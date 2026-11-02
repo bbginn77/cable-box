@@ -3,6 +3,9 @@ package com.retrocable.box
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.util.Base64
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -53,6 +56,10 @@ class MainActivity : AppCompatActivity() {
 
     // A downloaded update waiting for the one-time "install unknown apps" permission
     private var pendingUpdate: File? = null
+
+    // Radar channel music, played by Android's media player (not the web view)
+    private var jazzPlayer: MediaPlayer? = null
+    private val jazzFile by lazy { File(cacheDir, "nyx-jazz.wav") }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,6 +139,33 @@ class MainActivity : AppCompatActivity() {
         p.playWhenReady = true
     }
 
+    private fun startJazz() {
+        if (jazzPlayer != null) return
+        if (!jazzFile.exists()) { js("cable.jazzNative('error')"); return }
+        val mp = MediaPlayer()
+        try {
+            mp.setAudioAttributes(AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+            mp.setDataSource(jazzFile.absolutePath)
+            mp.isLooping = true
+            mp.setVolume(0.85f, 0.85f)
+            mp.setOnPreparedListener { it.start(); js("cable.jazzNative('playing')") }
+            mp.setOnErrorListener { _, _, _ -> js("cable.jazzNative('error')"); true }
+            mp.prepareAsync()
+            jazzPlayer = mp
+        } catch (e: Exception) {
+            mp.release()
+            js("cable.jazzNative('error')")
+        }
+    }
+
+    private fun stopJazz() {
+        jazzPlayer?.let { try { it.stop() } catch (e: Exception) {}; it.release() }
+        jazzPlayer = null
+        js("cable.jazzNative('stopped')")
+    }
+
     private fun stopStream() {
         player?.stop()
         player?.clearMediaItems()
@@ -200,7 +234,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        js("cable.pause()")  // stops the radar channel's music
+        js("cable.pause()")  // tells the page the app is in the background
+        stopJazz()
         stopStream()        // no streaming in the background while Netflix etc. is open
         videoSurface.visibility = View.INVISIBLE
         web.onPause()
@@ -211,6 +246,8 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         player?.release()
         player = null
+        jazzPlayer?.release()
+        jazzPlayer = null
         web.destroy()
         super.onDestroy()
     }
@@ -322,6 +359,23 @@ class MainActivity : AppCompatActivity() {
                     videoSurface.visibility = View.VISIBLE
                 }
             }
+        }
+
+        /** The page sends the composed jazz loop in pieces, then asks for it to play. */
+        @JavascriptInterface
+        fun jazzReady(): Boolean = jazzFile.exists() && jazzFile.length() > 100000
+
+        @JavascriptInterface
+        fun jazzBegin() { jazzFile.delete() }
+
+        @JavascriptInterface
+        fun jazzChunk(b64: String) {
+            java.io.FileOutputStream(jazzFile, true).use { it.write(Base64.decode(b64, Base64.DEFAULT)) }
+        }
+
+        @JavascriptInterface
+        fun jazzPlay(on: Boolean) {
+            runOnUiThread { if (on) startJazz() else stopJazz() }
         }
 
         /** This app's build number (100 + the GitHub build number). */

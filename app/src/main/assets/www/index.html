@@ -1079,7 +1079,10 @@ const PROG=[{b:38,v:[53,57,60,64]},{b:43,v:[53,57,59,64]},{b:36,v:[52,55,59,62]}
             {b:41,v:[52,57,60,64]},{b:40,v:[50,55,59,62]},{b:38,v:[53,57,60,65]},{b:43,v:[53,56,59,64]}];
 const mtof=m=>440*Math.pow(2,(m-69)/12);
 function jazzInit(){
-  const c=JAZZ.ctx=AC||new (window.AudioContext||window.webkitAudioContext)();AC=c;
+  const c=AC||new (window.AudioContext||window.webkitAudioContext)();AC=c;jazzGraph(c);
+}
+function jazzGraph(c){
+  JAZZ.ctx=c;
   const out=JAZZ.out=c.createGain();out.gain.value=0;
   const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=5200;out.connect(lp);lp.connect(c.destination);
   // small room reverb
@@ -1117,8 +1120,38 @@ function jazzStart(){if(JAZZ.on){try{if(JAZZ.ctx.state!=='running')JAZZ.ctx.resu
   jazzTick();JAZZ.timer=setInterval(jazzTick,250)}catch(e){JAZZ.on=false}}
 function jazzStop(){if(!JAZZ.on)return;JAZZ.on=false;clearInterval(JAZZ.timer);const c=JAZZ.ctx;try{JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(0,c.currentTime+.8)}catch(e){}}
 let APP_PAUSED=false;
-function jazzLabel(){if(!SET.jazz)return 'Jazz Off';if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return 'Jazz On';return 'Jazz starting\u2026 press OK again if silent'}
-function updateJazz(){const want=!APP_PAUSED&&SET.jazz&&has(S.ch)&&CH[S.ch].radar;if(want)jazzStart();else jazzStop()}
+/* On the TV, the web view can keep page audio muted, so NyxVision composes a ~90-second loop
+   once with an offline renderer and plays the finished file through Android's media player. */
+async function renderJazzWav(){
+  const sr=22050,bars=24,dur=bars*BEAT*4+0.4,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
+  const saved={ctx:JAZZ.ctx,out:JAZZ.out,ep:JAZZ.ep,verb:JAZZ.verb,noise:JAZZ.noise,bar:JAZZ.bar};
+  jazzGraph(off);JAZZ.out.gain.value=.85;JAZZ.bar=0;
+  for(let b=0;b<bars;b++)jazzBar(.02+b*BEAT*4);
+  const buf=await off.startRendering();Object.assign(JAZZ,saved);
+  const d=buf.getChannelData(0),n=d.length,bytes=new Uint8Array(44+n*2),v=new DataView(bytes.buffer);
+  const w=(o,str)=>{for(let i=0;i<str.length;i++)v.setUint8(o+i,str.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+  // short fade at the loop point so it repeats without a click
+  const fade=Math.floor(sr*.25);let pk=0;for(let i=0;i<n;i++)pk=Math.max(pk,Math.abs(d[i]));const gain=pk>0?.8/pk:1;
+  for(let i=0;i<n;i++){let x=d[i]*gain;if(i<fade)x*=i/fade;if(i>n-fade)x*=(n-i)/fade;v.setInt16(44+i*2,Math.max(-1,Math.min(1,x))*32767,true)}
+  return bytes;
+}
+function b64(u8){let s2='';for(let i=0;i<u8.length;i+=0x8000)s2+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s2)}
+async function nativeJazzOn(){
+  if(!JAZZ.nReady&&NATIVE.jazzReady&&NATIVE.jazzReady())JAZZ.nReady=true;  // composed on an earlier run
+  if(!JAZZ.nReady){if(JAZZ.rendering)return;JAZZ.rendering=true;JAZZ.nState='preparing';if(S.screen==='watch')render();
+    try{const wav=await renderJazzWav();NATIVE.jazzBegin();const step=393216;for(let i=0;i<wav.length;i+=step)NATIVE.jazzChunk(b64(wav.subarray(i,i+step)));JAZZ.nReady=true}
+    catch(e){JAZZ.nState='error';JAZZ.rendering=false;if(S.screen==='watch')render();return}
+    JAZZ.rendering=false}
+  if(JAZZ.nWant)NATIVE.jazzPlay(true);
+}
+function jazzNative(st){JAZZ.nState=st;if(S.screen==='watch')render()}
+function jazzLabel(){if(!SET.jazz)return 'Jazz Off';
+  if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?'Jazz On':JAZZ.nState==='preparing'?'Jazz warming up…':JAZZ.nState==='error'?'Jazz unavailable':'Jazz starting…';if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return 'Jazz On';return 'Jazz starting\u2026 press OK again if silent'}
+function updateJazz(){const want=!APP_PAUSED&&SET.jazz&&has(S.ch)&&CH[S.ch].radar;
+  if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant)return;JAZZ.nWant=want;if(want)nativeJazzOn();else NATIVE.jazzPlay(false);return}
+ if(want)jazzStart();else jazzStop()}
 
 /* ---------------- holiday themes ---------------- */
 // rule helpers (month m is 1-12)
@@ -1375,6 +1408,7 @@ window.cable={
   playerState:playerState,
   updateProgress:updateProgress,
   updateState:updateState,
+  jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
   pause:function(){APP_PAUSED=true;updateJazz()},
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
@@ -1383,7 +1417,8 @@ window.cable={
     applyStream()}
 };
 render();
-if(NATIVE){loadWeather();loadPluto();setTimeout(()=>checkUpdate(false),15000)}
+if(NATIVE){loadWeather();loadPluto();setTimeout(()=>checkUpdate(false),15000);
+  setTimeout(()=>{if(NATIVE.jazzPlay&&!(NATIVE.jazzReady&&NATIVE.jazzReady())&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn().then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
 })();
 </script>
 
