@@ -87,6 +87,17 @@ The optional extras below would each get their own written plan and your approva
   active alerts for Columbus, GA 31909 from the National Weather Service's free public data.
   Refreshes every 30 minutes. Alerts turn the bottom crawl red. Channel 4 shows the live temperature.
   To change the location, edit `WXLOC` near the weather section in `assets/www/index.html`.
+- **Severe weather alerts** (Settings → Weather Alerts): when the National Weather Service issues a
+  warning for your Weather Location, NyxVision interrupts whatever is on with a full-screen alert card,
+  then runs a red crawl across the top. Watches get a crawl only. Checks every 2 minutes, U.S. only.
+  The sound is NyxVision's own chime, not the broadcast emergency tones.
+- **Race call alerts** (Settings → Race Call Alerts): from 6 PM ET on November 3 through November 6,
+  2026, a RACE CALLED banner slides up on any channel when civicAPI reports a Senate or governor winner.
+- **Sports scores** (Settings → Sports Scores): pick leagues for the Nyx News Network ticker and
+  star your teams for score and final-score pop-ups. Uses ESPN's public scoreboard data
+  (unofficial, for personal use).
+- **Test Center** (Settings → Test Center): run any weather alert, a race call for each party, or the
+  sports pop-ups and crawl. Each test jumps to a random channel and is clearly marked TEST.
 - **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
   They play right inside NyxVision: full screen, in the guide's preview window, and CH ▲/▼
   surfs into them. Pluto's own ads stay in the stream. If a channel won't play, the box offers

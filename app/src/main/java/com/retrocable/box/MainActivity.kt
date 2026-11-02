@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     // Radar channel music, played by Android's media player (not the web view)
     private var jazzPlayer: MediaPlayer? = null
+    private var cuePlayer: MediaPlayer? = null
     private var jazzStyle = ""
     private fun musicFile(style: String) = File(cacheDir, "nyx-music-" + style.filter { it.isLetter() } + ".wav")
 
@@ -376,6 +377,28 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun jazzChunk(style: String, b64: String) {
             java.io.FileOutputStream(musicFile(style), true).use { it.write(Base64.decode(b64, Base64.DEFAULT)) }
+        }
+
+        /** Plays a short one-shot sound (alert chime, race-call fanfare) that NyxVision wrote with jazzBegin/jazzChunk. */
+        @JavascriptInterface
+        fun clipPlay(style: String) {
+            runOnUiThread {
+                val f = musicFile(style)
+                if (!f.exists()) return@runOnUiThread
+                cuePlayer?.let { try { it.release() } catch (e: Exception) {} }
+                val mp = MediaPlayer()
+                try {
+                    mp.setAudioAttributes(AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build())
+                    mp.setDataSource(f.absolutePath)
+                    mp.setOnPreparedListener { it.start() }
+                    mp.setOnCompletionListener { it.release(); if (cuePlayer === it) cuePlayer = null }
+                    mp.setOnErrorListener { m, _, _ -> m.release(); if (cuePlayer === m) cuePlayer = null; true }
+                    mp.prepareAsync()
+                    cuePlayer = mp
+                } catch (e: Exception) { mp.release() }
+            }
         }
 
         @JavascriptInterface
