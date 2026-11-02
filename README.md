@@ -52,6 +52,19 @@ Updating later: Settings → Check for Updates downloads the newest build from t
 Android's installer (Android asks once to allow NyxVision to install its own updates). You can still
 repeat step 3 with Downloader. Either way it installs over the old version and keeps your settings.
 
+## Android tablet
+
+The same app works on an Android tablet with touch controls:
+- Tap a menu item, setting or show to choose it. Tap the left or right arrows on a setting to change it.
+- While watching: tap to show the channel banner and a control bar (Menu, Guide, CH, Last, Fav);
+  swipe up/down to change channels, swipe left for the guide, swipe right for the menu.
+- In the guide: tap a show to highlight it, tap again to watch or set a reminder; swipe to scroll.
+- The footer hints (BACK, MENU, GUIDE...) are tappable. Back on the main menu leaves the app.
+
+Install: on the tablet, open Chrome and go to
+`github.com/BBGINN77/cable-box/releases/latest/download/cable-box.apk`, open the download,
+allow Chrome to install apps when asked, and choose Install. Updates come from Settings → Check for Updates.
+
 ## Backup and restore plan
 
 Nothing on the stick is modified apart from installing one app, so restoring is simple:

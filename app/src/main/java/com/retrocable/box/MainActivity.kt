@@ -378,6 +378,25 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread { if (on) startJazz() else stopJazz() }
         }
 
+        /** True on a phone or tablet (touch screen, no TV remote). */
+        @JavascriptInterface
+        fun isTouch(): Boolean =
+            !packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_LEANBACK) &&
+            packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_TOUCHSCREEN)
+
+        /** Keeps the tablet's screen on while a channel is playing. */
+        @JavascriptInterface
+        fun keepAwake(on: Boolean) {
+            runOnUiThread {
+                if (on) window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                else window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
+
+        /** Back on the tablet's main menu leaves NyxVision. */
+        @JavascriptInterface
+        fun exitApp() { runOnUiThread { moveTaskToBack(true) } }
+
         /** This app's build number (100 + the GitHub build number). */
         @JavascriptInterface
         fun appVersion(): Int = try {
