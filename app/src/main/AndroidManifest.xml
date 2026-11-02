@@ -20,6 +20,10 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
         <package android:name="com.android.vending" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
         <package android:name="tv.pluto.android" />
         <package android:name="com.google.android.youtube.tv" />
         <package android:name="com.google.android.youtube" />

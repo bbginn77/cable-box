@@ -289,6 +289,30 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .pride .grow:nth-child(7n+7) .gch,.pride .wxd:nth-child(7n+7),.pride .kbr:nth-child(7n+7) .kbk:not(.hi){background:linear-gradient(#8a1fa0,#611470)}
 .pride .grid:not(.gcol) .grow:nth-child(7n+7) .cell:not(.hi){background:linear-gradient(#8a1fa0,#611470);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
 .pride .mi:not(.hi),.pride .gch,.pride .wxd,.pride .kbk{text-shadow:1px 1px 0 rgba(0,0,0,.6)}
+.nnc{position:absolute;inset:0;background:linear-gradient(180deg,var(--k183689) 0%,var(--k0f2569) 55%,var(--k061650) 100%)}
+.nntop{background:linear-gradient(#b3131b,#7a0c12)!important;border-bottom-color:#ff8f8f!important}
+.pride .nntop{background:linear-gradient(#b3131b,#7a0c12)!important}
+.nnlogo{display:flex;align-items:center;gap:4px;background:#fff;color:#b3131b;padding:2px 8px 2px 10px;border-radius:3px}
+.nnlogo span{font:italic 900 22px var(--display);letter-spacing:-.02em}
+.wxbrand .nnlogo span{color:#b3131b;font:italic 900 22px var(--display);letter-spacing:-.02em;text-transform:none;overflow:visible}
+.nnimg{position:absolute;left:24px;top:100px;width:480px;height:270px;overflow:hidden;border:2px solid var(--k9ec0ff);background:#000}
+.nnimg2{position:absolute;left:20px;top:20px;width:384px;height:216px;overflow:hidden;border:2px solid var(--k9ec0ff);background:#000}
+.nnimg img,.nnimg2 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,#0d1f4f,#1d3ea6)}
+.nph .nnlogo span{font-size:40px}.nph em{font:700 16px var(--ui);color:var(--ice);font-style:normal;letter-spacing:.12em;text-transform:uppercase}
+.nntext{position:absolute;left:524px;right:24px;top:100px;height:270px;overflow:hidden}
+.nntext h2{margin:6px 0 10px;font:900 27px/1.18 var(--display);text-shadow:2px 2px 0 var(--k041040);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.nntext p{margin:0;font:500 17px/1.38 var(--ui);color:var(--dim);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.nnhint{position:absolute;left:24px;top:384px;padding:6px 12px;background:var(--kwxnow);border:2px solid var(--k9ec0ff);font:700 16px var(--ui);color:var(--hi);cursor:pointer}
+.nnmore{position:absolute;left:24px;right:24px;top:62px;bottom:52px;background:var(--kwxnow)}
+.nnmt{position:absolute;left:424px;right:20px;top:18px;height:330px;overflow:hidden}
+.nnmt h2{margin:6px 0 10px;font:900 24px/1.2 var(--display)}.nnmt p{margin:0;font:500 17px/1.4 var(--ui);color:var(--dim)}
+.nnqr{position:absolute;left:20px;top:250px;display:flex;align-items:center;gap:14px;width:384px}
+.nnqr svg{flex:none;border:4px solid #fff}.nnqr span{font:700 15px/1.3 var(--ui);color:var(--ice)}
+.nnopen{position:absolute;left:180px;top:118px;padding:8px 14px;border:none;border-radius:6px;background:var(--hi);color:var(--hiText);font:800 15px var(--ui);cursor:pointer}
+.nnnav{position:absolute;left:424px;right:20px;bottom:12px;display:flex;justify-content:space-between;font:700 15px var(--ui);color:var(--hi)}
+.nntk{bottom:0;display:flex}.nntk .nntag{flex:none;position:relative;z-index:1;padding:0 12px;background:#b3131b;font:italic 900 20px/38px var(--display)}
+.nntk b{color:var(--hi);margin-right:4px}
 /* location search */
 .lkt{font:700 28px var(--ui);letter-spacing:.06em;white-space:pre;overflow:hidden}
 .lkc{font:700 28px var(--ui);color:var(--hi);animation:blink 1s steps(2) infinite}
@@ -477,8 +501,11 @@ CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=SLOT)RADAR_CH.sched.push({title:'Your Local Forecast',start:t,end:t+SLOT,rating:'',desc:'Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.'});
-if(window.CableNative){CH.length=0;CH.push(RADAR_CH)} // TV app: radar + real Pluto TV channels only
-else CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;
+// Channel 5: Nyx News Network
+const NEWS_CH={n:5,call:'NNN',name:'Nyx News Network',g:'news',scene:'nnn',news:true,key:'news',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)NEWS_CH.sched.push({title:'Your Local News',start:t,end:t+SLOT,rating:'',desc:'Local and national headlines for your area. Press OK for more on a story.'});
+if(window.CableNative){CH.length=0;CH.push(RADAR_CH,NEWS_CH)} // TV app: weather, news + real Pluto TV channels only
+else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH}
 const BASE=CH.length; // demo channels exist only in the browser preview
 const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
 let SET=Object.assign({},DEF), FAV=DEF_FAV();
@@ -486,7 +513,7 @@ try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.as
 if(SET.jazz===true&&!SET._m){SET.music='auto';SET._m=1}
 function save(){try{localStorage.setItem('cablebox',JSON.stringify({set:SET,fav:[...FAV]}))}catch(e){}}
 
-const S={screen:'home',prev:'home',ch:(!window.CableNative||(function(){try{return localStorage.getItem('cablebox-lastch')}catch(e){return null}})()==='radar')?0:-1,last:-1,idx:{home:0,apps:0,od:0,my:0,set:0,more:0,themes:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
+const S={screen:'home',prev:'home',ch:(function(){if(!window.CableNative)return 0;let k=null;try{k=localStorage.getItem('cablebox-lastch')}catch(e){}const i=CH.findIndex(c=>c.key===k);return i}()),last:-1,idx:{home:0,apps:0,od:0,my:0,set:0,more:0,themes:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
 
 const HOME=[
  {label:'Watch TV',to:'watch',desc:'Return to full-screen television on your current channel.'},
@@ -589,7 +616,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 /* ---------------- languages: English (built in), Français, Español ---------------- */
 const I18N={
 fr:{
-'Main Menu':'Menu principal','Lady Gaga on YouTube':'Lady Gaga sur YouTube','Now Playing':'En lecture','Official music videos · YouTube':'Vidéoclips officiels · YouTube','Pride Disco':'Disco de la Fierté','Weather Location':'Lieu météo','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Choisissez la ville ou le code postal pour la Météo NyxVision, le menu principal et l’écran des prévisions.','Type a ZIP code, postal code or city, then choose Search.':'Tapez un code ZIP, un code postal ou une ville, puis choisissez Rechercher.','Now showing: {0}':'Affiché : {0}','Results':'Résultats','Searching…':'Recherche…','Results appear here after you search.':'Les résultats s’affichent ici après la recherche.','No places found. Check the spelling and try again.':'Aucun lieu trouvé. Vérifiez l’orthographe et réessayez.','Couldn’t search right now. Check the internet connection.':'Recherche impossible pour le moment. Vérifiez la connexion Internet.','Location search works on your TV or tablet.':'La recherche de lieu fonctionne sur votre télé ou votre tablette.','Space':'Espace','Delete':'Effacer','Clear':'Vider','Search':'Rechercher','Move':'Déplacer','Type':'Taper','Choose':'Choisir','Weather Location Set':'Lieu météo enregistré','NyxVision Weather now shows {0}.':'La Météo NyxVision affiche maintenant {0}.','NyxVision Weather':'Météo NyxVision','NYXVISION WEATHER':'MÉTÉO NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Conditions actuelles','Extended Forecast':'Prévisions à long terme','Weather Alerts':'Alertes météo','Radar map not available for this location.':'Carte radar non disponible pour ce lieu.','NO RADAR HERE · SAMPLE':'PAS DE RADAR ICI · EXEMPLE','Tap here for music':'Touchez ici pour la musique','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, conditions actuelles et prévisions à long terme pour votre région. Appuyez sur OK pour activer ou couper la musique.','{0}: high {1}°, low {2}°, {3}':'{0} : max {1}°, min {2}°, {3}','{0}: low {1}°, {2}':'{0} : min {1}°, {2}','Open-Meteo forecast · updated {0}':'Prévisions Open-Meteo · mises à jour à {0}','Weather Channel Music':'Musique de la chaîne météo','Seasonal':'Saisonnière','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Musique pour la Météo NyxVision (canal 4). Saisonnière suit le thème de fête : les vidéoclips officiels de Lady Gaga (par YouTube) pendant le Mois des fiertés, clochettes d’hiver à Noël, orgue lugubre à l’Halloween, folk des récoltes à l’automne, musique de fête aux anniversaires et célébrations, et jazz doux le reste du temps.','Music Off':'Musique désactivée','{0} On':'{0} activé','Music warming up…':'La musique se prépare…','Music unavailable':'Musique non disponible','Music starting…':'La musique démarre…','Music starting… press OK again if silent':'La musique démarre… appuyez de nouveau sur OK si c’est muet','Winter Bells':'Clochettes d’hiver','Spooky Organ':'Orgue lugubre','Harvest Folk':'Folk des récoltes','Party Mix':'Musique de fête','Guide Colors':'Couleurs du guide','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colore le guide par type : films, séries, nouvelles, sports, jeunesse et musique. Sur la première ligne du guide, appuyez sur ▲ pour n’afficher qu’un type.','Filter':'Filtre','Series':'Séries','News':'Nouvelles','Sports':'Sports','Kids':'Jeunesse','Music':'Musique','Movie':'Film','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'Rien dans {0} pour le moment. Appuyez sur ◀ ou ▶ pour choisir un autre type.','Pick type':'Choisir le type','Station IDs':'Identifications de chaîne','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'De courtes pauses NyxVision de temps en temps quand vous changez de chaîne, et à l’heure et à la demie.','You’re watching NyxVision':'Vous regardez NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'Nyx a attrapé la feuille !','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
+'Main Menu':'Menu principal','Nyx News Network':'Réseau d’information Nyx','Your Local News':'Vos nouvelles locales','Local and national headlines for your area. Press OK for more on a story.':'Manchettes locales et nationales pour votre région. Appuyez sur OK pour en savoir plus.','Local News':'Nouvelles locales','National Headlines':'Manchettes nationales','LOCAL':'LOCAL','NATIONAL':'NATIONAL','CANADA':'CANADA','OK: More on this story':'OK : en savoir plus','Tap the story for more':'Touchez la nouvelle pour en savoir plus','Story {0} of {1}':'Nouvelle {0} sur {1}','Scan to read the full story on your phone':'Balayez pour lire l’article complet sur votre téléphone','Open in browser':'Ouvrir dans le navigateur','Stories':'Nouvelles','Close':'Fermer','Loading the news…':'Chargement des nouvelles…','News unavailable right now.':'Nouvelles non disponibles pour le moment.','{0} min ago':'il y a {0} min','{0} h ago':'il y a {0} h','{0} d ago':'il y a {0} j','The source didn’t include a summary for this story.':'La source n’a pas fourni de résumé pour cette nouvelle.','Lady Gaga on YouTube':'Lady Gaga sur YouTube','Now Playing':'En lecture','Official music videos · YouTube':'Vidéoclips officiels · YouTube','Pride Disco':'Disco de la Fierté','Weather Location':'Lieu météo','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Choisissez la ville ou le code postal pour la Météo NyxVision, le menu principal et l’écran des prévisions.','Type a ZIP code, postal code or city, then choose Search.':'Tapez un code ZIP, un code postal ou une ville, puis choisissez Rechercher.','Now showing: {0}':'Affiché : {0}','Results':'Résultats','Searching…':'Recherche…','Results appear here after you search.':'Les résultats s’affichent ici après la recherche.','No places found. Check the spelling and try again.':'Aucun lieu trouvé. Vérifiez l’orthographe et réessayez.','Couldn’t search right now. Check the internet connection.':'Recherche impossible pour le moment. Vérifiez la connexion Internet.','Location search works on your TV or tablet.':'La recherche de lieu fonctionne sur votre télé ou votre tablette.','Space':'Espace','Delete':'Effacer','Clear':'Vider','Search':'Rechercher','Move':'Déplacer','Type':'Taper','Choose':'Choisir','Weather Location Set':'Lieu météo enregistré','NyxVision Weather now shows {0}.':'La Météo NyxVision affiche maintenant {0}.','NyxVision Weather':'Météo NyxVision','NYXVISION WEATHER':'MÉTÉO NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Conditions actuelles','Extended Forecast':'Prévisions à long terme','Weather Alerts':'Alertes météo','Radar map not available for this location.':'Carte radar non disponible pour ce lieu.','NO RADAR HERE · SAMPLE':'PAS DE RADAR ICI · EXEMPLE','Tap here for music':'Touchez ici pour la musique','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, conditions actuelles et prévisions à long terme pour votre région. Appuyez sur OK pour activer ou couper la musique.','{0}: high {1}°, low {2}°, {3}':'{0} : max {1}°, min {2}°, {3}','{0}: low {1}°, {2}':'{0} : min {1}°, {2}','Open-Meteo forecast · updated {0}':'Prévisions Open-Meteo · mises à jour à {0}','Weather Channel Music':'Musique de la chaîne météo','Seasonal':'Saisonnière','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Musique pour la Météo NyxVision (canal 4). Saisonnière suit le thème de fête : les vidéoclips officiels de Lady Gaga (par YouTube) pendant le Mois des fiertés, clochettes d’hiver à Noël, orgue lugubre à l’Halloween, folk des récoltes à l’automne, musique de fête aux anniversaires et célébrations, et jazz doux le reste du temps.','Music Off':'Musique désactivée','{0} On':'{0} activé','Music warming up…':'La musique se prépare…','Music unavailable':'Musique non disponible','Music starting…':'La musique démarre…','Music starting… press OK again if silent':'La musique démarre… appuyez de nouveau sur OK si c’est muet','Winter Bells':'Clochettes d’hiver','Spooky Organ':'Orgue lugubre','Harvest Folk':'Folk des récoltes','Party Mix':'Musique de fête','Guide Colors':'Couleurs du guide','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colore le guide par type : films, séries, nouvelles, sports, jeunesse et musique. Sur la première ligne du guide, appuyez sur ▲ pour n’afficher qu’un type.','Filter':'Filtre','Series':'Séries','News':'Nouvelles','Sports':'Sports','Kids':'Jeunesse','Music':'Musique','Movie':'Film','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'Rien dans {0} pour le moment. Appuyez sur ◀ ou ▶ pour choisir un autre type.','Pick type':'Choisir le type','Station IDs':'Identifications de chaîne','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'De courtes pauses NyxVision de temps en temps quand vous changez de chaîne, et à l’heure et à la demie.','You’re watching NyxVision':'Vous regardez NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'Nyx a attrapé la feuille !','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
 'Watch TV':'Regarder la télé',
 'Return to full-screen television on your current channel.':'Retour à la télé en plein écran sur votre chaîne actuelle.',
 'Browse what’s on now and up to 24 hours ahead.':'Voyez ce qui joue maintenant et jusqu’à 24 heures à l’avance.',
@@ -746,7 +773,7 @@ fr:{
 'Family Day':'Fête de la famille','Happy Family Day':'Bonne fête de la famille','Victoria Day':'Fête de Victoria','Happy Victoria Day':'Bonne fête de Victoria','National Indigenous Peoples Day':'Journée nationale des peuples autochtones','Saint-Jean-Baptiste Day':'Fête nationale du Québec','Happy Saint-Jean-Baptiste Day':'Bonne Fête nationale !','Canada Day':'Fête du Canada','Happy Canada Day':'Bonne fête du Canada !','Civic Holiday':'Congé civique','Labour Day':'Fête du Travail','Happy Labour Day':'Bonne fête du Travail','National Day for Truth and Reconciliation':'Journée nationale de la vérité et de la réconciliation','Every Child Matters':'Chaque enfant compte','Remembrance Day':'Jour du Souvenir','Lest We Forget':'Nous nous souviendrons','Boxing Day':'Lendemain de Noël','Happy Boxing Day':'Joyeux lendemain de Noël'
 },
 es:{
-'Main Menu':'Menú principal','Lady Gaga on YouTube':'Lady Gaga en YouTube','Now Playing':'Reproduciendo','Official music videos · YouTube':'Videos musicales oficiales · YouTube','Pride Disco':'Disco del Orgullo','Weather Location':'Ubicación del clima','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Elija la ciudad o el código postal para Clima NyxVision, el menú principal y la pantalla del pronóstico.','Type a ZIP code, postal code or city, then choose Search.':'Escriba un código ZIP, código postal o ciudad, y elija Buscar.','Now showing: {0}':'Mostrando: {0}','Results':'Resultados','Searching…':'Buscando…','Results appear here after you search.':'Los resultados aparecen aquí después de buscar.','No places found. Check the spelling and try again.':'No se encontraron lugares. Revise la ortografía e inténtelo de nuevo.','Couldn’t search right now. Check the internet connection.':'No se pudo buscar ahora. Revise la conexión a internet.','Location search works on your TV or tablet.':'La búsqueda de ubicación funciona en su TV o tablet.','Space':'Espacio','Delete':'Borrar','Clear':'Limpiar','Search':'Buscar','Move':'Mover','Type':'Escribir','Choose':'Elegir','Weather Location Set':'Ubicación guardada','NyxVision Weather now shows {0}.':'Clima NyxVision ahora muestra {0}.','NyxVision Weather':'Clima NyxVision','NYXVISION WEATHER':'CLIMA NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Condiciones actuales','Extended Forecast':'Pronóstico extendido','Weather Alerts':'Alertas del clima','Radar map not available for this location.':'Mapa de radar no disponible para esta ubicación.','NO RADAR HERE · SAMPLE':'SIN RADAR AQUÍ · EJEMPLO','Tap here for music':'Toque aquí para la música','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, condiciones actuales y pronóstico extendido de su zona. Pulse OK para activar o apagar la música.','{0}: high {1}°, low {2}°, {3}':'{0}: máx {1}°, mín {2}°, {3}','{0}: low {1}°, {2}':'{0}: mín {1}°, {2}','Open-Meteo forecast · updated {0}':'Pronóstico de Open-Meteo · actualizado a las {0}','Weather Channel Music':'Música del canal del clima','Seasonal':'De temporada','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Música para Clima NyxVision (canal 4). De temporada sigue el tema festivo: los videos oficiales de Lady Gaga (por YouTube) en el Mes del Orgullo, campanas de invierno en Navidad, un órgano tenebroso en Halloween, folk de cosecha en otoño, música de fiesta en cumpleaños y celebraciones, y jazz suave el resto del tiempo.','Music Off':'Música apagada','{0} On':'{0} activado','Music warming up…':'Preparando la música…','Music unavailable':'Música no disponible','Music starting…':'Iniciando la música…','Music starting… press OK again if silent':'Iniciando la música… pulse OK otra vez si no suena','Winter Bells':'Campanas de invierno','Spooky Organ':'Órgano tenebroso','Harvest Folk':'Folk de cosecha','Party Mix':'Mezcla de fiesta','Guide Colors':'Colores de la guía','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colorea la guía por tipo: películas, series, noticias, deportes, niños y música. En la primera fila de la guía, pulse ▲ para ver solo un tipo.','Filter':'Filtro','Series':'Series','News':'Noticias','Sports':'Deportes','Kids':'Niños','Music':'Música','Movie':'Película','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'No hay nada en {0} ahora. Pulse ◀ o ▶ para elegir otro tipo.','Pick type':'Elegir tipo','Station IDs':'Identificaciones del canal','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'Breves pausas de NyxVision de vez en cuando al cambiar de canal, y a la hora y a la media hora.','You’re watching NyxVision':'Está viendo NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'¡Nyx atrapó la hoja!','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
+'Main Menu':'Menú principal','Nyx News Network':'Red de Noticias Nyx','Your Local News':'Sus noticias locales','Local and national headlines for your area. Press OK for more on a story.':'Titulares locales y nacionales de su zona. Pulse OK para ver más de una noticia.','Local News':'Noticias locales','National Headlines':'Titulares nacionales','LOCAL':'LOCAL','NATIONAL':'NACIONAL','CANADA':'CANADÁ','OK: More on this story':'OK: más sobre esta noticia','Tap the story for more':'Toque la noticia para ver más','Story {0} of {1}':'Noticia {0} de {1}','Scan to read the full story on your phone':'Escanee para leer la noticia completa en su teléfono','Open in browser':'Abrir en el navegador','Stories':'Noticias','Close':'Cerrar','Loading the news…':'Cargando las noticias…','News unavailable right now.':'Noticias no disponibles por ahora.','{0} min ago':'hace {0} min','{0} h ago':'hace {0} h','{0} d ago':'hace {0} d','The source didn’t include a summary for this story.':'La fuente no incluyó un resumen de esta noticia.','Lady Gaga on YouTube':'Lady Gaga en YouTube','Now Playing':'Reproduciendo','Official music videos · YouTube':'Videos musicales oficiales · YouTube','Pride Disco':'Disco del Orgullo','Weather Location':'Ubicación del clima','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Elija la ciudad o el código postal para Clima NyxVision, el menú principal y la pantalla del pronóstico.','Type a ZIP code, postal code or city, then choose Search.':'Escriba un código ZIP, código postal o ciudad, y elija Buscar.','Now showing: {0}':'Mostrando: {0}','Results':'Resultados','Searching…':'Buscando…','Results appear here after you search.':'Los resultados aparecen aquí después de buscar.','No places found. Check the spelling and try again.':'No se encontraron lugares. Revise la ortografía e inténtelo de nuevo.','Couldn’t search right now. Check the internet connection.':'No se pudo buscar ahora. Revise la conexión a internet.','Location search works on your TV or tablet.':'La búsqueda de ubicación funciona en su TV o tablet.','Space':'Espacio','Delete':'Borrar','Clear':'Limpiar','Search':'Buscar','Move':'Mover','Type':'Escribir','Choose':'Elegir','Weather Location Set':'Ubicación guardada','NyxVision Weather now shows {0}.':'Clima NyxVision ahora muestra {0}.','NyxVision Weather':'Clima NyxVision','NYXVISION WEATHER':'CLIMA NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Condiciones actuales','Extended Forecast':'Pronóstico extendido','Weather Alerts':'Alertas del clima','Radar map not available for this location.':'Mapa de radar no disponible para esta ubicación.','NO RADAR HERE · SAMPLE':'SIN RADAR AQUÍ · EJEMPLO','Tap here for music':'Toque aquí para la música','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, condiciones actuales y pronóstico extendido de su zona. Pulse OK para activar o apagar la música.','{0}: high {1}°, low {2}°, {3}':'{0}: máx {1}°, mín {2}°, {3}','{0}: low {1}°, {2}':'{0}: mín {1}°, {2}','Open-Meteo forecast · updated {0}':'Pronóstico de Open-Meteo · actualizado a las {0}','Weather Channel Music':'Música del canal del clima','Seasonal':'De temporada','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Música para Clima NyxVision (canal 4). De temporada sigue el tema festivo: los videos oficiales de Lady Gaga (por YouTube) en el Mes del Orgullo, campanas de invierno en Navidad, un órgano tenebroso en Halloween, folk de cosecha en otoño, música de fiesta en cumpleaños y celebraciones, y jazz suave el resto del tiempo.','Music Off':'Música apagada','{0} On':'{0} activado','Music warming up…':'Preparando la música…','Music unavailable':'Música no disponible','Music starting…':'Iniciando la música…','Music starting… press OK again if silent':'Iniciando la música… pulse OK otra vez si no suena','Winter Bells':'Campanas de invierno','Spooky Organ':'Órgano tenebroso','Harvest Folk':'Folk de cosecha','Party Mix':'Mezcla de fiesta','Guide Colors':'Colores de la guía','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colorea la guía por tipo: películas, series, noticias, deportes, niños y música. En la primera fila de la guía, pulse ▲ para ver solo un tipo.','Filter':'Filtro','Series':'Series','News':'Noticias','Sports':'Deportes','Kids':'Niños','Music':'Música','Movie':'Película','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'No hay nada en {0} ahora. Pulse ◀ o ▶ para elegir otro tipo.','Pick type':'Elegir tipo','Station IDs':'Identificaciones del canal','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'Breves pausas de NyxVision de vez en cuando al cambiar de canal, y a la hora y a la media hora.','You’re watching NyxVision':'Está viendo NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'¡Nyx atrapó la hoja!','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
 'Watch TV':'Ver TV',
 'Return to full-screen television on your current channel.':'Vuelva a la televisión en pantalla completa en su canal actual.',
 'Browse what’s on now and up to 24 hours ahead.':'Vea qué hay ahora y hasta 24 horas después.',
@@ -926,8 +953,8 @@ function tune(ci){
   if(!has(ci))return;
   try{localStorage.setItem('cablebox-lastch',CH[ci].key)}catch(e){}
   if(ci===S.ch){S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
-  S.last=S.ch;S.ch=ci;if(CH[ci].radar){S.wxT0=Date.now();S.wxSegLast=null}S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
-  if(SET.idents&&!CH[ci].radar&&S.screen==='watch'&&Date.now()-(S.lastBump||0)>15*MIN&&Math.random()<.5)setTimeout(showBump,900);
+  S.last=S.ch;S.ch=ci;S.nm=false;if(CH[ci].radar){S.wxT0=Date.now();S.wxSegLast=null}if(CH[ci].news){S.newsT0=Date.now();S.nwLast=null;if(NATIVE&&Date.now()-NEWSAT>10*MIN)loadNews()}S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
+  if(SET.idents&&!CH[ci].radar&&!CH[ci].news&&S.screen==='watch'&&Date.now()-(S.lastBump||0)>15*MIN&&Math.random()<.5)setTimeout(showBump,900);
 }
 function chStep(dir){const L=surfList();if(!L.length){snd.bump();return}let p=L.indexOf(S.ch);if(p<0)p=0;p=(p+dir+L.length)%L.length;tune(L[p])}
 
@@ -983,6 +1010,7 @@ function launch(app){
 /* ---------------- input ---------------- */
 let entryT=0;
 function press(k){
+  if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].news&&newsKey(k))return;
   if(S.screen==='loc'&&!S.dialog){try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}locKey(k);return}
   if(S.screen==='boot'){if(k==='ok'&&performance.now()-BOOTSEQ.t0>800)endBoot();return}
   if(S.screen==='egg'){if(performance.now()-EGG.t0>800)go('set');return}
@@ -1037,7 +1065,8 @@ function press(k){
     if(it.action&&it.k==='loc'){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen();return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF,{themeState:{}});FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='region'){applyTheme();render()}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='region'||it.k==='lang'){NEWSAT=0}
+    if(it.k==='region'){applyTheme();render()}
     if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+curRadar();render()}return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
@@ -1120,6 +1149,7 @@ function render(){
   }
   else if(sc==='watch'){
     if(CH[S.ch].radar){h+=wxChannelHTML()}
+    if(CH[S.ch].news){h+=newsHTML()}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>'+T('{0} is blocked by Parental Controls. Turn them off in Settings to watch.','Ch '+CH[S.ch].n+' '+esc(CH[S.ch].call))+'</p></div></div>';
     if(S.bumpUntil>Date.now())h+=bumpHTML();
     if(Date.now()<S.bannerUntil||S.entry){
@@ -1337,6 +1367,10 @@ function drawScene(ctx,w,h,ci,t){
   case 'stage':{ctx.fillStyle='#120a14';ctx.fillRect(0,0,w,h);const g=ctx.createRadialGradient(240,230,10,240,200,170);g.addColorStop(0,'rgba(255,240,200,.75)');g.addColorStop(1,'rgba(255,240,200,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(200,0);ctx.lineTo(280,0);ctx.lineTo(380,270);ctx.lineTo(100,270);ctx.fill();
     for(let s=0;s<2;s++){ctx.fillStyle='#8c1a26';for(let i=0;i<5;i++){ctx.beginPath();const x0=s?480-i*18:i*18;ctx.ellipse(x0,135,14,140,0,0,7);ctx.fill()}}
     ctx.fillStyle='#222';ctx.fillRect(238,150,4,100);ctx.beginPath();ctx.arc(240,148,7,0,7);ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(266,130+Math.sin(t*2)*2,14,0,7);ctx.fill();ctx.fillRect(254,144+Math.sin(t*2)*2,24,90);break}
+  case 'nnn':{const g2=ctx.createLinearGradient(0,0,0,h);g2.addColorStop(0,'#0d1f4f');g2.addColorStop(1,'#050b22');ctx.fillStyle=g2;ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#c4232b';ctx.fillRect(20,24,120,48);txt(ctx,'NNN',80,60,34,'#fff','center',900);txt(ctx,T('Nyx News Network').toUpperCase(),156,56,15,'#ffd21a','left',800);
+    const L=newsStories(),st=L[newsIdx()];if(st){ctx.font='800 22px Archivo, Arial, sans-serif';const words=st.t.split(' ');let line='',y=120,n=0;for(const wd of words){const tst=line+wd+' ';if(ctx.measureText(tst).width>430&&line){txt(ctx,line,24,y,22,'#fff','left',800);line=wd+' ';y+=28;if(++n>=4)break}else line=tst}if(n<4)txt(ctx,line,24,y,22,'#fff','left',800)}
+    ctx.fillStyle='#c4232b';ctx.fillRect(0,236,w,34);txt(ctx,T('LOCAL'),12,258,15,'#fff','left',900);break}
   case 'radar':{if(radarFullImg.complete&&radarFullImg.naturalWidth&&!radarFullFail){ctx.fillStyle='#0a0d12';ctx.fillRect(0,0,w,h);const iw=radarFullImg.naturalWidth,ih=radarFullImg.naturalHeight,k2=Math.min(w/iw,h/ih);ctx.drawImage(radarFullImg,(w-iw*k2)/2,(h-ih*k2)/2,iw*k2,ih*k2)}else drawRadarSample(ctx,t,w,h);
     ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,w,26);txt(ctx,T('NYXVISION WEATHER'),10,18,13,'#ffd21a');break}
   case 'pluto':{const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a1450');g.addColorStop(1,'#07051f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
@@ -1510,7 +1544,7 @@ async function locSearch(){const L=S.lk,q=L.text.trim();if(!q){snd.bump();return
     L.res=res.slice(0,7);L.ri=0;L.focus=L.res.length?'res':'kb';L.msg=L.res.length?'':T('No places found. Check the spelling and try again.')}
   catch(e){L.msg=/404/.test(String(e))?T('No places found. Check the spelling and try again.'):T('Couldn’t search right now. Check the internet connection.')}
   L.busy=false;if(S.screen==='loc')render()}
-function locChoose(r){if(!r)return;SET.loc={label:r.label,short:r.short,lat:+r.lat,lon:+r.lon,cc:r.cc};save();snd.ok();
+function locChoose(r){if(!r)return;SET.loc={label:r.label,short:r.short,lat:+r.lat,lon:+r.lon,cc:r.cc};save();snd.ok();NEWS=null;NEWSAT=0;newsBusy=false;setTimeout(loadNews,500);
   WX=null;WXERR=null;WXAT=0;loadWeather();radarIdx=0;if(NATIVE){radarSrc();radarFullSrc()}nameWeatherChannel();
   go('set');dialog('Weather Location Set',T('NyxVision Weather now shows {0}.','<b>'+esc(r.label)+'</b>'),3000)}
 function locHTML(){const L=S.lk;
@@ -2097,7 +2131,7 @@ function progCat(ci,p){if(p&&p.cat)return p.cat;const c=CH[ci];if(!c)return 'ent
 function chanHasCat(ci,cat){const g=S.g;if(!g)return true;const a=g.win,b=g.win+WIN;return CH[ci].sched.some(p=>p.end>a&&p.start<b&&progCat(ci,p)===cat)}
 
 /* ---------------- station IDs ("You're watching NyxVision") ---------------- */
-function showBump(){if(!SET.idents||S.screen!=='watch'||!has(S.ch)||CH[S.ch].radar)return;
+function showBump(){if(!SET.idents||S.screen!=='watch'||!has(S.ch)||CH[S.ch].radar||CH[S.ch].news)return;
   S.bumpT0=Date.now();S.bumpUntil=S.bumpT0+3800;S.lastBump=S.bumpT0;render();setTimeout(()=>{if(S.screen==='watch')render()},3900);
   [72,76,79,84].forEach((m,i)=>setTimeout(()=>tone(mtof(m),.35,'sine',.05),180+i*140))}
 function bumpHTML(){const e=((Date.now()-S.bumpT0)/1000).toFixed(2);
@@ -2161,6 +2195,7 @@ function eggLeafScene(x,t){
 const _catHead=catHead;catHead=function(x,o){_catHead(x,o);drawHat(x,o&&o.hat)};
 function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
   if(CH[S.ch].radar){const sg=wxSeg();if(sg!==S.wxSegLast){S.wxSegLast=sg;render()}return}
+  if(CH[S.ch].news){const ni=newsIdx();if(ni!==S.nwLast){S.nwLast=ni;render()}return}
   const d=new Date();if((d.getMinutes()===0||d.getMinutes()===30)&&d.getSeconds()<3&&Date.now()-(S.lastBump||0)>120000)showBump()}
 /* ---------------- boot-up sequence (like powering on a 2004 cable box) ---------------- */
 const BOOTSEQ={t0:0,pct:0,next:'watch'};
@@ -2197,6 +2232,10 @@ function tapAt(el,x){
   if(sc==='loc'){const kk=el.closest('[data-key]');if(kk){const a=kk.dataset.key.split(',').map(Number);S.lk.y=a[0];S.lk.x=a[1];S.lk.focus='kb';locKey('ok');return}
     const rr=el.closest('[data-res]');if(rr){S.lk.ri=+rr.dataset.res;locChoose(S.lk.res[S.lk.ri]);return}}
   const fk=el.closest('[data-k]');if(fk){press(fk.dataset.k);return}
+  if(sc==='watch'&&has(S.ch)&&CH[S.ch].news){const L=newsStories();
+    if(el.closest('[data-open]')){const st=L[newsIdx()];if(st&&st.url&&NATIVE.openUrl)NATIVE.openUrl(st.url);return}
+    if(S.nm){if(el.closest('.nnqr'))return;const b=stage.getBoundingClientRect();press(x<b.left+b.width*.33?'left':x>b.left+b.width*.67?'right':'ok');return}
+    if(el.closest('.nnimg,.nntext,.nnhint')){press('ok');return}showTbar();press('info');return}
   if(sc==='watch'){if(el.closest('.rbot')){press('ok');return}if(el.closest('.banner')){press('guide');return}showTbar();press('info');return}
   if(sc==='wx'){press('back');return}
   if(sc==='home'){
@@ -2251,6 +2290,133 @@ function syncGaga(){
   else if(!want&&f)f.remove();   // leaving the channel stops the music
 }
 
+/* ---------------- tiny QR code maker (byte mode, error level L) for "read the full story" links ---------------- */
+const QR=(()=>{
+  // per version: [total codewords, ec codewords per block, [blocks group1, data per block g1, blocks g2, data per block g2]] for level L
+  const V={1:[26,7,[1,19,0,0]],2:[44,10,[1,34,0,0]],3:[70,15,[1,55,0,0]],4:[100,20,[1,80,0,0]],5:[134,26,[1,108,0,0]],6:[172,18,[2,68,0,0]],7:[196,20,[2,78,0,0]],
+    8:[242,24,[2,97,0,0]],9:[292,30,[2,116,0,0]],10:[346,18,[2,68,2,69]],11:[404,20,[4,81,0,0]],12:[466,24,[2,92,2,93]],13:[532,26,[4,107,0,0]],14:[581,30,[3,115,1,116]],
+    15:[655,22,[5,87,1,88]],16:[733,24,[5,98,1,99]],17:[815,28,[1,107,5,108]],18:[901,30,[5,120,1,121]],19:[991,28,[3,113,4,114]],20:[1085,28,[3,107,5,108]]};
+  const ALIGN={2:[6,18],3:[6,22],4:[6,26],5:[6,30],6:[6,34],7:[6,22,38],8:[6,24,42],9:[6,26,46],10:[6,28,50],11:[6,30,54],12:[6,32,58],13:[6,34,62],14:[6,26,46,66],15:[6,26,48,70],16:[6,26,50,74],17:[6,30,54,78],18:[6,30,56,82],19:[6,30,58,86],20:[6,34,62,90]};
+  const EXP=new Array(512),LOG=new Array(256);let x=1;for(let i=0;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&256)x^=0x11d}for(let i=255;i<512;i++)EXP[i]=EXP[i-255];
+  const mul=(a,b)=>a&&b?EXP[LOG[a]+LOG[b]]:0;
+  function gen(n){let g=[1];for(let i=0;i<n;i++){const ng=new Array(g.length+1).fill(0);for(let j=0;j<g.length;j++){ng[j]^=g[j];ng[j+1]^=mul(g[j],EXP[i])}g=ng}return g}
+  function rs(data,n){const g=gen(n),r=data.concat(new Array(n).fill(0));for(let i=0;i<data.length;i++){const c=r[i];if(c)for(let j=0;j<g.length;j++)r[i+j]^=mul(g[j],c)}return r.slice(data.length)}
+  function bchFormat(d){let v=d<<10;for(let i=14;i>=10;i--)if(v>>i&1)v^=0x537<<(i-10);return ((d<<10)|v)^0x5412}
+  function bchVersion(vn){let v=vn<<12;for(let i=17;i>=12;i--)if(v>>i&1)v^=0x1f25<<(i-12);return (vn<<12)|v}
+  function make(text){
+    const bytes=[...new TextEncoder().encode(text)];
+    let ver=0;for(let v=1;v<=20;v++){const cap=V[v][2][0]*V[v][2][1]+V[v][2][2]*V[v][2][3];if(bytes.length+(v<10?2:3)<=cap){ver=v;break}}
+    if(!ver)return null;
+    const [total,ecn,[b1,d1,b2,d2]]=V[ver],cap=b1*d1+b2*d2;
+    const bits=[];const put=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push(v>>i&1)};
+    put(4,4);put(bytes.length,ver<10?8:16);bytes.forEach(b=>put(b,8));
+    put(0,Math.min(4,cap*8-bits.length));while(bits.length%8)bits.push(0);
+    const data=[];for(let i=0;i<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=b<<1|bits[i+j];data.push(b)}
+    for(let pad=0;data.length<cap;pad++)data.push(pad%2?0x11:0xEC);
+    const blocks=[],ecs=[];let k=0;
+    for(let i=0;i<b1+b2;i++){const n=i<b1?d1:d2;const blk=data.slice(k,k+n);k+=n;blocks.push(blk);ecs.push(rs(blk,ecn))}
+    const out=[];const mx=Math.max(d1,d2);for(let i=0;i<mx;i++)blocks.forEach(b=>{if(i<b.length)out.push(b[i])});for(let i=0;i<ecn;i++)ecs.forEach(e=>out.push(e[i]));
+    const N=ver*4+17,M=[],F=[];for(let i=0;i<N;i++){M.push(new Array(N).fill(0));F.push(new Array(N).fill(false))}
+    const set=(r,c,v)=>{M[r][c]=v?1:0;F[r][c]=true};
+    const finder=(r,c)=>{for(let i=-1;i<=7;i++)for(let j=-1;j<=7;j++){const rr=r+i,cc=c+j;if(rr<0||cc<0||rr>=N||cc>=N)continue;
+      const on=(i>=0&&i<=6&&(j===0||j===6))||(j>=0&&j<=6&&(i===0||i===6))||(i>=2&&i<=4&&j>=2&&j<=4);set(rr,cc,on)}};
+    finder(0,0);finder(0,N-7);finder(N-7,0);
+    const al=ALIGN[ver]||[];al.forEach(r=>al.forEach(c=>{if(F[r][c])return;for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++)set(r+i,c+j,Math.max(Math.abs(i),Math.abs(j))!==1)}));
+    for(let i=8;i<N-8;i++){if(!F[6][i])set(6,i,i%2===0);if(!F[i][6])set(i,6,i%2===0)}
+    set(N-8,8,1);
+    for(let i=0;i<9;i++){if(!F[8][i])F[8][i]=true;if(!F[i][8])F[i][8]=true}for(let i=0;i<8;i++){F[8][N-1-i]=true;F[N-1-i][8]=true}
+    if(ver>=7){for(let i=0;i<6;i++)for(let j=0;j<3;j++){F[i][N-11+j]=true;F[N-11+j][i]=true}}
+    const dbits=[];out.forEach(b=>{for(let i=7;i>=0;i--)dbits.push(b>>i&1)});
+    let bi=0,up=true;for(let c=N-1;c>0;c-=2){if(c===6)c--;for(let t=0;t<N;t++){const r=up?N-1-t:t;for(let d=0;d<2;d++){const cc=c-d;if(F[r][cc])continue;M[r][cc]=bi<dbits.length?dbits[bi]:0;bi++}}up=!up}
+    const MASK=[(r,c)=>(r+c)%2===0,(r)=>r%2===0,(r,c)=>c%3===0,(r,c)=>(r+c)%3===0,(r,c)=>(Math.floor(r/2)+Math.floor(c/3))%2===0,(r,c)=>r*c%2+r*c%3===0,(r,c)=>(r*c%2+r*c%3)%2===0,(r,c)=>((r+c)%2+r*c%3)%2===0];
+    function apply(m){const A=M.map(r=>r.slice());for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(!F[r][c]&&MASK[m](r,c))A[r][c]^=1;
+      const fb=bchFormat((1<<3)|m);   // level L = 01
+      const fbit=i=>fb>>i&1;
+      for(let i=0;i<=5;i++)A[i][8]=fbit(i);A[7][8]=fbit(6);A[8][8]=fbit(7);A[8][7]=fbit(8);for(let i=9;i<15;i++)A[8][14-i]=fbit(i);
+      for(let i=0;i<8;i++)A[8][N-1-i]=fbit(i);for(let i=8;i<15;i++)A[N-15+i][8]=fbit(i);
+      A[N-8][8]=1;
+      if(ver>=7){const vb=bchVersion(ver);for(let i=0;i<18;i++){const b=vb>>i&1,a=Math.floor(i/3),c2=i%3+N-11;A[a][c2]=b;A[c2][a]=b}}
+      return A}
+    function penalty(A){let p=0;for(let r=0;r<N;r++){let run=1;for(let c=1;c<N;c++){if(A[r][c]===A[r][c-1]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(let c=0;c<N;c++){let run=1;for(let r=1;r<N;r++){if(A[r][c]===A[r-1][c]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(let r=0;r<N-1;r++)for(let c=0;c<N-1;c++){const v=A[r][c];if(v===A[r][c+1]&&v===A[r+1][c]&&v===A[r+1][c+1])p+=3}
+      let dark=0;A.forEach(r=>r.forEach(v=>dark+=v));p+=Math.floor(Math.abs(dark*100/(N*N)-50)/5)*10;return p}
+    let best=null,bp=1e9;for(let m=0;m<8;m++){const A=apply(m),pp=penalty(A);if(pp<bp){bp=pp;best=A}}
+    return best;
+  }
+  function svg(text,px){const A=make(text);if(!A)return '';const N=A.length,q=4,S=N+q*2;let d='';
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(A[r][c])d+='M'+(c+q)+' '+(r+q)+'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+S+' '+S+'" width="'+px+'" height="'+px+'" shape-rendering="crispEdges"><rect width="'+S+'" height="'+S+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'}
+  return {make:make,svg:svg};
+})();
+
+/* ---------------- Nyx News Network (channel 5): local + national headlines from public news feeds ----------------
+   Shows only what publishers put in their RSS feeds (headline, source, short summary, thumbnail) and links out
+   to the full story; it never copies article text. */
+let NEWS=null,NEWSERR=null,NEWSAT=0,newsBusy=false;
+const SAMPLE_NEWS={local:[
+  {t:'Sample story: City council reviews plans for a new riverfront park',src:'Sample News',d:'This is an example of how a local story looks on Nyx News Network. On your TV, real headlines for your location appear here.',img:'',url:'',at:Date.now()-40*MIN},
+  {t:'Sample story: Weekend farmers market adds evening hours',src:'Sample News',d:'Another example story. Press OK on a real story to see more and get a link to the full article.',img:'',url:'',at:Date.now()-3*3600000},
+  {t:'Sample story: School district announces winter break schedule',src:'Sample News',d:'Example only.',img:'',url:'',at:Date.now()-6*3600000}],
+  nat:[{t:'Sample national headline: Storm system moves across the Plains',src:'Sample',d:'',img:'',url:'',at:Date.now()},{t:'Sample national headline: Holiday travel expected to set a record',src:'Sample',d:'',img:'',url:'',at:Date.now()}]};
+function newsMarket(){const ca=SET.region==='ca',l=SET.lang||'en';
+  if(ca)return l==='fr'?{mkt:'fr-CA',g:'hl=fr-CA&gl=CA&ceid=CA:fr'}:{mkt:'en-CA',g:'hl=en-CA&gl=CA&ceid=CA:en'};
+  return l==='es'?{mkt:'es-US',g:'hl=es-419&gl=US&ceid=US:es-419'}:{mkt:'en-US',g:'hl=en-US&gl=US&ceid=US:en'}}
+function stripHtml(h){const d=document.createElement('div');d.innerHTML=String(h||'');return (d.textContent||'').replace(/\s+/g,' ').trim()}
+function parseRss(xml){
+  const doc=new DOMParser().parseFromString(xml,'text/xml');const items=[...doc.getElementsByTagName('item')];
+  return items.map(it=>{const g=n=>{const e=it.getElementsByTagName(n)[0];return e?e.textContent.trim():''};
+    let t=stripHtml(g('title')),src=g('News:Source')||g('source')||'',link=g('link');
+    if(!src){const m=t.match(/^(.*) - ([^-]{2,60})$/);if(m){t=m[1];src=m[2]}}else if(t.endsWith(' - '+src))t=t.slice(0,-(src.length+3));
+    let img=g('News:Image');if(!img){const mc=it.getElementsByTagName('media:content')[0]||it.getElementsByTagName('media:thumbnail')[0]||it.getElementsByTagName('enclosure')[0];if(mc)img=mc.getAttribute('url')||''}
+    if(img&&/bing\.com\/th\?/.test(img))img=img.replace(/&amp;/g,'&')+'&w=640&h=360&c=7&rs=1';
+    try{const u=new URL(link);const real=u.searchParams.get('url');if(real&&/apiclick/.test(link))link=real}catch(e){}
+    let d=stripHtml(g('description'));if(d.indexOf(t)===0)d=d.slice(t.length).trim();if(src&&d.endsWith(src))d=d.slice(0,-src.length).trim();
+    if(d.length>300)d=d.slice(0,297).replace(/\s+\S*$/,'')+'…';   // feed summaries only, kept short
+    return {t:t,src:src,d:d,img:/^https:/.test(img)?img:'',url:/^https?:/.test(link)?link:'',at:Date.parse(g('pubDate'))||Date.now()}})
+    .filter(x=>x.t);
+}
+async function loadNews(){
+  if(!NATIVE||newsBusy)return;newsBusy=true;NEWSAT=Date.now();
+  const L=LOC(),m=newsMarket(),q=L.short.replace(/,/g,'');let local=[],nat=[];
+  try{local=parseRss(await http('https://www.bing.com/news/search?q='+encodeURIComponent(q)+'&format=rss&mkt='+m.mkt))}catch(e){}
+  if(local.length<3){try{local=parseRss(await http('https://news.google.com/rss/search?q='+encodeURIComponent(q+' when:2d')+'&'+m.g))}catch(e){}}
+  try{nat=parseRss(await http('https://news.google.com/rss?'+m.g))}catch(e){}
+  newsBusy=false;
+  if(!local.length&&!nat.length){NEWSERR='News unavailable right now.';NEWSAT=Date.now()-12*MIN}
+  else{local.sort((a,b)=>b.at-a.at);NEWS={local:local.slice(0,12),nat:nat.slice(0,12),loc:L.short,at:Date.now()};NEWSERR=null}
+  if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].news)render();
+}
+function newsData(){return NEWS||(NATIVE?null:SAMPLE_NEWS)}
+function newsStories(){const N=newsData();if(!N)return [];return N.local.length?N.local:N.nat}
+function newsIdx(){const L=newsStories();if(!L.length)return 0;if(S.nm)return Math.min(S.ni||0,L.length-1);return Math.floor((Date.now()-(S.newsT0||0))/10000)%L.length}
+function ago(t){const m=Math.max(1,Math.round((Date.now()-t)/60000));return m<60?T('{0} min ago',m):m<1440?T('{0} h ago',Math.round(m/60)):T('{0} d ago',Math.round(m/1440))}
+function nnnLogo(){return '<div class="nnlogo"><span>NNN</span>'+catSvg(30)+'</div>'}
+function newsPhoto(st,cls){return '<div class="'+cls+'"><div class="nph">'+nnnLogo()+'<em>'+esc(LOC().short)+'</em></div>'+(st.img?'<img src="'+esc(st.img)+'" alt="" onerror="this.remove()">':'')+'</div>'}
+function newsKey(k){const L=newsStories();if(!L.length)return false;
+  if(!S.nm){if(k==='ok'){S.nm=true;S.ni=newsIdx();snd.ok();render();return true}return false}
+  if(k==='left'||k==='right'){S.ni=(S.ni+(k==='left'?-1:1)+L.length)%L.length;snd.nav();render();return true}
+  if(k==='ok'||k==='back'){S.nm=false;S.newsT0=Date.now()-S.ni*10000;snd.back();render();return true}
+  if(k==='up'||k==='down'||k==='chup'||k==='chdn'){S.nm=false;return false}
+  return true}
+function newsHTML(){
+  const N=newsData(),L=newsStories(),i=newsIdx(),st=L[i];
+  let h='<div class="nnc"></div><div class="wxtop nntop"><div class="wxbrand">'+nnnLogo()+'<b>'+T('Nyx News Network')+'</b><span>'+esc(LOC().short)+'</span></div>'+
+    (THEME&&THEME.greet?'<div class="wxgreet">'+decoIcon(0,22)+' '+esc(THEME.greet)+' '+decoIcon(1,22)+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
+  if(!st){h+='<div class="box bevel" style="left:200px;top:170px;width:520px"><h3>'+T('Nyx News Network')+'</h3><p>'+(NEWSERR?T(NEWSERR):T('Loading the news…'))+'</p></div>'}
+  else if(!S.nm){
+    h+='<div class="wxseg"><b>'+T(N.local.length?'Local News':'National Headlines')+'</b><span class="dots">'+L.slice(0,10).map((x,j)=>'<i class="'+(j===i?'on':'')+'"></i>').join('')+'</span></div>'+
+      newsPhoto(st,'nnimg')+'<div class="nntext"><div class="lbl">'+esc(st.src)+' · '+ago(st.at)+'</div><h2>'+esc(st.t)+'</h2>'+(st.d?'<p>'+esc(st.d)+'</p>':'')+'</div>'+
+      '<div class="nnhint">'+(TOUCH?T('Tap the story for more'):T('OK: More on this story'))+'</div>'}
+  else{
+    h+='<div class="nnmore bevel">'+newsPhoto(st,'nnimg2')+'<div class="nnmt"><div class="lbl">'+T('Story {0} of {1}',i+1,L.length)+' · '+esc(st.src)+' · '+ago(st.at)+'</div><h2>'+esc(st.t)+'</h2><p>'+esc(st.d||T('The source didn’t include a summary for this story.'))+'</p></div>'+
+      (st.url?'<div class="nnqr">'+QR.svg(st.url,150)+'<span>'+T('Scan to read the full story on your phone')+'</span>'+(TOUCH&&NATIVE&&NATIVE.openUrl?'<button type="button" class="nnopen" data-open="1">'+T('Open in browser')+'</button>':'')+'</div>':'')+
+      '<div class="nnnav"><span>◀ ▶ '+T('Stories')+'</span><span>OK / BACK '+T('Close')+'</span></div></div>'}
+  const tk=[];if(N){const a=N.local.slice(0,8),b=N.nat.slice(0,8);for(let j=0;j<Math.max(a.length,b.length);j++){if(a[j])tk.push('<b>'+T('LOCAL')+'</b> '+esc(a[j].t));if(b[j])tk.push('<b>'+T(SET.region==='ca'?'CANADA':'NATIONAL')+'</b> '+esc(b[j].t))}}
+  const txt=tk.join(' • ')||T('Loading the news…'),dur=Math.max(30,txt.replace(/<[^>]+>/g,'').length*.15);
+  h+='<div class="ticker nntk"><span class="nntag">NNN</span><div style="animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+((Date.now()/1000)%dur).toFixed(2)+'s">'+txt+'</div></div>';
+  return h}
+
 /* reminders: pop up when a reminded show starts */
 function checkReminders(){
   const now=Date.now();
@@ -2260,7 +2426,7 @@ function checkReminders(){
       S.dialog.onOk=()=>{if(CH[ci].pluto&&SET.plutoPlay!=='box')launchPluto(ci);else{S.screen='watch';tune(ci)}}}
     else if(st<now-10*MIN)S.reminders.delete(key)});
 }
-setInterval(()=>{checkReminders();if(NATIVE&&UPD.checkedAt&&Date.now()-UPD.checkedAt>12*3600000)checkUpdate(false);if(new Date().toDateString()!==THEME_DAY){applyTheme();render()}if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
+setInterval(()=>{checkReminders();if(NATIVE&&Date.now()-NEWSAT>15*MIN)loadNews();if(NATIVE&&UPD.checkedAt&&Date.now()-UPD.checkedAt>12*3600000)checkUpdate(false);if(new Date().toDateString()!==THEME_DAY){applyTheme();render()}if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
 
 applyTheme();
 /* Android TV integration: the app forwards remote buttons here */
@@ -2282,7 +2448,7 @@ window.cable={
     applyStream()}
 };
 render();
-if(NATIVE){loadWeather();loadPluto();setTimeout(()=>checkUpdate(false),15000);
+if(NATIVE){loadWeather();loadPluto();setTimeout(loadNews,4000);setTimeout(()=>checkUpdate(false),15000);
   setTimeout(()=>{const st=musicStyle();if(MSTY[st]&&NATIVE.jazzPlay&&!NATIVE.jazzReady(st)&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn(st).then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
 })();
 </script>

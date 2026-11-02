@@ -458,6 +458,16 @@ class MainActivity : AppCompatActivity() {
             }.start()
         }
 
+        /** Opens a news story in the device's web browser (tablet). False if there's no browser. */
+        @JavascriptInterface
+        fun openUrl(url: String): Boolean {
+            if (!url.startsWith("http")) return false
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (intent.resolveActivity(packageManager) == null) return false
+            runOnUiThread { try { startActivity(intent) } catch (e: Exception) {} }
+            return true
+        }
+
         /** Opens a web link (e.g. a YouTube search) in the first installed app from the list. False if none took it. */
         @JavascriptInterface
         fun openLink(pkgsJson: String, url: String): Boolean {

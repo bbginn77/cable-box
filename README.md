@@ -6,6 +6,8 @@ channel playing inside the box; the main menu shows local radar and current cond
 Channel 4 is NyxVision Weather: radar, current conditions, the extended forecast and alerts for the
 place set in Settings → Weather Location (US ZIP, Canadian postal code or city), with seasonal music
 (press OK on it). US forecasts come from the National Weather Service, others from Open-Meteo.
+Channel 5 is Nyx News Network: local stories for the Weather Location and national headlines from
+public news feeds (headline, source, short feed summary, photo). OK shows more and a QR code to the full story.
 Holiday themes switch on by themselves for 40+ holidays; manage them in Settings → Holiday Themes. It opens your real
 streaming apps: DIRECTV, Netflix, YouTube, Hulu, Disney+, HBO Max, Paramount+ and Peacock.
 
