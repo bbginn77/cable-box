@@ -11,8 +11,8 @@ android {
         applicationId = "com.retrocable.box"
         minSdk = 26
         targetSdk = 34
-        versionCode = 4
-        versionName = "0.4"
+        versionCode = 5
+        versionName = "0.5"
     }
 
     // A fixed signing key, so each new build installs over the old one

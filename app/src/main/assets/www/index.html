@@ -18,11 +18,9 @@
   --display:"Archivo","Arial Black",Helvetica,sans-serif;
   --ui:"Archivo Narrow","Arial Narrow",Helvetica,Arial,sans-serif;
   color-scheme:dark;
+  --khi1:#ffe45c;--khi2:#f2c200;--khil:#fff6b8;--khid:#8a6c00;--khink:#5a4500;
   --k041040:#041040;--k050f3a:#050f3a;--k06123f:#06123f;--k061650:#061650;--k071a55:#071a55;--k081a58:#081a58;--k081a5c:#081a5c;--k082063:#082063;--k0a1a55:#0a1a55;--k0b2268:#0b2268;--k0b2569:#0b2569;--k0d2a7c:#0d2a7c;--k0e2780:#0e2780;--k0f2569:#0f2569;--k0f2672:#0f2672;--k10093a:#10093a;--k12318a:#12318a;--k143a96:#143a96;--k173586:#173586;--k173f9e:#173f9e;--k183689:#183689;--k1a1460:#1a1460;--k1a3a92:#1a3a92;--k1d3ea6:#1d3ea6;--k2148b4:#2148b4;--k2348b0:#2348b0;--k24164f:#24164f;--k2a4aa4:#2a4aa4;--k2a4fae:#2a4fae;--k2a4fb4:#2a4fb4;--k2a58c0:#2a58c0;--k2a62c9:#2a62c9;--k5b44b0:#5b44b0;--k6f9cf0:#6f9cf0;--k7fa8f5:#7fa8f5;--k86acf4:#86acf4;--k8a80e0:#8a80e0;--k8fb3f5:#8fb3f5;--k9ec0ff:#9ec0ff;--kc9c4ff:#c9c4ff;--kdfe8ff:#dfe8ff;--ke6ecff:#e6ecff;--kwxnow:rgba(6,20,80,.55);
 }
-/* Thanksgiving theme: harvest browns, burnt orange, cranberry and gold */
-.fall{--k041040:#1f0a03;--k050f3a:#1e0a04;--k06123f:#241005;--k061650:#2a1006;--k071a55:#2e1207;--k081a58:#2c1207;--k081a5c:#3e1709;--k082063:#2a0f05;--k0a1a55:#2e1207;--k0b2268:#4a1e0a;--k0b2569:#3e1709;--k0d2a7c:#5a2410;--k0e2780:#6a2c10;--k0f2569:#3c1a0b;--k0f2672:#7a3010;--k10093a:#2a0808;--k12318a:#7a3412;--k143a96:#6e2c10;--k173586:#6b2e10;--k173f9e:#7a3412;--k183689:#5a2a12;--k1a1460:#3d0c0c;--k1a3a92:#7a3412;--k1d3ea6:#b5531d;--k2148b4:#a8501c;--k2348b0:#a3471a;--k24164f:#4a1a2a;--k2a4aa4:#6e3418;--k2a4fae:#8e3e16;--k2a4fb4:#9a4a1a;--k2a58c0:#a8501c;--k2a62c9:#b8641f;--k5b44b0:#8e4a5e;--k6f9cf0:#e08a4a;--k7fa8f5:#e39a5f;--k86acf4:#f0a96b;--k8a80e0:#d98a7a;--k8fb3f5:#f3b07a;--k9ec0ff:#f2b27c;--kc9c4ff:#f0c4b4;--kdfe8ff:#ffeedd;--ke6ecff:#fff1e2;--kwxnow:rgba(40,14,4,.6);
-  --cell:#7a2626;--cellNow:#b5531d;--chan:#3b1d0e;--ice:#f6cf8f;--dim:#ecd3b6;--hi:#f5b83a}
 body{background:var(--room);color:var(--text);font-family:var(--ui);
   padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:16px}
 .app{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:18px;max-width:1380px;margin:0 auto;align-items:start}
@@ -61,12 +59,12 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .mi{height:44px;display:flex;align-items:center;padding:0 16px;font:700 22px var(--ui);letter-spacing:.02em;background:linear-gradient(var(--k2348b0),var(--k173586));
   border:2px solid;border-color:var(--k86acf4) var(--k0a1a55) var(--k0a1a55) var(--k86acf4);color:#fff;text-shadow:1px 1px 0 var(--k041040);gap:12px}
 .mi .n{font:800 15px var(--display);color:var(--ice);width:20px}
-.mi.hi{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);text-shadow:none;border-color:#fff6b8 #8a6c00 #8a6c00 #fff6b8}
-.mi.hi .n{color:#5a4500}
+.mi.hi{background:linear-gradient(var(--khi1),var(--khi2));color:var(--hiText);text-shadow:none;border-color:var(--khil) var(--khid) var(--khid) var(--khil)}
+.mi.hi .n{color:var(--khink)}
 .mi .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mi .v{margin-left:auto;font-weight:600;font-size:19px}
 .mi .star{margin-left:auto;color:var(--hi);font-size:20px}
-.mi.hi .star{color:#7a5a00}
+.mi.hi .star{color:var(--khink)}
 .box{position:absolute;background:linear-gradient(var(--k183689),var(--k0f2569));padding:16px 18px}
 .box h3{margin:0 0 8px;font:800 22px var(--display);letter-spacing:.01em}
 .box p{margin:0 0 8px;font:500 17px/1.35 var(--ui);color:var(--dim)}
@@ -94,11 +92,11 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .cell{position:absolute;top:0;height:38px;box-sizing:border-box;background:var(--cell);border:1px solid;border-color:var(--k8a80e0) var(--k1a1460) var(--k1a1460) var(--k8a80e0);
   display:flex;align-items:center;padding:0 9px;font:700 17px var(--ui);white-space:nowrap;overflow:hidden;text-shadow:1px 1px 0 var(--k10093a)}
 .cell.now{background:var(--cellNow);border-color:var(--k8fb3f5) var(--k0a1a55) var(--k0a1a55) var(--k8fb3f5);text-shadow:1px 1px 0 var(--k041040)}
-.cell.hi{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);text-shadow:none;border-color:#fff6b8 #8a6c00 #8a6c00 #fff6b8}
+.cell.hi{background:linear-gradient(var(--khi1),var(--khi2));color:var(--hiText);text-shadow:none;border-color:var(--khil) var(--khid) var(--khid) var(--khil)}
 .cell .ar{color:var(--ice);margin-right:5px;font-size:13px}
-.cell.hi .ar{color:#6b5000}
+.cell.hi .ar{color:var(--khink)}
 .cell .rm{margin-left:6px;color:var(--hi)}
-.cell.hi .rm{color:#7a2a00}
+.cell.hi .rm{color:var(--khink)}
 .lockedrow .cell{color:var(--kc9c4ff)}
 .grow.pl .gch{background:var(--k24164f);border-color:var(--k5b44b0)}
 .grow.pl .gch b{font-size:16px;width:34px}
@@ -124,7 +122,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 
 /* dialog */
 .dlg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;background:linear-gradient(var(--k183689),var(--k0f2569));border:2px solid;border-color:var(--k9ec0ff) var(--k061650) var(--k061650) var(--k9ec0ff);box-shadow:0 10px 0 rgba(0,0,0,.45)}
-.dlg .t{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);font:800 19px var(--display);padding:8px 14px;letter-spacing:.02em}
+.dlg .t{background:linear-gradient(var(--khi1),var(--khi2));color:var(--hiText);font:800 19px var(--display);padding:8px 14px;letter-spacing:.02em}
 .dlg .b{padding:16px 18px;font:500 18px/1.4 var(--ui);color:var(--ke6ecff)}
 .dlg .b small{display:block;margin-top:10px;font-size:15px;color:var(--dim)}
 .wait{display:inline-block;width:14px;height:14px;border:3px solid var(--ice);border-right-color:transparent;border-radius:50%;animation:sp 1s steps(8) infinite;vertical-align:-2px;margin-right:8px}
@@ -176,15 +174,27 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
   .dpad{grid-column:1;grid-row:2 / span 2}
   .chv{grid-column:2}
 }
-/* seasonal decorations (only in the Thanksgiving theme) */
+/* holiday decorations (only while a holiday theme is active) */
 .deco{display:none;position:absolute;pointer-events:none}
-.fall .deco{display:block}
+.themed .deco{display:block}
 .bg .deco{opacity:.16}
 .hdr .deco{position:static;display:none}
-.fall .hdr .deco{display:inline-block}
+.themed .hdr .deco{display:inline-block}
 .hdrmid{display:flex;align-items:center;gap:10px}
+.emo{font-family:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;line-height:1;display:inline-block}
+.emo.txt{font-family:var(--display);font-weight:900;color:var(--hi)}
+/* metro Atlanta radar channel */
+.rfull{position:absolute;inset:0;background:#0a0d12}
+.rfull img,.rfull canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.rtop{position:absolute;left:0;right:0;top:0;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:linear-gradient(var(--k1d3ea6),var(--k0f2672));border-bottom:2px solid var(--k6f9cf0)}
+.rtop b{font:900 20px var(--display);letter-spacing:.04em;text-transform:uppercase;text-shadow:2px 2px 0 var(--k041040)}
+.rbot{position:absolute;left:22px;bottom:20px;display:flex;gap:10px;align-items:center;padding:8px 14px;background:var(--kwxnow);border:2px solid var(--k9ec0ff);font:700 16px var(--ui)}
+.rbot .mus{color:var(--hi)}
+/* holiday themes screen */
+.sw{display:inline-block;width:26px;height:26px;border:2px solid rgba(255,255,255,.6);margin-right:6px}
+.motifs{font-size:40px;display:flex;gap:14px;margin:10px 0 14px}
 .ftr .deco{position:static;margin-left:auto}
-.fall .ftr .deco{display:flex;gap:6px;align-items:flex-end}
+.themed .ftr .deco{display:flex;gap:6px;align-items:flex-end}
 /* main menu weather widgets */
 .radar{position:absolute;overflow:hidden;background:#0b0f14}
 .radar img,.radar canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
@@ -339,16 +349,20 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',theme:'auto'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false};
 CH.forEach(c=>c.key='v'+c.n);
-if(window.CableNative)CH.length=0; // TV app: only channels with real video (Pluto TV)
+// Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
+const RADAR_CH={n:4,call:'WXRD',name:'Metro Atlanta Radar',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)RADAR_CH.sched.push({title:'Metro Atlanta Doppler Radar',start:t,end:t+SLOT,rating:'',desc:'The latest radar loop for metro Atlanta from the National Weather Service. While watching, press OK to turn smooth jazz on or off.'});
+if(window.CableNative){CH.length=0;CH.push(RADAR_CH)} // TV app: radar + real Pluto TV channels only
+else CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;
 const BASE=CH.length; // demo channels exist only in the browser preview
 const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
 let SET=Object.assign({},DEF), FAV=DEF_FAV();
 try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(Array.isArray(j.fav)&&j.fav.every(x=>typeof x==='string'))FAV=new Set(j.fav)}}catch(e){}
 function save(){try{localStorage.setItem('cablebox',JSON.stringify({set:SET,fav:[...FAV]}))}catch(e){}}
 
-const S={screen:'home',prev:'home',ch:CH.length?0:-1,last:CH.length?0:-1,idx:{home:0,apps:0,od:0,my:0,set:0,more:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
+const S={screen:'home',prev:'home',ch:(!window.CableNative||(function(){try{return localStorage.getItem('cablebox-lastch')}catch(e){return null}})()==='radar')?0:-1,last:-1,idx:{home:0,apps:0,od:0,my:0,set:0,more:0,themes:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
 
 const HOME=[
  {label:'Watch TV',to:'watch',desc:'Return to full-screen television on your current channel.'},
@@ -395,6 +409,7 @@ function loadInstalled(){
 }
 function appByLabel(l){return APPS.find(a=>a.label===l)}
 const SAMPLE_MORE=['Spotify','Pluto TV','Tubi','Plex','Twitch','Google Play Store'].map(l=>({label:l,pkg:null,sample:true}));
+function themeList(){return [{master:true,label:'Holiday Themes'}].concat(THEMES)}
 function moreList(){if(!NATIVE)return SAMPLE_MORE;const mine=APPS.filter(a=>a.pkg).map(a=>a.pkg);const l=INSTALLED.filter(x=>mine.indexOf(x.pkg)<0);return l.length?l:[{label:'No other apps found',pkg:null}]}
 const SETS=[
  {k:'sound',label:'Navigation Sounds',vals:[true,false],names:['On','Off'],desc:'The short beeps you hear when you press remote buttons.'},
@@ -405,7 +420,8 @@ const SETS=[
  {k:'pluto',label:'Pluto TV Listings',vals:[true,false],names:['On','Off'],desc:'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.'},
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
- {k:'theme',label:'Theme',vals:['auto','fall','blue'],names:['Seasonal','Thanksgiving','Classic Blue'],desc:'Seasonal uses the Thanksgiving colors in November and classic cable blue the rest of the year.'},
+ {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
+ {k:'jazz',label:'Radar Channel Music',vals:[false,true],names:['Off','Smooth Jazz'],desc:'Soft jazz that plays while you watch the Metro Atlanta Radar channel. You can also press OK on that channel to switch it.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
 ];
 
@@ -508,9 +524,10 @@ function press(k){
   if(k==='last'){snd.ok();const l=S.last;if(S.screen!=='watch')S.screen='watch';tune(l);return}
   const sc=S.screen;
   if(k==='back'){snd.back();if(sc==='watch'){tune(S.last);return}
-    if(sc==='home'){go('watch');return} if(sc==='wx'||sc==='more'){go('apps');return} if(sc==='guide'){go('watch');return} go('home');return}
+    if(sc==='home'){go('watch');return} if(sc==='wx'||sc==='more'){go('apps');return} if(sc==='themes'){go('set');return} if(sc==='guide'){go('watch');return} go('home');return}
   if(sc==='watch'){
     if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
+    if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){SET.jazz=!SET.jazz;save();snd.ok();updateJazz();render();return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     if(k==='left'){snd.ok();go('home');return}
@@ -520,6 +537,17 @@ function press(k){
   }
   if(sc==='guide'){if(k==='info'){const f=gFocus();snd.nav();dialog(esc(f.p.title),esc(f.p.desc)+'<small>Ch '+CH[f.ci].n+' '+CH[f.ci].call+' · '+fmtT(f.p.start)+'–'+fmtT(f.p.end)+' · '+f.p.rating+'</small>');return}guideKey(k);return}
   if(sc==='wx'){return}
+  if(sc==='themes'){const L=themeList();let i=S.idx.themes;
+    if(k==='up'||k==='down'){const ni=i+(k==='up'?-1:1);if(ni<0||ni>=L.length){snd.bump();return}S.idx.themes=ni;snd.nav();render();return}
+    if(k==='chup'||k==='chdn'){S.idx.themes=Math.max(0,Math.min(L.length-1,i+(k==='chup'?-8:8)));snd.nav();render();return}
+    if(k==='left'||k==='right'||k==='ok'){const it=L[i];
+      if(it.master)SET.themesOn=!SET.themesOn;
+      else{const order=['auto','off','force'],st=themeState(it.id);let j=(order.indexOf(st)+(k==='left'?-1:1)+3)%3;
+        SET.themeState=Object.assign({},SET.themeState);
+        if(order[j]==='force')Object.keys(SET.themeState).forEach(id=>{if(SET.themeState[id]==='force')delete SET.themeState[id]});
+        if(order[j]==='auto')delete SET.themeState[it.id];else SET.themeState[it.id]=order[j];}
+      save();snd.nav();applyTheme();render();return}
+    return}
   // list screens
   const lists={home:HOME,apps:APPS,od:OD,my:CH,set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
   let i=S.idx[sc];
@@ -527,8 +555,9 @@ function press(k){
   if(k==='chup'||k==='chdn'){S.idx[sc]=Math.max(0,Math.min(list.length-1,i+(k==='chup'?-5:5)));snd.nav();render();return}
   const it=list[i];
   if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
-    if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF);FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='theme'){applyTheme();render()}return}
+    if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
+    if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF,{themeState:{}});FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -569,16 +598,20 @@ function radarSrc(){radarAt=Date.now();radarFail=false;radarImg.hidden=false;rad
   radarImg.src='https://radar.weather.gov/ridge/standard/'+RADARS[radarIdx]+'_loop.gif?t='+Math.floor(Date.now()/600000)}
 radarImg.onerror=()=>{if(radarIdx<RADARS.length-1){radarIdx++;radarSrc()}else{radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'}};
 if(window.CableNative)radarSrc();else{radarFail=true;radarImg.hidden=true;radarDot.hidden=false;radarLbl.textContent='SAMPLE RADAR'}
-function drawRadarSample(ctx,t){const w=288,h=216;ctx.fillStyle='#1b2433';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#3c4b66';ctx.lineWidth=1;
+const radarFull=document.createElement('div');radarFull.style.cssText='position:absolute;inset:0';
+const radarFullImg=document.createElement('img');radarFullImg.alt='';
+const radarFullCv=document.createElement('canvas');radarFullCv.width=480;radarFullCv.height=270;
+radarFull.append(radarFullCv,radarFullImg);
+let radarFullFail=!window.CableNative,radarFullAt=0;
+function radarFullSrc(){radarFullAt=Date.now();radarFullFail=false;radarFullImg.hidden=false;radarFullCv.hidden=true;radarFullImg.src='https://radar.weather.gov/ridge/standard/KFFC_loop.gif?t='+Math.floor(Date.now()/300000)}
+radarFullImg.onerror=()=>{radarFullFail=true;radarFullImg.hidden=true;radarFullCv.hidden=false;if(S.screen==='watch')render()};
+if(window.CableNative)radarFullSrc();else{radarFullImg.hidden=true}
+function drawRadarSample(ctx,t,w,h){w=w||288;h=h||216;ctx.save();ctx.scale(w/288,h/216);w=288;h=216;ctx.fillStyle='#1b2433';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#3c4b66';ctx.lineWidth=1;
   for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(i*48,0);ctx.lineTo(i*48+20,h);ctx.stroke()}ctx.beginPath();ctx.moveTo(0,90);ctx.bezierCurveTo(90,70,180,120,288,96);ctx.stroke();
-  const blobs=[['#3fd36b',46],['#e8d53a',24],['#e2493a',10]];for(let j=0;j<3;j++){const bx=((t*10+j*120)%420)-60,by=60+j*48;blobs.forEach(([cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}}
+  const blobs=[['#3fd36b',46],['#e8d53a',24],['#e2493a',10]];for(let j=0;j<3;j++){const bx=((t*10+j*120)%420)-60,by=60+j*48;blobs.forEach(([cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}ctx.restore()}
 const ui=$('#ui');
-const hdr=t=>'<div class="hdr"><div class="brand"><svg class="cat" viewBox="0 0 32 30" width="32" height="30" aria-hidden="true"><path d="M4 13 L5 1 L13 8 Z M28 13 L27 1 L19 8 Z" fill="#3b2618" stroke="#041040" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5.5 L7.6 10 L10.5 8 Z M25 5.5 L24.4 10 L21.5 8 Z" fill="#c98f8a"/><ellipse cx="16" cy="17" rx="13" ry="11.5" fill="#efe2c8" stroke="#041040" stroke-width="1.2"/><path d="M16 9.5 C10 10 6.5 15 7.5 20 C9 26 23 26 24.5 20 C25.5 15 22 10 16 9.5 Z" fill="#4a2f1e"/><path d="M8.6 15.6 Q11.6 13.4 14 16 Q11.2 17.6 8.6 15.6 Z M23.4 15.6 Q20.4 13.4 18 16 Q20.8 17.6 23.4 15.6 Z" fill="#4fb6ff"/><path d="M11.4 15.2 v1.2 M20.6 15.2 v1.2" stroke="#06113d" stroke-width="1.3" stroke-linecap="round"/><path d="M14.6 19.4 h2.8 l-1.4 1.6 Z" fill="#d79a9a"/><path d="M16 21 v1.2 M16 22.2 q-1.6 1.2 -3 .4 M16 22.2 q1.6 1.2 3 .4" stroke="#1a0f08" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M4 19.5 l5 .6 M4 22 l5 -.4 M28 19.5 l-5 .6 M28 22 l-5 -.4" stroke="#efe2c8" stroke-width=".8" stroke-linecap="round"/></svg><b>NyxVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="hdrmid"><svg class="deco" width="20" height="20" style="fill:#e3a92b;transform:rotate(-20deg)"><use href="#leaf"/></svg><div class="title">'+t+'</div><svg class="deco" width="20" height="20" style="fill:#d9661f;transform:rotate(25deg)"><use href="#oak"/></svg></div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
-const ftr=items=>'<div class="ftr">'+items.map(x=>'<span>'+x+'</span>').join('')+'<span class="deco"><svg width="26" height="24"><use href="#pumpkin"/></svg><svg width="28" height="28"><use href="#turkey"/></svg><svg width="20" height="20" style="fill:#b8322a"><use href="#leaf"/></svg></span></div>';
-const LEAVES=[[18,410,90,'#d9661f',-25,'leaf'],[870,80,70,'#e3a92b',30,'oak'],[905,420,60,'#b8322a',15,'leaf'],[400,470,46,'#e3a92b',-40,'oak'],[300,60,40,'#b8322a',50,'leaf']];
-function bgDeco(){return LEAVES.map(l=>'<svg class="deco" width="'+l[2]+'" height="'+l[2]+'" style="left:'+l[0]+'px;top:'+l[1]+'px;fill:'+l[3]+';transform:rotate('+l[4]+'deg)"><use href="#'+l[5]+'"/></svg>').join('')}
-function applyTheme(){const fall=SET.theme==='fall'||(SET.theme==='auto'&&new Date().getMonth()===10);document.documentElement.classList.toggle('fall',fall)}
-applyTheme();
+const hdr=t=>'<div class="hdr"><div class="brand"><svg class="cat" viewBox="0 0 32 30" width="32" height="30" aria-hidden="true"><path d="M4 13 L5 1 L13 8 Z M28 13 L27 1 L19 8 Z" fill="#3b2618" stroke="#041040" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5.5 L7.6 10 L10.5 8 Z M25 5.5 L24.4 10 L21.5 8 Z" fill="#c98f8a"/><ellipse cx="16" cy="17" rx="13" ry="11.5" fill="#efe2c8" stroke="#041040" stroke-width="1.2"/><path d="M16 9.5 C10 10 6.5 15 7.5 20 C9 26 23 26 24.5 20 C25.5 15 22 10 16 9.5 Z" fill="#4a2f1e"/><path d="M8.6 15.6 Q11.6 13.4 14 16 Q11.2 17.6 8.6 15.6 Z M23.4 15.6 Q20.4 13.4 18 16 Q20.8 17.6 23.4 15.6 Z" fill="#4fb6ff"/><path d="M11.4 15.2 v1.2 M20.6 15.2 v1.2" stroke="#06113d" stroke-width="1.3" stroke-linecap="round"/><path d="M14.6 19.4 h2.8 l-1.4 1.6 Z" fill="#d79a9a"/><path d="M16 21 v1.2 M16 22.2 q-1.6 1.2 -3 .4 M16 22.2 q1.6 1.2 3 .4" stroke="#1a0f08" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M4 19.5 l5 .6 M4 22 l5 -.4 M28 19.5 l-5 .6 M28 22 l-5 -.4" stroke="#efe2c8" stroke-width=".8" stroke-linecap="round"/></svg><b>NyxVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="hdrmid">'+decoIcon(0,22)+'<div class="title">'+t+'</div>'+decoIcon(1,22)+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
+const ftr=items=>'<div class="ftr">'+items.map(x=>'<span>'+x+'</span>').join('')+footDeco()+'</div>';
 
 function menuHTML(list,sel,x,y,w,fmt,max){
   max=max||list.length;let start=Math.max(0,Math.min(sel-Math.floor(max/2),list.length-max));
@@ -602,19 +635,21 @@ function render(){
     h+='<div class="lock"><div class="box bevel"><h3>'+(PLUTO_ERR||!SET.pluto?'No Channels':'Tuning In…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to get channels.':PLUTO_ERR?esc(PLUTO_ERR)+' Press ◀ for the main menu.':'Loading the channel lineup. This takes a few seconds.')+'</p></div></div>';
   }
   else if(sc==='watch'){
+    if(CH[S.ch].radar){h+='<div class="rfull radar-full-slot"></div><div class="rtop"><b>Metro Atlanta Doppler Radar</b><span class="clk">'+clockStr()+'</span></div>'+
+      '<div class="rbot"><span>'+(radarFullFail?'Sample radar \u00B7 live loop unavailable':'NWS Peachtree City \u00B7 KFFC loop')+'</span><span class="mus">\u266A Jazz '+(SET.jazz?'On':'Off')+'</span><span>OK to switch</span></div>'}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>Ch '+CH[S.ch].n+' '+CH[S.ch].call+' is blocked by Parental Controls. Turn them off in Settings to watch.</p></div></div>';
     if(Date.now()<S.bannerUntil||S.entry){
       const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
       h+='<div class="banner"><div class="num"><b>'+c.n+'</b><span>'+c.call+'</span></div><div class="mid"><h2>'+esc(p.title)+'</h2>'+
         '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
         '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">Next: '+esc(nx.title)+' at '+fmtT(nx.start)+'</div></div>'+
-        '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(isFav(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl">OK Guide · ◀ Menu</div></div></div>';
+        '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(isFav(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl" style="white-space:nowrap;letter-spacing:.06em">'+(CH[S.ch].radar?'OK Jazz':'OK Guide')+' \u00B7 \u25C0 Menu</div></div></div>';
     }
     if(S.entry)h+='<div class="entry">'+S.entry+(S.entry.length<3?'-':'')+'</div>';
   }
   else if(sc==='home'){
     const it=HOME[S.idx.home];
-    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Main Menu')+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr(THEME&&THEME.greet?esc(THEME.greet):'Main Menu')+
       menuHTML(HOME,S.idx.home,40,78,360,(x,i)=>'<span class="n">'+(i+1)+'</span>'+x.label)+
       '<div class="box bevel" style="left:40px;top:412px;width:324px;padding-block:10px"><p style="margin:0;font-size:16px">'+it.desc+'</p></div>'+
       '<div class="pv bevel pv-slot" style="left:448px;top:62px;width:288px;height:162px;position:absolute"></div>'+
@@ -655,15 +690,30 @@ function render(){
   }
   else if(sc==='set'){
     const it=SETS[S.idx.set];
-    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?'':'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'))+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
       '<div class="box bevel" style="left:580px;top:66px;width:304px;height:240px"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
       '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT prototype v0.1<br>Guide data: sample lineup</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>Main Menu']);
   }
   else if(sc==='wx'){h+=wxHTML()}
+  else if(sc==='themes'){
+    const L=themeList(),i=Math.min(S.idx.themes,L.length-1),it=L[i],cur=pickTheme(new Date());
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Holiday Themes')+menuHTML(L,i,40,62,500,x=>{
+      if(x.master)return '<span class="t">Holiday Themes</span><span class="v">◀ '+(SET.themesOn?'On':'Off')+' ▶</span>';
+      const st=themeState(x.id);return '<span class="t">'+(cur===x?'★ ':'')+esc(x.name)+'</span><span class="v">◀ '+(st==='auto'?'Auto':st==='off'?'Off':'On Now')+' ▶</span>'},8);
+    if(it.master)h+='<div class="box bevel" style="left:580px;top:62px;width:304px;height:386px"><h3>Holiday Themes</h3><p>When on, NyxVision changes its colors and decorations by itself on each holiday.</p><p>Today: <b style="color:#fff">'+(cur?esc(cur.name):'Classic Blue')+'</b></p><p>Set a holiday to <b style="color:#fff">Off</b> to skip it, or <b style="color:#fff">On Now</b> to use it today.</p></div>';
+    else{const pl=it.pal,st=themeState(it.id);
+      h+='<div class="box bevel" style="left:580px;top:62px;width:304px;height:386px"><div class="lbl">'+(it.range?'Runs':'Date')+'</div><h3 style="margin-top:4px">'+esc(it.name)+'</h3><p style="color:#fff;margin-bottom:4px">'+themeDates(it)+'</p>'+
+        '<div class="motifs">'+it.motifs.map(m=>motifHTML(m,40,'position:static;display:inline-block')).join('')+'</div>'+
+        '<div>'+[pl.b,pl.p,pl.h,pl.c,pl.n,pl.hi].map(c=>'<span class="sw" style="background:'+c+'"></span>').join('')+'</div>'+
+        '<p style="margin-top:12px">'+(st==='auto'?'Turns on by itself on its date'+(it.range?'s':'')+'.':st==='off'?'Skipped. This holiday won’t change the look.':'On now, whatever the date. Switch back to Auto to end it.')+'</p></div>';}
+    h+=ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Auto / Off / On Now','<i>BACK</i>Settings']);
+  }
   if(S.dialog)h+='<div class="dlg"><div class="t">'+S.dialog.title+'</div><div class="b">'+S.dialog.body+'</div></div>';
   ui.innerHTML=h;
   const slot=ui.querySelector('.pv-slot');if(slot)slot.appendChild(pv);
+  const rf=ui.querySelector('.radar-full-slot');if(rf){rf.appendChild(radarFull);if(NATIVE&&Date.now()-radarFullAt>5*MIN)radarFullSrc()}
+  updateJazz();
   const rs=ui.querySelector('.radar-slot');if(rs){rs.appendChild(radarBox);if(NATIVE&&Date.now()-radarAt>10*MIN){radarIdx=0;radarSrc()}}
   syncVideo();
   clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
@@ -795,6 +845,8 @@ function drawScene(ctx,w,h,ci,t){
   case 'stage':{ctx.fillStyle='#120a14';ctx.fillRect(0,0,w,h);const g=ctx.createRadialGradient(240,230,10,240,200,170);g.addColorStop(0,'rgba(255,240,200,.75)');g.addColorStop(1,'rgba(255,240,200,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(200,0);ctx.lineTo(280,0);ctx.lineTo(380,270);ctx.lineTo(100,270);ctx.fill();
     for(let s=0;s<2;s++){ctx.fillStyle='#8c1a26';for(let i=0;i<5;i++){ctx.beginPath();const x0=s?480-i*18:i*18;ctx.ellipse(x0,135,14,140,0,0,7);ctx.fill()}}
     ctx.fillStyle='#222';ctx.fillRect(238,150,4,100);ctx.beginPath();ctx.arc(240,148,7,0,7);ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(266,130+Math.sin(t*2)*2,14,0,7);ctx.fill();ctx.fillRect(254,144+Math.sin(t*2)*2,24,90);break}
+  case 'radar':{if(radarFullImg.complete&&radarFullImg.naturalWidth&&!radarFullFail){ctx.fillStyle='#0a0d12';ctx.fillRect(0,0,w,h);const iw=radarFullImg.naturalWidth,ih=radarFullImg.naturalHeight,k2=Math.min(w/iw,h/ih);ctx.drawImage(radarFullImg,(w-iw*k2)/2,(h-ih*k2)/2,iw*k2,ih*k2)}else drawRadarSample(ctx,t,w,h);
+    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,w,26);txt(ctx,'METRO ATLANTA RADAR',10,18,13,'#ffd21a');break}
   case 'pluto':{const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a1450');g.addColorStop(1,'#07051f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     txt(ctx,String(c.n),240,118,64,'#ffd21a','center',900);txt(ctx,c.name.length>30?c.name.slice(0,30)+'…':c.name,240,152,18,'#fff','center',800);
     const msg=(PLAY.on&&PLAY.ci===ci)?'TUNING'+'...'.slice(0,1+Math.floor(t*2)%3):(SET.plutoPlay==='box'?'NO SIGNAL':'PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV');txt(ctx,msg,240,186,13,'#a6d4ff','center',700);break}
@@ -815,7 +867,8 @@ function loop(ms){
   const t=ms/1000,stat=ms<S.staticUntil;
   const live=PLAY.on&&PLAY.ready&&PLAY.ci===S.ch&&!locked(S.ch);
   const vc=$('#video');
-  if(S.screen==='watch'){const show=!live||stat;if(vc.style.visibility!==(show?'visible':'hidden'))vc.style.visibility=show?'visible':'hidden';
+  const isRadar=has(S.ch)&&CH[S.ch].radar;
+  if(S.screen==='watch'){const show=(!live&&!isRadar)||stat;if(vc.style.visibility!==(show?'visible':'hidden'))vc.style.visibility=show?'visible':'hidden';
     if(show){stat?drawStatic(vctx,480,270):drawScene(vctx,480,270,S.ch,t)}}
   else if(pv.isConnected&&live&&!stat){pv.style.visibility='hidden';pv.parentNode.style.background='transparent'}
   else if(pv.isConnected){
@@ -824,6 +877,7 @@ function loop(ms){
     stat?drawStatic(pctx,320,180):drawScene(pctx,320,180,ci,t);
   }
   if(radarFail&&radarBox.isConnected)drawRadarSample(radarCv.getContext('2d'),t);
+  if(radarFullFail&&radarFull.isConnected)drawRadarSample(radarFullCv.getContext('2d'),t,480,270);
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -1008,6 +1062,156 @@ function playerState(st){
     S.dialog.onOk=()=>launchPluto(ci);}
 }
 
+/* ---------------- smooth jazz for the radar channel (generated live, no stream needed) ---------------- */
+const JAZZ={on:false,ctx:null,out:null,ep:null,verb:null,timer:0,next:0,bar:0,noise:null};
+const BEAT=60/68;
+const PROG=[{b:38,v:[53,57,60,64]},{b:43,v:[53,57,59,64]},{b:36,v:[52,55,59,62]},{b:45,v:[55,59,60,64]},
+            {b:41,v:[52,57,60,64]},{b:40,v:[50,55,59,62]},{b:38,v:[53,57,60,65]},{b:43,v:[53,56,59,64]}];
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+function jazzInit(){
+  const c=JAZZ.ctx=AC||new (window.AudioContext||window.webkitAudioContext)();AC=c;
+  const out=JAZZ.out=c.createGain();out.gain.value=0;
+  const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=5200;out.connect(lp);lp.connect(c.destination);
+  // small room reverb
+  const len=c.sampleRate*2.4,ir=c.createBuffer(2,len,c.sampleRate);
+  for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}
+  const verb=JAZZ.verb=c.createConvolver();verb.buffer=ir;const vg=c.createGain();vg.gain.value=.28;verb.connect(vg);vg.connect(out);
+  // electric piano bus with gentle tremolo
+  const ep=JAZZ.ep=c.createGain();ep.gain.value=.55;const lfo=c.createOscillator(),lg=c.createGain();lfo.frequency.value=4.2;lg.gain.value=.12;lfo.connect(lg);lg.connect(ep.gain);lfo.start();
+  ep.connect(out);ep.connect(verb);
+  const nb=JAZZ.noise=c.createBuffer(1,c.sampleRate,c.sampleRate);const nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+}
+function epNote(m,t,dur,vel){const c=JAZZ.ctx,g=c.createGain(),o1=c.createOscillator(),o2=c.createOscillator(),g2=c.createGain();
+  o1.type='sine';o1.frequency.value=mtof(m);o2.type='sine';o2.frequency.value=mtof(m)*4.01;g2.gain.value=.12;
+  o1.connect(g);o2.connect(g2);g2.connect(g);g.connect(JAZZ.ep);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09*vel,t+.015);g.gain.exponentialRampToValueAtTime(.03*vel,t+.6);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  g2.gain.exponentialRampToValueAtTime(.0001,t+.4);o1.start(t);o2.start(t);o1.stop(t+dur+.05);o2.stop(t+dur+.05)}
+function bassNote(m,t,dur){const c=JAZZ.ctx,o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();f.type='lowpass';f.frequency.value=700;
+  o.type='triangle';o.frequency.value=mtof(m);o.connect(f);f.connect(g);g.connect(JAZZ.out);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.28,t+.02);g.gain.exponentialRampToValueAtTime(.06,t+dur*.8);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.start(t);o.stop(t+dur+.05)}
+function brush(t,len,vol,freq){const c=JAZZ.ctx,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=JAZZ.noise;f.type='bandpass';f.frequency.value=freq;f.Q.value=.7;
+  s.connect(f);f.connect(g);g.connect(JAZZ.out);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+len*.3);g.gain.exponentialRampToValueAtTime(.0001,t+len);s.start(t,Math.random()*.5);s.stop(t+len+.05)}
+function vibe(m,t){const c=JAZZ.ctx,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=mtof(m);o.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.07,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+1.8);o.start(t);o.stop(t+1.9)}
+function jazzBar(t0){const ch=PROG[JAZZ.bar%PROG.length],sw=BEAT*.66;
+  ch.v.forEach((m,i)=>epNote(m,t0+i*.012,BEAT*3.6,.9));                 // chord on 1
+  if(Math.random()<.6)ch.v.forEach(m=>epNote(m,t0+BEAT*2+sw,BEAT*1.2,.5)); // light push on the and-of-3
+  const r=ch.b;[r,r+7,r+12,r+(Math.random()<.5?11:13)].forEach((m,i)=>bassNote(m,t0+i*BEAT,BEAT*.95));
+  for(let i=0;i<4;i++){brush(t0+i*BEAT,BEAT*.9,i%2?.05:.03,2600);if(Math.random()<.7)brush(t0+i*BEAT+sw,.12,.02,7000)}
+  const scale=[0,2,4,7,9].map(x=>x+ch.v[0]+12);
+  if(JAZZ.bar%2===1)for(let i=0;i<3;i++)if(Math.random()<.55)vibe(scale[Math.floor(Math.random()*scale.length)]+(Math.random()<.3?12:0),t0+BEAT*(i+.5+Math.random()*.4));
+  JAZZ.bar++}
+function jazzTick(){const c=JAZZ.ctx;while(JAZZ.next<c.currentTime+1.2){jazzBar(JAZZ.next);JAZZ.next+=BEAT*4}}
+function jazzStart(){if(JAZZ.on)return;try{if(!JAZZ.ctx)jazzInit();const c=JAZZ.ctx;if(c.state==='suspended')c.resume();
+  JAZZ.on=true;JAZZ.next=c.currentTime+.1;JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(.8,c.currentTime+1.5);
+  jazzTick();JAZZ.timer=setInterval(jazzTick,250)}catch(e){JAZZ.on=false}}
+function jazzStop(){if(!JAZZ.on)return;JAZZ.on=false;clearInterval(JAZZ.timer);const c=JAZZ.ctx;try{JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(0,c.currentTime+.8)}catch(e){}}
+let APP_PAUSED=false;
+function updateJazz(){const want=!APP_PAUSED&&SET.jazz&&has(S.ch)&&CH[S.ch].radar;if(want)jazzStart();else jazzStop()}
+
+/* ---------------- holiday themes ---------------- */
+// rule helpers (month m is 1-12)
+function nthWd(y,m,wd,n){if(n>0){const d=new Date(y,m-1,1);const off=(wd-d.getDay()+7)%7;return new Date(y,m-1,1+off+(n-1)*7)}
+  const d=new Date(y,m,0);const off=(d.getDay()-wd+7)%7;return new Date(y,m-1,d.getDate()-off)}
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da)}
+function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+const thanksgiving=y=>nthWd(y,11,4,4);
+const LUNAR={2025:[1,29],2026:[2,17],2027:[2,6],2028:[1,26],2029:[2,13],2030:[2,3],2031:[1,23],2032:[2,11],2033:[1,31],2034:[2,19],2035:[2,8]};
+const fx=(m,d)=>y=>new Date(y,m-1,d);
+// palette: b background, p panels, h header, c guide cells, n on-now cells, hi highlight, l label text
+const T=(id,name,date,pal,motifs,greet,range)=>({id:id,name:name,date:date,range:range||null,pal:pal,motifs:motifs,greet:greet||''});
+const P=(b,p,h,c,n,hi,l)=>({b:b,p:p,h:h,c:c,n:n,hi:hi,l:l});
+const RWB=P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa');
+const THEMES=[
+ T('bailey','Bailey’s Birthday',fx(8,26),P('#1f2a3d','#3a5a8a','#b5835a','#4a6fa5','#a8734a','#ffd8a8','#e6f0ff'),['🐶','🎂','🦴','🎈'],'Happy Birthday, Bailey!'),
+ T('taylor','Taylor’s Birthday',fx(11,8),P('#24123a','#5a2d82','#b8860b','#6a3a9a','#c48a1a','#f7d774','#efdcff'),['🎂','🎈','🎉','✨'],'Happy Birthday, Taylor!'),
+ T('newyear','New Year’s Day',fx(1,1),P('#121212','#3a3a3a','#8a6d1f','#4d4d4d','#a8862a','#f2c94c','#e0e0e0'),['🎆','🕛','🥂'],'Happy New Year!'),
+ T('mlk','Martin Luther King Jr. Day',y=>nthWd(y,1,1,3),P('#0e1f4d','#1f3a7a','#b22234','#3b4f8f','#b22234','#ffffff','#cfd8ff'),['🕊️','☮️']),
+ T('lunar','Lunar New Year',y=>LUNAR[y]?new Date(y,LUNAR[y][0]-1,LUNAR[y][1]):null,P('#4a0606','#8b1010','#b8860b','#9c1c1c','#c0392b','#ffd34d','#ffd9a0'),['🐉','🏮','🧧'],'Happy Lunar New Year!'),
+ T('groundhog','Groundhog Day',fx(2,2),P('#2b1d12','#5a3d22','#3f7a3a','#4a7c3a','#3d7fb8','#9fd8f2','#cfe8f7'),['🦫','🌤️','☀️']),
+ T('valentine','Valentine’s Day',fx(2,14),P('#3d0717','#8c1236','#c2185b','#a3153f','#d81b60','#ffc0d3','#ffd6e2'),['❤️','🌹','💘'],'Happy Valentine’s Day'),
+ T('presidents','Presidents’ Day',y=>nthWd(y,2,1,3),RWB,['⭐','🇺🇸']),
+ T('mardigras','Mardi Gras',y=>addDays(easter(y),-47),P('#2a0a3d','#4b1a6e','#2e7d32','#5e2a8a','#2e7d32','#f5c518','#e9d5ff'),['🎭','📿','⚜️']),
+ T('piday','Pi Day',fx(3,14),P('#0b2445','#1b4f8a','#2563b0','#2a5c9c','#3a78c4','#ffffff','#dbe9ff'),['π','🥧','⭕']),
+ T('stpat','St. Patrick’s Day',fx(3,17),P('#06301a','#0f5a2e','#1b7a3c','#17703a','#a8861e','#ffd54a','#c8f0d0'),['☘️','🍀','🌈'],'Happy St. Patrick’s Day'),
+ T('spring','First Day of Spring',fx(3,20),P('#2e3b2a','#6a4a6e','#c46a94','#5e8a4a','#b8628a','#fff2a8','#ffe1ee'),['🌸','🦋','☀️']),
+ T('aprilfools','April Fools’ Day',fx(4,1),P('#2a1440','#5a2a8a','#d9731a','#6b34a3','#d9731a','#ffe14d','#ffe0b3'),['🃏','🤡','🎈']),
+ T('easter','Easter',y=>easter(y),P('#2c2a4a','#5a5a9a','#b86e9c','#5f86b8','#b86e9c','#fff3a3','#ffe3f1'),['🥚','🐰','🧺'],'Happy Easter'),
+ T('earth','Earth Day',fx(4,22),P('#08303a','#1f6a4a','#1f6fb0','#2d7d46','#2a74b8','#a8e6a1','#d4f5e0'),['🌍','🌳','♻️']),
+ T('arbor','Arbor Day',y=>nthWd(y,4,5,-1),P('#16261a','#2f5233','#4a3220','#2f6b3a','#6b4a2a','#b5d98a','#e2efcf'),['🌳','🍃','🌱']),
+ T('mayday','May Day',fx(5,1),P('#2f2a1a','#7a4a6a','#4f8a3a','#a0527a','#4f8a3a','#ffe873','#ffe1f0'),['🌼','🎀','🌷']),
+ T('starwars','Star Wars Day',fx(5,4),P('#05070d','#16213e','#0f3c8a','#1c2f5e','#1f5fd1','#ffe81f','#bcd2ff'),['⭐','🚀','✨'],'May the Fourth Be With You'),
+ T('cinco','Cinco de Mayo',fx(5,5),P('#0b2e18','#1a6b3a','#b2232a','#1f7a42','#b2232a','#ffffff','#e8f5e9'),['🇲🇽','🎊','🌵']),
+ T('mothers','Mother’s Day',y=>nthWd(y,5,0,2),P('#2f1f35','#6b4a85','#b8628a','#7a5a96','#b8628a','#fff3e0','#f6e6ff'),['💐','💗','🌷'],'Happy Mother’s Day'),
+ T('memorial','Memorial Day',y=>nthWd(y,5,1,-1),RWB,['🇺🇸','⭐','🌺']),
+ T('pride','Pride Month (June 1)',fx(6,1),P('#1a1a2e','#3a2a6e','#7b2cbf','#2a6fdb','#d9480f','#ffd60a','#ffd1f2'),['🏳️‍🌈','❤️','🌈'],'Happy Pride'),
+ T('donut','National Donut Day',y=>nthWd(y,6,5,1),P('#2b1a12','#6a3f2a','#c25a85','#7a4a32','#b85480','#ffc2d9','#ffe0ec'),['🍩','☕','✨']),
+ T('flagday','Flag Day',fx(6,14),RWB,['🇺🇸','⭐']),
+ T('juneteenth','Juneteenth',fx(6,19),P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa'),['🌟','⭐','✊🏾']),
+ T('fathers','Father’s Day',y=>nthWd(y,6,0,3),P('#0d1b2a','#1b3a5c','#2f5d3a','#24476e','#5c4128','#cfe3b4','#d6e4f0'),['👔','🔧','❤️'],'Happy Father’s Day'),
+ T('summer','First Day of Summer',fx(6,21),P('#073b4c','#0f7c8a','#e07a1f','#11807a','#e07a1f','#ffe066','#d8fbff'),['☀️','🕶️','🏖️']),
+ T('july4','Independence Day',fx(7,4),P('#0a1638','#1c3a8c','#b31942','#24479a','#b31942','#ffffff','#dfe7ff'),['🎆','🇺🇸','🦅'],'Happy 4th of July'),
+ T('icecream','National Ice Cream Day',y=>nthWd(y,7,0,3),P('#2c2433','#4f7f74','#b86e8e','#5a8f84','#b86e8e','#fff4d6','#ffe4ef'),['🍦','🍨','🍧']),
+ T('hotdog','National Hot Dog Day',y=>nthWd(y,7,3,3),P('#2e1a0e','#8a2a1a','#b5841f','#9c3a22','#b5841f','#ffd23f','#f3dfbf'),['🌭','🔥','🍔']),
+ T('dogday','National Dog Day',fx(8,26),P('#2a2118','#4a6a8a','#8a6a48','#5a7a9a','#8a5a38','#f2d3a8','#e6eef8'),['🐾','🐕','🦴']),
+ T('labor','Labor Day',y=>nthWd(y,9,1,1),RWB,['🇺🇸','🔨','🛠️']),
+ T('pirate','Talk Like a Pirate Day',fx(9,19),P('#0a0a0a','#2a1a1a','#8b1a1a','#3a2020','#9c1f1f','#e0b84a','#f0d9a0'),['🏴‍☠️','☠️','⛵'],'Ahoy, Matey!'),
+ T('fall','First Day of Fall',fx(9,22),P('#2a1208','#6b2a1a','#b5541d','#6e1f2a','#b5541d','#f5b83a','#f6cf8f'),['🍂','🌰','🎃']),
+ T('veterans','Veterans Day',fx(11,11),RWB,['🇺🇸','⭐','🎖️'],'Thank You, Veterans'),
+ T('blackfriday','Black Friday',y=>addDays(thanksgiving(y),1),P('#0b0b0b','#2a2a2a','#c8102e','#333333','#c8102e','#ffd400','#ffe680'),['🏷️','🛍️','💥'],'Black Friday Deals'),
+ T('solstice','Winter Solstice',fx(12,21),P('#0b1a2e','#24466b','#4f7fa8','#2e5a85','#4f86b8','#e8f6ff','#d8ecff'),['❄️','🌙','✨']),
+ T('nye','New Year’s Eve',fx(12,31),P('#0d0d0d','#333333','#8a6d1f','#454545','#a8862a','#f2c94c','#e0e0e0'),['🕛','🎆','🥂'],'Happy New Year’s Eve'),
+ // the three long ones
+ T('halloween','Halloween',null,P('#0e0614','#3a1a52','#c0500e','#4a2266','#c0500e','#ff9f1c','#e6c8ff'),['🎃','🦇','👻'],'Happy Halloween',y=>[new Date(y,9,1),new Date(y,9,31)]),
+ T('thanksgiving','Thanksgiving',null,P('#5a2410','#7a3412','#b5531d','#7a2626','#b5531d','#f5b83a','#f6cf8f'),['#leaf:#d9661f','#turkey','#pumpkin','#oak:#e3a92b'],'Happy Thanksgiving',y=>[new Date(y,10,1),thanksgiving(y)]),
+ T('christmas','Christmas',null,P('#0b2a17','#14532d','#b3131b','#1d6b3a','#b3131b','#f4c542','#ffe7a8'),['🎄','🎅','🎁','✨'],'Merry Christmas',y=>[addDays(thanksgiving(y),2),new Date(y,11,25)])
+];
+const sameDay=(a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+function themeOn(th,d){const y=d.getFullYear();
+  if(th.range){const r=th.range(y),t=new Date(y,d.getMonth(),d.getDate());return t>=r[0]&&t<=r[1]}
+  return sameDay(th.date(y),d)}
+function themeState(id){return (SET.themeState&&SET.themeState[id])||'auto'}
+function pickTheme(d){
+  const forced=THEMES.find(t=>themeState(t.id)==='force');if(forced)return forced;
+  if(!SET.themesOn)return null;
+  const ok=t=>themeState(t.id)!=='off'&&themeOn(t,d);
+  return THEMES.find(t=>!t.range&&ok(t))||THEMES.find(t=>t.range&&ok(t))||null;   // single days win over long themes
+}
+function themeDates(th){const now=new Date(),y=now.getFullYear(),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const f=d=>M[d.getMonth()]+' '+d.getDate();
+  if(th.range){let r=th.range(y);if(r[1]<new Date(y,now.getMonth(),now.getDate()))r=th.range(y+1);return f(r[0])+' – '+f(r[1])}
+  let d=th.date(y);if(!d||d<new Date(y,now.getMonth(),now.getDate()))d=th.date(y+1);return d?DAYS[d.getDay()]+', '+f(d):'Date not known'}
+// color helpers
+function hx(c){c=c.replace('#','');return [0,2,4].map(i=>parseInt(c.substr(i,2),16))}
+function mix(a,b,t){const A=hx(a),B=hx(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+const lt=(c,t)=>mix(c,'#ffffff',t),dk=(c,t)=>mix(c,'#000000',t);
+function lum(c){const v=hx(c).map(x=>{x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*v[0]+.7152*v[1]+.0722*v[2]}
+function themeVars(pl){const b=pl.b,p=pl.p,h=pl.h,c=pl.c,n=pl.n,hi=pl.hi,l=pl.l,d0=dk(b,.55),light=lum(hi)>.45;
+  const ink=light?dk(hi,.65):lt(hi,.75),pr=mix(c,b,.55);
+  const V={'041040':dk(b,.65),'061650':d0,'0a1a55':dk(b,.45),'082063':d0,'071a55':dk(b,.4),'081a58':dk(b,.35),'081a5c':dk(b,.25),
+   '050f3a':dk(b,.6),'0e2780':b,'06123f':dk(b,.5),'0f2569':dk(p,.4),'0b2268':dk(p,.35),'0d2a7c':dk(p,.3),'0b2569':dk(p,.35),
+   '183689':p,'173586':dk(p,.1),'12318a':p,'1a3a92':lt(p,.04),'2a4aa4':lt(p,.08),'173f9e':p,'143a96':p,
+   '2348b0':lt(p,.16),'2148b4':lt(p,.16),'2a62c9':lt(p,.2),'2a58c0':lt(p,.16),'2a4fb4':lt(p,.22),'2a4fae':lt(p,.2),
+   '1d3ea6':h,'0f2672':dk(h,.4),'6f9cf0':lt(h,.4),'9ec0ff':lt(p,.6),'7fa8f5':lt(p,.5),'86acf4':lt(p,.55),'8fb3f5':lt(p,.58),
+   'dfe8ff':lt(l,.6),'e6ecff':lt(l,.7),'c9c4ff':lt(c,.6),'8a80e0':lt(c,.38),'1a1460':dk(c,.55),'10093a':dk(c,.7),'24164f':pr,'5b44b0':lt(pr,.35),
+   'hi1':lt(hi,.3),'hi2':hi,'hil':lt(hi,.6),'hid':dk(hi,.5),'hink':ink};
+  const out={};Object.keys(V).forEach(k=>out['--k'+k]=V[k]);
+  const r=hx(d0);out['--kwxnow']='rgba('+r[0]+','+r[1]+','+r[2]+',.6)';
+  Object.assign(out,{'--cell':c,'--cellNow':n,'--chan':dk(p,.45),'--hi':hi,'--hiText':light?'#0b0b18':'#ffffff','--ice':l,'--dim':mix(l,'#ffffff',.35)});
+  return out}
+let THEME=null,THEME_VARS=[],THEME_DAY='';
+function applyTheme(){const root=document.documentElement;THEME=pickTheme(new Date());THEME_DAY=new Date().toDateString();
+  THEME_VARS.forEach(k=>root.style.removeProperty(k));THEME_VARS=[];
+  root.classList.toggle('themed',!!THEME);
+  if(THEME){const v=themeVars(THEME.pal);Object.keys(v).forEach(k=>{root.style.setProperty(k,v[k]);THEME_VARS.push(k)})}}
+function motifHTML(m,size,style){style=style||'';
+  if(m[0]==='#'){const parts=m.slice(1).split(':');return '<svg class="deco" width="'+size+'" height="'+size+'" style="'+style+(parts[1]?';fill:'+parts[1]:'')+'"><use href="#'+parts[0]+'"/></svg>'}
+  return '<span class="deco emo'+(m.length<3&&!/\p{Extended_Pictographic}/u.test(m)?' txt':'')+'" style="font-size:'+Math.round(size*.85)+'px;'+style+'">'+m+'</span>'}
+function decoIcon(i,size){return THEME?motifHTML(THEME.motifs[i%THEME.motifs.length],size,''):''}
+function footDeco(){return THEME?'<span class="deco">'+THEME.motifs.slice(0,3).map(m=>motifHTML(m,24,'position:static')).join('')+'</span>':''}
+const SPOTS=[[18,410,90,-25],[870,80,70,30],[905,420,60,15],[400,470,46,-40],[300,60,40,50]];
+function bgDeco(){if(!THEME)return '';return SPOTS.map((s2,i)=>motifHTML(THEME.motifs[i%THEME.motifs.length],s2[2],'left:'+s2[0]+'px;top:'+s2[1]+'px;transform:rotate('+s2[3]+'deg)')).join('')}
+
 /* reminders: pop up when a reminded show starts */
 function checkReminders(){
   const now=Date.now();
@@ -1017,15 +1221,18 @@ function checkReminders(){
       S.dialog.onOk=()=>{if(CH[ci].pluto&&SET.plutoPlay!=='box')launchPluto(ci);else{S.screen='watch';tune(ci)}}}
     else if(st<now-10*MIN)S.reminders.delete(key)});
 }
-setInterval(()=>{checkReminders();if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
+setInterval(()=>{checkReminders();if(new Date().toDateString()!==THEME_DAY){applyTheme();render()}if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
 
+applyTheme();
 /* Android TV integration: the app forwards remote buttons here */
 if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();S.screen='watch';S.bannerUntil=Date.now()+SET.bannerSec*1000;}
 window.cable={
   press:press,
   httpDone:httpDone,
   playerState:playerState,
-  resume:function(){PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
+  pause:function(){APP_PAUSED=true;updateJazz()},
+  themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
+  resume:function(){APP_PAUSED=false;applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
     if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}
     applyStream()}
 };

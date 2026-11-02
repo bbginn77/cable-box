@@ -176,6 +176,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        js("cable.pause()")  // stops the radar channel's music
         stopStream()        // no streaming in the background while Netflix etc. is open
         videoSurface.visibility = View.INVISIBLE
         web.onPause()
