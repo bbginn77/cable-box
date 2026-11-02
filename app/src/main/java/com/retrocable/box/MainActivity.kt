@@ -59,7 +59,8 @@ class MainActivity : AppCompatActivity() {
 
     // Radar channel music, played by Android's media player (not the web view)
     private var jazzPlayer: MediaPlayer? = null
-    private val jazzFile by lazy { File(cacheDir, "nyx-jazz.wav") }
+    private var jazzStyle = ""
+    private fun musicFile(style: String) = File(cacheDir, "nyx-music-" + style.filter { it.isLetter() } + ".wav")
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,9 +140,13 @@ class MainActivity : AppCompatActivity() {
         p.playWhenReady = true
     }
 
-    private fun startJazz() {
-        if (jazzPlayer != null) return
+    private fun startJazz(style: String) {
+        if (jazzPlayer != null && jazzStyle == style) return
+        jazzPlayer?.let { try { it.stop() } catch (e: Exception) {}; it.release() }
+        jazzPlayer = null
+        val jazzFile = musicFile(style)
         if (!jazzFile.exists()) { js("cable.jazzNative('error')"); return }
+        jazzStyle = style
         val mp = MediaPlayer()
         try {
             mp.setAudioAttributes(AudioAttributes.Builder()
@@ -363,19 +368,19 @@ class MainActivity : AppCompatActivity() {
 
         /** The page sends the composed jazz loop in pieces, then asks for it to play. */
         @JavascriptInterface
-        fun jazzReady(): Boolean = jazzFile.exists() && jazzFile.length() > 100000
+        fun jazzReady(style: String): Boolean = musicFile(style).let { it.exists() && it.length() > 100000 }
 
         @JavascriptInterface
-        fun jazzBegin() { jazzFile.delete() }
+        fun jazzBegin(style: String) { musicFile(style).delete() }
 
         @JavascriptInterface
-        fun jazzChunk(b64: String) {
-            java.io.FileOutputStream(jazzFile, true).use { it.write(Base64.decode(b64, Base64.DEFAULT)) }
+        fun jazzChunk(style: String, b64: String) {
+            java.io.FileOutputStream(musicFile(style), true).use { it.write(Base64.decode(b64, Base64.DEFAULT)) }
         }
 
         @JavascriptInterface
-        fun jazzPlay(on: Boolean) {
-            runOnUiThread { if (on) startJazz() else stopJazz() }
+        fun jazzPlay(style: String, on: Boolean) {
+            runOnUiThread { if (on) startJazz(style) else stopJazz() }
         }
 
         /** True on a phone or tablet (touch screen, no TV remote). */

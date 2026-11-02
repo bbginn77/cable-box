@@ -202,6 +202,66 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .bfoot{position:absolute;left:30px;right:30px;bottom:26px;display:flex;justify-content:space-between;align-items:center;font:600 15px var(--ui);color:var(--dim)}
 .bled{font:700 30px "DejaVu Sans Mono",Consolas,monospace;color:#ff3b2f;text-shadow:0 0 8px rgba(255,59,47,.8);background:#120404;padding:2px 12px;border:2px solid #333;letter-spacing:.08em;min-width:110px;text-align:center}
 .bskip{position:absolute;right:30px;top:24px;font:600 14px var(--ui);color:var(--dim)}
+/* guide colors by type */
+.gcol .cell.cat-movies:not(.hi){background:linear-gradient(#8a3f9e,#62267a);border-color:#c48ad6 #2c0f3a #2c0f3a #c48ad6}
+.gcol .cell.cat-news:not(.hi){background:linear-gradient(#2f6fb8,#1d4c8a);border-color:#8fbaf0 #0c2650 #0c2650 #8fbaf0}
+.gcol .cell.cat-sports:not(.hi){background:linear-gradient(#3a8f47,#25692f);border-color:#9fdca6 #0f3a16 #0f3a16 #9fdca6}
+.gcol .cell.cat-kids:not(.hi){background:linear-gradient(#d0802a,#a85d14);border-color:#f5c48a #5a2f05 #5a2f05 #f5c48a}
+.gcol .cell.cat-music:not(.hi){background:linear-gradient(#b8406f,#8c2650);border-color:#eda0be #45102a #45102a #eda0be}
+.gcol .cell.now:not(.hi){filter:brightness(1.15)}
+.chip{display:inline-block;padding:0 7px;border-radius:3px;font:700 13px var(--ui);letter-spacing:.06em;text-transform:uppercase;background:var(--cell);color:#fff;line-height:20px}
+.chip.cat-movies{background:#7a3a92}.chip.cat-news{background:#2a64ac}.chip.cat-sports{background:#33803f}.chip.cat-kids{background:#c0741f}.chip.cat-music{background:#a8365f}
+.trow .d.hi{background:linear-gradient(var(--khi1),var(--khi2));color:var(--hiText)}
+.trow .d{cursor:pointer;white-space:nowrap;overflow:hidden}
+/* station IDs */
+.bump{position:absolute;left:0;right:0;top:150px;height:230px;display:flex;align-items:center;justify-content:center;gap:28px;
+  background:linear-gradient(90deg,transparent,var(--k183689) 14%,var(--k183689) 86%,transparent);border-block:3px solid var(--k9ec0ff);
+  animation:bumpIn 3.8s ease both;animation-delay:calc(0s - var(--e))}
+@keyframes bumpIn{0%{opacity:0;transform:scaleY(.05)}10%{opacity:1;transform:scaleY(1)}86%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(.6)}}
+.bcat{animation:catPop .7s cubic-bezier(.2,1.6,.4,1) both;animation-delay:calc(.35s - var(--e));filter:drop-shadow(5px 5px 0 var(--k041040))}
+@keyframes catPop{0%{transform:scale(0) rotate(-20deg)}100%{transform:scale(1) rotate(0)}}
+.btxt{display:flex;flex-direction:column;animation:txtIn .6s ease both;animation-delay:calc(.6s - var(--e))}
+@keyframes txtIn{0%{opacity:0;transform:translateX(40px)}100%{opacity:1;transform:none}}
+.btxt b{font:italic 900 64px var(--display);text-shadow:4px 4px 0 var(--k041040);line-height:1}
+.btxt span{font:800 22px var(--display);color:var(--hi);margin-top:8px}
+.btxt em{font:600 17px var(--ui);color:var(--dim);font-style:normal;margin-top:4px}
+.bdeco{display:flex;gap:8px;align-self:flex-start;margin-top:34px}
+/* NyxVision Weather channel */
+.wxc{position:absolute;inset:0;background:linear-gradient(180deg,var(--k2a62c9) 0%,var(--k173f9e) 45%,var(--k0b2569) 100%)}
+.wxtop{position:absolute;left:0;right:0;top:0;height:50px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 22px;background:linear-gradient(var(--k1d3ea6),var(--k0f2672));border-bottom:2px solid var(--k6f9cf0)}
+.wxbrand{display:flex;align-items:center;gap:10px;min-width:0}
+.wxbrand b{font:italic 900 24px var(--display);text-shadow:2px 2px 0 var(--k041040);white-space:nowrap}
+.wxbrand span{font:700 15px var(--ui);letter-spacing:.12em;color:var(--ice);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wxgreet .deco{position:static}
+.wxgreet{font:800 16px var(--display);color:var(--hi);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.wxtop .clk{font:700 19px var(--ui);white-space:nowrap}
+.wxseg{position:absolute;left:24px;right:24px;top:58px;height:32px;display:flex;align-items:center;justify-content:space-between}
+.wxseg b{font:900 22px var(--display);letter-spacing:.04em;text-transform:uppercase;text-shadow:2px 2px 0 var(--k041040)}
+.wxseg .dots{display:flex;gap:6px}.wxseg .dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3)}.wxseg .dots i.on{background:var(--hi)}
+.wxnote{position:absolute;left:40px;top:110px;padding:4px 10px;background:var(--kwxnow);font:700 14px var(--ui);color:var(--ice)}
+.wxbig{position:absolute;left:24px;top:100px;width:520px;height:320px;background:var(--kwxnow);padding:18px 24px;box-sizing:border-box}
+.wxbig .tmp{font:900 130px/1 var(--display);text-shadow:5px 5px 0 var(--k061650)}
+.wxbrow{display:flex;align-items:center;gap:22px;margin-top:6px}
+.wxbig .cond{font:800 30px var(--display);color:var(--hi);margin-top:10px}
+.wxside{position:absolute;left:570px;right:24px;top:100px;height:320px;background:var(--kwxnow);padding:22px 24px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.wxside .row{display:flex;justify-content:space-between;gap:10px;font:700 22px var(--ui)}
+.wxside .row span:first-child{color:var(--ice)}
+.wxalert{position:absolute;left:24px;right:24px;top:100px;height:320px;background:rgba(90,8,16,.85);padding:20px 26px;box-sizing:border-box;overflow:hidden}
+.wxalert h3{font:900 28px var(--display);margin:0 0 12px;color:#ffd0d0}.wxalert p{font:600 19px/1.35 var(--ui);margin:0 0 10px}
+.wxtk{bottom:0}
+/* location search */
+.lkt{font:700 28px var(--ui);letter-spacing:.06em;white-space:pre;overflow:hidden}
+.lkc{font:700 28px var(--ui);color:var(--hi);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.lkhint{font:600 15px var(--ui);color:var(--dim)}
+.kbr{display:flex;gap:4px;margin-bottom:4px}
+.kbk{flex:1;height:46px;display:flex;align-items:center;justify-content:center;font:800 20px var(--display);background:linear-gradient(var(--k2348b0),var(--k173586));border:2px solid;border-color:var(--k86acf4) var(--k0a1a55) var(--k0a1a55) var(--k86acf4);cursor:pointer}
+.kbk.wide{font:700 17px var(--ui);letter-spacing:.06em}
+.kbk.hi{background:linear-gradient(var(--khi1),var(--khi2));color:var(--hiText);border-color:var(--khil) var(--khid) var(--khid) var(--khil)}
+.lkr{margin-top:6px;padding:7px 10px;font:700 17px var(--ui);background:linear-gradient(var(--k2348b0),var(--k173586));border:2px solid;border-color:var(--k86acf4) var(--k0a1a55) var(--k0a1a55) var(--k86acf4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.lkr.hi{background:linear-gradient(var(--khi1),var(--khi2));color:var(--hiText)}
+@media (prefers-reduced-motion:reduce){.bump,.bcat,.btxt,.lkc{animation:none}}
+
 /* holiday themes screen */
 .sw{display:inline-block;width:26px;height:26px;border:2px solid rgba(255,255,255,.6);margin-right:6px}
 .motifs{font-size:40px;display:flex;gap:14px;margin:10px 0 14px}
@@ -372,17 +432,18 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,lang:'en',region:'us'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
-const RADAR_CH={n:4,call:'WXRD',name:'Metro Atlanta Radar',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
-for(let t=D0;t<D0+72*3600000;t+=SLOT)RADAR_CH.sched.push({title:'Metro Atlanta Doppler Radar',start:t,end:t+SLOT,rating:'',desc:'The latest radar loop for metro Atlanta from the National Weather Service. While watching, press OK to turn smooth jazz on or off.'});
+const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)RADAR_CH.sched.push({title:'Your Local Forecast',start:t,end:t+SLOT,rating:'',desc:'Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.'});
 if(window.CableNative){CH.length=0;CH.push(RADAR_CH)} // TV app: radar + real Pluto TV channels only
 else CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;
 const BASE=CH.length; // demo channels exist only in the browser preview
 const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
 let SET=Object.assign({},DEF), FAV=DEF_FAV();
 try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(Array.isArray(j.fav)&&j.fav.every(x=>typeof x==='string'))FAV=new Set(j.fav)}}catch(e){}
+if(SET.jazz===true&&!SET._m){SET.music='auto';SET._m=1}
 function save(){try{localStorage.setItem('cablebox',JSON.stringify({set:SET,fav:[...FAV]}))}catch(e){}}
 
 const S={screen:'home',prev:'home',ch:(!window.CableNative||(function(){try{return localStorage.getItem('cablebox-lastch')}catch(e){return null}})()==='radar')?0:-1,last:-1,idx:{home:0,apps:0,od:0,my:0,set:0,more:0,themes:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
@@ -437,6 +498,7 @@ function moreList(){if(!NATIVE)return SAMPLE_MORE;const mine=APPS.filter(a=>a.pk
 const SETS=[
  {k:'lang',label:'Language',vals:['en','fr','es'],names:['English','Français','Español'],desc:'The language of every menu, screen and holiday greeting.'},
  {k:'region',label:'Region',vals:['us','ca'],names:['\uD83C\uDDFA\uD83C\uDDF8 United States','\uD83C\uDDE8\uD83C\uDDE6 Canada'],desc:'Sets the TV rating symbols and weather units. Canada uses the Canadian rating symbols, °C, km/h and kPa.'},
+ {k:'loc',label:'Weather Location',action:true,desc:'Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.'},
  {k:'sound',label:'Navigation Sounds',vals:[true,false],names:['On','Off'],desc:'The short beeps you hear when you press remote buttons.'},
  {k:'clock24',label:'Clock Format',vals:[false,true],names:['12-Hour','24-Hour'],desc:'How times appear in the guide, banner and header.'},
  {k:'bannerSec',label:'Channel Banner',vals:[3,5,8],names:['3 sec','5 sec','8 sec'],desc:'How long the blue info banner stays on screen after you change channels.'},
@@ -446,7 +508,9 @@ const SETS=[
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
- {k:'jazz',label:'Radar Channel Music',vals:[false,true],names:['Off','Smooth Jazz'],desc:'Soft jazz that plays while you watch the Metro Atlanta Radar channel. You can also press OK on that channel to switch it.'},
+ {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz'],names:['Off','Seasonal','Smooth Jazz'],desc:'Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.'},
+ {k:'gcol',label:'Guide Colors',vals:[true,false],names:['On','Off'],desc:'Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.'},
+ {k:'idents',label:'Station IDs',vals:[true,false],names:['On','Off'],desc:'Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.'},
  {k:'update',label:'Check for Updates',action:true,desc:'Looks for a newer NyxVision on GitHub. If there is one, NyxVision downloads it and opens the installer. Your settings and favorites carry over.'},
  {k:'about',label:'About NyxVision',action:true,desc:'NyxVision digital cable, named after Nyx the Siamese cat.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
@@ -479,12 +543,12 @@ function favFilter(L){return (SET.guideFav&&L.some(isFav))?L.filter(isFav):L}
 function allList(){const L=[];for(let i=0;i<CH.length;i++)L.push(i);return L}
 function surfList(){return favFilter(allList().filter(i=>!CH[i].pluto||SET.plutoPlay==='box'||!NATIVE))}
 // rows in the guide: your channels plus Pluto TV rows
-function guideList(){return favFilter(allList())}
+function guideList(){let L=favFilter(allList());const g=S.g;if(g&&g.filt&&S.screen==='guide'){const c=CATS[g.filt];L=L.filter(ci=>chanHasCat(ci,c))}return L}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 /* ---------------- languages: English (built in), Français, Español ---------------- */
 const I18N={
 fr:{
-'Main Menu':'Menu principal','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
+'Main Menu':'Menu principal','Weather Location':'Lieu météo','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Choisissez la ville ou le code postal pour la Météo NyxVision, le menu principal et l’écran des prévisions.','Type a ZIP code, postal code or city, then choose Search.':'Tapez un code ZIP, un code postal ou une ville, puis choisissez Rechercher.','Now showing: {0}':'Affiché : {0}','Results':'Résultats','Searching…':'Recherche…','Results appear here after you search.':'Les résultats s’affichent ici après la recherche.','No places found. Check the spelling and try again.':'Aucun lieu trouvé. Vérifiez l’orthographe et réessayez.','Couldn’t search right now. Check the internet connection.':'Recherche impossible pour le moment. Vérifiez la connexion Internet.','Location search works on your TV or tablet.':'La recherche de lieu fonctionne sur votre télé ou votre tablette.','Space':'Espace','Delete':'Effacer','Clear':'Vider','Search':'Rechercher','Move':'Déplacer','Type':'Taper','Choose':'Choisir','Weather Location Set':'Lieu météo enregistré','NyxVision Weather now shows {0}.':'La Météo NyxVision affiche maintenant {0}.','NyxVision Weather':'Météo NyxVision','NYXVISION WEATHER':'MÉTÉO NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Conditions actuelles','Extended Forecast':'Prévisions à long terme','Weather Alerts':'Alertes météo','Radar map not available for this location.':'Carte radar non disponible pour ce lieu.','NO RADAR HERE · SAMPLE':'PAS DE RADAR ICI · EXEMPLE','Tap here for music':'Touchez ici pour la musique','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, conditions actuelles et prévisions à long terme pour votre région. Appuyez sur OK pour activer ou couper la musique.','{0}: high {1}°, low {2}°, {3}':'{0} : max {1}°, min {2}°, {3}','{0}: low {1}°, {2}':'{0} : min {1}°, {2}','Open-Meteo forecast · updated {0}':'Prévisions Open-Meteo · mises à jour à {0}','Weather Channel Music':'Musique de la chaîne météo','Seasonal':'Saisonnière','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Musique pour la Météo NyxVision (canal 4). Saisonnière suit le thème de fête : clochettes d’hiver à Noël, orgue lugubre à l’Halloween, folk des récoltes à l’automne, musique de fête aux anniversaires et célébrations, et jazz doux le reste du temps.','Music Off':'Musique désactivée','{0} On':'{0} activé','Music warming up…':'La musique se prépare…','Music unavailable':'Musique non disponible','Music starting…':'La musique démarre…','Music starting… press OK again if silent':'La musique démarre… appuyez de nouveau sur OK si c’est muet','Winter Bells':'Clochettes d’hiver','Spooky Organ':'Orgue lugubre','Harvest Folk':'Folk des récoltes','Party Mix':'Musique de fête','Guide Colors':'Couleurs du guide','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colore le guide par type : films, séries, nouvelles, sports, jeunesse et musique. Sur la première ligne du guide, appuyez sur ▲ pour n’afficher qu’un type.','Filter':'Filtre','Series':'Séries','News':'Nouvelles','Sports':'Sports','Kids':'Jeunesse','Music':'Musique','Movie':'Film','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'Rien dans {0} pour le moment. Appuyez sur ◀ ou ▶ pour choisir un autre type.','Pick type':'Choisir le type','Station IDs':'Identifications de chaîne','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'De courtes pauses NyxVision de temps en temps quand vous changez de chaîne, et à l’heure et à la demie.','You’re watching NyxVision':'Vous regardez NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'Nyx a attrapé la feuille !','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
 'Watch TV':'Regarder la télé',
 'Return to full-screen television on your current channel.':'Retour à la télé en plein écran sur votre chaîne actuelle.',
 'Browse what’s on now and up to 24 hours ahead.':'Voyez ce qui joue maintenant et jusqu’à 24 heures à l’avance.',
@@ -641,7 +705,7 @@ fr:{
 'Family Day':'Fête de la famille','Happy Family Day':'Bonne fête de la famille','Victoria Day':'Fête de Victoria','Happy Victoria Day':'Bonne fête de Victoria','National Indigenous Peoples Day':'Journée nationale des peuples autochtones','Saint-Jean-Baptiste Day':'Fête nationale du Québec','Happy Saint-Jean-Baptiste Day':'Bonne Fête nationale !','Canada Day':'Fête du Canada','Happy Canada Day':'Bonne fête du Canada !','Civic Holiday':'Congé civique','Labour Day':'Fête du Travail','Happy Labour Day':'Bonne fête du Travail','National Day for Truth and Reconciliation':'Journée nationale de la vérité et de la réconciliation','Every Child Matters':'Chaque enfant compte','Remembrance Day':'Jour du Souvenir','Lest We Forget':'Nous nous souviendrons','Boxing Day':'Lendemain de Noël','Happy Boxing Day':'Joyeux lendemain de Noël'
 },
 es:{
-'Main Menu':'Menú principal','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
+'Main Menu':'Menú principal','Weather Location':'Ubicación del clima','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Elija la ciudad o el código postal para Clima NyxVision, el menú principal y la pantalla del pronóstico.','Type a ZIP code, postal code or city, then choose Search.':'Escriba un código ZIP, código postal o ciudad, y elija Buscar.','Now showing: {0}':'Mostrando: {0}','Results':'Resultados','Searching…':'Buscando…','Results appear here after you search.':'Los resultados aparecen aquí después de buscar.','No places found. Check the spelling and try again.':'No se encontraron lugares. Revise la ortografía e inténtelo de nuevo.','Couldn’t search right now. Check the internet connection.':'No se pudo buscar ahora. Revise la conexión a internet.','Location search works on your TV or tablet.':'La búsqueda de ubicación funciona en su TV o tablet.','Space':'Espacio','Delete':'Borrar','Clear':'Limpiar','Search':'Buscar','Move':'Mover','Type':'Escribir','Choose':'Elegir','Weather Location Set':'Ubicación guardada','NyxVision Weather now shows {0}.':'Clima NyxVision ahora muestra {0}.','NyxVision Weather':'Clima NyxVision','NYXVISION WEATHER':'CLIMA NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Condiciones actuales','Extended Forecast':'Pronóstico extendido','Weather Alerts':'Alertas del clima','Radar map not available for this location.':'Mapa de radar no disponible para esta ubicación.','NO RADAR HERE · SAMPLE':'SIN RADAR AQUÍ · EJEMPLO','Tap here for music':'Toque aquí para la música','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, condiciones actuales y pronóstico extendido de su zona. Pulse OK para activar o apagar la música.','{0}: high {1}°, low {2}°, {3}':'{0}: máx {1}°, mín {2}°, {3}','{0}: low {1}°, {2}':'{0}: mín {1}°, {2}','Open-Meteo forecast · updated {0}':'Pronóstico de Open-Meteo · actualizado a las {0}','Weather Channel Music':'Música del canal del clima','Seasonal':'De temporada','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Música para Clima NyxVision (canal 4). De temporada sigue el tema festivo: campanas de invierno en Navidad, un órgano tenebroso en Halloween, folk de cosecha en otoño, música de fiesta en cumpleaños y celebraciones, y jazz suave el resto del tiempo.','Music Off':'Música apagada','{0} On':'{0} activado','Music warming up…':'Preparando la música…','Music unavailable':'Música no disponible','Music starting…':'Iniciando la música…','Music starting… press OK again if silent':'Iniciando la música… pulse OK otra vez si no suena','Winter Bells':'Campanas de invierno','Spooky Organ':'Órgano tenebroso','Harvest Folk':'Folk de cosecha','Party Mix':'Mezcla de fiesta','Guide Colors':'Colores de la guía','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colorea la guía por tipo: películas, series, noticias, deportes, niños y música. En la primera fila de la guía, pulse ▲ para ver solo un tipo.','Filter':'Filtro','Series':'Series','News':'Noticias','Sports':'Deportes','Kids':'Niños','Music':'Música','Movie':'Película','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'No hay nada en {0} ahora. Pulse ◀ o ▶ para elegir otro tipo.','Pick type':'Elegir tipo','Station IDs':'Identificaciones del canal','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'Breves pausas de NyxVision de vez en cuando al cambiar de canal, y a la hora y a la media hora.','You’re watching NyxVision':'Está viendo NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'¡Nyx atrapó la hoja!','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
 'Watch TV':'Ver TV',
 'Return to full-screen television on your current channel.':'Vuelva a la televisión en pantalla completa en su canal actual.',
 'Browse what’s on now and up to 24 hours ahead.':'Vea qué hay ahora y hasta 24 horas después.',
@@ -821,7 +885,8 @@ function tune(ci){
   if(!has(ci))return;
   try{localStorage.setItem('cablebox-lastch',CH[ci].key)}catch(e){}
   if(ci===S.ch){S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
-  S.last=S.ch;S.ch=ci;S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
+  S.last=S.ch;S.ch=ci;if(CH[ci].radar){S.wxT0=Date.now();S.wxSegLast=null}S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
+  if(SET.idents&&!CH[ci].radar&&S.screen==='watch'&&Date.now()-(S.lastBump||0)>15*MIN&&Math.random()<.5)setTimeout(showBump,900);
 }
 function chStep(dir){const L=surfList();if(!L.length){snd.bump();return}let p=L.indexOf(S.ch);if(p<0)p=0;p=(p+dir+L.length)%L.length;tune(L[p])}
 
@@ -829,12 +894,16 @@ function go(screen){S.prev=S.screen;S.screen=screen;if(screen==='guide')initGuid
 
 /* ---------------- guide ---------------- */
 const ROWS=6, WIN=90*MIN;
-function initGuide(){const L=guideList();let row=L.indexOf(S.ch);if(row<0)row=0;const now=Date.now();
-  S.g={row:row,top:Math.max(0,Math.min(row-2,L.length-ROWS)),win:floor30(now),ft:now}}
+function initGuide(){const now=Date.now();S.g={row:0,top:0,win:floor30(now),ft:now,filt:S.gfilt||0,inF:false};const L=guideList();let row=L.indexOf(S.ch);if(row<0)row=0;S.g.row=row;S.g.top=Math.max(0,Math.min(row-2,L.length-ROWS))}
 function gFocus(){const L=guideList();if(!L.length)return null;const ci=L[S.g.row];return {ci:ci,p:progAt(ci,Math.max(S.g.ft,S.g.win))}}
 function guideKey(k){
   const L=guideList(),g=S.g;
-  if(!L.length){snd.bump();return}
+  if(k==='gfilt'){if(!g.inF){g.inF=true;snd.nav();render();return}k='right'}
+  if(g.inF){if(k==='left'||k==='right'){g.filt=(g.filt+(k==='left'?-1:1)+CATS.length)%CATS.length;S.gfilt=g.filt;g.row=0;g.top=0;snd.nav();render();return}
+    if(k==='down'||k==='ok'||k==='chdn'){if(guideList().length){g.inF=false;snd.nav();render()}else snd.bump();return}
+    snd.bump();return}
+  if(!L.length){if(k==='up'&&g.filt){g.inF=true;snd.nav();render();return}snd.bump();return}
+  if(k==='up'&&g.row===0){g.inF=true;snd.nav();render();return}
   if(g.row>=L.length){g.row=L.length-1}
   if(k==='up'||k==='down'||k==='chup'||k==='chdn'){
     const step=k==='up'?-1:k==='down'?1:k==='chup'?-ROWS:ROWS;
@@ -873,6 +942,7 @@ function launch(app){
 /* ---------------- input ---------------- */
 let entryT=0;
 function press(k){
+  if(S.screen==='loc'&&!S.dialog){try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}locKey(k);return}
   if(S.screen==='boot'){if(k==='ok'&&performance.now()-BOOTSEQ.t0>800)endBoot();return}
   if(S.screen==='egg'){if(performance.now()-EGG.t0>800)go('set');return}
   try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
@@ -892,7 +962,7 @@ function press(k){
     if(sc==='home'){if(TOUCH&&NATIVE&&NATIVE.exitApp){NATIVE.exitApp();return}go('watch');return} if(sc==='wx'||sc==='more'){go('apps');return} if(sc==='themes'){go('set');return} if(sc==='guide'){go('watch');return} go('home');return}
   if(sc==='watch'){
     if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
-    if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){SET.jazz=!SET.jazz;save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
+    if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){if(musicOn()){SET.musicLast=SET.music;SET.music='off'}else SET.music=SET.musicLast||'auto';save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     if(k==='left'){snd.ok();go('home');return}
@@ -923,10 +993,11 @@ function press(k){
   if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
     if(it.action&&it.k==='update'){if(k!=='ok')return;snd.ok();if(UPD.state==='available')askUpdate();else checkUpdate(true);return}
     if(it.action&&it.k==='about'){if(k!=='ok')return;const now=Date.now();EGGC.n=(now-EGGC.t<1600)?EGGC.n+1:1;EGGC.t=now;snd.nav();if(EGGC.n>=5){EGGC.n=0;startEgg()}else render();return}
+    if(it.action&&it.k==='loc'){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen();return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF,{themeState:{}});FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();if(it.k==='region'){applyTheme();render()}
-    if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+RADARS[radarIdx];render()}return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='region'){applyTheme();render()}
+    if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+curRadar();render()}return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -963,19 +1034,20 @@ const radarCv=document.createElement('canvas');radarCv.width=288;radarCv.height=
 const radarLbl=document.createElement('span');radarLbl.className='rlbl';
 const radarDot=document.createElement('span');radarDot.className='dot2';
 radarBox.append(radarCv,radarImg,radarDot,radarLbl);
-function radarSrc(){radarAt=Date.now();radarFail=false;radarImg.hidden=false;radarCv.hidden=true;radarDot.hidden=true;
-  radarLbl.textContent=T('LIVE RADAR')+' \u00B7 '+RADARS[radarIdx];
-  radarImg.src='https://radar.weather.gov/ridge/standard/'+RADARS[radarIdx]+'_loop.gif?t='+Math.floor(Date.now()/600000)}
-radarImg.onerror=()=>{if(radarIdx<RADARS.length-1){radarIdx++;radarSrc()}else{radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR')}};
-if(window.CableNative)radarSrc();else{radarFail=true;radarImg.hidden=true;radarDot.hidden=false;radarLbl.textContent=T('SAMPLE RADAR')}
+function radarSrc(){radarAt=Date.now();const st=curRadar();
+  if(!st){radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=T('NO RADAR HERE \u00B7 SAMPLE');return}
+  radarFail=false;radarImg.hidden=false;radarCv.hidden=true;radarDot.hidden=true;radarLbl.textContent=T('LIVE RADAR')+' \u00B7 '+st;
+  radarImg.src='https://radar.weather.gov/ridge/standard/'+st+'_loop.gif?t='+Math.floor(Date.now()/600000)}
+radarImg.onerror=()=>{radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR')};
+if(window.CableNative)setTimeout(radarSrc,0);else{radarFail=true;radarImg.hidden=true;radarDot.hidden=false;radarLbl.textContent=T('SAMPLE RADAR')}
 const radarFull=document.createElement('div');radarFull.style.cssText='position:absolute;inset:0';
 const radarFullImg=document.createElement('img');radarFullImg.alt='';
 const radarFullCv=document.createElement('canvas');radarFullCv.width=480;radarFullCv.height=270;
 radarFull.append(radarFullCv,radarFullImg);
 let radarFullFail=!window.CableNative,radarFullAt=0;
-function radarFullSrc(){radarFullAt=Date.now();radarFullFail=false;radarFullImg.hidden=false;radarFullCv.hidden=true;radarFullImg.src='https://radar.weather.gov/ridge/standard/KFFC_loop.gif?t='+Math.floor(Date.now()/300000)}
+function radarFullSrc(){radarFullAt=Date.now();const st=curRadar();if(!st){radarFullFail=true;radarFullImg.hidden=true;radarFullCv.hidden=false;return}radarFullFail=false;radarFullImg.hidden=false;radarFullCv.hidden=true;radarFullImg.src='https://radar.weather.gov/ridge/standard/'+st+'_loop.gif?t='+Math.floor(Date.now()/300000)}
 radarFullImg.onerror=()=>{radarFullFail=true;radarFullImg.hidden=true;radarFullCv.hidden=false;if(S.screen==='watch')render()};
-if(window.CableNative)radarFullSrc();else{radarFullImg.hidden=true}
+if(window.CableNative)setTimeout(radarFullSrc,0);else{radarFullImg.hidden=true}
 function drawRadarSample(ctx,t,w,h){w=w||288;h=h||216;ctx.save();ctx.scale(w/288,h/216);w=288;h=216;ctx.fillStyle='#1b2433';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#3c4b66';ctx.lineWidth=1;
   for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(i*48,0);ctx.lineTo(i*48+20,h);ctx.stroke()}ctx.beginPath();ctx.moveTo(0,90);ctx.bezierCurveTo(90,70,180,120,288,96);ctx.stroke();
   const blobs=[['#3fd36b',46],['#e8d53a',24],['#e2493a',10]];for(let j=0;j<3;j++){const bx=((t*10+j*120)%420)-60,by=60+j*48;blobs.forEach(([cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}ctx.restore()}
@@ -993,7 +1065,7 @@ function menuHTML(list,sel,x,y,w,fmt,max){
 function nowLine(ci){if(!has(ci))return 'No channel tuned yet';const p=progAt(ci,Date.now());const one='display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';return '<b style="font-size:22px;display:block">Ch '+CH[ci].n+'</b><span style="'+one+';color:var(--ice)">'+esc(CH[ci].name)+'</span><span style="'+one+'">'+esc(p.title)+'</span><span style="'+one+'">'+fmtT(p.start,true)+'\u2013'+fmtT(p.end)+'</span>'}
 function homeWx(){
   const W=WX&&WX.now?WX:null,d=W&&W.days[0];
-  return '<div class="box bevel mini" style="left:748px;top:238px;width:136px;height:184px"><div class="lbl">Columbus, GA</div>'+
+  return '<div class="box bevel mini" style="left:748px;top:238px;width:136px;height:184px"><div class="lbl">'+esc(LOC().short)+'</div>'+
    (W?'<div style="display:flex;align-items:center;gap:4px"><div class="tmp2">'+tU(W.now.temp)+'\u00B0</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:48px;height:39px"></canvas></div><div style="font:800 16px var(--display);color:var(--hi)">'+esc(W.now.cond)+'</div>'+
     (d?'<div class="row2"><span>Hi / Lo</span><span>'+(d.hi!=null?tU(d.hi)+'\u00B0':'\u2014')+' / '+(d.lo!=null?tU(d.lo)+'\u00B0':'\u2014')+'</span></div>':'')+'<div class="row2"><span>Wind</span><span>'+esc(windU(W.now.wind))+'</span></div>'
     :'<p style="margin-top:8px">'+(NATIVE?(WXERR?'Weather unavailable right now.':'Loading weather\u2026'):'Live weather shows here on your TV.')+'</p>')+'</div>';
@@ -1006,9 +1078,9 @@ function render(){
     h+='<div class="lock"><div class="box bevel"><h3>'+(PLUTO_ERR||!SET.pluto?'No Channels':'Tuning In…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to get channels.':PLUTO_ERR?T('{0} Press \u25C0 for the main menu.',T(PLUTO_ERR)):'Loading the channel lineup. This takes a few seconds.')+'</p></div></div>';
   }
   else if(sc==='watch'){
-    if(CH[S.ch].radar){h+='<div class="rfull radar-full-slot"></div><div class="rtop"><b>Metro Atlanta Doppler Radar</b><span class="clk">'+clockStr()+'</span></div>'+
-      '<div class="rbot"><span>'+(radarFullFail?'Sample radar \u00B7 live loop unavailable':'NWS Peachtree City \u00B7 KFFC loop')+'</span><span class="mus">\u266A '+jazzLabel()+'</span><span>OK to switch</span></div>'}
+    if(CH[S.ch].radar){h+=wxChannelHTML()}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>'+T('{0} is blocked by Parental Controls. Turn them off in Settings to watch.','Ch '+CH[S.ch].n+' '+esc(CH[S.ch].call))+'</p></div></div>';
+    if(S.bumpUntil>Date.now())h+=bumpHTML();
     if(Date.now()<S.bannerUntil||S.entry){
       const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
       h+='<div class="banner"><div class="num"><b>'+c.n+'</b><span>'+c.call+'</span></div><div class="mid"><h2>'+esc(p.title)+'</h2>'+
@@ -1061,13 +1133,14 @@ function render(){
   }
   else if(sc==='set'){
     const it=SETS[S.idx.set];
-    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':x.k==='update'&&UPD.state==='available'?'<span class="v">New build ready ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.k==='loc'?'<span class="v">'+esc(LOC().short)+' \u25B6</span>':x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':x.k==='update'&&UPD.state==='available'?'<span class="v">New build ready ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
       '<div class="box bevel" style="left:580px;top:66px;width:304px;height:216px;overflow:hidden"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
       '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT \u00B7 '+buildLabel()+'<br>'+T('Guide data: {0}',NATIVE?'Pluto TV + NWS':T('sample lineup'))+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>Main Menu']);
   }
   else if(sc==='wx'){h+=wxHTML()}
   else if(sc==='boot'){h+=bootHTML()}
+  else if(sc==='loc'){h+=locHTML()}
   else if(sc==='egg'){h+='<canvas id="eggc" width="960" height="540" style="position:absolute;inset:0"></canvas>'}
   else if(sc==='themes'){
     const L=themeList(),i=Math.min(S.idx.themes,L.length-1),it=L[i],cur=pickTheme(new Date());
@@ -1096,18 +1169,20 @@ function render(){
 
 function guideHTML(){
   const L=guideList(),g=S.g;
+  if(!L.length&&g&&g.filt){g.inF=true;const nm=T(CATNAME[CATS[g.filt]]);return '<div class="bg">'+bgDeco()+'</div>'+hdr('TV Guide')+'<div class="box bevel" style="left:200px;top:110px;width:520px"><h3>'+nm+'</h3><p>'+T('Nothing in {0} right now. Press ◀ or ▶ to pick another type.',nm)+'</p></div>'+
+    '<div class="trow"><div class="d hi" data-k="gfilt">◀ '+nm+' ▶</div></div>'+ftr(['<i>◀▶</i>Pick type','<i>BACK</i>Exit'])}
   if(!L.length)return '<div class="bg">'+bgDeco()+'</div>'+hdr('TV Guide')+'<div class="box bevel" style="left:200px;top:180px;width:520px"><h3>'+(PLUTO_ERR||!SET.pluto?'No Listings':'Loading Listings…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to fill the guide.':PLUTO_ERR?esc(PLUTO_ERR):'Getting the Pluto TV lineup. This takes a few seconds.')+'</p></div>'+ftr(['<i>BACK</i>Exit']);
   if(g.row>=L.length)g.row=L.length-1;
   const f=gFocus(),now=Date.now(),c=CH[f.ci],p=f.p,remK=f.ci+':'+p.start;
   const onNow=p.start<=now&&p.end>now;
   let h='<div class="bg">'+bgDeco()+'</div>'+hdr('TV Guide')+
    '<div class="ginfo"><div class="pv bevel pv-slot"></div><div class="gtext bevel"><h2>'+esc(p.title)+'</h2>'+
-   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+rateHTML(p.rating)+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
+   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span>'+(SET.gcol?'<span class="chip cat-'+progCat(f.ci,p)+'">'+T(CATCHIP[progCat(f.ci,p)])+'</span>':'')+'<span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+rateHTML(p.rating)+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
    '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'On now · Press OK to watch in Pluto TV':'On now · Press OK to watch'):'Press OK to set a reminder')+'</p></div></div>';
   const gw=936-150, ppm=gw/90;
-  h+='<div class="trow"><div class="d">'+fmtDate(g.win)+'</div>';
+  h+='<div class="trow"><div class="d'+(g.inF?' hi':'')+'" data-k="gfilt">'+(g.inF?'\u25C0 '+T(CATNAME[CATS[g.filt||0]])+' \u25B6':(g.filt?'<span class="chip cat-'+CATS[g.filt]+'">'+T(CATNAME[CATS[g.filt]])+'</span>':fmtDate(g.win)))+'</div>';
   for(let s=0;s<3;s++)h+='<div class="s">'+fmtT(g.win+s*SLOT)+'</div>';
-  h+='</div><div class="grid">';
+  h+='</div><div class="grid'+(SET.gcol?' gcol':'')+'">';
   for(let r=g.top;r<Math.min(L.length,g.top+ROWS);r++){
     const ci=L[r],ch=CH[ci],lk=locked(ci);
     h+='<div class="grow'+(ci===S.ch?' cur':'')+(ch.pluto?' pl':'')+(lk?' lockedrow':'')+'"><div class="gch" data-r="'+r+'"><b>'+ch.n+'</b><span>'+ch.call+'</span>'+(isFav(ci)?'<span class="fv">★</span>':'')+'</div>';
@@ -1116,12 +1191,12 @@ function guideHTML(){
       const s=Math.max(pr.start,g.win),e=Math.min(pr.end,g.win+WIN);
       const x=150+(s-g.win)/MIN*ppm,w=(e-s)/MIN*ppm;
       const hi=(r===g.row&&pr===p),nw=pr.start<=now&&pr.end>now;
-      h+='<div class="cell'+(hi?' hi':nw?' now':'')+'" data-r="'+r+'" data-st="'+pr.start+'" style="left:'+x.toFixed(1)+'px;width:'+(w-2).toFixed(1)+'px">'+
+      h+='<div class="cell cat-'+progCat(ci,pr)+(hi&&!g.inF?' hi':nw?' now':'')+'" data-r="'+r+'" data-st="'+pr.start+'" style="left:'+x.toFixed(1)+'px;width:'+(w-2).toFixed(1)+'px">'+
         (pr.start<g.win?'<span class="ar">◀</span>':'')+(lk?'Locked':esc(pr.title))+(S.reminders.has(ci+':'+pr.start)?'<span class="rm">⏰</span>':'')+(pr.end>g.win+WIN?'<span class="ar" style="margin-left:auto;padding-left:6px">▶</span>':'')+'</div>';
     }
     h+='</div>';
   }
-  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'Open in Pluto TV':'Watch'):'Remind'),'<i>CH</i>Page','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
+  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'Open in Pluto TV':'Watch'):'Remind'),'<i>\u25B2</i>Filter','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
   return h;
 }
 
@@ -1134,14 +1209,14 @@ function wxHTML(){
   const W=WX||sample;
   const days=W.days.map(x=>'<div class="wxd"><div class="dn">'+(x.name[0]==='#'?dayName(+x.name.slice(1)):esc(x.name))+'</div><canvas class="wxi" data-c="'+x.cond+'" width="64" height="52"></canvas><div class="c">'+x.cond+'</div><div class="hi2">'+(x.hi!=null?tU(x.hi)+'°':'—')+'</div><div class="lo">'+(x.lo!=null?tU(x.lo)+'°':'—')+'</div></div>').join('');
   let note;
-  if(live)note=(WXERR?WXERR:T('National Weather Service · updated {0}',fmtT(W.updated)))+(SET.lang!=='en'?' \u00B7 '+T('Forecast details from the National Weather Service are in English.'):'');
+  if(live)note=(WXERR?WXERR:T(W.src==='Open-Meteo'?'Open-Meteo forecast · updated {0}':'National Weather Service · updated {0}',fmtT(W.updated)))+(SET.lang!=='en'&&W.src!=='Open-Meteo'?' \u00B7 '+T('Forecast details from the National Weather Service are in English.'):'');
   else if(NATIVE)note=WXERR?'Couldn’t reach the National Weather Service · sample shown':'Loading your forecast… sample shown';
-  else note=T('Sample forecast · the TV app shows live weather for {0}',WXLOC.label);
+  else note=T('Sample forecast · the TV app shows live weather for {0}',LOC().label);
   return '<div class="wx">'+bgDeco()+'</div><div class="wxh"><b>Your Local Forecast</b><div class="clk">'+clockStr()+'</div></div>'+
-   '<div class="wxnow"><div class="lbl">'+esc(WXLOC.label)+'</div><div class="tmp">'+tU(W.now.temp)+'°</div><div class="cond">'+esc(W.now.cond)+'</div>'+
+   '<div class="wxnow"><div class="lbl">'+esc(LOC().label)+'</div><div class="tmp">'+tU(W.now.temp)+'°</div><div class="cond">'+esc(W.now.cond)+'</div>'+
    '<div class="row"><span>Humidity</span><span>'+W.now.hum+'</span></div><div class="row"><span>Wind</span><span>'+esc(windU(W.now.wind))+'</span></div><div class="row"><span>Barometer</span><span>'+baroU(W.now.baro)+'</span></div></div>'+
    '<div class="wxdays">'+days+'</div><div class="sample">'+note+'</div>'+
-   '<div class="ticker'+(live&&W.alerts?' alert':'')+'"><div>'+T('LOCAL WEATHER')+' • '+W.ticker.map(x=>esc(WX?x:T(x))).join(' • ')+'</div></div>'+
+   '<div class="ticker'+(live&&W.alerts?' alert':'')+'"><div>'+T('LOCAL WEATHER')+' • '+(WX?wxTicker(WX):W.ticker.map(x=>T(x))).map(esc).join(' • ')+'</div></div>'+
    ftr(['<i>BACK</i>Applications','<i>MENU</i>Main Menu']);
 }
 function drawWxIcons(){
@@ -1221,7 +1296,7 @@ function drawScene(ctx,w,h,ci,t){
     for(let s=0;s<2;s++){ctx.fillStyle='#8c1a26';for(let i=0;i<5;i++){ctx.beginPath();const x0=s?480-i*18:i*18;ctx.ellipse(x0,135,14,140,0,0,7);ctx.fill()}}
     ctx.fillStyle='#222';ctx.fillRect(238,150,4,100);ctx.beginPath();ctx.arc(240,148,7,0,7);ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(266,130+Math.sin(t*2)*2,14,0,7);ctx.fill();ctx.fillRect(254,144+Math.sin(t*2)*2,24,90);break}
   case 'radar':{if(radarFullImg.complete&&radarFullImg.naturalWidth&&!radarFullFail){ctx.fillStyle='#0a0d12';ctx.fillRect(0,0,w,h);const iw=radarFullImg.naturalWidth,ih=radarFullImg.naturalHeight,k2=Math.min(w/iw,h/ih);ctx.drawImage(radarFullImg,(w-iw*k2)/2,(h-ih*k2)/2,iw*k2,ih*k2)}else drawRadarSample(ctx,t,w,h);
-    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,w,26);txt(ctx,T('METRO ATLANTA RADAR'),10,18,13,'#ffd21a');break}
+    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,w,26);txt(ctx,T('NYXVISION WEATHER'),10,18,13,'#ffd21a');break}
   case 'pluto':{const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a1450');g.addColorStop(1,'#07051f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     txt(ctx,String(c.n),240,118,64,'#ffd21a','center',900);txt(ctx,c.name.length>30?c.name.slice(0,30)+'…':c.name,240,152,18,'#fff','center',800);
     const msg=(PLAY.on&&PLAY.ci===ci)?T('TUNING')+'...'.slice(0,1+Math.floor(t*2)%3):T(SET.plutoPlay==='box'?'NO SIGNAL':'PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV');txt(ctx,msg,240,186,13,'#a6d4ff','center',700);break}
@@ -1260,7 +1335,7 @@ function loop(ms){
 requestAnimationFrame(loop);
 
 /* clock + guide refresh */
-setInterval(()=>{ui.querySelectorAll('.clk').forEach(el=>{el.innerHTML=el.closest('.banner')?fmtT(Date.now()):clockStr()})},1000);
+setInterval(()=>{ui.querySelectorAll('.clk').forEach(el=>{el.innerHTML=el.closest('.banner')?fmtT(Date.now()):clockStr()});wxTick()},1000);
 
 /* scale stage to screen */
 const screenEl=$('#screen'),stage=$('#stage');
@@ -1269,7 +1344,7 @@ try{new ResizeObserver(fit).observe(screenEl)}catch(e){window.addEventListener('
 fit();
 
 const origRender=render;
-render=function(){origRender();if(S.screen==='wx'||S.screen==='home')drawWxIcons()};
+render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&CH[S.ch].radar))drawWxIcons()};
 
 /* ---------------- web requests through the Android app ---------------- */
 let httpId=0;const httpWait={};
@@ -1283,7 +1358,6 @@ function httpDone(id,status){const w=httpWait[id];const body=NATIVE.takeResult(i
   if(status>=200&&status<300)w.res(body);else w.rej(new Error('HTTP '+status))}
 
 /* ---------------- local weather (National Weather Service, free) ---------------- */
-const WXLOC={zip:'31909',lat:32.5466,lon:-84.9252,label:'Columbus, GA 31909'};
 let WX=null,WXERR=null,WXAT=0;
 const COMPASS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
 function wxCat(s){s=(s||'').toLowerCase();
@@ -1293,15 +1367,15 @@ function wxCat(s){s=(s||'').toLowerCase();
   if(/mostly cloudy|overcast|cloudy/.test(s))return 'Cloudy'; if(/wind|breez|blustery/.test(s))return 'Breezy';
   if(/clear/.test(s))return 'Clear'; return 'Sunny'}
 async function loadWeather(){
-  if(!NATIVE)return;WXAT=Date.now();
-  try{
-    const pt=JSON.parse(await http('https://api.weather.gov/points/'+WXLOC.lat+','+WXLOC.lon)).properties;
+  if(!NATIVE)return;WXAT=Date.now();const myLoc=LOC();
+  try{if(myLoc.cc!=='US')throw new Error('not US');
+    const pt=JSON.parse(await http('https://api.weather.gov/points/'+LOC().lat+','+LOC().lon)).properties;
     const per=JSON.parse(await http(pt.forecast)).properties.periods;
     let ob=null;
     try{const st=JSON.parse(await http(pt.observationStations));const sid=st.features[0].properties.stationIdentifier;
       ob=JSON.parse(await http('https://api.weather.gov/stations/'+sid+'/observations/latest')).properties}catch(e){}
     let alerts=[];
-    try{const al=JSON.parse(await http('https://api.weather.gov/alerts/active?point='+WXLOC.lat+','+WXLOC.lon));
+    try{const al=JSON.parse(await http('https://api.weather.gov/alerts/active?point='+LOC().lat+','+LOC().lon));
       alerts=(al.features||[]).map(f=>f.properties.event+(f.properties.headline?': '+f.properties.headline:''))}catch(e){}
     const num=v=>(v&&typeof v.value==='number')?v.value:null;
     const tC=ob&&num(ob.temperature);
@@ -1319,10 +1393,121 @@ async function loadWeather(){
       else if(i===0){days.push({name:'Tonight',hi:null,lo:p.temperature,cond:wxCat(p.shortForecast)})}
     }
     const tick=alerts.map(a=>'⚠ '+a.toUpperCase()).concat(per.slice(0,3).map(p=>p.name.toUpperCase()+': '+p.detailedForecast));
-    WX={now:now,days:days,ticker:tick,alerts:alerts.length,updated:Date.now()};WXERR=null;WXAT=Date.now();
-  }catch(e){WXERR='Couldn’t reach the National Weather Service. Showing the last forecast.';WXAT=Date.now()-25*MIN}
-  if(S.screen==='wx'||S.screen==='home')render();
+    WX={now:now,days:days,ticker:tick,alerts:alerts.length,alertList:alerts,radar:pt.radarStation||null,src:'NWS',updated:Date.now()};WXERR=null;WXAT=Date.now();
+  }catch(e){try{WX=await loadOpenMeteo();WXERR=null;WXAT=Date.now()}catch(e2){WXERR='Couldn’t reach the National Weather Service. Showing the last forecast.';WXAT=Date.now()-25*MIN}}
+  if(LOC()!==myLoc)return;
+  const st=curRadar();if(st&&radarImg.src.indexOf('/'+st+'_')<0){radarSrc();radarFullSrc()}
+  if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&CH[S.ch].radar))render();
 }
+
+/* ---------------- weather location (any US ZIP, Canadian postal code or city) ---------------- */
+const DEFLOC={label:'Columbus, GA 31909',short:'Columbus, GA',lat:32.5466,lon:-84.9252,cc:'US'};
+function LOC(){return (SET.loc&&typeof SET.loc.lat==='number')?SET.loc:DEFLOC}
+const USST={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'District of Columbia',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',
+  AB:'Alberta',BC:'British Columbia',MB:'Manitoba',NB:'New Brunswick',NL:'Newfoundland and Labrador',NS:'Nova Scotia',ON:'Ontario',PE:'Prince Edward Island',QC:'Quebec',SK:'Saskatchewan',NT:'Northwest Territories',NU:'Nunavut',YT:'Yukon'};
+const STABBR={};Object.keys(USST).forEach(k=>STABBR[USST[k].toLowerCase()]=k);
+// U.S. radars near the Canadian border, so Canadian cities close to the border still get a radar loop
+const BORDER_RADARS=[['KBUF',42.95,-78.74],['KTYX',43.76,-75.68],['KCXX',44.51,-73.17],['KGYX',43.89,-70.26],['KCBW',46.04,-67.81],['KDTX',42.70,-83.47],['KAPX',44.91,-84.72],['KMQT',46.53,-87.55],
+  ['KDLH',46.84,-92.21],['KMVX',47.53,-97.33],['KMBX',48.39,-100.86],['KGGW',48.21,-106.63],['KTFX',47.46,-111.39],['KMSX',47.04,-113.99],['KOTX',47.68,-117.63],['KATX',48.19,-122.50]];
+function km(a,b,c,d){const r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 12742*Math.asin(Math.sqrt(x))}
+function curRadar(){if(WX&&WX.radar)return WX.radar;const L=LOC();if(L.radar)return L.radar;if(L===DEFLOC)return 'KFFC';
+  let best=null,bd=270;BORDER_RADARS.forEach(r=>{const d=km(L.lat,L.lon,r[1],r[2]);if(d<bd){bd=d;best=r[0]}});return best}
+const WMO=(c,day)=>c===0?(day?'Sunny':'Clear'):c===1?(day?'Mostly Sunny':'Clear'):c===2?'Partly Cloudy':c===3?'Cloudy':(c===45||c===48)?'Fog':(c>=51&&c<=67)||(c>=80&&c<=82)?'Showers':(c>=71&&c<=77)||c===85||c===86?'Snow':c>=95?'T-Storms':'Cloudy';
+async function loadOpenMeteo(){
+  const L=LOC();
+  const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+L.lat+'&longitude='+L.lon+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,surface_pressure,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto&forecast_days=6'));
+  const c=j.current,d=j.daily,ws=c.wind_speed_10m;
+  const days=d.time.slice(0,5).map((ts,i)=>({name:i===0?'Today':'#'+new Date(ts+'T12:00:00').getDay(),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i]),cond:WMO(d.weather_code[i],1)}));
+  return {now:{temp:Math.round(c.temperature_2m),cond:WMO(c.weather_code,c.is_day),hum:Math.round(c.relative_humidity_2m)+'%',
+      wind:ws<1?'Calm':COMPASS[Math.round(c.wind_direction_10m/22.5)%16]+' '+Math.round(ws)+' mph',baro:(c.surface_pressure*0.02953).toFixed(2)+' in'},
+    days:days,ticker:null,tickDays:true,alerts:0,alertList:[],radar:null,src:'Open-Meteo',updated:Date.now()};
+}
+function wxTicker(W){
+  if(!W.tickDays)return W.ticker;
+  return W.days.map(x=>{const n=x.name==='Today'?T('Today'):x.name==='Tonight'?T('Tonight'):x.name[0]==='#'?dayName(+x.name.slice(1)):x.name;
+    return x.hi!=null?T('{0}: high {1}°, low {2}°, {3}',n,tU(x.hi),tU(x.lo),T(x.cond).toLowerCase()):T('{0}: low {1}°, {2}',n,tU(x.lo),T(x.cond).toLowerCase())});
+}
+
+/* ---------------- on-screen keyboard for the location search ---------------- */
+const KB=['1234567890'.split(''),'QWERTYUIOP'.split(''),'ASDFGHJKL\''.split(''),'ZXCVBNM,.-'.split(''),['SPACE','DEL','CLEAR','SEARCH']];
+const KBL={SPACE:'Space',DEL:'Delete',CLEAR:'Clear',SEARCH:'Search'};
+function locOpen(){S.lk={text:'',x:0,y:0,focus:'kb',res:[],ri:0,busy:false,msg:''};go('loc')}
+function locType(key){const L=S.lk;
+  if(key==='SPACE')L.text=(L.text+' ').slice(0,30);else if(key==='DEL')L.text=L.text.slice(0,-1);else if(key==='CLEAR'){L.text='';L.res=[];L.msg=''}
+  else if(key==='SEARCH')locSearch();else L.text=(L.text+key).slice(0,30);
+  snd.nav();render()}
+function locKey(k){const L=S.lk;
+  if(/^[0-9]$/.test(k)){locType(k);return}
+  if(k==='back'){snd.back();go('set');return}
+  if(L.focus==='res'){
+    if(k==='up'||k==='down'){const n=L.ri+(k==='up'?-1:1);if(n<0||n>=L.res.length){snd.bump();return}L.ri=n;snd.nav();render();return}
+    if(k==='left'){L.focus='kb';snd.nav();render();return}
+    if(k==='ok'||k==='right'){locChoose(L.res[L.ri]);return}
+    return}
+  const last=L.y===4;
+  if(k==='up'){if(L.y===0){snd.bump();return}if(last)L.x=Math.min(9,Math.round(L.x*2.5+1));L.y--;snd.nav();render();return}
+  if(k==='down'){if(last){snd.bump();return}L.y++;if(L.y===4)L.x=Math.min(3,Math.floor(L.x/2.5));snd.nav();render();return}
+  if(k==='left'){if(L.x===0){snd.bump();return}L.x--;snd.nav();render();return}
+  if(k==='right'){const max=last?3:9;if(L.x<max){L.x++;snd.nav();render();return}if(L.res.length){L.focus='res';snd.nav();render()}else snd.bump();return}
+  if(k==='ok'){locType(KB[L.y][L.x]);return}
+}
+async function locSearch(){const L=S.lk,q=L.text.trim();if(!q){snd.bump();return}
+  if(!NATIVE){L.msg=T('Location search works on your TV or tablet.');render();return}
+  L.busy=true;L.msg='';L.res=[];render();
+  try{let res=[];
+    if(/^\d{5}$/.test(q)){const j=JSON.parse(await http('https://api.zippopotam.us/us/'+q));
+      res=(j.places||[]).map(p=>({label:p['place name']+', '+p['state abbreviation']+' '+q,short:p['place name']+', '+p['state abbreviation'],lat:+p.latitude,lon:+p.longitude,cc:'US'}))}
+    else if(/^[A-Za-z]\d[A-Za-z](\s?\d[A-Za-z]\d)?$/.test(q)){const fsa=q.slice(0,3).toUpperCase();const j=JSON.parse(await http('https://api.zippopotam.us/ca/'+fsa));
+      res=(j.places||[]).map(p=>({label:p['place name']+', '+p['state abbreviation']+' '+q.toUpperCase(),short:p['place name']+', '+p['state abbreviation'],lat:+p.latitude,lon:+p.longitude,cc:'CA'}))}
+    else{let name=q.split(',')[0].trim(),want=(q.split(',')[1]||'').trim().toLowerCase();
+      const words=name.split(/\s+/);if(!want&&words.length>1&&(USST[words[words.length-1].toUpperCase()]||STABBR[words[words.length-1].toLowerCase()])){want=words.pop().toLowerCase();name=words.join(' ')}
+      const j=JSON.parse(await http('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(name)+'&count=10&language='+(SET.lang||'en')+'&format=json'));
+      res=(j.results||[]).map(r=>{const ab=r.admin1?(STABBR[String(r.admin1).toLowerCase()]||r.admin1):'';const where=(r.country_code==='US'||r.country_code==='CA')?ab:(r.country||r.country_code);
+        return {label:r.name+(where?', '+where:''),short:r.name+(where?', '+where:''),lat:r.latitude,lon:r.longitude,cc:r.country_code,_a:String(r.admin1||'').toLowerCase(),_ab:String(ab).toLowerCase()}});
+      if(want){const w=USST[want.toUpperCase()]?USST[want.toUpperCase()].toLowerCase():want;const f=res.filter(r=>r._a===w||r._ab===want||r._a.indexOf(w)===0);if(f.length)res=f}}
+    L.res=res.slice(0,7);L.ri=0;L.focus=L.res.length?'res':'kb';L.msg=L.res.length?'':T('No places found. Check the spelling and try again.')}
+  catch(e){L.msg=/404/.test(String(e))?T('No places found. Check the spelling and try again.'):T('Couldn’t search right now. Check the internet connection.')}
+  L.busy=false;if(S.screen==='loc')render()}
+function locChoose(r){if(!r)return;SET.loc={label:r.label,short:r.short,lat:+r.lat,lon:+r.lon,cc:r.cc};save();snd.ok();
+  WX=null;WXERR=null;WXAT=0;loadWeather();radarIdx=0;if(NATIVE){radarSrc();radarFullSrc()}nameWeatherChannel();
+  go('set');dialog('Weather Location Set',T('NyxVision Weather now shows {0}.','<b>'+esc(r.label)+'</b>'),3000)}
+function locHTML(){const L=S.lk;
+  let h='<div class="bg">'+bgDeco()+'</div>'+hdr('Weather Location')+
+    '<div class="box bevel lkf" style="left:40px;top:62px;width:500px;height:56px;padding:0 16px;display:flex;align-items:center"><span class="lkt">'+esc(L.text)+'</span><span class="lkc">▌</span></div>'+
+    '<p class="lkhint" style="position:absolute;left:44px;top:126px;margin:0;width:500px">'+T('Type a ZIP code, postal code or city, then choose Search.')+'</p>'+
+    '<div class="kb" style="position:absolute;left:40px;top:160px;width:500px">';
+  KB.forEach((row,y)=>{h+='<div class="kbr">';row.forEach((key,x)=>{const sel=L.focus==='kb'&&L.y===y&&L.x===x;h+='<div class="kbk'+(row.length===4?' wide':'')+(sel?' hi':'')+'" data-key="'+y+','+x+'">'+(KBL[key]?T(KBL[key]):esc(key))+'</div>'});h+='</div>'});
+  h+='</div><div class="box bevel" style="left:580px;top:62px;width:304px;height:386px;overflow:hidden"><div class="lbl">'+T('Now showing: {0}',esc(LOC().short))+'</div><h3 style="margin-top:10px">'+T('Results')+'</h3>';
+  if(L.busy)h+='<p><span class="wait"></span>'+T('Searching…')+'</p>';
+  else if(L.msg)h+='<p>'+L.msg+'</p>';
+  else if(!L.res.length)h+='<p>'+T('Results appear here after you search.')+'</p>';
+  L.res.forEach((r,i)=>{h+='<div class="lkr'+(L.focus==='res'&&L.ri===i?' hi':'')+'" data-res="'+i+'">'+esc(r.label)+'</div>'});
+  h+='</div>'+ftr(['<i>▲▼◀▶</i>Move','<i>OK</i>'+(L.focus==='res'?'Choose':'Type'),'<i>BACK</i>Settings']);
+  return h}
+
+/* ---------------- NyxVision Weather (channel 4) ---------------- */
+function nameWeatherChannel(){RADAR_CH.name=T('NyxVision Weather')}
+function wxSegs(){return ['radar','now','ext'].concat(WX&&WX.alerts?['alerts']:[])}
+function wxSeg(){const s=wxSegs();return s[Math.floor((Date.now()-(S.wxT0||0))/12000)%s.length]}
+const SEGNAME={radar:'Doppler Radar',now:'Current Conditions',ext:'Extended Forecast',alerts:'Weather Alerts'};
+function wxChannelHTML(){
+  const W=WX||null,seg=wxSeg(),L=LOC(),rs=curRadar();
+  let h='<div class="wxc"></div><div class="wxtop"><div class="wxbrand">'+catSvg(34)+'<b>'+T('NyxVision Weather')+'</b><span>'+esc(L.short)+'</span></div>'+
+    (THEME&&THEME.greet?'<div class="wxgreet">'+decoIcon(0,22)+' '+esc(THEME.greet)+' '+decoIcon(1,22)+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>'+
+    '<div class="wxseg"><b>'+T(SEGNAME[seg])+'</b><span class="dots">'+wxSegs().map(x=>'<i class="'+(x===seg?'on':'')+'"></i>').join('')+'</span></div>';
+  if(seg==='radar'){h+='<div class="rfull radar-full-slot" style="top:96px;bottom:84px;left:24px;right:24px;border:2px solid var(--k9ec0ff)"></div>';
+    if(!rs||radarFullFail)h+='<div class="wxnote">'+(rs?T('Sample radar · live loop unavailable'):T('Radar map not available for this location.'))+'</div>'}
+  else if(!W)h+='<div class="box bevel" style="left:200px;top:180px;width:520px"><h3>'+T('Your Local Forecast')+'</h3><p>'+(NATIVE?(WXERR?T('Weather unavailable right now.'):T('Loading weather…')):T('Live weather shows here on your TV.'))+'</p></div>';
+  else if(seg==='now'){const d=W.days[0];
+    h+='<div class="wxbig bevel"><div class="lbl">'+esc(L.label)+'</div><div class="wxbrow"><div class="tmp">'+tU(W.now.temp)+'°</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:150px;height:122px"></canvas></div><div class="cond">'+esc(W.now.cond)+'</div></div>'+
+      '<div class="wxside bevel">'+[['Humidity',W.now.hum],['Wind',esc(windU(W.now.wind))],['Barometer',baroU(W.now.baro)]].concat(d?[['Hi / Lo',(d.hi!=null?tU(d.hi)+'°':'—')+' / '+(d.lo!=null?tU(d.lo)+'°':'—')]]:[]).map(r=>'<div class="row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('')+'</div>'}
+  else if(seg==='ext'){h+='<div class="wxdays" style="left:24px;right:24px;top:110px;height:300px">'+W.days.map(x=>'<div class="wxd"><div class="dn">'+(x.name[0]==='#'?dayName(+x.name.slice(1)):esc(x.name))+'</div><canvas class="wxi" data-c="'+x.cond+'" width="64" height="52" style="width:88px;height:72px"></canvas><div class="c">'+x.cond+'</div><div class="hi2">'+(x.hi!=null?tU(x.hi)+'°':'—')+'</div><div class="lo">'+(x.lo!=null?tU(x.lo)+'°':'—')+'</div></div>').join('')+'</div>'}
+  else if(seg==='alerts'){h+='<div class="wxalert bevel"><h3>⚠ '+T('Weather Alerts')+'</h3>'+(W.alertList||[]).slice(0,4).map(a=>'<p>'+esc(a)+'</p>').join('')+'</div>'}
+  const tick=W?wxTicker(W):[T('Live weather shows here on your TV.')],txt=T('LOCAL WEATHER')+' • '+tick.map(esc).join(' • '),dur=Math.max(22,txt.length*.16);
+  h+='<div class="ticker wxtk'+(W&&W.alerts?' alert':'')+'"><div style="animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+((Date.now()/1000)%dur).toFixed(2)+'s">'+txt+'</div></div>'+
+    '<div class="rbot" style="bottom:52px"><span class="mus">♪ '+jazzLabel()+'</span><span>'+(TOUCH?T('Tap here for music'):T('OK to switch'))+'</span></div>';
+  return h}
+function catSvg(sz){const m=hdr.toString().match(/<svg class=\\?"cat\\?"[\s\S]*?<\/svg>/);if(!m)return '';return m[0].replace(/\\"/g,'"').replace('width="32" height="30"','width="'+sz+'" height="'+Math.round(sz*30/32)+'"')}
 
 /* ---------------- Pluto TV listings ---------------- */
 let PLUTO_ERR=null,PLUTOAT=0,plutoBusy=false;
@@ -1330,18 +1515,18 @@ function clientId(){let id=null;try{id=localStorage.getItem('cablebox-cid')}catc
   if(!id){id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});try{localStorage.setItem('cablebox-cid',id)}catch(e){}}
   return id}
 function mapProg(p){const ep=p.episode||{};return {title:p.title||ep.name||'Pluto TV',start:Date.parse(p.start),end:Date.parse(p.stop),
-  desc:ep.description&&ep.description!=='No information available'?ep.description:'',rating:ep.rating&&ep.rating!=='Not Rated'?ep.rating:'',isNew:false}}
+  desc:ep.description&&ep.description!=='No information available'?ep.description:'',rating:ep.rating&&ep.rating!=='Not Rated'?ep.rating:'',isNew:false,genre:ep.genre||ep.subGenre||''}}
 async function plutoV2(start,stop){
   const j=JSON.parse(await http('https://api.pluto.tv/v2/channels?start='+encodeURIComponent(start)+'&stop='+encodeURIComponent(stop)));
   if(!Array.isArray(j)||!j.length)throw new Error('empty');
   return j.filter(c=>c.number>0&&c.isStitched!==false).sort((a,b)=>a.number-b.number)
-    .map(c=>({num:c.number,name:c.name,slug:c.slug,id:c._id||c.id,stitched:(c.stitched&&c.stitched.urls&&c.stitched.urls[0]&&c.stitched.urls[0].url)||'',progs:(c.timelines||[]).map(mapProg)}));
+    .map(c=>({num:c.number,name:c.name,cat:catOf((c.category||'')+' '+c.name),slug:c.slug,id:c._id||c.id,stitched:(c.stitched&&c.stitched.urls&&c.stitched.urls[0]&&c.stitched.urls[0].url)||'',progs:(c.timelines||[]).map(mapProg)}));
 }
 async function plutoV4(start){
   const boot=await plutoBoot();const H={Authorization:'Bearer '+boot.sessionToken};
   const cj=JSON.parse(await http('https://service-channels.clusters.pluto.tv/v2/guide/channels?channelIds=&offset=0&limit=1000&sort=number%3Aasc',H));
   let chans=(cj.data||[]).filter(c=>c.number>0).sort((a,b)=>a.number-b.number).slice(0,SET.plutoCount);
-  const byId={};chans.forEach(c=>byId[c.id]={num:c.number,name:c.name,slug:c.slug,id:c.id,progs:[]});
+  const byId={};chans.forEach(c=>byId[c.id]={num:c.number,name:c.name,cat:catOf((c.category||'')+' '+c.name),slug:c.slug,id:c.id,progs:[]});
   for(let i=0;i<chans.length;i+=100){
     const ids=chans.slice(i,i+100).map(c=>c.id).join(',');
     const tj=JSON.parse(await http('https://service-channels.clusters.pluto.tv/v2/guide/timelines?start='+encodeURIComponent(start)+'&channelIds='+ids+'&duration=360',H));
@@ -1370,7 +1555,7 @@ async function loadPluto(){
   const curId=S.ch>=BASE&&CH[S.ch]?CH[S.ch].pluto.id:null,lastId=S.last>=BASE&&CH[S.last]?CH[S.last].pluto.id:null;
   CH.length=BASE;
   list.slice(0,SET.plutoCount).forEach((c,i)=>{
-    CH.push({key:'p'+c.id,n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'pluto',pluto:{slug:c.slug,id:c.id,num:c.num,stitched:c.stitched||''},sched:fillSched(c.progs,c.name)});
+    CH.push({key:'p'+c.id,n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'pluto',pluto:{slug:c.slug,id:c.id,num:c.num,stitched:c.stitched||''},cat:c.cat||'ent',sched:fillSched(c.progs.map(p=>{const g=catOf(p.genre);p.cat=(p.genre&&g!=='ent')?g:(c.cat||'ent');return p}),c.name)});
   });
   const find=id=>{for(let i=BASE;i<CH.length;i++)if(CH[i].pluto.id===id)return i;return -1};
   if(curId){const i=find(curId);if(i<0){S.ch=BASE?0:-1;applyStream()}else{S.ch=i;PLAY.ci=PLAY.on?i:-1}}
@@ -1481,19 +1666,83 @@ function jazzBar(t0){const ch=PROG[JAZZ.bar%PROG.length],sw=BEAT*.66;
   const scale=[0,2,4,7,9].map(x=>x+ch.v[0]+12);
   if(JAZZ.bar%2===1)for(let i=0;i<3;i++)if(Math.random()<.55)vibe(scale[Math.floor(Math.random()*scale.length)]+(Math.random()<.3?12:0),t0+BEAT*(i+.5+Math.random()*.4));
   JAZZ.bar++}
-function jazzTick(){const c=JAZZ.ctx;while(JAZZ.next<c.currentTime+1.2){jazzBar(JAZZ.next);JAZZ.next+=BEAT*4}}
-function jazzStart(){if(JAZZ.on){try{if(JAZZ.ctx.state!=='running')JAZZ.ctx.resume()}catch(e){}return}try{if(!JAZZ.ctx)jazzInit();const c=JAZZ.ctx;if(c.state==='suspended')c.resume();
+function jazzTick(){const c=JAZZ.ctx,st=MSTY[JAZZ.style||'jazz'],B=60/st.bpm;while(JAZZ.next<c.currentTime+1.2){st.bar(JAZZ.next,B);JAZZ.next+=B*4}}
+function jazzStart(style){if(style)JAZZ.style=style;if(JAZZ.on){try{if(JAZZ.ctx.state!=='running')JAZZ.ctx.resume()}catch(e){}return}try{if(!JAZZ.ctx)jazzInit();const c=JAZZ.ctx;if(c.state==='suspended')c.resume();
   JAZZ.on=true;JAZZ.next=c.currentTime+.1;JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(.8,c.currentTime+1.5);
   jazzTick();JAZZ.timer=setInterval(jazzTick,250)}catch(e){JAZZ.on=false}}
 function jazzStop(){if(!JAZZ.on)return;JAZZ.on=false;clearInterval(JAZZ.timer);const c=JAZZ.ctx;try{JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(0,c.currentTime+.8)}catch(e){}}
+/* ---------------- music styles for NyxVision Weather (all composed live from simple instruments) ---------------- */
+function bellNote(m,t,vol){const c=JAZZ.ctx,f=mtof(m);[[1,1,1.6],[2.76,.4,.9],[5.4,.2,.5],[8.93,.08,.3]].forEach(([r,g0,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f*r;o.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*g0,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.05)})}
+function organ(notes,t,dur,vol){const c=JAZZ.ctx,lfo=c.createOscillator(),lg=c.createGain();lfo.frequency.value=5.2;lg.gain.value=2.2;lfo.connect(lg);lfo.start(t);lfo.stop(t+dur+.4);
+  notes.forEach(m=>[[1,.5],[2,.22],[3,.1]].forEach(([r,gv])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=mtof(m)*r;lg.connect(o.frequency);o.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*gv,t+.35);g.gain.setValueAtTime(vol*gv,t+dur-.2);g.gain.linearRampToValueAtTime(0,t+dur+.3);o.start(t);o.stop(t+dur+.35)}))}
+function glide(m0,m1,t,dur,vol){const c=JAZZ.ctx,o=c.createOscillator(),g=c.createGain(),lfo=c.createOscillator(),lg=c.createGain();
+  o.type='sine';o.frequency.setValueAtTime(mtof(m0),t);o.frequency.exponentialRampToValueAtTime(mtof(m1),t+.35);lfo.frequency.value=5.6;lg.gain.value=mtof(m1)*.012;lfo.connect(lg);lg.connect(o.frequency);
+  o.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.25);g.gain.setValueAtTime(vol,t+dur-.3);g.gain.linearRampToValueAtTime(0,t+dur);
+  o.start(t);lfo.start(t);o.stop(t+dur+.05);lfo.stop(t+dur+.05)}
+function pluck(m,t,vol){const c=JAZZ.ctx;[0,.07].forEach(det=>{const o=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();o.type='sawtooth';o.frequency.value=mtof(m+det);f.type='lowpass';f.Q.value=2;
+  f.frequency.setValueAtTime(3200,t);f.frequency.exponentialRampToValueAtTime(380,t+.35);o.connect(f);f.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*.5,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+1.3);o.start(t);o.stop(t+1.35)})}
+function marimba(m,t,vol){const c=JAZZ.ctx;[[1,1,.55],[4,.25,.12]].forEach(([r,g0,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=mtof(m)*r;o.connect(g);g.connect(JAZZ.out);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*g0,t+.003);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d+.05)})}
+function thump(t,vol){const c=JAZZ.ctx,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(48,t+.14);o.connect(g);g.connect(JAZZ.out);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.2);o.start(t);o.stop(t+.22)}
+function block(m,t,vol){const c=JAZZ.ctx,o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=mtof(m);o.connect(g);g.connect(JAZZ.out);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.07);o.start(t);o.stop(t+.09)}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const P_WINTER=[{b:48,v:[60,64,67,71]},{b:45,v:[57,60,64,67]},{b:41,v:[57,60,64,65]},{b:43,v:[55,59,62,65]}];
+const P_SPOOKY=[{b:38,v:[62,65,69]},{b:34,v:[58,62,65]},{b:43,v:[55,58,62]},{b:45,v:[57,61,64,67]}];
+const P_HARVEST=[{b:43,v:[55,59,62,67]},{b:48,v:[55,60,64,67]},{b:40,v:[55,59,64,67]},{b:50,v:[54,57,62,66]}];
+const P_PARTY=[{b:41,v:[65,69,72]},{b:38,v:[62,65,69]},{b:46,v:[62,65,70]},{b:48,v:[64,67,72]}];
+function barJazz(t0,B){const ch=PROG[JAZZ.bar%PROG.length],sw=B*.66;
+  ch.v.forEach((m,i)=>epNote(m,t0+i*.012,B*3.6,.9));
+  if(Math.random()<.6)ch.v.forEach(m=>epNote(m,t0+B*2+sw,B*1.2,.5));
+  const r=ch.b;[r,r+7,r+12,r+(Math.random()<.5?11:13)].forEach((m,i)=>bassNote(m,t0+i*B,B*.95));
+  for(let i=0;i<4;i++){brush(t0+i*B,B*.9,i%2?.05:.03,2600);if(Math.random()<.7)brush(t0+i*B+sw,.12,.02,7000)}
+  const scale=[0,2,4,7,9].map(x=>x+ch.v[0]+12);
+  if(JAZZ.bar%2===1)for(let i=0;i<3;i++)if(Math.random()<.55)vibe(pick(scale)+(Math.random()<.3?12:0),t0+B*(i+.5+Math.random()*.4));
+  JAZZ.bar++}
+function barWinter(t0,B){const ch=P_WINTER[JAZZ.bar%4],up=ch.v.concat(ch.v.slice(1,3).map(x=>x+12));
+  ch.v.forEach(m=>epNote(m,t0,B*3.8,.45));
+  [0,1,2,3,4,3,2,1].forEach((ix,i)=>bellNote(up[ix]+12,t0+i*B/2,.035));
+  bassNote(ch.b-12,t0,B*1.9);bassNote(ch.b-5,t0+B*2,B*1.9);
+  for(let i=0;i<8;i++)brush(t0+i*B/2,.07,i%2?.012:.022,8500);
+  const pent=[60,62,64,67,69].map(x=>x+12);for(let i=0;i<4;i+=2)if(Math.random()<.65)bellNote(pick(pent),t0+i*B+(Math.random()<.4?B/2:0),.09);
+  JAZZ.bar++}
+function barSpooky(t0,B){const ch=P_SPOOKY[JAZZ.bar%4];
+  organ(ch.v,t0,B*4,.045);bassNote(ch.b-12,t0,B*3.9);
+  for(let i=0;i<4;i++)block(i%2?79:84,t0+i*B,.035);
+  if(JAZZ.bar%2===0){const pent=[62,65,67,69,72].map(x=>x+12),a=pick(pent),b=pick(pent);glide(a-5,a,t0+B*.5,B*1.6,.05);glide(a,b,t0+B*2.2,B*1.6,.05)}
+  if(JAZZ.bar%4===0)bellNote(50,t0,.08);
+  JAZZ.bar++}
+function barHarvest(t0,B){const ch=P_HARVEST[JAZZ.bar%4],sw=B*.08;
+  [0,2,1,3,2,1,3,2].forEach((ix,i)=>pluck(ch.v[ix],t0+i*B/2+(i%2?sw:0),.12));
+  bassNote(ch.b-12,t0,B*1.5);bassNote(ch.b-5,t0+B*2,B*1.5);if(Math.random()<.5)bassNote(ch.b-12,t0+B*3.5,B*.45);
+  for(let i=0;i<8;i++)brush(t0+i*B/2+(i%2?sw:0),.06,i%2?.012:.024,6200);
+  const pent=[67,69,71,74,76];if(Math.random()<.7){vibe(pick(pent),t0+B*(1+Math.random()));}if(Math.random()<.5)vibe(pick(pent),t0+B*(2.5+Math.random()));
+  JAZZ.bar++}
+function barParty(t0,B){const ch=P_PARTY[JAZZ.bar%4],r=ch.b-12;
+  for(let i=0;i<4;i++){thump(t0+i*B,i%2?.16:.22);bassNote([r,r+12,r+7,r+12][i],t0+i*B,B*.45);ch.v.forEach(m=>marimba(m,t0+i*B+B/2,.05))}
+  [1,3].forEach(i=>{brush(t0+i*B,.12,.07,1500);brush(t0+i*B+.012,.1,.05,1800)});
+  for(let i=0;i<8;i++)brush(t0+i*B/2,.04,.018,8500);
+  const pent=[77,79,81,84,86];for(let i=0;i<8;i++)if(Math.random()<.28)bellNote(pick(pent),t0+i*B/2,.04);
+  JAZZ.bar++}
+const MSTY={jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
+const STYLE_OF={christmas:'winter',solstice:'winter',boxing:'winter',halloween:'spooky',thanksgiving:'harvest',thanksca:'harvest',fall:'harvest',
+  newyear:'party',nye:'party',bailey:'party',taylor:'party',july4:'party',canadaday:'party',cinco:'party',mardigras:'party',stpat:'party',pride:'party'};
+const STYLE_NAME={jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
+function musicOn(){return SET.music&&SET.music!=='off'}
+function musicStyle(){if(SET.music==='jazz')return 'jazz';return (THEME&&STYLE_OF[THEME.id])||'jazz'}
+
 let APP_PAUSED=false;
 /* On the TV, the web view can keep page audio muted, so NyxVision composes a ~90-second loop
    once with an offline renderer and plays the finished file through Android's media player. */
-async function renderJazzWav(){
-  const sr=22050,bars=24,dur=bars*BEAT*4+0.4,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
+async function renderJazzWav(style){
+  const st=MSTY[style||'jazz'],B=60/st.bpm,sr=22050,bars=Math.round(64/(4*B)),dur=bars*B*4+0.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
   const saved={ctx:JAZZ.ctx,out:JAZZ.out,ep:JAZZ.ep,verb:JAZZ.verb,noise:JAZZ.noise,bar:JAZZ.bar};
   jazzGraph(off);JAZZ.out.gain.value=.85;JAZZ.bar=0;
-  for(let b=0;b<bars;b++)jazzBar(.02+b*BEAT*4);
+  for(let b=0;b<bars;b++)st.bar(.02+b*B*4,B);
   const buf=await off.startRendering();Object.assign(JAZZ,saved);
   const d=buf.getChannelData(0),n=d.length,bytes=new Uint8Array(44+n*2),v=new DataView(bytes.buffer);
   const w=(o,str)=>{for(let i=0;i<str.length;i++)v.setUint8(o+i,str.charCodeAt(i))};
@@ -1505,20 +1754,22 @@ async function renderJazzWav(){
   return bytes;
 }
 function b64(u8){let s2='';for(let i=0;i<u8.length;i+=0x8000)s2+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s2)}
-async function nativeJazzOn(){
-  if(!JAZZ.nReady&&NATIVE.jazzReady&&NATIVE.jazzReady())JAZZ.nReady=true;  // composed on an earlier run
-  if(!JAZZ.nReady){if(JAZZ.rendering)return;JAZZ.rendering=true;JAZZ.nState='preparing';if(S.screen==='watch')render();
-    try{const wav=await renderJazzWav();NATIVE.jazzBegin();const step=393216;for(let i=0;i<wav.length;i+=step)NATIVE.jazzChunk(b64(wav.subarray(i,i+step)));JAZZ.nReady=true}
+JAZZ.ready={};
+async function nativeJazzOn(style){
+  if(!JAZZ.ready[style]&&NATIVE.jazzReady&&NATIVE.jazzReady(style))JAZZ.ready[style]=true;  // composed on an earlier run
+  if(!JAZZ.ready[style]){if(JAZZ.rendering)return;JAZZ.rendering=style;JAZZ.nState='preparing';if(S.screen==='watch')render();
+    try{const wav=await renderJazzWav(style);NATIVE.jazzBegin(style);const step=393216;for(let i=0;i<wav.length;i+=step)NATIVE.jazzChunk(style,b64(wav.subarray(i,i+step)));JAZZ.ready[style]=true}
     catch(e){JAZZ.nState='error';JAZZ.rendering=false;if(S.screen==='watch')render();return}
     JAZZ.rendering=false}
-  if(JAZZ.nWant)NATIVE.jazzPlay(true);
+  if(JAZZ.nWant){if(JAZZ.nStyle===style)NATIVE.jazzPlay(style,true);else nativeJazzOn(JAZZ.nStyle)}
 }
 function jazzNative(st){JAZZ.nState=st;if(S.screen==='watch')render()}
-function jazzLabel(){if(!SET.jazz)return 'Jazz Off';
-  if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?'Jazz On':JAZZ.nState==='preparing'?'Jazz warming up…':JAZZ.nState==='error'?'Jazz unavailable':'Jazz starting…';if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return 'Jazz On';return 'Jazz starting\u2026 press OK again if silent'}
-function updateJazz(){const want=!APP_PAUSED&&SET.jazz&&has(S.ch)&&CH[S.ch].radar;
-  if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant)return;JAZZ.nWant=want;if(want)nativeJazzOn();else NATIVE.jazzPlay(false);return}
- if(want)jazzStart();else jazzStop()}
+function jazzLabel(){if(!musicOn())return T('Music Off');const nm=T(STYLE_NAME[musicStyle()]);
+  if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?T('{0} On',nm):JAZZ.nState==='preparing'?T('Music warming up\u2026'):JAZZ.nState==='error'?T('Music unavailable'):T('Music starting\u2026');
+  if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return T('{0} On',nm);return T('Music starting\u2026 press OK again if silent')}
+function updateJazz(){const want=!APP_PAUSED&&musicOn()&&has(S.ch)&&CH[S.ch].radar,style=musicStyle();
+  if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant&&style===JAZZ.nStyle)return;JAZZ.nWant=want;JAZZ.nStyle=style;if(want)nativeJazzOn(style);else NATIVE.jazzPlay(style,false);return}
+  if(want)jazzStart(style);else jazzStop()}
 
 /* ---------------- holiday themes ---------------- */
 // rule helpers (month m is 1-12)
@@ -1679,7 +1930,7 @@ function updateState(st){
 
 /* ---------------- Easter egg: Nyx (Settings > About NyxVision, press OK 5 times) ---------------- */
 const EGG={t0:0,fired:{}};const EGGC={n:0,t:0};
-function startEgg(){EGG.t0=performance.now();EGG.fired={};S.screen='egg';render()}
+function startEgg(){EGG.t0=performance.now();EGG.fired={};eggSetup();S.screen='egg';render()}
 const ease=t=>t<=0?0:t>=1?1:t*t*(3-2*t);
 const lerp=(a,b,t)=>a+(b-a)*t;
 function eggOnce(key,fn){if(!EGG.fired[key]){EGG.fired[key]=1;fn()}}
@@ -1743,13 +1994,14 @@ function catSide(x,cx,cy,s,dir,ang,legs,stretch){x.save();x.translate(cx,cy);x.s
   [[-22,legs[0]],[-14,legs[1]],[18,legs[2]],[26,legs[3]]].forEach(([hx2,sw])=>catLeg(x,hx2,0,hx2+sw,24-Math.abs(sw)*.25));
   const bg=x.createLinearGradient(0,-16,0,14);bg.addColorStop(0,SHADE);bg.addColorStop(.5,CREAM);bg.addColorStop(1,SHADE);x.fillStyle=bg;x.beginPath();x.ellipse(0,-2,36+stretch*6,15,0,0,7);x.fill();
   x.fillStyle='rgba(94,61,39,.35)';x.beginPath();x.ellipse(-24,-4,12,12,0,0,7);x.fill();
-  x.save();x.translate(40+stretch*4,-14);x.scale(.72,.72);catHead(x,{blink:0,tongue:0});x.restore();
+  x.save();x.translate(40+stretch*4,-14);x.scale(.72,.72);catHead(x,{blink:0,tongue:0,hat:EGG.hat});x.restore();
   x.restore()}
 function eggScene(x,t){
+  if(EGG.kind==='leaf'){eggLeafScene(x,t);eggFx(x,t);return}
   eggRoom(x,t);
   const FLOOR=470,TOP=262,X0=210,XT=452,X1=770,S1=1.25;
   const blink=((t%2.7)<.13)?1:0;
-  const o={squash:0,paw:null,headTilt:0,headDy:0,blink:blink,tongue:0,tail:Math.sin(t*2.2)};
+  const o={squash:0,paw:null,headTilt:0,headDy:0,blink:blink,tongue:0,tail:Math.sin(t*2.2),hat:EGG.hat};
   const leap=(xa,ya,xb,yb,k,h)=>{const cx=lerp(xa,xb,k),cy=lerp(ya,yb,k)-Math.sin(k*Math.PI)*h;const dx=xb-xa,dy=(yb-ya)-h*Math.PI*Math.cos(k*Math.PI);
     const ang=Math.atan2(dy,dx)*.7;catSide(x,cx,cy-30,S1,1,ang,[-18,-24,22,28],Math.sin(k*Math.PI))};
   if(t<1.0)catSit(x,X0,FLOOR,S1,o);
@@ -1771,10 +2023,92 @@ function eggScene(x,t){
   else{const cx=X1+(t-8.8)*200;
     x.fillStyle='rgba(30,18,10,.55)';for(let px=X1+30;px<Math.min(cx-20,960);px+=46){x.beginPath();x.arc(px,500+((px/46|0)%2)*10,5,0,7);x.fill()}
     if(cx<1080){const ph=t*11;catSide(x,cx,FLOOR-30,S1,1,0,[Math.sin(ph)*12,-Math.sin(ph)*12,-Math.sin(ph)*12,Math.sin(ph)*12],0)}}
+  eggFx(x,t);
   if(t>9.4){const a=Math.min(1,(t-9.4)/.8);x.globalAlpha=a;x.textAlign='center';x.font='italic 900 44px Archivo, Arial Black, sans-serif';x.fillStyle='#041040';x.fillText(T('Nyx was here.'),483,130);x.fillStyle='#fff';x.fillText(T('Nyx was here.'),480,127);
     x.font='700 16px "Archivo Narrow", Arial, sans-serif';x.fillStyle='#a6d4ff';x.fillText(T('Press any button'),480,160);x.globalAlpha=1}
 }
 
+/* ---------------- guide colors by type ---------------- */
+const CATS=['all','movies','ent','news','sports','kids','music'];
+const CATNAME={all:'All',movies:'Movies',ent:'Series',news:'News',sports:'Sports',kids:'Kids',music:'Music'};
+const CATCHIP={movies:'Movie',ent:'Series',news:'News',sports:'Sports',kids:'Kids',music:'Music'};
+const DEMO_CAT={news:'news',kids:'kids',weather:'news',radar:'news',sports:'sports',music:'music',movies:'movies'};
+function catOf(txt){const s=String(txt||'').toLowerCase();
+  if(/sport|nfl|nba|nhl|mlb|soccer|football|golf|fight|wrestl|racing|poker|outdoor/.test(s))return 'sports';
+  if(/news|opinion|politic|weather|business|finance/.test(s))return 'news';
+  if(/kid|famil|anim|cartoon|junior|children|teen/.test(s))return 'kids';
+  if(/movie|film|cinema|feature/.test(s))return 'movies';
+  if(/music|concert|hits|vevo|karaoke/.test(s))return 'music';
+  return 'ent'}
+function progCat(ci,p){if(p&&p.cat)return p.cat;const c=CH[ci];if(!c)return 'ent';if(c.pluto)return c.cat||'ent';return DEMO_CAT[c.g]||'ent'}
+function chanHasCat(ci,cat){const g=S.g;if(!g)return true;const a=g.win,b=g.win+WIN;return CH[ci].sched.some(p=>p.end>a&&p.start<b&&progCat(ci,p)===cat)}
+
+/* ---------------- station IDs ("You're watching NyxVision") ---------------- */
+function showBump(){if(!SET.idents||S.screen!=='watch'||!has(S.ch)||CH[S.ch].radar)return;
+  S.bumpT0=Date.now();S.bumpUntil=S.bumpT0+3800;S.lastBump=S.bumpT0;render();setTimeout(()=>{if(S.screen==='watch')render()},3900);
+  [72,76,79,84].forEach((m,i)=>setTimeout(()=>tone(mtof(m),.35,'sine',.05),180+i*140))}
+function bumpHTML(){const e=((Date.now()-S.bumpT0)/1000).toFixed(2);
+  return '<div class="bump" style="--e:'+e+'s"><div class="bcat">'+catSvg(110)+'</div><div class="btxt"><b>NyxVision</b><span>'+
+    (THEME&&THEME.greet?esc(THEME.greet):T('You’re watching NyxVision'))+'</span><em>'+T('Channel {0}',CH[S.ch].n)+' · '+esc(CH[S.ch].name)+'</em></div>'+
+    (THEME?'<div class="bdeco">'+THEME.motifs.slice(0,3).map(m=>motifHTML(m,30,'position:static;display:inline-block')).join('')+'</div>':'')+'</div>'}
+
+/* ---------------- seasonal Nyx ---------------- */
+const FALL_IDS=['thanksgiving','thanksca','fall'],SANTA_IDS=['christmas','solstice','boxing'],PARTY_IDS=['bailey','taylor','newyear','nye','july4','canadaday','cinco','mardigras','pride','stpat'];
+function eggSetup(){const id=THEME&&THEME.id,m=new Date().getMonth();
+  EGG.kind=(FALL_IDS.indexOf(id)>=0||(!THEME&&m>=8&&m<=10))?'leaf':'classic';
+  EGG.hat=SANTA_IDS.indexOf(id)>=0?'santa':PARTY_IDS.indexOf(id)>=0?'party':id==='halloween'?'witch':null;
+  EGG.fx=EGG.hat==='santa'?'snow':EGG.hat==='party'?'confetti':EGG.hat==='witch'?'bats':null}
+function drawHat(x,hat){if(!hat)return;x.save();
+  if(hat==='santa'){x.fillStyle='#c4232b';x.beginPath();x.moveTo(-17,-19);x.quadraticCurveTo(-4,-58,22,-44);x.quadraticCurveTo(10,-34,17,-19);x.closePath();x.fill();
+    x.fillStyle='#fff';x.beginPath();x.ellipse(0,-19,19,5.5,0,0,7);x.fill();x.beginPath();x.arc(23,-43,5,0,7);x.fill()}
+  else if(hat==='party'){x.fillStyle='#f2c94c';x.beginPath();x.moveTo(-11,-20);x.lineTo(11,-20);x.lineTo(2,-54);x.closePath();x.fill();
+    x.strokeStyle='#e0507a';x.lineWidth=3;[[-8,-26,8,-30],[-5,-35,6,-39],[-2,-44,4,-46]].forEach(l=>{x.beginPath();x.moveTo(l[0],l[1]);x.lineTo(l[2],l[3]);x.stroke()});
+    x.fillStyle='#4fb6ff';x.beginPath();x.arc(2,-55,4.5,0,7);x.fill()}
+  else if(hat==='witch'){x.fillStyle='#1a1024';x.beginPath();x.ellipse(0,-21,27,6,0,0,7);x.fill();x.beginPath();x.moveTo(-13,-23);x.lineTo(13,-23);x.quadraticCurveTo(6,-44,14,-60);x.quadraticCurveTo(-2,-46,-13,-23);x.fill();
+    x.fillStyle='#7b3fa0';x.fillRect(-12,-29,24,5)}
+  x.restore()}
+function eggFx(x,t){if(!EGG.fx)return;x.save();
+  if(EGG.fx==='snow'){x.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<80;i++){const a=(i*0.6180339)%1,b=(i*0.7548776)%1;const px=(a*1000+Math.sin(t*.8+i)*18)%980,py=((b*560+t*(28+(i%5)*6))%580)-20;x.beginPath();x.arc(px,py,1.2+(i%3),0,7);x.fill()}}
+  else if(EGG.fx==='confetti'){const cols=['#f2c94c','#e0507a','#4fb6ff','#7ed957','#ff8a3d'];for(let i=0;i<70;i++){const a=(i*0.6180339)%1,b=(i*0.7548776)%1;const px=(a*960+Math.sin(t*1.3+i)*24),py=((b*560+t*(60+(i%4)*15))%580)-20;
+    x.save();x.translate(px,py);x.rotate(t*3+i);x.fillStyle=cols[i%5];x.fillRect(-4,-2,8,4);x.restore()}}
+  else if(EGG.fx==='bats'){x.fillStyle='#120a18';for(let i=0;i<5;i++){const px=((i*230+t*(70+i*12))%1160)-100,py=70+i*28+Math.sin(t*2+i)*18,f=Math.sin(t*14+i)*.6;
+    x.save();x.translate(px,py);x.beginPath();x.ellipse(0,0,5,4,0,0,7);x.fill();[-1,1].forEach(d=>{x.beginPath();x.moveTo(0,0);x.quadraticCurveTo(d*10,-12*f-4,d*20,-2*f);x.quadraticCurveTo(d*13,2,d*8,4);x.closePath();x.fill()});x.restore()}}
+  x.restore()}
+function drawLeaf(x,cx,cy,rot,s,col){x.save();x.translate(cx,cy);x.rotate(rot);x.scale(s/100,s/100);x.translate(-50,-50);
+  x.fillStyle=col||'#d9661f';x.beginPath();const P=[50,4,57,24,70,16,66,37,86,31,77,47,94,54,73,62,78,77,58,69,53,88,50,90,47,88,42,69,22,77,27,62,6,54,23,47,14,31,34,37,30,16,43,24];
+  x.moveTo(P[0],P[1]);for(let i=2;i<P.length;i+=2)x.lineTo(P[i],P[i+1]);x.closePath();x.fill();
+  x.strokeStyle='rgba(90,40,10,.7)';x.lineWidth=3;x.beginPath();x.moveTo(50,99);x.lineTo(50,20);x.moveTo(50,55);x.lineTo(24,40);x.moveTo(50,55);x.lineTo(76,40);x.stroke();x.restore()}
+function eggLeafScene(x,t){
+  eggRoom(x,t);
+  const FLOOR=470,TOP=262,X0=200,X1=690,XT=448,S1=1.25,blink=((t%2.9)<.13)?1:0;
+  const o={squash:0,paw:null,headTilt:0,headDy:0,blink:blink,tongue:0,tail:Math.sin(t*2.2),hat:EGG.hat};
+  const leap=(xa,ya,xb,yb,k,h)=>{const cx=lerp(xa,xb,k),cy=lerp(ya,yb,k)-Math.sin(k*Math.PI)*h,dir=xb>=xa?1:-1;const dx=Math.abs(xb-xa),dy=(yb-ya)-h*Math.PI*Math.cos(k*Math.PI);
+    catSide(x,cx,cy-30,S1,dir,Math.atan2(dy,dx)*.7,[-18,-24,22,28],Math.sin(k*Math.PI))};
+  // the leaf: drifts down, rests, gets swept up onto the TV
+  let lx,ly,lr;
+  if(t<3.2){const k=t/3.2;lx=760-60*k+Math.sin(t*2.6)*40;ly=-30+(FLOOR-4+30)*(1-Math.pow(1-k,1.6));lr=Math.sin(t*3)*.9}
+  else if(t<4.8){lx=736;ly=FLOOR-4;lr=.3}
+  else if(t<6.4){const e=ease((t-4.8)/1.6);lx=lerp(736,512,e);ly=lerp(FLOOR-4,TOP-8,e)-Math.sin(e*Math.PI)*130;lr=.3+t*5}
+  else{lx=512;ly=TOP-8;lr=.2}
+  const pinned=t>=7.8;if(!pinned)drawLeaf(x,lx,ly,lr,52,'#d9661f');
+  if(t<3.2){o.headTilt=Math.max(-.35,Math.min(.35,(lx-X0)/900))+Math.sin(t*2.6)*.08;o.tail=Math.sin(t*5);catSit(x,X0,FLOOR,S1,o)}
+  else if(t<3.9){o.squash=.75;o.headTilt=.2;o.tail=Math.sin(t*14);x.save();x.translate(Math.sin(t*34)*3,0);catSit(x,X0,FLOOR,S1,o);x.restore()}
+  else if(t<4.8){eggOnce('c1',()=>eggSound('chirp'));leap(X0,FLOOR,X1,FLOOR,(t-3.9)/.9,110)}
+  else if(t<5.1){eggOnce('t1',()=>eggSound('thump'));o.squash=1-ease((t-4.8)/.3);catSit(x,X1,FLOOR,S1,o)}
+  else if(t<6.4){const g=t-5.1,ph=(g%.6)/.6,lift=Math.sin(ph*Math.PI);o.headTilt=-.28;o.headDy=-3;o.paw=[lerp(9,-16,lift),lerp(0,-128,lift)];catSit(x,X1,FLOOR,S1,o)}
+  else if(t<7.0){o.squash=ease((t-6.4)/.6)*.8;o.headTilt=-.2;catSit(x,X1,FLOOR,S1,o)}
+  else if(t<7.8){eggOnce('c2',()=>eggSound('chirp'));leap(X1,FLOOR,XT,TOP,(t-7.0)/.8,120)}
+  else if(t<8.1){eggOnce('t2',()=>eggSound('thump'));o.squash=1-ease((t-7.8)/.3);o.paw=[44,0];catSit(x,XT,TOP,S1,o)}
+  else{o.paw=[44,0];if(t>8.7&&t<9.1)o.blink=Math.sin((t-8.7)/.4*Math.PI);eggOnce('m1',()=>eggSound('meow'));catSit(x,XT,TOP,S1,o)}
+  if(pinned){drawLeaf(x,lx,ly,lr,52,'#d9661f');x.fillStyle=POINT;x.beginPath();x.ellipse(XT+44*S1,TOP-6,9,6,0,0,7);x.fill()}
+  if(t>9.4){const a=Math.min(1,(t-9.4)/.8);x.globalAlpha=a;x.textAlign='center';x.font='italic 900 44px Archivo, Arial Black, sans-serif';x.fillStyle='#041040';x.fillText(T('Nyx caught the leaf!'),483,64);x.fillStyle='#fff';x.fillText(T('Nyx caught the leaf!'),480,61);
+    x.font='700 16px "Archivo Narrow", Arial, sans-serif';x.fillStyle='#a6d4ff';x.fillText(T('Press any button'),480,92);x.globalAlpha=1}
+}
+
+const _catHead=catHead;catHead=function(x,o){_catHead(x,o);drawHat(x,o&&o.hat)};
+function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
+  if(CH[S.ch].radar){const sg=wxSeg();if(sg!==S.wxSegLast){S.wxSegLast=sg;render()}return}
+  const d=new Date();if((d.getMinutes()===0||d.getMinutes()===30)&&d.getSeconds()<3&&Date.now()-(S.lastBump||0)>120000)showBump()}
 /* ---------------- boot-up sequence (like powering on a 2004 cable box) ---------------- */
 const BOOTSEQ={t0:0,pct:0,next:'watch'};
 function bootHTML(){
@@ -1807,6 +2141,8 @@ function tapAt(el,x){
   const sc=S.screen;
   if(sc==='boot'||sc==='egg'){press('ok');return}
   if(S.dialog){press(el.closest('.dlg')?'ok':'back');return}
+  if(sc==='loc'){const kk=el.closest('[data-key]');if(kk){const a=kk.dataset.key.split(',').map(Number);S.lk.y=a[0];S.lk.x=a[1];S.lk.focus='kb';locKey('ok');return}
+    const rr=el.closest('[data-res]');if(rr){S.lk.ri=+rr.dataset.res;locChoose(S.lk.res[S.lk.ri]);return}}
   const fk=el.closest('[data-k]');if(fk){press(fk.dataset.k);return}
   if(sc==='watch'){if(el.closest('.rbot')){press('ok');return}if(el.closest('.banner')){press('guide');return}showTbar();press('info');return}
   if(sc==='wx'){press('back');return}
@@ -1871,6 +2207,7 @@ window.cable={
   jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
   pause:function(){APP_PAUSED=true;updateJazz()},
+  dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
   resume:function(){APP_PAUSED=false;applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
     if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}
@@ -1878,7 +2215,7 @@ window.cable={
 };
 render();
 if(NATIVE){loadWeather();loadPluto();setTimeout(()=>checkUpdate(false),15000);
-  setTimeout(()=>{if(NATIVE.jazzPlay&&!(NATIVE.jazzReady&&NATIVE.jazzReady())&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn().then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
+  setTimeout(()=>{const st=musicStyle();if(NATIVE.jazzPlay&&!NATIVE.jazzReady(st)&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn(st).then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
 })();
 </script>
 
