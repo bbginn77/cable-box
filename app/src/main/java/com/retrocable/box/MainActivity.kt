@@ -379,6 +379,23 @@ class MainActivity : AppCompatActivity() {
             java.io.FileOutputStream(musicFile(style), true).use { it.write(Base64.decode(b64, Base64.DEFAULT)) }
         }
 
+        /** Text the owner copied on this device (used by the Paste button when entering a service key). */
+        @JavascriptInterface
+        fun clipText(): String {
+            val latch = java.util.concurrent.CountDownLatch(1)
+            var out = ""
+            runOnUiThread {
+                try {
+                    val cm = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                    val clip = cm.primaryClip
+                    if (clip != null && clip.itemCount > 0) out = clip.getItemAt(0).coerceToText(this@MainActivity)?.toString() ?: ""
+                } catch (e: Exception) {}
+                latch.countDown()
+            }
+            latch.await(2, java.util.concurrent.TimeUnit.SECONDS)
+            return out
+        }
+
         /** Plays a short one-shot sound (alert chime, race-call fanfare) that NyxVision wrote with jazzBegin/jazzChunk. */
         @JavascriptInterface
         fun clipPlay(style: String) {
