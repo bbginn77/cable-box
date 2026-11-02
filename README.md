@@ -67,7 +67,9 @@ The optional extras below would each get their own written plan and your approva
   Refreshes every 30 minutes. Alerts turn the bottom crawl red. Channel 4 shows the live temperature.
   To change the location, edit `WXLOC` near the weather section in `assets/www/index.html`.
 - **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
-  OK on one opens it in the Pluto TV app (install Pluto TV from Google Play if you haven't).
+  They play right inside NyxVision: full screen, in the guide's preview window, and CH ▲/▼
+  surfs into them. Pluto's own ads stay in the stream. If a channel won't play, the box offers
+  to open it in the Pluto TV app instead. Settings → Pluto TV Plays In switches to always using the app.
   Pluto doesn't publish an official listings feed, so this reads the same public guide data
   their website uses, like many hobby DVR apps do. It can stop working if Pluto changes it;
   the rest of the box keeps working if that happens. Turn it off or show all channels in Settings.

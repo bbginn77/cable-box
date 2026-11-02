@@ -172,11 +172,12 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
   .chv{grid-column:2}
 }
 /* full-screen mode inside the Android TV app */
-.tv body{padding:0;overflow:hidden;background:#000}
+.tv body{padding:0;overflow:hidden;background:transparent}
+.tv,.tv #stage,.tv #ui{background:transparent}
 .tv .app{display:block;max-width:none}
 .tv .remote,.tv .under{display:none}
-.tv .tvframe{padding:0;border-radius:0;box-shadow:none;background:#000}
-.tv .screen{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0}
+.tv .tvframe{padding:0;border-radius:0;box-shadow:none;background:transparent}
+.tv .screen{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0;background:transparent}
 @media (prefers-reduced-motion:reduce){.ticker div,.wait{animation:none}}
 </style>
 <style>html,body{margin:0}body{font-size:14px}[hidden]{display:none!important}</style>
@@ -309,7 +310,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box'};
 const BASE=CH.length; // channels 2-99 are the box's own; Pluto TV rows are added after these
 let SET=Object.assign({},DEF), FAV=new Set([0,2,3,4,8,10]);
 try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(j.fav)FAV=new Set(j.fav)}}catch(e){}
@@ -370,6 +371,7 @@ const SETS=[
  {k:'parental',label:'Parental Controls',vals:[false,true],names:['Off','On'],desc:'When on, channels rated TV-14 or higher are blocked. On a real TV this ties into the TV’s own PIN where supported.'},
  {k:'guideFav',label:'Guide Shows',vals:[false,true],names:['All Channels','My Channels'],desc:'Show every channel in the guide, or only your favorites. CH ▲/▼ follows the same list.'},
  {k:'pluto',label:'Pluto TV Listings',vals:[true,false],names:['On','Off'],desc:'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.'},
+ {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
 ];
@@ -395,14 +397,16 @@ function clockStr(){return fmtDate(Date.now())+'&nbsp;&nbsp;'+fmtT(Date.now())}
 function floor30(t){return Math.floor(t/SLOT)*SLOT}
 function locked(ci){return SET.parental&&(CH[ci].mature)}
 // channels you can flip through in full screen (the box's own)
-function surfList(){const all=[];for(let i=0;i<BASE;i++)all.push(i);if(SET.guideFav&&FAV.size){return all.filter(i=>FAV.has(i))}return all}
+function baseList(){const all=[];for(let i=0;i<BASE;i++)all.push(i);if(SET.guideFav&&FAV.size){return all.filter(i=>FAV.has(i))}return all}
+function plutoRows(){const L=[];for(let i=BASE;i<CH.length;i++)L.push(i);return L}
+function surfList(){const L=baseList();return (!SET.guideFav&&SET.plutoPlay==='box'&&NATIVE)?L.concat(plutoRows()):L}
 // rows in the guide: your channels plus Pluto TV rows
-function guideList(){const L=surfList();if(SET.guideFav)return L;for(let i=BASE;i<CH.length;i++)L.push(i);return L}
+function guideList(){const L=baseList();return SET.guideFav?L:L.concat(plutoRows())}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
 function tune(ci){
   if(ci===S.ch){S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
-  S.last=S.ch;S.ch=ci;S.staticUntil=performance.now()+260;S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();
+  S.last=S.ch;S.ch=ci;S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
 }
 function chStep(dir){const L=surfList();let p=L.indexOf(S.ch);if(p<0)p=0;p=(p+dir+L.length)%L.length;tune(L[p])}
 
@@ -429,7 +433,7 @@ function guideKey(k){
     if(nt<minT){snd.bump();return}
     while(nt<g.win)g.win-=SLOT;const pp=progAt(f.ci,nt);g.ft=Math.max(pp.start,g.win);snd.nav();render();return}
   if(k==='ok'){const f=gFocus();const now=Date.now();
-    if(f.p.start<=now&&f.p.end>now){snd.ok();if(CH[f.ci].pluto){launchPluto(f.ci)}else{tune(f.ci);S.screen='watch';render();}}
+    if(f.p.start<=now&&f.p.end>now){snd.ok();if(CH[f.ci].pluto&&SET.plutoPlay!=='box'){launchPluto(f.ci)}else{S.screen='watch';tune(f.ci);}}
     else{const key=f.ci+':'+f.p.start;if(S.reminders.has(key)){S.reminders.delete(key);dialog('Reminder Cleared',esc(f.p.title)+' on Ch '+CH[f.ci].n+'.',1600)}
       else{S.reminders.add(key);dialog('Reminder Set','We’ll remind you when <b>'+esc(f.p.title)+'</b> starts at '+fmtT(f.p.start)+' on Ch '+CH[f.ci].n+'.',2000)}snd.ok()}
     return}
@@ -455,10 +459,10 @@ let entryT=0;
 function press(k){
   if(S.dialog){if(k==='ok'||k==='back'){const f=(k==='ok')&&S.dialog.onOk;S.dialog=null;clearTimeout(dlgT);snd.back();render();if(f)f()}return}
   if(/^[0-9]$/.test(k)){
-    S.entry=(S.entry+k).slice(-2);snd.nav();
+    S.entry=(S.entry+k).slice(-3);snd.nav();
     if(S.screen!=='watch'){S.screen='watch'}
     clearTimeout(entryT);
-    entryT=setTimeout(()=>{const n=parseInt(S.entry,10);S.entry='';let best=0,bd=1e9;CH.forEach((c,i)=>{if(i>=BASE)return;const d=Math.abs(c.n-n);if(d<bd){bd=d;best=i}});tune(best)},1300);
+    entryT=setTimeout(()=>{const n=parseInt(S.entry,10);S.entry='';let best=0,bd=1e9;surfList().forEach(i=>{const d=Math.abs(CH[i].n-n);if(d<bd){bd=d;best=i}});tune(best)},1300);
     render();return;
   }
   if(k==='menu'){if(S.screen==='home'){snd.back();go('watch')}else{snd.ok();go('home')}return}
@@ -473,7 +477,7 @@ function press(k){
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     if(k==='left'){snd.ok();go('home');return}
     if(k==='right'){snd.ok();go('guide');return}
-    if(k==='fav'){toggleFav(S.ch);S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
+    if(k==='fav'){if(S.ch<BASE)toggleFav(S.ch);S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     return;
   }
   if(sc==='guide'){if(k==='info'){const f=gFocus();snd.nav();dialog(esc(f.p.title),esc(f.p.desc)+'<small>Ch '+CH[f.ci].n+' '+CH[f.ci].call+' · '+fmtT(f.p.start)+'–'+fmtT(f.p.end)+' · '+f.p.rating+'</small>');return}guideKey(k);return}
@@ -486,7 +490,7 @@ function press(k){
   const it=list[i];
   if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF);FAV=new Set([0,2,3,4,8,10]);save();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -539,7 +543,7 @@ function render(){
         '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">Next: '+esc(nx.title)+' at '+fmtT(nx.start)+'</div></div>'+
         '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(FAV.has(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl">OK Guide · ◀ Menu</div></div></div>';
     }
-    if(S.entry)h+='<div class="entry">'+S.entry+(S.entry.length<2?'-':'')+'</div>';
+    if(S.entry)h+='<div class="entry">'+S.entry+(S.entry.length<3?'-':'')+'</div>';
   }
   else if(sc==='home'){
     const it=HOME[S.idx.home];
@@ -591,6 +595,7 @@ function render(){
   if(S.dialog)h+='<div class="dlg"><div class="t">'+S.dialog.title+'</div><div class="b">'+S.dialog.body+'</div></div>';
   ui.innerHTML=h;
   const slot=ui.querySelector('.pv-slot');if(slot)slot.appendChild(pv);
+  syncVideo();
   clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
 }
 
@@ -601,7 +606,7 @@ function guideHTML(){
   let h='<div class="bg"></div>'+hdr('TV Guide')+
    '<div class="ginfo"><div class="pv bevel pv-slot"></div><div class="gtext bevel"><h2>'+esc(p.title)+'</h2>'+
    '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
-   '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?(c.pluto?'On now · Press OK to watch in Pluto TV':'On now · Press OK to watch'):'Press OK to set a reminder')+'</p></div></div>';
+   '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'On now · Press OK to watch in Pluto TV':'On now · Press OK to watch'):'Press OK to set a reminder')+'</p></div></div>';
   const gw=936-150, ppm=gw/90;
   h+='<div class="trow"><div class="d">'+fmtDate(g.win)+'</div>';
   for(let s=0;s<3;s++)h+='<div class="s">'+fmtT(g.win+s*SLOT)+'</div>';
@@ -619,7 +624,7 @@ function guideHTML(){
     }
     h+='</div>';
   }
-  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?(c.pluto?'Open in Pluto TV':'Watch'):'Remind'),'<i>CH</i>Page','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
+  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'Open in Pluto TV':'Watch'):'Remind'),'<i>CH</i>Page','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
   return h;
 }
 
@@ -717,6 +722,9 @@ function drawScene(ctx,w,h,ci,t){
   case 'stage':{ctx.fillStyle='#120a14';ctx.fillRect(0,0,w,h);const g=ctx.createRadialGradient(240,230,10,240,200,170);g.addColorStop(0,'rgba(255,240,200,.75)');g.addColorStop(1,'rgba(255,240,200,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(200,0);ctx.lineTo(280,0);ctx.lineTo(380,270);ctx.lineTo(100,270);ctx.fill();
     for(let s=0;s<2;s++){ctx.fillStyle='#8c1a26';for(let i=0;i<5;i++){ctx.beginPath();const x0=s?480-i*18:i*18;ctx.ellipse(x0,135,14,140,0,0,7);ctx.fill()}}
     ctx.fillStyle='#222';ctx.fillRect(238,150,4,100);ctx.beginPath();ctx.arc(240,148,7,0,7);ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(266,130+Math.sin(t*2)*2,14,0,7);ctx.fill();ctx.fillRect(254,144+Math.sin(t*2)*2,24,90);break}
+  case 'pluto':{const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a1450');g.addColorStop(1,'#07051f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    txt(ctx,String(c.n),240,118,64,'#ffd21a','center',900);txt(ctx,c.name.length>30?c.name.slice(0,30)+'…':c.name,240,152,18,'#fff','center',800);
+    const msg=(PLAY.on&&PLAY.ci===ci)?'TUNING'+'...'.slice(0,1+Math.floor(t*2)%3):(SET.plutoPlay==='box'?'NO SIGNAL':'PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV');txt(ctx,msg,240,186,13,'#a6d4ff','center',700);break}
   case 'shop':{const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#2b0a5c');g.addColorStop(1,'#b0126a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     const s=Math.abs(Math.cos(t));ctx.fillStyle='#ffd21a';ctx.fillRect(160+(1-s)*50,60,100*s+20,100);ctx.fillStyle='#e3a800';ctx.fillRect(160+(1-s)*50+100*s+20,70,30*(1-s)+8,100);
     txt(ctx,'$19.95',350,110,34,'#fff','center',900);txt(ctx,'+ S&H',350,132,14,'#ffd21a','center');ctx.fillStyle='#ffd21a';ctx.fillRect(0,205,w,40);txt(ctx,'CALL NOW 1-800-555-0199',240,232,20,'#2b0a5c','center',900);
@@ -732,8 +740,13 @@ function loop(ms){
   if(ms-lastDraw<32){requestAnimationFrame(loop);return} // ~30 fps keeps TV sticks cool
   lastDraw=ms;
   const t=ms/1000,stat=ms<S.staticUntil;
-  if(S.screen==='watch'){stat?drawStatic(vctx,480,270):drawScene(vctx,480,270,S.ch,t)}
+  const live=PLAY.on&&PLAY.ready&&PLAY.ci===S.ch&&!locked(S.ch);
+  const vc=$('#video');
+  if(S.screen==='watch'){const show=!live||stat;if(vc.style.visibility!==(show?'visible':'hidden'))vc.style.visibility=show?'visible':'hidden';
+    if(show){stat?drawStatic(vctx,480,270):drawScene(vctx,480,270,S.ch,t)}}
+  else if(pv.isConnected&&live&&!stat){pv.style.visibility='hidden';pv.parentNode.style.background='transparent'}
   else if(pv.isConnected){
+    if(pv.style.visibility==='hidden'){pv.style.visibility='visible';pv.parentNode.style.background=''}
     const ci=(S.screen==='guide'&&S.g)?S.ch:S.ch;
     stat?drawStatic(pctx,320,180):drawScene(pctx,320,180,ci,t);
   }
@@ -817,11 +830,10 @@ async function plutoV2(start,stop){
   const j=JSON.parse(await http('https://api.pluto.tv/v2/channels?start='+encodeURIComponent(start)+'&stop='+encodeURIComponent(stop)));
   if(!Array.isArray(j)||!j.length)throw new Error('empty');
   return j.filter(c=>c.number>0&&c.isStitched!==false).sort((a,b)=>a.number-b.number)
-    .map(c=>({num:c.number,name:c.name,slug:c.slug,id:c._id||c.id,progs:(c.timelines||[]).map(mapProg)}));
+    .map(c=>({num:c.number,name:c.name,slug:c.slug,id:c._id||c.id,stitched:(c.stitched&&c.stitched.urls&&c.stitched.urls[0]&&c.stitched.urls[0].url)||'',progs:(c.timelines||[]).map(mapProg)}));
 }
 async function plutoV4(start){
-  const boot=JSON.parse(await http('https://boot.pluto.tv/v4/start?appName=web&appVersion=8.0.0-111b2b9dc00bd0bea9030b30662159ed9e7c8bc6&deviceVersion=122.0.0&deviceModel=web&deviceMake=chrome&deviceType=web&clientID='+clientId()+'&clientModelNumber=1.0.0&serverSideAds=false'));
-  if(!boot.sessionToken)throw new Error('no session');const H={Authorization:'Bearer '+boot.sessionToken};
+  const boot=await plutoBoot();const H={Authorization:'Bearer '+boot.sessionToken};
   const cj=JSON.parse(await http('https://service-channels.clusters.pluto.tv/v2/guide/channels?channelIds=&offset=0&limit=1000&sort=number%3Aasc',H));
   let chans=(cj.data||[]).filter(c=>c.number>0).sort((a,b)=>a.number-b.number).slice(0,SET.plutoCount);
   const byId={};chans.forEach(c=>byId[c.id]={num:c.number,name:c.name,slug:c.slug,id:c.id,progs:[]});
@@ -841,8 +853,7 @@ function fillSched(progs,name){
   return out;
 }
 async function loadPluto(){
-  CH.length=BASE;            // drop old Pluto rows
-  if(!SET.pluto){PLUTO_ERR=null;if(S.screen==='guide')render();return}
+  if(!SET.pluto){if(S.ch>=BASE){S.ch=0;applyStream()}if(S.last>=BASE)S.last=0;CH.length=BASE;PLUTO_ERR=null;if(S.screen==='guide')render();return}
   if(!NATIVE||plutoBusy)return;
   plutoBusy=true;
   const now=Date.now(),start=new Date(floor30(now)-SLOT).toISOString(),stop=new Date(now+6*3600000).toISOString();
@@ -851,10 +862,14 @@ async function loadPluto(){
   if(!list){try{list=await plutoV4(start)}catch(e){}}
   plutoBusy=false;
   if(!list){PLUTO_ERR='Pluto TV listings are unavailable right now.';PLUTOAT=Date.now()-100*MIN;return}
+  const curId=S.ch>=BASE&&CH[S.ch]?CH[S.ch].pluto.id:null,lastId=S.last>=BASE&&CH[S.last]?CH[S.last].pluto.id:null;
   CH.length=BASE;
   list.slice(0,SET.plutoCount).forEach((c,i)=>{
-    CH.push({n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'bars',pluto:{slug:c.slug,id:c.id,num:c.num},sched:fillSched(c.progs,c.name)});
+    CH.push({n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'pluto',pluto:{slug:c.slug,id:c.id,num:c.num,stitched:c.stitched||''},sched:fillSched(c.progs,c.name)});
   });
+  const find=id=>{for(let i=BASE;i<CH.length;i++)if(CH[i].pluto.id===id)return i;return -1};
+  if(curId){const i=find(curId);if(i<0){S.ch=0;applyStream()}else{S.ch=i;PLAY.ci=PLAY.on?i:-1}}
+  if(lastId){const i=find(lastId);S.last=i<0?0:i}
   PLUTO_ERR=null;PLUTOAT=Date.now();
   if(S.screen==='guide')render();
 }
@@ -868,13 +883,62 @@ function launchPluto(ci){
   dialog('Pluto TV','<span class="wait"></span>Opening <b>'+esc(c.name)+'</b> in Pluto TV…',1500);
 }
 
+/* ---------------- playing Pluto TV inside NyxVision ---------------- */
+function uuid(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)})}
+let BOOT=null,BOOTAT=0;
+async function plutoBoot(){
+  if(BOOT&&Date.now()-BOOTAT<3*3600000)return BOOT;
+  const b=JSON.parse(await http('https://boot.pluto.tv/v4/start?appName=web&appVersion=8.0.0-111b2b9dc00bd0bea9030b30662159ed9e7c8bc6&deviceVersion=122.0.0&deviceModel=web&deviceMake=chrome&deviceType=web&clientID='+clientId()+'&clientModelNumber=1.0.0&serverSideAds=false'));
+  if(!b.sessionToken)throw new Error('no session');BOOT=b;BOOTAT=Date.now();return b;
+}
+async function plutoUrls(ci){
+  const pl=CH[ci].pluto,urls=[],dev=clientId(),sid=uuid();
+  try{const b=await plutoBoot();const host=b.servers&&b.servers.stitcher;
+    if(host&&b.stitcherParams)urls.push(host.replace(/\/$/,'')+'/v2/stitch/hls/channel/'+pl.id+'/master.m3u8?'+b.stitcherParams+'&jwt='+b.sessionToken+'&masterJWTPassthrough=true&includeExtendedEvents=true')}catch(e){}
+  urls.push('https://service-stitcher.clusters.pluto.tv/stitch/hls/channel/'+pl.id+'/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId='+dev+'&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&sid='+sid+'&userId=&serverSideAds=true');
+  if(pl.stitched)urls.push(pl.stitched.replace(/^http:/,'https:').replace('deviceId=&','deviceId='+dev+'&').replace('sid=&','sid='+sid+'&'));
+  return urls;
+}
+const PLAY={on:false,ready:false,ci:-1};
+function canPlay(ci){return !!(NATIVE&&NATIVE.playStream&&CH[ci]&&CH[ci].pluto&&SET.plutoPlay==='box')}
+async function applyStream(){
+  const ci=S.ch;
+  if(!canPlay(ci)){if(PLAY.on&&NATIVE.stopStream)NATIVE.stopStream();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;syncVideo();return}
+  if(PLAY.on&&PLAY.ci===ci){syncVideo();return}
+  if(PLAY.on)NATIVE.stopStream();
+  PLAY.on=true;PLAY.ready=false;PLAY.ci=ci;syncVideo();
+  const urls=await plutoUrls(ci);
+  if(S.ch!==ci||PLAY.ci!==ci)return;   // changed channel while looking it up
+  NATIVE.playStream(JSON.stringify(urls));syncVideo();
+}
+// position the real video under the interface: full screen, the preview window, or hidden
+function syncVideo(){
+  if(!NATIVE||!NATIVE.videoRect)return;
+  const bg=ui.querySelector('.bg');if(bg)bg.style.clipPath='';
+  let r=null;
+  if(PLAY.on&&!locked(S.ch)){
+    if(S.screen==='watch')r={x:0,y:0,w:innerWidth,h:innerHeight};
+    else{const sl=ui.querySelector('.pv-slot');if(sl){const b=sl.getBoundingClientRect();r={x:b.left+2,y:b.top+2,w:b.width-4,h:b.height-4};
+      if(bg){const st=stage.getBoundingClientRect(),k=st.width/960,x1=(r.x-st.left)/k,y1=(r.y-st.top)/k,x2=x1+r.w/k,y2=y1+r.h/k;
+        bg.style.clipPath='polygon(evenodd,0 0,960px 0,960px 540px,0 540px,0 0,'+x1+'px '+y1+'px,'+x2+'px '+y1+'px,'+x2+'px '+y2+'px,'+x1+'px '+y2+'px,'+x1+'px '+y1+'px)'}}}
+  }
+  const d=window.devicePixelRatio||1;
+  if(r)NATIVE.videoRect(Math.round(r.x*d),Math.round(r.y*d),Math.round(r.w*d),Math.round(r.h*d));else NATIVE.videoRect(0,0,0,0);
+}
+function playerState(st){
+  if(st==='ready')PLAY.ready=true;
+  if(st==='error'&&PLAY.on){const ci=PLAY.ci;PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;syncVideo();
+    dialog('Channel Unavailable',esc(CH[ci]?CH[ci].name:'This channel')+' couldn’t be played in NyxVision right now.<small>Press OK to open it in the Pluto TV app instead, or BACK to stay here.</small>');
+    S.dialog.onOk=()=>launchPluto(ci);}
+}
+
 /* reminders: pop up when a reminded show starts */
 function checkReminders(){
   const now=Date.now();
   S.reminders.forEach(key=>{const parts=key.split(':'),ci=+parts[0],st=+parts[1];
     if(st<=now&&now-st<10*MIN&&CH[ci]){S.reminders.delete(key);const p=progAt(ci,st);
       dialog('Starting Now','<b>'+esc(p.title)+'</b> is starting on Ch '+CH[ci].n+' '+esc(CH[ci].call)+'.<small>Press OK to watch, or BACK to dismiss.</small>');snd.ok();
-      S.dialog.onOk=()=>{if(CH[ci].pluto)launchPluto(ci);else{S.screen='watch';tune(ci)}}}
+      S.dialog.onOk=()=>{if(CH[ci].pluto&&SET.plutoPlay!=='box')launchPluto(ci);else{S.screen='watch';tune(ci)}}}
     else if(st<now-10*MIN)S.reminders.delete(key)});
 }
 setInterval(()=>{checkReminders();if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
@@ -884,8 +948,10 @@ if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();S.screen
 window.cable={
   press:press,
   httpDone:httpDone,
-  resume:function(){loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
-    if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}}
+  playerState:playerState,
+  resume:function(){PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
+    if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}
+    applyStream()}
 };
 render();
 if(NATIVE){loadWeather();loadPluto()}

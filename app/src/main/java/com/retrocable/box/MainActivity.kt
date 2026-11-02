@@ -7,13 +7,24 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
+import android.view.SurfaceView
 import android.view.View
+import android.widget.FrameLayout
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MimeTypes
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.webkit.WebViewAssetLoader
 import org.json.JSONArray
 import org.json.JSONObject
@@ -26,10 +37,17 @@ import java.util.concurrent.ConcurrentHashMap
  * This activity shows it full screen, forwards remote buttons to it,
  * and gives it a small bridge ("CableNative") to open the TV's real apps.
  */
+@OptIn(UnstableApi::class)
 class MainActivity : AppCompatActivity() {
 
     private lateinit var web: WebView
     private val results = ConcurrentHashMap<Int, String>()
+
+    // Live video (Pluto TV channels) plays on this surface, underneath the see-through interface
+    private lateinit var videoSurface: SurfaceView
+    private var player: ExoPlayer? = null
+    private var streamUrls: List<String> = emptyList()
+    private var streamIndex = 0
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         web = WebView(this).apply {
-            setBackgroundColor(android.graphics.Color.BLACK)
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true            // remembers settings + favorites
             settings.mediaPlaybackRequiresUserGesture = false
@@ -54,9 +72,64 @@ class MainActivity : AppCompatActivity() {
                     assets.shouldInterceptRequest(request.url)
             }
         }
-        setContentView(web)
+        videoSurface = SurfaceView(this).apply { visibility = View.INVISIBLE }
+        val root = FrameLayout(this).apply { setBackgroundColor(android.graphics.Color.BLACK) }
+        root.addView(videoSurface, FrameLayout.LayoutParams(1, 1))
+        root.addView(web, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        setContentView(root)
         hideSystemBars()
         web.loadUrl("https://appassets.androidplatform.net/assets/www/index.html")
+    }
+
+    private fun js(code: String) = web.evaluateJavascript("window.cable&&$code", null)
+
+    private fun ensurePlayer(): ExoPlayer {
+        player?.let { return it }
+        val http = DefaultHttpDataSource.Factory()
+            .setUserAgent("Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36")
+            .setAllowCrossProtocolRedirects(true)
+        val p = ExoPlayer.Builder(this)
+            .setMediaSourceFactory(DefaultMediaSourceFactory(http))
+            .build()
+        p.setVideoSurfaceView(videoSurface)
+        p.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(state: Int) {
+                val name = when (state) {
+                    Player.STATE_READY -> "ready"
+                    Player.STATE_BUFFERING -> "buffering"
+                    Player.STATE_ENDED -> "ended"
+                    else -> "idle"
+                }
+                js("cable.playerState('$name')")
+            }
+            override fun onPlayerError(error: PlaybackException) {
+                // try the next address for this channel before giving up
+                if (streamIndex + 1 < streamUrls.size) {
+                    streamIndex++
+                    startStream()
+                } else {
+                    js("cable.playerState('error')")
+                }
+            }
+        })
+        player = p
+        return p
+    }
+
+    private fun startStream() {
+        val p = ensurePlayer()
+        val item = MediaItem.Builder()
+            .setUri(streamUrls[streamIndex])
+            .setMimeType(MimeTypes.APPLICATION_M3U8)
+            .build()
+        p.setMediaItem(item)
+        p.prepare()
+        p.playWhenReady = true
+    }
+
+    private fun stopStream() {
+        player?.stop()
+        player?.clearMediaItems()
     }
 
     private fun hideSystemBars() {
@@ -103,12 +176,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        stopStream()        // no streaming in the background while Netflix etc. is open
+        videoSurface.visibility = View.INVISIBLE
         web.onPause()
         web.pauseTimers()   // stop animating while another app is on screen
         super.onPause()
     }
 
     override fun onDestroy() {
+        player?.release()
+        player = null
         web.destroy()
         super.onDestroy()
     }
@@ -187,6 +264,40 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun takeResult(id: Int): String = results.remove(id) ?: ""
+
+        /** Plays a live HLS stream. urlsJson is a list of addresses to try in order. */
+        @JavascriptInterface
+        fun playStream(urlsJson: String) {
+            val arr = JSONArray(urlsJson)
+            val list = (0 until arr.length()).map { arr.getString(it) }
+            if (list.isEmpty()) return
+            runOnUiThread {
+                streamUrls = list
+                streamIndex = 0
+                startStream()
+            }
+        }
+
+        @JavascriptInterface
+        fun stopStream() {
+            runOnUiThread { this@MainActivity.stopStream() }
+        }
+
+        /** Where the video shows, in screen pixels. A zero size hides the picture (sound keeps playing). */
+        @JavascriptInterface
+        fun videoRect(x: Int, y: Int, w: Int, h: Int) {
+            runOnUiThread {
+                if (w <= 0 || h <= 0) {
+                    videoSurface.visibility = View.INVISIBLE
+                } else {
+                    val lp = FrameLayout.LayoutParams(w, h)
+                    lp.leftMargin = x
+                    lp.topMargin = y
+                    videoSurface.layoutParams = lp
+                    videoSurface.visibility = View.VISIBLE
+                }
+            }
+        }
 
         /** Opens a Pluto TV channel in the Pluto TV app. Returns false if Pluto TV isn't installed. */
         @JavascriptInterface
