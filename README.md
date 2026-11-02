@@ -93,6 +93,9 @@ The optional extras below would each get their own written plan and your approva
   The sound is NyxVision's own chime, not the broadcast emergency tones.
 - **Race call alerts** (Settings → Race Call Alerts): from 6 PM ET on November 3 through November 6,
   2026, a RACE CALLED banner slides up on any channel when civicAPI reports a Senate or governor winner.
+- **Election night bar** (Settings → Election Night Bar): from 6 PM ET on November 3 through
+  November 6, a Balance of Power lower third (Senate, House, governors) sits on every channel.
+  Test it from Settings → Test Center → Election Race Calls → Balance of Power bar.
 - **Sports scores** (Settings → Sports Scores): pick leagues for the Nyx News Network ticker and
   star your teams for score and final-score pop-ups. Uses ESPN's public scoreboard data
   (unofficial, for personal use).
