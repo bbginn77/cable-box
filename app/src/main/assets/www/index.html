@@ -1144,7 +1144,7 @@ const THEMES=[
  T('cinco','Cinco de Mayo',fx(5,5),P('#0b2e18','#1a6b3a','#b2232a','#1f7a42','#b2232a','#ffffff','#e8f5e9'),['🇲🇽','🎊','🌵']),
  T('mothers','Mother’s Day',y=>nthWd(y,5,0,2),P('#2f1f35','#6b4a85','#b8628a','#7a5a96','#b8628a','#fff3e0','#f6e6ff'),['💐','💗','🌷'],'Happy Mother’s Day'),
  T('memorial','Memorial Day',y=>nthWd(y,5,1,-1),RWB,['🇺🇸','⭐','🌺']),
- T('pride','Pride Month (June 1)',fx(6,1),P('#1a1a2e','#3a2a6e','#7b2cbf','#2a6fdb','#d9480f','#ffd60a','#ffd1f2'),['🏳️‍🌈','❤️','🌈'],'Happy Pride'),
+ T('pride','Pride Month',null,P('#1a1a2e','#3a2a6e','#7b2cbf','#2a6fdb','#d9480f','#ffd60a','#ffd1f2'),['🏳️‍🌈','❤️','🌈'],'Happy Pride',y=>[new Date(y,5,1),new Date(y,5,30)]),
  T('donut','National Donut Day',y=>nthWd(y,6,5,1),P('#2b1a12','#6a3f2a','#c25a85','#7a4a32','#b85480','#ffc2d9','#ffe0ec'),['🍩','☕','✨']),
  T('flagday','Flag Day',fx(6,14),RWB,['🇺🇸','⭐']),
  T('juneteenth','Juneteenth',fx(6,19),P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa'),['🌟','⭐','✊🏾']),
