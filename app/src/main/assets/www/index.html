@@ -94,6 +94,9 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .cell .rm{margin-left:6px;color:var(--hi)}
 .cell.hi .rm{color:#7a2a00}
 .lockedrow .cell{color:#c9c4ff}
+.grow.pl .gch{background:#24164f;border-color:#5b44b0}
+.grow.pl .gch b{font-size:16px;width:34px}
+.grow.pl .gch span{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92px}
 
 /* watch banner */
 .banner{position:absolute;left:24px;right:24px;bottom:22px;height:118px;display:flex;background:linear-gradient(#2148b4 0%,#12318a 55%,#0b2268 100%);
@@ -136,6 +139,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .wxd .lo{font:700 18px var(--ui);color:var(--ice)}
 .wxd .c{font:600 14px var(--ui);color:#dfe8ff}
 .ticker{position:absolute;left:0;right:0;bottom:34px;height:38px;background:#061650;border-top:2px solid var(--hi);overflow:hidden;white-space:nowrap}
+.ticker.alert{border-top-color:#ff4d4d;background:#4a0b12}
 .ticker div{display:inline-block;padding-left:100%;font:700 19px/38px var(--ui);animation:tk 26s linear infinite}
 @keyframes tk{to{transform:translateX(-100%)}}
 .sample{position:absolute;left:30px;top:336px;font:600 14px var(--ui);color:var(--ice);letter-spacing:.1em;text-transform:uppercase}
@@ -299,11 +303,13 @@ CH.forEach((c,i)=>{
   }
   c.sched=out;
 });
-function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.end)return p}return s[s.length-1]}
+function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.end)return p}
+  const st=Math.floor(t/1800000)*1800000;return {title:CH[ci].name,start:st,end:st+1800000,rating:'',desc:'Listings not available.',filler:true}}
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50};
+const BASE=CH.length; // channels 2-99 are the box's own; Pluto TV rows are added after these
 let SET=Object.assign({},DEF), FAV=new Set([0,2,3,4,8,10]);
 try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(j.fav)FAV=new Set(j.fav)}}catch(e){}
 function save(){try{localStorage.setItem('cablebox',JSON.stringify({set:SET,fav:[...FAV]}))}catch(e){}}
@@ -362,6 +368,8 @@ const SETS=[
  {k:'bannerSec',label:'Channel Banner',vals:[3,5,8],names:['3 sec','5 sec','8 sec'],desc:'How long the blue info banner stays on screen after you change channels.'},
  {k:'parental',label:'Parental Controls',vals:[false,true],names:['Off','On'],desc:'When on, channels rated TV-14 or higher are blocked. On a real TV this ties into the TV’s own PIN where supported.'},
  {k:'guideFav',label:'Guide Shows',vals:[false,true],names:['All Channels','My Channels'],desc:'Show every channel in the guide, or only your favorites. CH ▲/▼ follows the same list.'},
+ {k:'pluto',label:'Pluto TV Listings',vals:[true,false],names:['On','Off'],desc:'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.'},
+ {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
 ];
 
@@ -385,7 +393,10 @@ function fmtDate(ms){const d=new Date(ms);return DAYS[d.getDay()]+' '+(d.getMont
 function clockStr(){return fmtDate(Date.now())+'&nbsp;&nbsp;'+fmtT(Date.now())}
 function floor30(t){return Math.floor(t/SLOT)*SLOT}
 function locked(ci){return SET.parental&&(CH[ci].mature)}
-function surfList(){if(SET.guideFav&&FAV.size){return CH.map((c,i)=>i).filter(i=>FAV.has(i))}return CH.map((c,i)=>i)}
+// channels you can flip through in full screen (the box's own)
+function surfList(){const all=[];for(let i=0;i<BASE;i++)all.push(i);if(SET.guideFav&&FAV.size){return all.filter(i=>FAV.has(i))}return all}
+// rows in the guide: your channels plus Pluto TV rows
+function guideList(){const L=surfList();if(SET.guideFav)return L;for(let i=BASE;i<CH.length;i++)L.push(i);return L}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
 function tune(ci){
@@ -398,11 +409,11 @@ function go(screen){S.prev=S.screen;S.screen=screen;if(screen==='guide')initGuid
 
 /* ---------------- guide ---------------- */
 const ROWS=6, WIN=90*MIN;
-function initGuide(){const L=surfList();let row=L.indexOf(S.ch);if(row<0)row=0;const now=Date.now();
+function initGuide(){const L=guideList();let row=L.indexOf(S.ch);if(row<0)row=0;const now=Date.now();
   S.g={row:row,top:Math.max(0,Math.min(row-2,L.length-ROWS)),win:floor30(now),ft:now}}
-function gFocus(){const L=surfList();const ci=L[S.g.row];return {ci:ci,p:progAt(ci,Math.max(S.g.ft,S.g.win))}}
+function gFocus(){const L=guideList();const ci=L[S.g.row];return {ci:ci,p:progAt(ci,Math.max(S.g.ft,S.g.win))}}
 function guideKey(k){
-  const L=surfList(),g=S.g;
+  const L=guideList(),g=S.g;
   if(g.row>=L.length){g.row=L.length-1}
   if(k==='up'||k==='down'||k==='chup'||k==='chdn'){
     const step=k==='up'?-1:k==='down'?1:k==='chup'?-ROWS:ROWS;
@@ -417,11 +428,11 @@ function guideKey(k){
     if(nt<minT){snd.bump();return}
     while(nt<g.win)g.win-=SLOT;const pp=progAt(f.ci,nt);g.ft=Math.max(pp.start,g.win);snd.nav();render();return}
   if(k==='ok'){const f=gFocus();const now=Date.now();
-    if(f.p.start<=now&&f.p.end>now){snd.ok();tune(f.ci);S.screen='watch';render();}
+    if(f.p.start<=now&&f.p.end>now){snd.ok();if(CH[f.ci].pluto){launchPluto(f.ci)}else{tune(f.ci);S.screen='watch';render();}}
     else{const key=f.ci+':'+f.p.start;if(S.reminders.has(key)){S.reminders.delete(key);dialog('Reminder Cleared',esc(f.p.title)+' on Ch '+CH[f.ci].n+'.',1600)}
       else{S.reminders.add(key);dialog('Reminder Set','We’ll remind you when <b>'+esc(f.p.title)+'</b> starts at '+fmtT(f.p.start)+' on Ch '+CH[f.ci].n+'.',2000)}snd.ok()}
     return}
-  if(k==='fav'){const f=gFocus();toggleFav(f.ci);return}
+  if(k==='fav'){const f=gFocus();if(f.ci<BASE)toggleFav(f.ci);return}
 }
 function toggleFav(ci){if(FAV.has(ci))FAV.delete(ci);else FAV.add(ci);save();snd.ok();render()}
 
@@ -446,7 +457,7 @@ function press(k){
     S.entry=(S.entry+k).slice(-2);snd.nav();
     if(S.screen!=='watch'){S.screen='watch'}
     clearTimeout(entryT);
-    entryT=setTimeout(()=>{const n=parseInt(S.entry,10);S.entry='';let best=0,bd=1e9;CH.forEach((c,i)=>{const d=Math.abs(c.n-n);if(d<bd){bd=d;best=i}});tune(best)},1300);
+    entryT=setTimeout(()=>{const n=parseInt(S.entry,10);S.entry='';let best=0,bd=1e9;CH.forEach((c,i)=>{if(i>=BASE)return;const d=Math.abs(c.n-n);if(d<bd){bd=d;best=i}});tune(best)},1300);
     render();return;
   }
   if(k==='menu'){if(S.screen==='home'){snd.back();go('watch')}else{snd.ok();go('home')}return}
@@ -467,14 +478,14 @@ function press(k){
   if(sc==='guide'){if(k==='info'){const f=gFocus();snd.nav();dialog(esc(f.p.title),esc(f.p.desc)+'<small>Ch '+CH[f.ci].n+' '+CH[f.ci].call+' · '+fmtT(f.p.start)+'–'+fmtT(f.p.end)+' · '+f.p.rating+'</small>');return}guideKey(k);return}
   if(sc==='wx'){return}
   // list screens
-  const lists={home:HOME,apps:APPS,od:OD,my:CH,set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
+  const lists={home:HOME,apps:APPS,od:OD,my:CH.slice(0,BASE),set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
   let i=S.idx[sc];
   if(k==='up'||k==='down'){const ni=i+(k==='up'?-1:1);if(ni<0||ni>=list.length){snd.bump();return}S.idx[sc]=ni;snd.nav();render();return}
   if(k==='chup'||k==='chdn'){S.idx[sc]=Math.max(0,Math.min(list.length-1,i+(k==='chup'?-5:5)));snd.nav();render();return}
   const it=list[i];
   if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF);FAV=new Set([0,2,3,4,8,10]);save();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -523,7 +534,7 @@ function render(){
     if(Date.now()<S.bannerUntil||S.entry){
       const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
       h+='<div class="banner"><div class="num"><b>'+c.n+'</b><span>'+c.call+'</span></div><div class="mid"><h2>'+esc(p.title)+'</h2>'+
-        '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span class="rate">'+p.rating+'</span>'+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
+        '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
         '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">Next: '+esc(nx.title)+' at '+fmtT(nx.start)+'</div></div>'+
         '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(FAV.has(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl">OK Guide · ◀ Menu</div></div></div>';
     }
@@ -563,8 +574,8 @@ function render(){
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Open','<i>BACK</i>Main Menu']);
   }
   else if(sc==='my'){
-    h+='<div class="bg"></div>'+hdr('My Channels')+menuHTML(CH,S.idx.my,40,62,460,(c,i)=>'<span class="n" style="width:34px">'+c.n+'</span>'+c.call+' · '+esc(c.name)+(FAV.has(i)?'<span class="star">★</span>':''),8)+
-      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+FAV.size+' of '+CH.length+'</h3>'+
+    h+='<div class="bg"></div>'+hdr('My Channels')+menuHTML(CH.slice(0,BASE),S.idx.my,40,62,460,(c,i)=>'<span class="n" style="width:34px">'+c.n+'</span>'+c.call+' · '+esc(c.name)+(FAV.has(i)?'<span class="star">★</span>':''),8)+
+      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+FAV.size+' of '+BASE+'</h3>'+
       '<p>Press OK to add or remove the highlighted channel.</p><p>Set <b style="color:#fff">Guide Shows</b> to <b style="color:#fff">My Channels</b> in Settings to surf only your favorites.</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Add / Remove ★','<i>BACK</i>Main Menu']);
   }
@@ -583,20 +594,20 @@ function render(){
 }
 
 function guideHTML(){
-  const L=surfList(),g=S.g;if(g.row>=L.length)g.row=L.length-1;
+  const L=guideList(),g=S.g;if(g.row>=L.length)g.row=L.length-1;
   const f=gFocus(),now=Date.now(),c=CH[f.ci],p=f.p,remK=f.ci+':'+p.start;
   const onNow=p.start<=now&&p.end>now;
   let h='<div class="bg"></div>'+hdr('TV Guide')+
    '<div class="ginfo"><div class="pv bevel pv-slot"></div><div class="gtext bevel"><h2>'+esc(p.title)+'</h2>'+
-   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+c.call+'</span><span class="rate">'+p.rating+'</span>'+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
-   '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?'On now · Press OK to watch':'Press OK to set a reminder')+'</p></div></div>';
+   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
+   '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?(c.pluto?'On now · Press OK to watch in Pluto TV':'On now · Press OK to watch'):'Press OK to set a reminder')+'</p></div></div>';
   const gw=936-150, ppm=gw/90;
   h+='<div class="trow"><div class="d">'+fmtDate(g.win)+'</div>';
   for(let s=0;s<3;s++)h+='<div class="s">'+fmtT(g.win+s*SLOT)+'</div>';
   h+='</div><div class="grid">';
   for(let r=g.top;r<Math.min(L.length,g.top+ROWS);r++){
     const ci=L[r],ch=CH[ci],lk=locked(ci);
-    h+='<div class="grow'+(ci===S.ch?' cur':'')+(lk?' lockedrow':'')+'"><div class="gch"><b>'+ch.n+'</b><span>'+ch.call+'</span>'+(FAV.has(ci)?'<span class="fv">★</span>':'')+'</div>';
+    h+='<div class="grow'+(ci===S.ch?' cur':'')+(ch.pluto?' pl':'')+(lk?' lockedrow':'')+'"><div class="gch"><b>'+ch.n+'</b><span>'+ch.call+'</span>'+(FAV.has(ci)?'<span class="fv">★</span>':'')+'</div>';
     for(const pr of ch.sched){
       if(pr.end<=g.win||pr.start>=g.win+WIN)continue;
       const s=Math.max(pr.start,g.win),e=Math.min(pr.end,g.win+WIN);
@@ -607,27 +618,43 @@ function guideHTML(){
     }
     h+='</div>';
   }
-  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?'Watch':'Remind'),'<i>CH</i>Page','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
+  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?(c.pluto?'Open in Pluto TV':'Watch'):'Remind'),'<i>CH</i>Page','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
   return h;
 }
 
 function wxHTML(){
-  const d=new Date();const days=[];const cond=[['Sunny',64,47],['Partly Cloudy',61,45],['Showers',55,44],['Breezy',58,41],['Mostly Sunny',63,46]];
-  for(let i=0;i<5;i++){const dd=new Date(d.getTime()+i*86400000);days.push('<div class="wxd"><div class="dn">'+(i===0?'Today':DAYS[dd.getDay()])+'</div><canvas class="wxi" data-c="'+cond[i][0]+'" width="64" height="52"></canvas><div class="c">'+cond[i][0]+'</div><div class="hi2">'+cond[i][1]+'°</div><div class="lo">'+cond[i][2]+'°</div></div>')}
+  const live=!!WX;
+  const d=new Date();
+  const sample={now:{temp:58,cond:'Partly Cloudy',hum:'62%',wind:'NW 9 mph',baro:'30.08 in'},
+    days:[['Sunny',64,47],['Partly Cloudy',61,45],['Showers',55,44],['Breezy',58,41],['Mostly Sunny',63,46]].map((c,i)=>({name:i===0?'Today':DAYS[new Date(d.getTime()+i*86400000).getDay()],cond:c[0],hi:c[1],lo:c[2]})),
+    ticker:['Clear skies tonight with lows in the upper 40s','A cold front brings showers Tuesday','Pollen: Low']};
+  const W=WX||sample;
+  const days=W.days.map(x=>'<div class="wxd"><div class="dn">'+esc(x.name)+'</div><canvas class="wxi" data-c="'+x.cond+'" width="64" height="52"></canvas><div class="c">'+x.cond+'</div><div class="hi2">'+(x.hi!=null?x.hi+'°':'—')+'</div><div class="lo">'+(x.lo!=null?x.lo+'°':'—')+'</div></div>').join('');
+  let note;
+  if(live)note=(WXERR?WXERR:'National Weather Service · updated '+fmtT(W.updated));
+  else if(NATIVE)note=WXERR?'Couldn’t reach the National Weather Service · sample shown':'Loading your forecast… sample shown';
+  else note='Sample forecast · the TV app shows live weather for '+WXLOC.label;
   return '<div class="wx"></div><div class="wxh"><b>Your Local Forecast</b><div class="clk">'+clockStr()+'</div></div>'+
-   '<div class="wxnow"><div class="lbl">Currently</div><div class="tmp">58°</div><div class="cond">Partly Cloudy</div>'+
-   '<div class="row"><span>Humidity</span><span>62%</span></div><div class="row"><span>Wind</span><span>NW 9 mph</span></div><div class="row"><span>Barometer</span><span>30.08 in ↑</span></div></div>'+
-   '<div class="wxdays">'+days.join('')+'</div><div class="sample">Sample forecast · live data comes with the TV version</div>'+
-   '<div class="ticker"><div>LOCAL WEATHER • Clear skies tonight with lows in the upper 40s • A cold front brings showers Tuesday • Sunrise 6:34 AM • Sunset 4:58 PM • Pollen: Low • UV Index: 3 Moderate</div></div>'+
+   '<div class="wxnow"><div class="lbl">'+esc(WXLOC.label)+'</div><div class="tmp">'+W.now.temp+'°</div><div class="cond">'+esc(W.now.cond)+'</div>'+
+   '<div class="row"><span>Humidity</span><span>'+W.now.hum+'</span></div><div class="row"><span>Wind</span><span>'+esc(W.now.wind)+'</span></div><div class="row"><span>Barometer</span><span>'+W.now.baro+'</span></div></div>'+
+   '<div class="wxdays">'+days+'</div><div class="sample">'+note+'</div>'+
+   '<div class="ticker'+(live&&W.alerts?' alert':'')+'"><div>LOCAL WEATHER • '+W.ticker.map(esc).join(' • ')+'</div></div>'+
    ftr(['<i>BACK</i>Applications','<i>MENU</i>Main Menu']);
 }
 function drawWxIcons(){
   ui.querySelectorAll('canvas.wxi').forEach(cv=>{const x=cv.getContext('2d'),c=cv.dataset.c;x.clearRect(0,0,64,52);
     const sun=(cx,cy,r)=>{x.fillStyle='#ffd21a';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.strokeStyle='#ffd21a';x.lineWidth=3;for(let a=0;a<8;a++){const t=a*Math.PI/4;x.beginPath();x.moveTo(cx+Math.cos(t)*(r+4),cy+Math.sin(t)*(r+4));x.lineTo(cx+Math.cos(t)*(r+9),cy+Math.sin(t)*(r+9));x.stroke()}};
+    const moon=(cx,cy,r)=>{x.fillStyle='#f4f1c9';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.fillStyle='#1d48a6';x.beginPath();x.arc(cx+6,cy-4,r-1,0,7);x.fill()};
     const cloud=(cx,cy,col)=>{x.fillStyle=col;x.beginPath();x.arc(cx-10,cy,10,0,7);x.arc(cx+4,cy-6,13,0,7);x.arc(cx+16,cy+2,9,0,7);x.rect(cx-10,cy,26,10);x.fill()};
-    if(c==='Sunny')sun(32,26,12);else if(c==='Mostly Sunny'){sun(26,22,10);cloud(36,32,'#e8eefc')}
+    const rain=()=>{x.strokeStyle='#8fd0ff';x.lineWidth=3;for(let i=0;i<4;i++){x.beginPath();x.moveTo(20+i*8,36);x.lineTo(16+i*8,46);x.stroke()}};
+    if(c==='Sunny')sun(32,26,12);else if(c==='Clear')moon(30,26,13);
+    else if(c==='Mostly Sunny'){sun(26,22,10);cloud(36,32,'#e8eefc')}
     else if(c==='Partly Cloudy'){sun(22,18,9);cloud(34,28,'#e8eefc')}
-    else if(c==='Showers'){cloud(30,20,'#c3cde4');x.strokeStyle='#8fd0ff';x.lineWidth=3;for(let i=0;i<4;i++){x.beginPath();x.moveTo(20+i*8,36);x.lineTo(16+i*8,46);x.stroke()}}
+    else if(c==='Cloudy'){cloud(24,22,'#aab6d0');cloud(34,30,'#e8eefc')}
+    else if(c==='Showers'){cloud(30,20,'#c3cde4');rain()}
+    else if(c==='T-Storms'){cloud(30,18,'#9aa6c0');x.fillStyle='#ffd21a';x.beginPath();x.moveTo(32,28);x.lineTo(24,40);x.lineTo(31,40);x.lineTo(26,51);x.lineTo(40,36);x.lineTo(33,36);x.lineTo(38,28);x.fill()}
+    else if(c==='Snow'){cloud(30,20,'#e8eefc');x.fillStyle='#fff';for(let i=0;i<5;i++){x.beginPath();x.arc(16+i*8,40+(i%2)*6,2.5,0,7);x.fill()}}
+    else if(c==='Fog'){x.strokeStyle='#cfd8ea';x.lineWidth=4;for(let i=0;i<4;i++){x.beginPath();x.moveTo(8+(i%2)*6,16+i*9);x.lineTo(56-(i%2)*6,16+i*9);x.stroke()}}
     else {cloud(30,22,'#e8eefc');x.strokeStyle='#a6d4ff';x.lineWidth=2;for(let i=0;i<3;i++){x.beginPath();x.moveTo(8,38+i*5);x.lineTo(50-i*8,38+i*5);x.stroke()}}
   });
 }
@@ -661,7 +688,7 @@ function drawScene(ctx,w,h,ci,t){
     ctx.strokeStyle='#4b6290';ctx.lineWidth=1;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(i*90,40);ctx.lineTo(i*90+30,270);ctx.stroke()}
     const blobs=[[0,'#3fd36b',60],[40,'#e8d53a',34],[70,'#e2493a',16]];
     for(let j=0;j<3;j++){const bx=((t*14+j*170)%640)-80,by=110+j*40;blobs.forEach(([o,cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}
-    ctx.fillStyle='rgba(6,20,80,.85)';ctx.fillRect(0,0,w,30);txt(ctx,'DOPPLER RADAR',12,21,15,'#ffd21a');txt(ctx,'58°',468,21,17,'#fff','right');break}
+    ctx.fillStyle='rgba(6,20,80,.85)';ctx.fillRect(0,0,w,30);txt(ctx,'DOPPLER RADAR',12,21,15,'#ffd21a');txt(ctx,(WX?WX.now.temp:58)+'\u00B0',468,21,17,'#fff','right');break}
   case 'ocean':case 'ocean2':{const g=ctx.createLinearGradient(0,0,0,h*.6);const warm=c.scene==='ocean';g.addColorStop(0,warm?'#ff7e5f':'#5fb4ff');g.addColorStop(1,warm?'#feb47b':'#cdeaff');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     ctx.fillStyle=warm?'#fff3b0':'#fffbe0';ctx.beginPath();ctx.arc(warm?240:380,warm?150:60,warm?40:24,0,7);ctx.fill();
     for(let L=0;L<5;L++){ctx.fillStyle=['#1d4e89','#1b5e9e','#2470b5','#2c84c9','#3a98da'][L];ctx.beginPath();ctx.moveTo(0,h);const base=150+L*24;for(let x=0;x<=w;x+=8)ctx.lineTo(x,base+Math.sin(x/(30+L*6)+t*(1+L*.3))*(4+L));ctx.lineTo(w,h);ctx.fill()}
@@ -725,13 +752,142 @@ fit();
 const origRender=render;
 render=function(){origRender();if(S.screen==='wx')drawWxIcons()};
 
+/* ---------------- web requests through the Android app ---------------- */
+let httpId=0;const httpWait={};
+function http(url,headers){return new Promise((res,rej)=>{
+  if(!NATIVE||!NATIVE.httpGet){rej(new Error('no network bridge'));return}
+  const id=++httpId;httpWait[id]={res:res,rej:rej};
+  setTimeout(()=>{if(httpWait[id]){delete httpWait[id];rej(new Error('timeout'))}},45000);
+  NATIVE.httpGet(id,url,JSON.stringify(headers||{}));
+})}
+function httpDone(id,status){const w=httpWait[id];const body=NATIVE.takeResult(id);if(!w)return;delete httpWait[id];
+  if(status>=200&&status<300)w.res(body);else w.rej(new Error('HTTP '+status))}
+
+/* ---------------- local weather (National Weather Service, free) ---------------- */
+const WXLOC={zip:'31909',lat:32.5466,lon:-84.9252,label:'Columbus, GA 31909'};
+let WX=null,WXERR=null,WXAT=0;
+const COMPASS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+function wxCat(s){s=(s||'').toLowerCase();
+  if(/thunder|t-storm/.test(s))return 'T-Storms'; if(/snow|flurr|sleet|wintry/.test(s))return 'Snow';
+  if(/shower|rain|drizzle/.test(s))return 'Showers'; if(/fog|haze|mist|smoke/.test(s))return 'Fog';
+  if(/partly/.test(s))return 'Partly Cloudy'; if(/mostly clear/.test(s))return 'Clear'; if(/mostly sunny/.test(s))return 'Mostly Sunny';
+  if(/mostly cloudy|overcast|cloudy/.test(s))return 'Cloudy'; if(/wind|breez|blustery/.test(s))return 'Breezy';
+  if(/clear/.test(s))return 'Clear'; return 'Sunny'}
+async function loadWeather(){
+  if(!NATIVE)return;WXAT=Date.now();
+  try{
+    const pt=JSON.parse(await http('https://api.weather.gov/points/'+WXLOC.lat+','+WXLOC.lon)).properties;
+    const per=JSON.parse(await http(pt.forecast)).properties.periods;
+    let ob=null;
+    try{const st=JSON.parse(await http(pt.observationStations));const sid=st.features[0].properties.stationIdentifier;
+      ob=JSON.parse(await http('https://api.weather.gov/stations/'+sid+'/observations/latest')).properties}catch(e){}
+    let alerts=[];
+    try{const al=JSON.parse(await http('https://api.weather.gov/alerts/active?point='+WXLOC.lat+','+WXLOC.lon));
+      alerts=(al.features||[]).map(f=>f.properties.event+(f.properties.headline?': '+f.properties.headline:''))}catch(e){}
+    const num=v=>(v&&typeof v.value==='number')?v.value:null;
+    const tC=ob&&num(ob.temperature);
+    const p0=per[0];
+    const now={
+      temp:tC!=null?Math.round(tC*9/5+32):p0.temperature,
+      cond:wxCat((ob&&ob.textDescription)||p0.shortForecast),
+      hum:ob&&num(ob.relativeHumidity)!=null?Math.round(num(ob.relativeHumidity))+'%':'—',
+      wind:(ob&&num(ob.windSpeed)!=null)?((num(ob.windSpeed)<1?'Calm':(num(ob.windDirection)!=null?COMPASS[Math.round(num(ob.windDirection)/22.5)%16]+' ':'')+Math.round(num(ob.windSpeed)*0.621)+' mph')):(p0.windDirection+' '+p0.windSpeed),
+      baro:(ob&&num(ob.barometricPressure)!=null)?(num(ob.barometricPressure)*0.0002953).toFixed(2)+' in':'—'
+    };
+    const days=[];
+    for(let i=0;i<per.length&&days.length<5;i++){const p=per[i];
+      if(p.isDaytime){const night=per[i+1];days.push({name:days.length===0&&/today|this/i.test(p.name)?'Today':p.name.slice(0,3),hi:p.temperature,lo:night&&!night.isDaytime?night.temperature:null,cond:wxCat(p.shortForecast)})}
+      else if(i===0){days.push({name:'Tonight',hi:null,lo:p.temperature,cond:wxCat(p.shortForecast)})}
+    }
+    const tick=alerts.map(a=>'⚠ '+a.toUpperCase()).concat(per.slice(0,3).map(p=>p.name.toUpperCase()+': '+p.detailedForecast));
+    WX={now:now,days:days,ticker:tick,alerts:alerts.length,updated:Date.now()};WXERR=null;WXAT=Date.now();
+  }catch(e){WXERR='Couldn’t reach the National Weather Service. Showing the last forecast.';WXAT=Date.now()-25*MIN}
+  if(S.screen==='wx')render();
+}
+
+/* ---------------- Pluto TV listings ---------------- */
+let PLUTO_ERR=null,PLUTOAT=0,plutoBusy=false;
+function clientId(){let id=null;try{id=localStorage.getItem('cablebox-cid')}catch(e){}
+  if(!id){id='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)});try{localStorage.setItem('cablebox-cid',id)}catch(e){}}
+  return id}
+function mapProg(p){const ep=p.episode||{};return {title:p.title||ep.name||'Pluto TV',start:Date.parse(p.start),end:Date.parse(p.stop),
+  desc:ep.description&&ep.description!=='No information available'?ep.description:'',rating:ep.rating&&ep.rating!=='Not Rated'?ep.rating:'',isNew:false}}
+async function plutoV2(start,stop){
+  const j=JSON.parse(await http('https://api.pluto.tv/v2/channels?start='+encodeURIComponent(start)+'&stop='+encodeURIComponent(stop)));
+  if(!Array.isArray(j)||!j.length)throw new Error('empty');
+  return j.filter(c=>c.number>0&&c.isStitched!==false).sort((a,b)=>a.number-b.number)
+    .map(c=>({num:c.number,name:c.name,slug:c.slug,id:c._id||c.id,progs:(c.timelines||[]).map(mapProg)}));
+}
+async function plutoV4(start){
+  const boot=JSON.parse(await http('https://boot.pluto.tv/v4/start?appName=web&appVersion=8.0.0-111b2b9dc00bd0bea9030b30662159ed9e7c8bc6&deviceVersion=122.0.0&deviceModel=web&deviceMake=chrome&deviceType=web&clientID='+clientId()+'&clientModelNumber=1.0.0&serverSideAds=false'));
+  if(!boot.sessionToken)throw new Error('no session');const H={Authorization:'Bearer '+boot.sessionToken};
+  const cj=JSON.parse(await http('https://service-channels.clusters.pluto.tv/v2/guide/channels?channelIds=&offset=0&limit=1000&sort=number%3Aasc',H));
+  let chans=(cj.data||[]).filter(c=>c.number>0).sort((a,b)=>a.number-b.number).slice(0,SET.plutoCount);
+  const byId={};chans.forEach(c=>byId[c.id]={num:c.number,name:c.name,slug:c.slug,id:c.id,progs:[]});
+  for(let i=0;i<chans.length;i+=100){
+    const ids=chans.slice(i,i+100).map(c=>c.id).join(',');
+    const tj=JSON.parse(await http('https://service-channels.clusters.pluto.tv/v2/guide/timelines?start='+encodeURIComponent(start)+'&channelIds='+ids+'&duration=360',H));
+    (tj.data||[]).forEach(d=>{if(byId[d.channelId])byId[d.channelId].progs=(d.timelines||[]).map(mapProg)});
+  }
+  return chans.map(c=>byId[c.id]);
+}
+function fillSched(progs,name){
+  progs=progs.filter(p=>p.end>p.start).sort((a,b)=>a.start-b.start);
+  const out=[];let t=floor30(Date.now())-2*SLOT;const endT=t+26*3600000;
+  const fill=(a,b)=>out.push({title:name,start:a,end:b,rating:'',desc:'Listings not available for this time.',filler:true});
+  for(const p of progs){if(p.end<=t)continue;if(p.start>t)fill(t,p.start);out.push(p);t=p.end}
+  if(t<endT)fill(t,endT);
+  return out;
+}
+async function loadPluto(){
+  CH.length=BASE;            // drop old Pluto rows
+  if(!SET.pluto){PLUTO_ERR=null;if(S.screen==='guide')render();return}
+  if(!NATIVE||plutoBusy)return;
+  plutoBusy=true;
+  const now=Date.now(),start=new Date(floor30(now)-SLOT).toISOString(),stop=new Date(now+6*3600000).toISOString();
+  let list=null;
+  try{list=await plutoV2(start,stop)}catch(e){}
+  if(!list){try{list=await plutoV4(start)}catch(e){}}
+  plutoBusy=false;
+  if(!list){PLUTO_ERR='Pluto TV listings are unavailable right now.';PLUTOAT=Date.now()-100*MIN;return}
+  CH.length=BASE;
+  list.slice(0,SET.plutoCount).forEach((c,i)=>{
+    CH.push({n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'bars',pluto:{slug:c.slug,id:c.id,num:c.num},sched:fillSched(c.progs,c.name)});
+  });
+  PLUTO_ERR=null;PLUTOAT=Date.now();
+  if(S.screen==='guide')render();
+}
+function launchPluto(ci){
+  const c=CH[ci];
+  if(!NATIVE)return;
+  if(!NATIVE.openPluto(c.pluto.slug||'')){
+    dialog('Pluto TV Not Found','The Pluto TV app isn’t installed on this Google TV.<small>Press OK to get it free from Google Play, or BACK to cancel.</small>');
+    S.dialog.onOk=()=>NATIVE.openStore('tv.pluto.android');return;
+  }
+  dialog('Pluto TV','<span class="wait"></span>Opening <b>'+esc(c.name)+'</b> in Pluto TV…',1500);
+}
+
+/* reminders: pop up when a reminded show starts */
+function checkReminders(){
+  const now=Date.now();
+  S.reminders.forEach(key=>{const parts=key.split(':'),ci=+parts[0],st=+parts[1];
+    if(st<=now&&now-st<10*MIN&&CH[ci]){S.reminders.delete(key);const p=progAt(ci,st);
+      dialog('Starting Now','<b>'+esc(p.title)+'</b> is starting on Ch '+CH[ci].n+' '+esc(CH[ci].call)+'.<small>Press OK to watch, or BACK to dismiss.</small>');snd.ok();
+      S.dialog.onOk=()=>{if(CH[ci].pluto)launchPluto(ci);else{S.screen='watch';tune(ci)}}}
+    else if(st<now-10*MIN)S.reminders.delete(key)});
+}
+setInterval(()=>{checkReminders();if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
+
 /* Android TV integration: the app forwards remote buttons here */
 if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();S.screen='watch';S.bannerUntil=Date.now()+SET.bannerSec*1000;}
 window.cable={
   press:press,
-  resume:function(){loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit()}
+  httpDone:httpDone,
+  resume:function(){loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
+    if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}}
 };
 render();
+if(NATIVE){loadWeather();loadPluto()}
 })();
 </script>
 

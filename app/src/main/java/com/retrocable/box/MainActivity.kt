@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.webkit.WebViewAssetLoader
 import org.json.JSONArray
 import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * The cable box interface is a web page bundled in assets/www.
@@ -26,6 +29,7 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var web: WebView
+    private val results = ConcurrentHashMap<Int, String>()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = pm.getLeanbackLaunchIntentForPackage(pkg) ?: pm.getLaunchIntentForPackage(pkg)
                 if (intent != null) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    try { startActivity(intent) } catch (_: ActivityNotFoundException) {}
+                    try { startActivity(intent) } catch (e: ActivityNotFoundException) {}
                 }
             }
         }
@@ -148,8 +152,61 @@ class MainActivity : AppCompatActivity() {
         fun openSettings() {
             runOnUiThread {
                 try { startActivity(Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
-                catch (_: ActivityNotFoundException) {}
+                catch (e: ActivityNotFoundException) {}
             }
+        }
+
+        /** Fetches a URL off the main thread (weather + Pluto TV listings), then tells the page it's ready. */
+        @JavascriptInterface
+        fun httpGet(id: Int, url: String, headersJson: String) {
+            Thread {
+                var status = 0
+                var body = ""
+                try {
+                    val conn = URL(url).openConnection() as HttpURLConnection
+                    conn.connectTimeout = 15000
+                    conn.readTimeout = 30000
+                    conn.setRequestProperty("User-Agent", "RetroCableBox/0.3 (personal hobby project)")
+                    conn.setRequestProperty("Accept", "application/geo+json, application/json")
+                    if (headersJson.isNotBlank()) {
+                        val h = JSONObject(headersJson)
+                        for (k in h.keys()) conn.setRequestProperty(k, h.getString(k))
+                    }
+                    status = conn.responseCode
+                    val stream = if (status in 200..299) conn.inputStream else conn.errorStream
+                    body = stream?.bufferedReader()?.use { it.readText() } ?: ""
+                    conn.disconnect()
+                } catch (e: Exception) {
+                    status = 0
+                    body = e.toString()
+                }
+                results[id] = body
+                runOnUiThread { web.evaluateJavascript("window.cable&&cable.httpDone($id,$status)", null) }
+            }.start()
+        }
+
+        @JavascriptInterface
+        fun takeResult(id: Int): String = results.remove(id) ?: ""
+
+        /** Opens a Pluto TV channel in the Pluto TV app. Returns false if Pluto TV isn't installed. */
+        @JavascriptInterface
+        fun openPluto(slug: String): Boolean {
+            val pkg = "tv.pluto.android"
+            val launch = packageManager.getLeanbackLaunchIntentForPackage(pkg)
+                ?: packageManager.getLaunchIntentForPackage(pkg)
+                ?: return false
+            runOnUiThread {
+                val deep = Intent(Intent.ACTION_VIEW, Uri.parse("https://pluto.tv/live-tv/$slug"))
+                    .setPackage(pkg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                try {
+                    if (slug.isNotBlank()) startActivity(deep) else throw ActivityNotFoundException()
+                } catch (e: Exception) {
+                    // Pluto didn't accept the channel link: open the app's home screen instead
+                    launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    try { startActivity(launch) } catch (e2: Exception) {}
+                }
+            }
+            return true
         }
 
         @JavascriptInterface
@@ -157,7 +214,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 val uri = if (pkg.isNotBlank()) Uri.parse("market://details?id=$pkg") else Uri.parse("market://search?q=apps")
                 try { startActivity(Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
-                catch (_: ActivityNotFoundException) {
+                catch (e: ActivityNotFoundException) {
                     packageManager.getLeanbackLaunchIntentForPackage("com.android.vending")?.let {
                         it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(it)
                     }

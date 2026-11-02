@@ -18,6 +18,7 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
         <package android:name="com.android.vending" />
+        <package android:name="tv.pluto.android" />
     </queries>
 
     <application

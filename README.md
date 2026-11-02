@@ -60,6 +60,18 @@ The optional extras below would each get their own written plan and your approva
 - Opening the cable box with the Home button (button-remapping app, removable any time).
 - Making it the true home screen (needs Developer Options and ADB; reversible with one command).
 
+## Live data
+
+- **Local Weather** (Applications → Local Weather): current conditions, 5-day forecast and any
+  active alerts for Columbus, GA 31909 from the National Weather Service's free public data.
+  Refreshes every 30 minutes. Alerts turn the bottom crawl red. Channel 4 shows the live temperature.
+  To change the location, edit `WXLOC` near the weather section in `assets/www/index.html`.
+- **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
+  OK on one opens it in the Pluto TV app (install Pluto TV from Google Play if you haven't).
+  Pluto doesn't publish an official listings feed, so this reads the same public guide data
+  their website uses, like many hobby DVR apps do. It can stop working if Pluto changes it;
+  the rest of the box keeps working if that happens. Turn it off or show all channels in Settings.
+
 ## Project layout
 
 - `app/src/main/assets/www/index.html`: the whole interface (HTML, CSS and JavaScript).
