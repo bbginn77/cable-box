@@ -479,6 +479,49 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 #vrem .vrtr span{font:700 7px Arial;color:#9aa0aa}#vrem .vrtr .vn{font-style:normal;font-size:11px;margin-bottom:6px}#vrem .vrec{color:#ff5a4a}
 #vrem .vrbrand{display:flex;flex-direction:column;align-items:center;margin-top:8px;gap:2px}#vrem .vrbrand b{font:italic 900 18px Arial;color:#b9bec8;letter-spacing:.02em}
 #vrem .vrbrand span{font:700 7px Arial;color:#8b919c;letter-spacing:.3em}
+.tape{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,#3a2a1c,#120c08 75%);overflow:hidden}
+.tape::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,#0000 0 38px,#ffffff06 38px 40px)}
+.tdeck{position:absolute;left:34px;top:62px;width:520px;height:392px;box-sizing:border-box;padding:12px 18px;background:linear-gradient(#c9ccd1,#9a9ea6 40%,#7d818a);border:3px solid #4b4e55;border-radius:6px;color:#222}
+.tbrand{display:flex;align-items:center;gap:12px}.tbrand b{font:italic 900 26px var(--display);color:#1b1d22;letter-spacing:.06em}.tbrand span{font:800 10px var(--ui);letter-spacing:.18em;color:#3b3e45}
+.tled{margin-left:auto;width:12px;height:12px;border-radius:50%;background:#3a1210;box-shadow:inset 0 1px 2px #000}.tape.play .tled{background:#ff3b2f;box-shadow:0 0 10px #ff3b2f}
+.twin{margin:10px auto 0;width:420px;height:222px;padding:12px;box-sizing:border-box;background:linear-gradient(#1b1d22,#2b2e35);border:3px solid #55585f;border-radius:8px;box-shadow:inset 0 4px 12px #000}
+.tcas{position:relative;height:100%;border-radius:10px;background:linear-gradient(#2d2f36,#1a1b20);border:2px solid #444750;overflow:hidden}
+.tlab{position:absolute;left:14px;right:14px;top:10px;height:122px;border-radius:6px;background:linear-gradient(#f5ecd2 0 26%,#e4572e 26% 31%,#f5ecd2 31% 69%,#f3a712 69% 74%,#f5ecd2 74%);box-sizing:border-box;padding:4px 12px}
+.tlab b{display:block;margin-left:34px;font:italic 800 21px "Comic Sans MS","Segoe Print","Bradley Hand",cursive;color:#1d2a6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform:rotate(-1.2deg)}
+.tlab i{position:absolute;right:12px;bottom:4px;font:700 10px var(--ui);color:#6b5a3a;font-style:normal;letter-spacing:.1em}
+.tside{position:absolute;left:10px;top:4px;width:28px;height:28px;border-radius:50%;background:#1d2a6b;color:#f5ecd2;font:900 17px var(--display);display:flex;align-items:center;justify-content:center}
+.twindow{position:absolute;left:66px;right:66px;top:50px;height:74px;border-radius:37px;background:#0d0e11cc;border:2px solid #6b6e76;overflow:hidden;display:flex;justify-content:space-between;align-items:center;padding:0 6px}
+.treel{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center}
+.ttape{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#3a2618 0 30%,#5a3a22 31%,#2a1a10);max-width:120px;max-height:120px;transition:width 1s,height 1s}
+.thub{position:relative;width:34px;height:34px;border-radius:50%;background:#f2f2f2;border:3px solid #cfcfcf;box-sizing:border-box}
+.thub span{position:absolute;left:50%;top:50%;width:6px;height:13px;margin:-6px 0 0 -3px;background:#2b2e35;border-radius:2px;transform-origin:3px 6px}
+.thub span:nth-child(1){transform:rotate(0) translateY(-6px)}.thub span:nth-child(2){transform:rotate(120deg) translateY(-6px)}.thub span:nth-child(3){transform:rotate(240deg) translateY(-6px)}
+.tape.play .thub{animation:tspin 1.6s linear infinite}@keyframes tspin{to{transform:rotate(-360deg)}}
+.tbot{position:absolute;left:70px;right:70px;bottom:-2px;height:34px;background:#24262c;border:2px solid #444750;border-bottom:none;clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)}
+.tctl{display:flex;align-items:center;gap:14px;margin-top:14px}
+.tcnt{font:700 24px "DejaVu Sans Mono",Consolas,monospace;color:#ff3b2f;background:#120404;padding:2px 8px;border:2px solid #333;letter-spacing:.1em;text-shadow:0 0 6px #ff3b2f99}
+.tvu{display:flex;gap:2px;height:30px;align-items:flex-end}.tvu i{width:6px;background:#2f3a2f;height:20%}
+.tape.play .tvu i{background:linear-gradient(#ff3b2f 0 20%,#f3c012 20% 45%,#4cd964 45%);animation:tvu .5s ease-in-out infinite alternate}
+.tvu i:nth-child(2n){animation-delay:-.2s!important}.tvu i:nth-child(3n){animation-delay:-.35s!important;animation-duration:.42s!important}.tvu.r i{animation-delay:-.1s}
+@keyframes tvu{from{height:15%}to{height:95%}}
+.tkeys{margin-left:auto;display:flex;gap:4px}.tkeys span{width:40px;height:30px;display:flex;align-items:center;justify-content:center;background:linear-gradient(#e8eaee,#a9adb5);border:2px solid #55585f;border-radius:3px;font:800 13px var(--ui);color:#2b2e35}
+.tkeys span.on{background:linear-gradient(#9aa0aa,#7d818a);box-shadow:inset 0 3px 4px #0006;color:#ff3b2f}
+.tjc{position:absolute;left:576px;top:62px;width:352px;height:392px;box-sizing:border-box;padding:16px 18px;background:linear-gradient(#f5ecd2,#e8dcb8);color:#2a2014;border:3px solid #6b5a3a;overflow:hidden}
+.tjc h3{margin:6px 0;font:900 24px var(--display);color:#1d2a6b;line-height:1.1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.tjc p{margin:4px 0;font:600 16px/1.3 var(--ui);color:#3a2e1c}
+.tart{width:128px;height:128px;margin:0 auto 6px;border:3px solid #2a2014;background:#1d2a6b;display:flex;align-items:center;justify-content:center;overflow:hidden}.tart img{width:100%;height:100%;object-fit:cover;image-rendering:auto}
+.tnow{font:800 12px var(--ui);letter-spacing:.16em;color:#e4572e;text-transform:uppercase;text-align:center}.tjc .tart2{font:800 18px var(--ui);color:#2a2014;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tjc .talb{font:600 14px var(--ui);color:#6b5a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbar{height:8px;margin-top:8px;background:#c9b98f;border:1px solid #6b5a3a}.tbar div{height:100%;background:#e4572e}
+.ttime{display:flex;justify-content:space-between;font:700 13px var(--ui);color:#6b5a3a;margin-top:3px}
+.tjc .ttqr span{color:#3a2e1c}
+.tkhint{margin-top:10px;padding:6px;text-align:center;font:800 15px var(--ui);background:#1d2a6b;color:#f5ecd2}
+.tfoot{position:absolute;left:34px;right:32px;bottom:44px;text-align:center;font:700 14px var(--ui);color:#cfb98a;letter-spacing:.04em}
+.tshelf{position:absolute;left:250px;top:56px;width:460px;height:410px;box-sizing:border-box;padding:12px 16px;background:linear-gradient(#4a3524,#2a1d12);border:3px solid #a8823c;color:#f5ecd2;z-index:3}
+.tshelf h3{margin:0 0 8px;font:italic 900 24px var(--display);color:#ffe7a8}.tshelf p{font:600 16px var(--ui)}
+.tsh{font:800 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#cfb98a;margin:6px 0 2px}
+.tsp{display:flex;align-items:center;gap:10px;height:31px;padding:0 8px;margin:2px 0;background:#1a1b20;border:2px solid #000;border-radius:3px}
+.tsp i{width:16px;height:22px;border-radius:2px;flex:none}.tsp b{font:800 15px var(--ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:250px}.tsp span{margin-left:auto;font:600 12px var(--ui);color:#9aa0aa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.tsp.sel{background:linear-gradient(#ffe7a8,#e6c36a);color:#2a1606;border-color:#fff}.tsp.sel span{color:#5a4a2a}
+.tshelf .tkhint{position:absolute;left:16px;right:16px;bottom:10px}
 .ppvc{width:600px;padding:0 0 14px;text-align:left;background:linear-gradient(#14205e,#070d33);border:3px solid #e6c36a;box-sizing:border-box}
 .ppvh{display:flex;justify-content:space-between;align-items:baseline;padding:8px 18px;background:linear-gradient(#e6c36a,#a8822c);color:#2a1606}.ppvh b{font:italic 900 26px var(--display);letter-spacing:.04em}.ppvh span{font:800 13px var(--ui);letter-spacing:.12em;text-transform:uppercase}
 .ppvt{margin:14px 18px 4px;font:900 26px var(--display);color:#fff;line-height:1.1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.ppvt em{font-style:normal;color:#ffe7a8;font-size:20px}
@@ -711,8 +754,10 @@ const PREVIEW_CH={n:1,call:'PRVW',name:'NyxVision Preview',g:'news',scene:'stage
 for(let t=D0;t<D0+72*3600000;t+=SLOT)PREVIEW_CH.sched.push({title:'NyxVision Preview',start:t,end:t+SLOT,rating:'',desc:'What’s on every channel right now, with a scrolling guide. Like the preview channel on a 2000s cable box.'});
 const MOVIE_CH={n:7,call:'NCT',name:'Nyx Classic Theater',g:'movies',scene:'film',movies:true,key:'movies',cat:'movies',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=2*SLOT)MOVIE_CH.sched.push({title:'Classic Movie',start:t,end:t+2*SLOT,rating:'',cat:'movies',desc:'Public-domain classic films from the Internet Archive.'});
-if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH)} // TV app: weather, news + real Pluto TV channels only
-else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH;[TRAF_CH,PREVIEW_CH,MOVIE_CH].forEach(X=>{const ix=CH.findIndex(c=>c.n===X.n);if(ix>=0)CH[ix]=X;else{const a=CH.findIndex(c=>c.n>X.n);CH.splice(a<0?CH.length:a,0,X)}})}
+const TAPE_CH={n:8,call:'NTD',name:'Nyx Tape Deck',g:'music',scene:'stage',tape:true,key:'tape',cat:'music',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=2*SLOT)TAPE_CH.sched.push({title:'Nyx Tape Deck',start:t,end:t+2*SLOT,rating:'',cat:'music',desc:'Your Spotify playlists on a cassette deck. Press INFO for the tape shelf.'});
+if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH,TAPE_CH)} // TV app: weather, news + real Pluto TV channels only
+else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH;[TRAF_CH,PREVIEW_CH,MOVIE_CH,TAPE_CH].forEach(X=>{const ix=CH.findIndex(c=>c.n===X.n);if(ix>=0)CH[ix]=X;else{const a=CH.findIndex(c=>c.n>X.n);CH.splice(a<0?CH.length:a,0,X)}})}
 const BASE=CH.length; // demo channels exist only in the browser preview
 const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
 let SET=Object.assign({},DEF), FAV=DEF_FAV();
@@ -795,6 +840,7 @@ const ALLSETS=[
  {k:'racecall',label:'Race Call Alerts',vals:[true,false],names:['On','Off'],desc:'On election night, a RACE CALLED banner slides up on any channel when a Senate or governor race is called. U.S. region only.'},
  {k:'bop',label:'Election Night Bar',vals:[true,false],names:['On','Off'],desc:'From 6 PM Eastern on November 3 through November 6, a Balance of Power bar for the Senate, House and governors sits at the bottom of every channel. Channel 5 has the full results.'},
  {k:'mkey',label:'MARTA Train Key',action:true,desc:'Live Atlanta MARTA trains on channel 6 use a free MARTA developer key. Register at itsmarta.com (developer registration), then type the key here.'},
+ {k:'skey',label:'Spotify Client ID',action:true,desc:'Channel 8, Nyx Tape Deck, plays your Spotify playlists on a cassette deck through the Spotify app on this tablet. Make a free app at developer.spotify.com with your Premium account and enter its Client ID here.'},
  {k:'tkey',label:'Traffic Map Key',action:true,desc:'Live traffic on channel 6 uses a free TomTom developer key. Sign up at developer.tomtom.com, create a key, and type it here. Transit boards work without a key.'},
  {k:'sports',label:'Sports Scores',action:true,desc:'Choose leagues for the scores ticker and pick your teams for score alerts.'},
  {k:'tests',label:'Test Center',action:true,desc:'Try weather alerts, race calls and sports alerts. Each test runs on a random channel and is clearly marked as a test.'},
@@ -808,7 +854,7 @@ const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
  {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','ppv','gdl','gdlnow']},
- {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data on channel 6: MARTA trains and TomTom traffic. New keys go here too.',rows:['mkey','tkey']}];
+ {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','tkey','skey']}];
 const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
 const SETS=[];
 function setGroup(g){SETS.length=0;const G=g&&SGROUPS.find(x=>x.k===g),touch=!!(window.__vremTest||window.CableNative&&window.CableNative.isTouch&&window.CableNative.isTouch());(G?G.rows:STOP).forEach(k=>{if(k==='vremote'&&!touch)return;const r=ALLSETS.find(x=>x.k===k)||SGROUPS.find(x=>x.k===k);if(r)SETS.push(r)})}
@@ -1246,6 +1292,7 @@ function press(k){
   if(['sports','teams','tests','testw','teste','testsp'].indexOf(S.screen)>=0&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){if(extraListKey(S.screen,k))return}
   if(['games','chess','mice'].indexOf(S.screen)>=0&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){if(S.screen==='games')gamesKey(k);else if(S.screen==='chess')chessKey(k);else miceKey(k);return}
   if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].news&&newsKey(k))return;
+  if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].tape&&tapeKey(k))return;
   if(S.screen==='loc'&&!S.dialog){try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}locKey(k);return}
   if(S.screen==='boot'){if(k==='ok'&&performance.now()-BOOTSEQ.t0>800)endBoot();return}
   if(S.screen==='gdl'){if((k==='ok'||k==='back')&&Date.now()-GDL.t0>800)gdlEnd();return}
@@ -1302,13 +1349,13 @@ function press(k){
     if(it.group){if(k!=='ok'&&k!=='right')return;snd.ok();S.sgrp=it.k;S.sgrpIdx=i;setGroup(it.k);S.idx.set=0;render();return}
     if(it.action&&it.k==='update'){if(k!=='ok')return;snd.ok();if(UPD.state==='available')askUpdate();else checkUpdate(true);return}
     if(it.action&&it.k==='about'){if(k!=='ok')return;const now=Date.now();EGGC.n=(now-EGGC.t<1600)?EGGC.n+1:1;EGGC.t=now;snd.nav();if(EGGC.n>=5){EGGC.n=0;startEgg()}else render();return}
-    if(it.action&&(it.k==='tkey'||it.k==='mkey')){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen('key',it.k);return}
+    if(it.action&&(it.k==='tkey'||it.k==='mkey'||it.k==='skey')){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen('key',it.k);return}
     if(it.action&&(it.k==='sports'||it.k==='tests')){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx[it.k]=0;go(it.k);return}
     if(it.action&&it.k==='loc'){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen();return}
     if(it.action&&it.k==='gdlnow'){if(k!=='ok'&&k!=='right')return;snd.ok();gdlStart('set');return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;snd.ok();dialog('Are You Sure?',T('This puts every setting and favorite back the way NyxVision shipped. Your service keys and weather location are kept.')+'<small>'+T('Press OK to restore defaults, or BACK to cancel.')+'</small>');
-      S.dialog.onOk=()=>{const keep={tkey:SET.tkey,mkey:SET.mkey,loc:SET.loc};SET=Object.assign({},DEF,{themeState:{}},keep);FAV=DEF_FAV();save();applyTheme();vremShow();setTimeout(()=>dialog('Settings Restored','All settings and favorites are back to their defaults.',1800),50)};return}
+      S.dialog.onOk=()=>{const keep={tkey:SET.tkey,mkey:SET.mkey,skey:SET.skey,loc:SET.loc};SET=Object.assign({},DEF,{themeState:{}},keep);FAV=DEF_FAV();save();applyTheme();vremShow();setTimeout(()=>dialog('Settings Restored','All settings and favorites are back to their defaults.',1800),50)};return}
     let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='ppv'){ppvCancel();applyStream()}if(it.k==='vremote')vremShow();if(it.k==='region'||it.k==='lang'){NEWSAT=0}
     if(it.k==='region'){applyTheme();render()}
     if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+curRadar();render()}return}
@@ -1397,6 +1444,7 @@ function render(){
     if(CH[S.ch].traffic){h+=trafficHTML()}
     if(CH[S.ch].preview){h+=previewHTML()}
     if(CH[S.ch].movies){h+=movieHTML()}
+    if(CH[S.ch].tape){h+=tapeHTML()}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>'+T('{0} is blocked by Parental Controls. Turn them off in Settings to watch.','Ch '+CH[S.ch].n+' '+esc(CH[S.ch].call))+'</p></div></div>';
     if(S.bumpUntil>Date.now())h+=bumpHTML();
     if(Date.now()<S.bannerUntil||S.entry){
@@ -1451,7 +1499,7 @@ function render(){
   }
   else if(sc==='set'){
     const it=SETS[S.idx.set];
-    h+='<div class="bg">'+bgDeco()+'</div>'+hdr(S.sgrp?(SGROUPS.find(g=>g.k===S.sgrp)||{}).label:'Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.group?'<span class="v">\u25B6</span>':(x.k==='tkey'||x.k==='mkey')?'<span class="v">'+T(SET[x.k]?'Saved':'Not set')+' \u25B6</span>':(x.k==='sports'||x.k==='tests')?'<span class="v">\u25B6</span>':x.k==='loc'?'<span class="v">'+esc(LOC().short)+' \u25B6</span>':x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':x.k==='update'&&UPD.state==='available'?'<span class="v">New build ready ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr(S.sgrp?(SGROUPS.find(g=>g.k===S.sgrp)||{}).label:'Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.group?'<span class="v">\u25B6</span>':(x.k==='tkey'||x.k==='mkey'||x.k==='skey')?'<span class="v">'+T(SET[x.k]?'Saved':'Not set')+' \u25B6</span>':(x.k==='sports'||x.k==='tests')?'<span class="v">\u25B6</span>':x.k==='loc'?'<span class="v">'+esc(LOC().short)+' \u25B6</span>':x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':x.k==='update'&&UPD.state==='available'?'<span class="v">New build ready ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
       '<div class="box bevel" style="left:580px;top:66px;width:304px;height:216px;overflow:hidden"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
       '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT \u00B7 '+buildLabel()+'<br>'+T('Guide data: {0}',NATIVE?'Pluto TV + NWS':T('sample lineup'))+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>'+(S.sgrp?'Settings':'Main Menu')]);
@@ -1769,6 +1817,7 @@ function locOpen(mode,target){target=target||'tkey';S.lk={target:target,text:mod
 function locType(key){const L=S.lk;
   if(L.mode==='key'){if(key==='PASTE'){let c='';try{c=String(NATIVE.clipText()||'')}catch(e){}c=c.replace(/\s+/g,'');if(c){L.text=c.slice(0,64);snd.ok()}else{snd.bump();L.msg=T('Nothing copied yet. Copy the key first, then press Paste.')}render();return}
     if(key==='CASE')L.lower=!L.lower;else if(key==='DEL')L.text=L.text.slice(0,-1);else if(key==='CLEAR')L.text='';
+    else if(key==='SAVE'&&L.target==='skey'){SET.skey=L.text.trim();save();SPT.st='idle';SPT.err='';SPT.tries=0;SPT.lib=null;snd.ok();go('set');dialog('Spotify Client ID',T(SET.skey?'Saved. Tune to channel 8 for the Tape Deck.':'Client ID removed.'),3000);return}
     else if(key==='SAVE'){const m=L.target==='mkey';SET[L.target]=L.text.trim();save();TT.traf.at=0;TT.traf.inc=[];TT.traf.err=null;TT.atl.at=0;TT.atl.err=null;TT.atl.url=-1;snd.ok();go('set');dialog(m?'MARTA Train Key':'Traffic Map Key',T(SET[L.target]?(m?'Saved. Live MARTA trains are ready on channel 6.':'Saved. Live traffic is ready on channel 6.'):'Key removed.'),3000);return}
     else L.text=(L.text+(L.lower?key.toLowerCase():key)).slice(0,64);snd.nav();render();return}
   if(key==='SPACE')L.text=(L.text+' ').slice(0,30);else if(key==='DEL')L.text=L.text.slice(0,-1);else if(key==='CLEAR'){L.text='';L.res=[];L.msg=''}
@@ -1811,11 +1860,12 @@ function locChoose(r){if(!r)return;WAL.at=0;SET.loc={label:r.label,short:r.short
   go('set');dialog('Weather Location Set',T('NyxVision Weather now shows {0}.','<b>'+esc(r.label)+'</b>'),3000)}
 function locHTML(){const L=S.lk;
   const KEYM=L.mode==='key';
-  let h='<div class="bg">'+bgDeco()+'</div>'+hdr(KEYM?(L.target==='mkey'?'MARTA Train Key':'Traffic Map Key'):'Weather Location')+
+  let h='<div class="bg">'+bgDeco()+'</div>'+hdr(KEYM?(L.target==='mkey'?'MARTA Train Key':L.target==='skey'?'Spotify Client ID':'Traffic Map Key'):'Weather Location')+
     '<div class="box bevel lkf" style="left:40px;top:62px;width:500px;height:56px;padding:0 16px;display:flex;align-items:center"><span class="lkt">'+esc(L.text)+'</span><span class="lkc">▌</span></div>'+
     '<p class="lkhint" style="position:absolute;left:44px;top:126px;margin:0;width:500px">'+T(KEYM?(L.msg||(NATIVE&&NATIVE.clipText?'Copy the key on this device and press Paste, or type it. abc switches letter case.':'Type the key exactly, then choose Save. abc switches letter case.')):'Type a ZIP code, postal code or city, then choose Search.')+'</p>'+
     '<div class="kb" style="position:absolute;left:40px;top:160px;width:500px">';
   kbRows().forEach((row,y)=>{h+='<div class="kbr">';row.forEach((key,x)=>{const sel=L.focus==='kb'&&L.y===y&&L.x===x;h+='<div class="kbk'+(row.length===4?' wide':'')+(sel?' hi':'')+'" data-key="'+y+','+x+'">'+kbLabel(key)+'</div>'});h+='</div>'});
+  if(KEYM&&L.target==='skey'){h+='</div><div class="box bevel" style="left:580px;top:62px;width:304px;height:386px;overflow:hidden"><div class="lbl">'+T(SET.skey?'Client ID saved':'No Client ID yet')+'</div><h3 style="margin-top:10px">Spotify</h3><p style="font-size:14px">'+T('At developer.spotify.com, create an app (check Android), add package com.retrocable.box with NyxVision’s SHA1 fingerprint, then copy its Client ID here.')+'</p><div class="ttqr" style="position:static;margin-top:8px">'+QR.svg('https://developer.spotify.com/dashboard',110)+'<span>'+T('Scan to open the dashboard')+'</span></div></div>'+ftr(['<i>▲▼◀▶</i>Move','<i>OK</i>Type','<i>BACK</i>Settings']);return h}
   if(KEYM){const mt=L.target==='mkey';h+='</div><div class="box bevel" style="left:580px;top:62px;width:304px;height:386px;overflow:hidden"><div class="lbl">'+T(SET[L.target]?'Key saved':'No key yet')+'</div><h3 style="margin-top:10px">'+(mt?'MARTA':'TomTom')+'</h3><p style="font-size:15px">'+T(mt?'Live MARTA trains need a free MARTA developer key. Register at itsmarta.com, then enter the key in Settings → MARTA Train Key.':'Get a free key: sign up at developer.tomtom.com (no card needed), create a key, then enter it in Settings → Traffic Map Key.')+'</p><div class="ttqr" style="position:static;margin-top:8px">'+QR.svg(mt?'https://www.itsmarta.com/developer-reg-rtt.aspx':'https://developer.tomtom.com/',110)+'<span>'+T('Scan to sign up on your phone')+'</span></div></div>'+ftr(['<i>▲▼◀▶</i>Move','<i>OK</i>Type','<i>BACK</i>Settings']);return h}
   h+='</div><div class="box bevel" style="left:580px;top:62px;width:304px;height:386px;overflow:hidden"><div class="lbl">'+T('Now showing: {0}',esc(LOC().short))+'</div><h3 style="margin-top:10px">'+T('Results')+'</h3>';
   if(L.busy)h+='<p><span class="wait"></span>'+T('Searching…')+'</p>';
@@ -2865,6 +2915,7 @@ function tapAt(el,x){
   if(S.dialog){press(el.closest('.dlg')?'ok':'back');return}
   if(sc==='loc'){const kk=el.closest('[data-key]');if(kk){const a=kk.dataset.key.split(',').map(Number);S.lk.y=a[0];S.lk.x=a[1];S.lk.focus='kb';locKey('ok');return}
     const rr=el.closest('[data-res]');if(rr){S.lk.ri=+rr.dataset.res;locChoose(S.lk.res[S.lk.ri]);return}}
+  if(sc==='watch'&&spOnTape()){const ts=el.closest('.tsp');if(ts){SPT.si=+ts.dataset.i;press('ok');return}if(SPT.shelf){if(!el.closest('.tshelf'))press('back');return}if(el.closest('.tlab')){press('info');return}if(el.closest('.tdeck')||el.closest('.tjc')){if(!(Date.now()<S.bannerUntil)){press('ok');return}}}
   const fk=el.closest('[data-k]');if(fk){press(fk.dataset.k);return}
   if(sc==='watch'&&has(S.ch)&&CH[S.ch].news&&S.mid){const tb=el.closest('[data-tab]');if(tb){S.mid=tb.dataset.tab;S.midSel=0;snd.nav();if(!MID.data[S.mid])loadMid(S.mid);render();return}
     if(el.closest('[data-ref]')){press('ok');return}const sv=el.closest('[data-st]');if(sv){const i=midList(S.mid).indexOf(sv.dataset.st);if(i>=0){S.midSel=i;snd.nav();render()}return}return}
@@ -3588,6 +3639,93 @@ function vremSetup(){if(!TOUCH&&!window.__vremTest)return;
   addEventListener('resize',()=>{vremPlace(btn,{x:btn.offsetLeft,y:btn.offsetTop});if(VREM.open){vremFit();vremPlace(el,{x:el.offsetLeft,y:el.offsetTop})}});
   vremShow()}
 
+/* ---------------- Channel 8: Nyx Tape Deck (Spotify plays the music through its own app; NyxVision is the cassette deck) ---------------- */
+const SPT={st:'idle',err:'',msg:'',pl:null,at:0,art:'',lib:null,libAt:0,shelf:false,si:0,lastCh:-1,autoPaused:false,tries:0,demo:false};
+function spNative(){return !!(NATIVE&&NATIVE.spotifyConnect)}
+function spInstalled(){try{return spNative()&&NATIVE.spotifyInstalled()}catch(e){return false}}
+function spOnTape(){return has(S.ch)&&!!CH[S.ch].tape}
+function spConnect(force){if(!spNative()||!SET.skey||SPT.st==='conn'||(SPT.st==='ok'&&!force))return;if(!spInstalled()){SPT.st='noapp';return}
+  SPT.st='conn';SPT.err='';SPT.at=Date.now();try{NATIVE.spotifyConnect(SET.skey)}catch(e){SPT.st='err';SPT.err='x'}if(spOnTape())render()}
+function spState(j){let o={};try{o=JSON.parse(j)}catch(e){}
+  if(o.ok){SPT.st='ok';SPT.err='';SPT.tries=0;if(!SPT.lib||Date.now()-SPT.libAt>10*MIN){try{NATIVE.spotifyLibrary()}catch(e){}}}
+  else{SPT.st='err';SPT.err=o.err||'x';SPT.msg=o.msg||''}
+  if(spOnTape()&&S.screen==='watch')render()}
+function spPlayer(j){try{SPT.pl=JSON.parse(j);SPT.pl.t=Date.now()}catch(e){}if(spOnTape()&&S.screen==='watch')tapeUpdate()}
+function spArt(d){SPT.art=d;if(spOnTape()&&S.screen==='watch')tapeUpdate()}
+function spList(j){let o=null;try{o=JSON.parse(j)}catch(e){}
+  if(Array.isArray(o)){SPT.lib=o.filter(s=>s.items&&s.items.length);SPT.libAt=Date.now()}else if(!SPT.lib)SPT.lib=[];
+  if(spOnTape()&&S.screen==='watch')render()}
+function spCmd(c,a){try{if(spNative()&&SPT.st==='ok')NATIVE.spotifyCmd(c,a||'')}catch(e){}}
+function spPos(){const p=SPT.pl;if(!p||!p.dur)return 0;return Math.min(p.dur,p.pos+(p.paused?0:Date.now()-p.t))}
+function spShelfRows(){const r=[];(SPT.lib||[]).forEach(s=>{r.push({head:true,title:s.title});s.items.forEach(it=>r.push(it))});return r}
+// leave the channel: pause the tape · come back: pick up where you left off
+function tapeTick(){const on=spOnTape();
+  if(on&&SET.skey&&spNative()&&(SPT.st==='idle'||(SPT.st==='err'&&SPT.err!=='UserNotAuthorizedException'&&Date.now()-SPT.at>20000&&SPT.tries<3))){if(SPT.st==='err')SPT.tries++;spConnect()}
+  if(SPT.lastCh!==S.ch){const was=SPT.lastCh>=0&&CH[SPT.lastCh]&&CH[SPT.lastCh].tape;SPT.lastCh=S.ch;
+    if(was&&!on&&SPT.pl&&!SPT.pl.paused){spCmd('pause');SPT.autoPaused=true}
+    if(on&&SPT.autoPaused){SPT.autoPaused=false;spCmd('resume')}
+    if(!on)SPT.shelf=false}
+  if(on&&S.screen==='watch')tapeUpdate()}
+function tapeKey(k){if(!spOnTape()||locked(S.ch))return false;
+  if(SPT.shelf){const R=spShelfRows();let i=SPT.si;
+    if(k==='up'||k==='down'||k==='chup'||k==='chdn'){const d=(k==='up'?-1:k==='down'?1:k==='chup'?-5:5);let n=i;do{n+=d>0?1:-1}while(n>=0&&n<R.length&&R[n].head);if(Math.abs(d)>1){n=Math.max(0,Math.min(R.length-1,i+d));while(n<R.length&&R[n]&&R[n].head)n++;if(n>=R.length)n=i}
+      if(n<0||n>=R.length){snd.bump();return true}SPT.si=n;snd.nav();render();return true}
+    if(k==='ok'){const it=R[i];if(it&&!it.head){spCmd('item',it.id);SPT.shelf=false;snd.ok();SPT.loadedTitle=it.title;render()}return true}
+    if(k==='back'||k==='info'||k==='left'){SPT.shelf=false;snd.back();render();return true}
+    SPT.shelf=false;return false}
+  if(Date.now()<S.bannerUntil&&(k==='ok'))return false;
+  if(spNative()&&!spInstalled()){if(k==='ok'){snd.ok();try{NATIVE.openSpotify()}catch(e){}return true}return false}
+  if(SPT.st!=='ok'){if(k==='ok'&&SET.skey&&SPT.st==='err'){SPT.tries=0;snd.ok();spConnect(true);return true}return false}
+  if(k==='ok'){snd.ok();if(!SPT.pl||!SPT.pl.name){SPT.shelf=true;SPT.si=Math.max(1,0);render();return true}spCmd(SPT.pl.paused?'resume':'pause');if(SPT.pl){SPT.pl.pos=spPos();SPT.pl.t=Date.now();SPT.pl.paused=!SPT.pl.paused}tapeUpdate();return true}
+  if(k==='right'){snd.nav();spCmd('next');return true}
+  if(k==='left'){snd.nav();spCmd('prev');return true}
+  if(k==='info'){snd.ok();if(!SPT.lib)try{NATIVE.spotifyLibrary()}catch(e){}SPT.shelf=true;const R=spShelfRows();SPT.si=R.findIndex(r=>!r.head);if(SPT.si<0)SPT.si=0;render();return true}
+  return false}
+const TAPE_ERR={CouldNotFindSpotifyApp:'Install the Spotify app on this device and log in, then come back to channel 8.',NotLoggedInException:'Open the Spotify app and log in first, then come back to channel 8.',
+  UserNotAuthorizedException:'Spotify didn’t let NyxVision connect. Check the Client ID in Settings → Service Keys, and that your Spotify app’s settings list the package com.retrocable.box with the SHA1 fingerprint.',
+  AuthenticationFailedException:'Spotify couldn’t sign NyxVision in. Check the Client ID and the redirect URI http://127.0.0.1:8898/callback in your Spotify app’s settings.',
+  OfflineModeException:'The Spotify app is in offline mode. Turn it off in Spotify’s settings.',UnsupportedFeatureVersionException:'Update the Spotify app from the Play Store, then come back.',
+  SpotifyConnectionTerminatedException:'Lost the connection to Spotify. Press OK to reconnect.',SpotifyDisconnectedException:'Lost the connection to Spotify. Press OK to reconnect.'};
+function tapeMsg(){if(!NATIVE)return null;
+  if(spNative()&&!spInstalled())return {h:'Spotify on this TV',p:'Spotify’s remote-control kit works with the Spotify app for phones and tablets, so the Tape Deck plays on your tablet. Here you can open Spotify’s TV app instead.',k:TOUCH?'Tap to open Spotify':'Press OK to open Spotify'};
+  if(!spNative())return {h:'Update NyxVision',p:'This build can’t talk to Spotify yet. Check for updates in Settings.'};
+  if(!SET.skey)return {h:'Connect your Spotify',p:'Make a free Spotify developer app with your Premium account, then enter its Client ID in Settings → Service Keys → Spotify Client ID.',qr:'https://developer.spotify.com/dashboard'};
+  if(SPT.st==='conn'||SPT.st==='idle')return {h:'Loading the tape…',p:'Connecting to the Spotify app. The first time, Spotify asks you to agree to let NyxVision control playback.'};
+  if(SPT.st==='err')return {h:'Spotify isn’t connected',p:T(TAPE_ERR[SPT.err]||'Couldn’t reach the Spotify app. Press OK to try again.'),k:TOUCH?'Tap to try again':'Press OK to try again'};
+  return null}
+function tapeReel(id,frac){const r=19+21*Math.max(0,Math.min(1,frac));return '<div class="treel" id="'+id+'"><i class="ttape" style="width:'+(2*r)+'px;height:'+(2*r)+'px"></i><b class="thub"><span></span><span></span><span></span></b></div>'}
+function tapeLabel(){const p=SPT.pl;return SPT.demo||!NATIVE?{t:'Nyx’s Mixtape',s:'Side A'}:{t:SPT.loadedTitle||(p&&p.album)||'Blank Tape',s:'Side A'}}
+function tapeHTML(){
+  const m=tapeMsg(),p=SPT.pl||(!NATIVE?{name:'Your Spotify songs play here',artist:'On your tablet',album:'',dur:240000,pos:80000,paused:false,t:Date.now()}:null);
+  const frac=p&&p.dur?spPos()/p.dur:0,lab=tapeLabel(),playing=p&&!p.paused&&!m;
+  let h='<div class="tape'+(playing?' play':'')+'"><div class="tdeck bevel"><div class="tbrand"><b>NYX</b><span>STEREO CASSETTE DECK · TD-8</span><em class="tled" id="tled"></em></div>'+
+    '<div class="twin"><div class="tcas"><div class="tlab"><span class="tside">A</span><b>'+esc(lab.t)+'</b><i>'+esc(lab.s)+' · NyxVision</i></div>'+
+    '<div class="twindow">'+tapeReel('treelL',1-frac)+tapeReel('treelR',frac)+'</div><div class="tbot"></div></div></div>'+
+    '<div class="tctl"><span class="tcnt" id="tcnt">000</span><div class="tvu"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="tvu r"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
+    '<div class="tkeys"><span>◀◀</span><span class="'+(playing?'on':'')+'">▶</span><span class="'+(p&&p.paused?'on':'')+'">❚❚</span><span>▶▶</span></div></div></div>';
+  h+='<div class="tjc bevel">'+(m?'<h3>'+T(m.h)+'</h3><p>'+m.p+'</p>'+(m.qr?'<div class="ttqr" style="position:static;margin-top:8px">'+QR.svg(m.qr,104)+'<span>'+T('Scan to open the Spotify dashboard')+'</span></div>':'')+(m.k?'<div class="tkhint">'+T(m.k)+'</div>':''):
+    (p&&p.name?'<div class="tart" id="tart">'+(SPT.art?'<img src="'+esc(SPT.art)+'" alt="">':catSvg(70))+'</div><div class="tnow">'+T(p.paused?'Paused':'Now Playing')+'</div><h3 id="ttitle">'+esc(p.name)+'</h3><p class="tart2">'+esc(p.artist)+'</p><p class="talb">'+esc(p.album||'')+'</p><div class="tbar"><div id="tbar" style="width:'+(frac*100).toFixed(1)+'%"></div></div><div class="ttime"><span id="tpos">'+mmss(spPos())+'</span><span>'+mmss(p.dur)+'</span></div>':
+    '<h3>'+T('No tape in the deck')+'</h3><p>'+T('Press INFO to pick a tape from your Spotify playlists and recently played.')+'</p>'))+'</div>';
+  if(!m)h+='<div class="tfoot">'+(TOUCH?T('Tap the deck: play/pause · swipe ◀▶ to skip · tap the label for your tapes'):T('OK Play/Pause · ◀▶ Skip · INFO Tape shelf · CH ▲▼ Change channel'))+'</div>';
+  if(SPT.shelf)h+=tapeShelfHTML();
+  return h+'</div>'}
+function tapeShelfHTML(){const R=spShelfRows();
+  if(!SPT.lib)return '<div class="tshelf bevel"><h3>'+T('Tape Shelf')+'</h3><p>'+T('Loading your tapes from Spotify…')+'</p></div>';
+  if(!R.length)return '<div class="tshelf bevel"><h3>'+T('Tape Shelf')+'</h3><p>'+T('No tapes found. Play something in the Spotify app once, then try again.')+'</p></div>';
+  const i=Math.max(0,Math.min(R.length-1,SPT.si)),top=Math.max(0,Math.min(R.length-9,i-4));
+  const cols=['#e4572e','#f3a712','#29335c','#669bbc','#a8c686','#db5a42','#7b2cbf','#2a9d8f'];
+  return '<div class="tshelf bevel"><h3>'+T('Tape Shelf')+'</h3><div class="tsl">'+R.slice(top,top+9).map((r,j)=>r.head?'<div class="tsh">'+esc(r.title)+'</div>':
+    '<div class="tsp'+(top+j===i?' sel':'')+'" data-i="'+(top+j)+'"><i style="background:'+cols[(top+j)%cols.length]+'"></i><b>'+esc(r.title)+'</b><span>'+esc(r.sub||'')+'</span></div>').join('')+'</div>'+
+    '<div class="tkhint">'+(TOUCH?T('Tap a tape to play it'):T('▲▼ Choose · OK Play · BACK Close'))+'</div></div>'}
+function mmss(ms){ms=Math.max(0,Math.round((ms||0)/1000));return Math.floor(ms/60)+':'+String(ms%60).padStart(2,'0')}
+// small updates (time, reels, art) without rebuilding the screen
+function tapeUpdate(){const p=SPT.pl;if(!document.querySelector('.tape'))return;
+  if(p&&p.name){const tt=document.getElementById('ttitle');const want=(!p.paused)!==!!document.querySelector('.tape.play');if(!tt||tt.textContent!==p.name||want){render();return}
+    const f=p.dur?spPos()/p.dur:0,b=document.getElementById('tbar'),tp=document.getElementById('tpos'),c=document.getElementById('tcnt');if(b)b.style.width=(f*100).toFixed(1)+'%';if(tp)tp.textContent=mmss(spPos());if(c)c.textContent=String(Math.floor(spPos()/1000)%1000).padStart(3,'0');
+    [['treelL',1-f],['treelR',f]].forEach(([id,x])=>{const e=document.querySelector('#'+id+' .ttape');if(e){const r=19+21*x;e.style.width=e.style.height=(2*r)+'px'}});
+    const a=document.querySelector('#tart img');if(SPT.art&&(!a||a.getAttribute('src')!==SPT.art)){const t=document.getElementById('tart');if(t)t.innerHTML='<img src="'+esc(SPT.art)+'" alt="">'}}
+  else if(SPT.pl&&!document.getElementById('ttitle')&&!tapeMsg())render()}
+
 /* ---------------- Games ---------------- */
 const GAMES=[{k:'chess',label:'Chess vs Nyx',desc:'Play White against Nyx. Your game is saved when you leave.'},{k:'chessnew',label:'New Chess Game',desc:'Start a fresh game of chess.'},
   {k:'level',label:'Chess Level',vals:[1,2,3],names:['Easy','Medium','Hard'],desc:'How hard Nyx plays. Hard thinks a little longer.'},
@@ -3735,6 +3873,7 @@ applyTheme();
 /* Android TV integration: the app forwards remote buttons here */
 if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();}
 try{vremSetup()}catch(e){}
+setInterval(()=>{try{tapeTick()}catch(e){}},1000);
 BOOTSEQ.next=NATIVE?'watch':'home';BOOTSEQ.t0=performance.now();S.screen='boot';document.documentElement.lang=SET.lang||'en';
 window.cable={
   press:press,
@@ -3744,6 +3883,7 @@ window.cable={
   updateState:updateState,
   jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
+  spState:function(j){spState(j)},spPlayer:function(j){spPlayer(j)},spArt:function(d){spArt(d)},spList:function(j){spList(j)},
   pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}},
   dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},

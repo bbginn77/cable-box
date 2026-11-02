@@ -3,7 +3,18 @@ package com.retrocable.box
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.media.AudioAttributes
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.ContentApi
+import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.client.Subscription
+import com.spotify.protocol.types.Image
+import com.spotify.protocol.types.ListItem
+import com.spotify.protocol.types.PlayerState
+import java.io.ByteArrayOutputStream
+import java.util.concurrent.atomic.AtomicInteger
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Base64
@@ -252,7 +263,41 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
     }
 
+    // ---- Spotify (the Spotify app plays the music; NyxVision is the on-screen tape deck) ----
+    private var spRemote: SpotifyAppRemote? = null
+    private var spSub: Subscription<PlayerState>? = null
+    private var spArtUri: String? = null
+    private val spItems = ConcurrentHashMap<String, ListItem>()
+    private fun spSend(fn: String, json: String) = runOnUiThread {
+        web.evaluateJavascript("window.cable&&cable.$fn&&cable.$fn(" + JSONObject.quote(json) + ")", null)
+    }
+    private fun spOnState(st: PlayerState) {
+        val o = JSONObject().put("paused", st.isPaused).put("pos", st.playbackPosition)
+        val t = st.track
+        if (t != null) {
+            o.put("name", t.name ?: "").put("artist", t.artist?.name ?: "").put("album", t.album?.name ?: "")
+                .put("dur", t.duration).put("uri", t.uri ?: "")
+            val iu = t.imageUri
+            if (iu?.raw != null && iu.raw != spArtUri) {
+                spArtUri = iu.raw
+                try {
+                    spRemote?.imagesApi?.getImage(iu, Image.Dimension.THUMBNAIL)?.setResultCallback { bmp ->
+                        val bos = ByteArrayOutputStream()
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 82, bos)
+                        spSend("spArt", "data:image/jpeg;base64," + Base64.encodeToString(bos.toByteArray(), Base64.NO_WRAP))
+                    }
+                } catch (e: Exception) {}
+            }
+        }
+        spSend("spPlayer", o.toString())
+    }
+    private fun spItemJson(it: ListItem): JSONObject {
+        spItems[it.id] = it
+        return JSONObject().put("id", it.id).put("uri", it.uri ?: "").put("title", it.title ?: "").put("sub", it.subtitle ?: "").put("play", it.playable)
+    }
+
     override fun onDestroy() {
+        try { spSub?.cancel(); SpotifyAppRemote.disconnect(spRemote) } catch (e: Exception) {}
         player?.release()
         player = null
         jazzPlayer?.release()
@@ -445,6 +490,89 @@ class MainActivity : AppCompatActivity() {
             packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_TOUCHSCREEN)
 
         /** Keeps the tablet's screen on while a channel is playing. */
+        @JavascriptInterface
+        fun spotifyInstalled(): Boolean = SpotifyAppRemote.isSpotifyInstalled(this@MainActivity)
+
+        /** Connect to the Spotify app with the owner's own Client ID. The first time, Spotify asks them to agree. */
+        @JavascriptInterface
+        fun spotifyConnect(clientId: String) {
+            runOnUiThread {
+                val r0 = spRemote
+                if (r0 != null && r0.isConnected) { spSend("spState", JSONObject().put("ok", true).toString()); return@runOnUiThread }
+                try { SpotifyAppRemote.disconnect(r0) } catch (e: Exception) {}
+                val params = ConnectionParams.Builder(clientId.trim())
+                    .setRedirectUri("http://127.0.0.1:8898/callback").showAuthView(true).build()
+                SpotifyAppRemote.connect(this@MainActivity, params, object : Connector.ConnectionListener {
+                    override fun onConnected(r: SpotifyAppRemote) {
+                        spRemote = r
+                        spSend("spState", JSONObject().put("ok", true).toString())
+                        try { spSub?.cancel() } catch (e: Exception) {}
+                        spSub = r.playerApi.subscribeToPlayerState().setEventCallback { st -> spOnState(st) }
+                    }
+                    override fun onFailure(e: Throwable) {
+                        spRemote = null
+                        spSend("spState", JSONObject().put("err", e.javaClass.simpleName).put("msg", e.message ?: "").toString())
+                    }
+                })
+            }
+        }
+
+        /** play/pause/resume/next/prev/shuffle/item (item = play a shelf item by id) */
+        @JavascriptInterface
+        fun spotifyCmd(cmd: String, arg: String) {
+            runOnUiThread {
+                val r = spRemote ?: return@runOnUiThread
+                try {
+                    val p = r.playerApi
+                    when (cmd) {
+                        "play" -> p.play(arg)
+                        "pause" -> p.pause()
+                        "resume" -> p.resume()
+                        "next" -> p.skipNext()
+                        "prev" -> p.skipPrevious()
+                        "shuffle" -> p.setShuffle(arg == "1")
+                        "item" -> { val it = spItems[arg]; if (it != null) r.contentApi.playContentItem(it) else if (arg.startsWith("spotify:")) p.play(arg) }
+                        else -> {}
+                    }
+                } catch (e: Exception) {}
+            }
+        }
+
+        /** The listener's shelves (recently played, playlists, ...) from the Spotify app, sent back as cable.spList(json). */
+        @JavascriptInterface
+        fun spotifyLibrary() {
+            runOnUiThread {
+                val r = spRemote ?: return@runOnUiThread
+                r.contentApi.getRecommendedContentItems(ContentApi.ContentType.DEFAULT).setResultCallback { top ->
+                    val items = top.items ?: arrayOf()
+                    val secs = arrayOfNulls<JSONObject>(items.size)
+                    val left = AtomicInteger(items.size)
+                    fun done() { if (left.decrementAndGet() == 0) { val a = JSONArray(); secs.forEach { if (it != null) a.put(it) }; spSend("spList", a.toString()) } }
+                    if (items.isEmpty()) spSend("spList", "[]")
+                    items.forEachIndexed { i, it ->
+                        if (it.playable && !it.hasChildren) {
+                            secs[i] = JSONObject().put("title", it.title ?: "").put("items", JSONArray().put(spItemJson(it))); done()
+                        } else {
+                            r.contentApi.getChildrenOfItem(it, 24, 0).setResultCallback { ch ->
+                                val arr = JSONArray()
+                                (ch.items ?: arrayOf()).forEach { c -> if (c.playable) arr.put(spItemJson(c)) }
+                                secs[i] = JSONObject().put("title", it.title ?: "").put("items", arr); done()
+                            }.setErrorCallback { done() }
+                        }
+                    }
+                }.setErrorCallback { e -> spSend("spList", JSONObject().put("err", e.javaClass.simpleName).toString()) }
+            }
+        }
+
+        @JavascriptInterface
+        fun openSpotify() {
+            runOnUiThread {
+                val pm = packageManager
+                val i = listOf("com.spotify.tv.android", "com.spotify.music").firstNotNullOfOrNull { pm.getLeanbackLaunchIntentForPackage(it) ?: pm.getLaunchIntentForPackage(it) }
+                try { if (i != null) startActivity(i) else startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music"))) } catch (e: Exception) {}
+            }
+        }
+
         /** On-screen remote VOL/MUTE: 1 = up, -1 = down, 0 = mute on/off. Shows Android's own volume slider. */
         @JavascriptInterface
         fun volume(dir: Int) {

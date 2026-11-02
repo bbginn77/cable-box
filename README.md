@@ -141,3 +141,9 @@ The optional extras below would each get their own written plan and your approva
 ## On-screen remote (tablet)
 
 A round **REMOTE** button floats on screen on touch devices. Drag it anywhere; tap it to open a 2000s satellite-style remote (GUIDE, MENU, arrows, SELECT, VOL, CH, PREV CH, number pad, channel shortcuts WX/NEWS/TRAF/MOV/PRV). Drag the remote by its top edge; PWR or the button closes it. **Settings → On-Screen Remote Button** turns the button off and back on.
+
+## Channel 8: Nyx Tape Deck (Spotify)
+
+Your Spotify playlists on a cassette deck. The Spotify app (phone/tablet version) plays the music; NyxVision shows the deck, reels, label and J-card, and sends play/pause/skip. Uses Spotify's App Remote SDK 0.8.0 (Apache 2.0, in `app/libs`).
+
+Setup: at developer.spotify.com/dashboard (Premium account) create an app, check **Android**, redirect URI `http://127.0.0.1:8898/callback`, Android package `com.retrocable.box` with SHA1 `89:73:96:81:40:5B:13:77:BE:88:E2:DC:25:25:9F:96:36:5A:76:35`. Enter the Client ID in Settings → Service Keys → Spotify Client ID. Keys: OK play/pause, ◀▶ skip, INFO tape shelf. Leaving channel 8 pauses the tape; coming back resumes it. On Google TV, channel 8 offers to open Spotify's TV app instead.

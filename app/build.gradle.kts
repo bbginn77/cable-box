@@ -55,6 +55,8 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.webkit:webkit:1.12.1")
+    implementation(files("libs/spotify-app-remote-release-0.8.0.aar"))   // Spotify App Remote SDK (Apache 2.0)
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.media3:media3-exoplayer:1.4.1")
     implementation("androidx.media3:media3-exoplayer-hls:1.4.1")
 }

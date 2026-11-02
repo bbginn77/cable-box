@@ -27,6 +27,8 @@
         <package android:name="tv.pluto.android" />
         <package android:name="com.google.android.youtube.tv" />
         <package android:name="com.google.android.youtube" />
+        <package android:name="com.spotify.music" />
+        <package android:name="com.spotify.tv.android" />
     </queries>
 
     <application
