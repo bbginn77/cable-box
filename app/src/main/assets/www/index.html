@@ -45,7 +45,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .brand b{font:900 21px var(--display);letter-spacing:-.01em;font-style:italic;color:#fff;text-shadow:2px 2px 0 var(--k041040)}
 .brand .cat{align-self:center;flex:none;filter:drop-shadow(2px 2px 0 var(--k041040))}
 .brand span{font:700 12px var(--ui);letter-spacing:.22em;color:var(--ice)}
-.hdr .title{font:800 19px var(--display);letter-spacing:.06em;text-transform:uppercase;text-shadow:2px 2px 0 var(--k041040)}
+.hdr .title{font:800 var(--tsz,19px) var(--display);letter-spacing:.06em;text-transform:uppercase;text-shadow:2px 2px 0 var(--k041040)}
 .clk{font:700 19px var(--ui);text-shadow:2px 2px 0 var(--k041040);font-variant-numeric:tabular-nums}
 .ftr{position:absolute;left:0;right:0;bottom:0;height:34px;display:flex;align-items:center;gap:22px;padding:0 22px;background:var(--k06123f);border-top:2px solid var(--k2a4fae);font:600 15px var(--ui);color:var(--dim)}
 .ftr i{font-style:normal;display:inline-block;min-width:22px;padding:1px 6px;margin-right:6px;border:1px solid var(--k6f9cf0);border-radius:3px;color:#fff;background:var(--k173586);text-align:center;font-weight:700}
@@ -77,6 +77,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .gtext h2{margin:0 0 4px;font:800 26px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gmeta{font:700 16px var(--ui);color:var(--ice);margin-bottom:6px;display:flex;gap:14px;flex-wrap:wrap}
 .rate{border:1px solid var(--ice);padding:0 5px;border-radius:2px}
+.cab{display:inline-block;vertical-align:middle;flex:none}
 .gtext p{margin:0;font:500 16px/1.32 var(--ui);color:var(--dim)}
 .rem{color:var(--hi)}
 .trow{position:absolute;left:12px;right:12px;top:214px;height:28px;display:flex;font:700 16px var(--ui)}
@@ -190,6 +191,17 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .rtop b{font:900 20px var(--display);letter-spacing:.04em;text-transform:uppercase;text-shadow:2px 2px 0 var(--k041040)}
 .rbot{position:absolute;left:22px;bottom:20px;display:flex;gap:10px;align-items:center;padding:8px 14px;background:var(--kwxnow);border:2px solid var(--k9ec0ff);font:700 16px var(--ui)}
 .rbot .mus{color:var(--hi)}
+.boot{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+.blogo{display:flex;align-items:center;gap:18px}
+.blogo b{display:block;font:italic 900 58px var(--display);text-shadow:4px 4px 0 var(--k041040)}
+.blogo span{display:block;font:700 16px var(--ui);letter-spacing:.4em;color:var(--ice);margin-top:2px}
+.blogo .cat{filter:drop-shadow(4px 4px 0 var(--k041040))}
+.bmsg{font:700 22px var(--ui);min-height:28px}
+.bbar{width:420px;height:16px;border:2px solid var(--k9ec0ff);background:var(--k061650);padding:2px}
+.bbar div{height:100%;width:0;background:linear-gradient(var(--khi1),var(--khi2))}
+.bfoot{position:absolute;left:30px;right:30px;bottom:26px;display:flex;justify-content:space-between;align-items:center;font:600 15px var(--ui);color:var(--dim)}
+.bled{font:700 30px "DejaVu Sans Mono",Consolas,monospace;color:#ff3b2f;text-shadow:0 0 8px rgba(255,59,47,.8);background:#120404;padding:2px 12px;border:2px solid #333;letter-spacing:.08em;min-width:110px;text-align:center}
+.bskip{position:absolute;right:30px;top:24px;font:600 14px var(--ui);color:var(--dim)}
 /* holiday themes screen */
 .sw{display:inline-block;width:26px;height:26px;border:2px solid rgba(255,255,255,.6);margin-right:6px}
 .motifs{font-size:40px;display:flex;gap:14px;margin:10px 0 14px}
@@ -349,7 +361,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXRD',name:'Metro Atlanta Radar',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -412,6 +424,8 @@ const SAMPLE_MORE=['Spotify','Pluto TV','Tubi','Plex','Twitch','Google Play Stor
 function themeList(){return [{master:true,label:'Holiday Themes'}].concat(THEMES)}
 function moreList(){if(!NATIVE)return SAMPLE_MORE;const mine=APPS.filter(a=>a.pkg).map(a=>a.pkg);const l=INSTALLED.filter(x=>mine.indexOf(x.pkg)<0);return l.length?l:[{label:'No other apps found',pkg:null}]}
 const SETS=[
+ {k:'lang',label:'Language',vals:['en','fr','es'],names:['English','Français','Español'],desc:'The language of every menu, screen and holiday greeting.'},
+ {k:'region',label:'Region',vals:['us','ca'],names:['\uD83C\uDDFA\uD83C\uDDF8 United States','\uD83C\uDDE8\uD83C\uDDE6 Canada'],desc:'Sets the TV rating symbols and weather units. Canada uses the Canadian rating symbols, °C, km/h and kPa.'},
  {k:'sound',label:'Navigation Sounds',vals:[true,false],names:['On','Off'],desc:'The short beeps you hear when you press remote buttons.'},
  {k:'clock24',label:'Clock Format',vals:[false,true],names:['12-Hour','24-Hour'],desc:'How times appear in the guide, banner and header.'},
  {k:'bannerSec',label:'Channel Banner',vals:[3,5,8],names:['3 sec','5 sec','8 sec'],desc:'How long the blue info banner stays on screen after you change channels.'},
@@ -443,7 +457,7 @@ function fmtT(ms,short){const d=new Date(ms);let h=d.getHours(),m=d.getMinutes()
   if(SET.clock24)return pad(h)+':'+pad(m);
   const ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+pad(m)+(short?'':' '+ap)}
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-function fmtDate(ms){const d=new Date(ms);return DAYS[d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate()}
+function fmtDate(ms){const d=new Date(ms);return dayName(d.getDay())+' '+(SET.lang==='en'?(d.getMonth()+1)+'/'+d.getDate():d.getDate()+'/'+(d.getMonth()+1))}
 function clockStr(){return fmtDate(Date.now())+'&nbsp;&nbsp;'+fmtT(Date.now())}
 function floor30(t){return Math.floor(t/SLOT)*SLOT}
 function locked(ci){return has(ci)&&SET.parental&&!!CH[ci].mature}
@@ -456,6 +470,339 @@ function surfList(){return favFilter(allList().filter(i=>!CH[i].pluto||SET.pluto
 // rows in the guide: your channels plus Pluto TV rows
 function guideList(){return favFilter(allList())}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+/* ---------------- languages: English (built in), Français, Español ---------------- */
+const I18N={
+fr:{
+'Main Menu':'Menu principal','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
+'Watch TV':'Regarder la télé',
+'Return to full-screen television on your current channel.':'Retour à la télé en plein écran sur votre chaîne actuelle.',
+'Browse what’s on now and up to 24 hours ahead.':'Voyez ce qui joue maintenant et jusqu’à 24 heures à l’avance.',
+'Movies, series and kids’ shows from your streaming services.':'Films, séries et émissions jeunesse de vos services de diffusion.',
+'Pick favorite channels for quick surfing and a shorter guide.':'Choisissez vos chaînes favorites pour zapper plus vite et raccourcir le guide.',
+'Open the apps installed on your TV, switch inputs, or check the weather.':'Ouvrez les applis de votre télé ou consultez la météo.',
+'Sounds, clock, channel banner, parental controls and more.':'Sons, horloge, bandeau de chaîne, contrôle parental et plus.',
+'Local Weather':'Météo locale','Google TV Settings':'Paramètres Google TV',
+'Live TV channels from your DIRECTV subscription.':'Les chaînes en direct de votre abonnement DIRECTV.',
+'Movies and series from Netflix.':'Films et séries de Netflix.',
+'Videos, music and creators on YouTube.':'Vidéos, musique et créateurs sur YouTube.',
+'Next-day TV, originals and movies from Hulu.':'Télé du lendemain, séries originales et films de Hulu.',
+'Disney, Pixar, Marvel, Star Wars and National Geographic.':'Disney, Pixar, Marvel, Star Wars et National Geographic.',
+'HBO series, Warner Bros. movies and more.':'Séries HBO, films Warner Bros. et plus.',
+'CBS shows, live sports and Paramount movies.':'Émissions CBS, sports en direct et films Paramount.',
+'NBC shows, live sports and Peacock originals.':'Émissions NBC, sports en direct et séries originales Peacock.',
+'A cable-style local forecast screen.':'Un écran de prévisions locales comme au câble.',
+'Every other app installed on your Google TV.':'Toutes les autres applis installées sur votre Google TV.',
+'Open the stick’s original settings menu. Nothing there is replaced.':'Ouvre le menu de paramètres d’origine de la clé. Rien n’y est remplacé.',
+'Not installed · OK opens Google Play':'Non installée · OK ouvre Google Play','Press OK to view':'Appuyez sur OK pour afficher','Press OK to launch':'Appuyez sur OK pour lancer',
+'Installed App':'Appli installée',
+'Press OK to open it. Press HOME on your remote any time to come back, then open the cable box.':'Appuyez sur OK pour l’ouvrir. Appuyez sur ACCUEIL pour revenir, puis rouvrez NyxVision.',
+'Sample list. On your Google TV, every installed app shows up here automatically.':'Liste d’exemple. Sur votre Google TV, toutes vos applis s’affichent ici automatiquement.',
+'No other apps found':'Aucune autre appli trouvée',
+'Live TV':'Télé en direct','Movies':'Films','Premium Series':'Séries premium','Next-Day TV':'Télé du lendemain','CBS & Paramount':'CBS et Paramount','NBC & Peacock':'NBC et Peacock','Kids & Family':'Enfants et famille','Music Videos':'Vidéoclips',
+'Your live channels and DVR recordings.':'Vos chaînes en direct et vos enregistrements.',
+'Feature films and new releases.':'Longs métrages et nouveautés.',
+'Drama and comedy from premium networks.':'Drames et comédies des chaînes premium.',
+'Catch up on broadcast shows the day after they air.':'Rattrapez les émissions le lendemain de leur diffusion.',
+'CBS primetime, news and Paramount movies.':'Heure de grande écoute CBS, nouvelles et films Paramount.',
+'NBC primetime, late night and live sports.':'Heure de grande écoute NBC, fin de soirée et sports en direct.',
+'Animated movies and family favorites.':'Films d’animation et favoris de la famille.',
+'Music videos, concerts and live sessions.':'Vidéoclips, concerts et prestations en direct.',
+'Category':'Catégorie','Available from':'Offert par','Press OK to open {0}':'Appuyez sur OK pour ouvrir {0}',
+'Favorites':'Favoris','{0} of {1}':'{0} sur {1}',
+'Press OK to add or remove the highlighted channel.':'Appuyez sur OK pour ajouter ou retirer la chaîne en surbrillance.',
+'Channels appear here once the Pluto TV listings load.':'Les chaînes s’affichent ici une fois l’horaire Pluto TV chargé.',
+'Set {0} to {1} in Settings to surf only your favorites.':'Réglez {0} sur {1} dans les Paramètres pour zapper seulement vos favoris.',
+'Guide Shows':'Le guide affiche',
+'Language':'Langue','Region':'Région',
+'Navigation Sounds':'Sons de navigation','Clock Format':'Format de l’heure','Channel Banner':'Bandeau de chaîne','Parental Controls':'Contrôle parental',
+'Pluto TV Listings':'Horaire Pluto TV','Pluto TV Plays In':'Pluto TV joue dans','Pluto Channels':'Chaînes Pluto','Radar Channel Music':'Musique du canal radar',
+'Check for Updates':'Rechercher les mises à jour','About NyxVision':'À propos de NyxVision','Restore Defaults':'Rétablir les réglages',
+'On':'Activé','Off':'Désactivé','12-Hour':'12 heures','24-Hour':'24 heures','3 sec':'3 s','5 sec':'5 s','8 sec':'8 s','All Channels':'Toutes les chaînes',
+'Pluto TV App':'Appli Pluto TV','Top 50':'50 premières','All':'Toutes','Smooth Jazz':'Jazz doux',
+'🇺🇸 United States':'🇺🇸 États-Unis','🇨🇦 Canada':'🇨🇦 Canada',
+'The language of every menu, screen and holiday greeting.':'La langue de chaque menu, écran et souhait de fête.',
+'Sets the TV rating symbols and weather units. Canada uses the Canadian rating symbols, °C, km/h and kPa.':'Choisit les symboles de classement et les unités météo. Canada utilise les symboles canadiens, les °C, les km/h et les kPa.',
+'The short beeps you hear when you press remote buttons.':'Les petits bips quand vous appuyez sur les touches de la télécommande.',
+'How times appear in the guide, banner and header.':'L’affichage de l’heure dans le guide, le bandeau et l’en-tête.',
+'How long the blue info banner stays on screen after you change channels.':'Durée d’affichage du bandeau d’info après un changement de chaîne.',
+'When on, channels rated TV-14 or higher are blocked. On a real TV this ties into the TV’s own PIN where supported.':'Lorsqu’il est activé, les chaînes classées 14+ ou plus sont bloquées.',
+'Show every channel in the guide, or only your favorites. CH ▲/▼ follows the same list.':'Afficher toutes les chaînes dans le guide, ou seulement vos favoris. CH ▲/▼ suit la même liste.',
+'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.':'Ajoute les chaînes gratuites Pluto TV au guide à partir du canal 200.',
+'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.':'NyxVision joue les chaînes Pluto ici même : plein écran, dans l’aperçu du guide et en zappant. Appli Pluto TV les ouvre plutôt dans Pluto.',
+'How many Pluto TV channels appear in the guide. All is several hundred.':'Nombre de chaînes Pluto TV dans le guide. Toutes en compte plusieurs centaines.',
+'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.':'Choisissez les thèmes de fêtes qui s’activent seuls, désactivez-en ou mettez-en un tout de suite.',
+'Soft jazz that plays while you watch the Metro Atlanta Radar channel. You can also press OK on that channel to switch it.':'Du jazz doux pendant le canal radar d’Atlanta. Appuyez aussi sur OK sur ce canal pour l’activer.',
+'Looks for a newer NyxVision on GitHub. If there is one, NyxVision downloads it and opens the installer. Your settings and favorites carry over.':'Cherche une version plus récente de NyxVision sur GitHub, la télécharge et ouvre l’installateur. Vos réglages et favoris sont conservés.',
+'NyxVision digital cable, named after Nyx the Siamese cat.':'Le câble numérique NyxVision, nommé d’après Nyx, la chatte siamoise.',
+'Put every setting and favorite back the way it shipped.':'Remet tous les réglages et favoris comme à l’origine.',
+'Receiver':'Récepteur','Guide data: {0}':'Données du guide : {0}','sample lineup':'grille d’exemple','New build ready':'Nouvelle version prête','Classic':'Classique','Classic Blue':'Bleu classique',
+'build {0}':'version {0}','preview':'aperçu','local build':'version locale',
+'Highlight':'Choisir','Select':'Sélectionner','Exit to TV':'Retour à la télé','Launch':'Lancer','Open':'Ouvrir','Add / Remove':'Ajouter / Retirer','Change':'Modifier','Browse':'Parcourir','Watch':'Regarder','Remind':'Rappel','Page':'Page','Details':'Détails','Exit':'Quitter','Auto / Off / On Now':'Auto / Désactivé / Maintenant','Open in Pluto TV':'Ouvrir dans Pluto TV',
+'On now · Press OK to watch':'En cours · Appuyez sur OK pour regarder','On now · Press OK to watch in Pluto TV':'En cours · OK pour regarder dans Pluto TV','Press OK to set a reminder':'Appuyez sur OK pour un rappel',
+'Reminder':'Rappel','NEW':'NOUVEAU','Locked':'Verrouillé','No Listings':'Aucun horaire','Loading Listings…':'Chargement de l’horaire…',
+'Turn on Pluto TV Listings in Settings to fill the guide.':'Activez l’horaire Pluto TV dans les Paramètres pour remplir le guide.',
+'Getting the Pluto TV lineup. This takes a few seconds.':'Chargement de la grille Pluto TV. Quelques secondes…',
+'Pluto TV listings are unavailable right now.':'L’horaire Pluto TV n’est pas disponible pour le moment.',
+'Listings not available for this time.':'Horaire non disponible pour cette période.','Listings not available.':'Horaire non disponible.',
+'Next: {0} at {1}':'Ensuite : {0} à {1}','Favorite':'Favori','OK Guide · ◀ Menu':'OK Guide · ◀ Menu','OK Jazz · ◀ Menu':'OK Jazz · ◀ Menu',
+'Channel Locked':'Chaîne verrouillée','{0} is blocked by Parental Controls. Turn them off in Settings to watch.':'{0} est bloquée par le contrôle parental. Désactivez-le dans les Paramètres pour regarder.',
+'No Channels':'Aucune chaîne','Tuning In…':'Syntonisation…','Turn on Pluto TV Listings in Settings to get channels.':'Activez l’horaire Pluto TV dans les Paramètres pour obtenir des chaînes.',
+'{0} Press ◀ for the main menu.':'{0} Appuyez sur ◀ pour le menu principal.','Loading the channel lineup. This takes a few seconds.':'Chargement de la grille des chaînes. Quelques secondes…',
+'Now Watching':'En cours','No channel tuned yet':'Aucune chaîne syntonisée','Hi / Lo':'Max / Min','Wind':'Vent','Loading weather…':'Chargement de la météo…','Weather unavailable right now.':'Météo non disponible.','Live weather shows here on your TV.':'La météo en direct s’affiche ici sur votre télé.',
+'Metro Atlanta Doppler Radar':'Radar Doppler d’Atlanta','Metro Atlanta Radar':'Radar d’Atlanta','Sample radar · live loop unavailable':'Radar d’exemple · boucle en direct non disponible','NWS Peachtree City · KFFC loop':'NWS Peachtree City · boucle KFFC','OK to switch':'OK pour changer',
+'Jazz On':'Jazz activé','Jazz Off':'Jazz désactivé','Jazz warming up…':'Le jazz se prépare…','Jazz unavailable':'Jazz non disponible','Jazz starting…':'Le jazz démarre…','Jazz starting… press OK again if silent':'Le jazz démarre… appuyez de nouveau sur OK si c’est muet',
+'METRO ATLANTA RADAR':'RADAR D’ATLANTA','LIVE RADAR':'RADAR EN DIRECT','RADAR OFFLINE · SAMPLE':'RADAR HORS LIGNE · EXEMPLE','SAMPLE RADAR':'RADAR D’EXEMPLE',
+'The latest radar loop for metro Atlanta from the National Weather Service. While watching, press OK to turn smooth jazz on or off.':'La plus récente boucle radar d’Atlanta du National Weather Service. Appuyez sur OK pour activer ou couper le jazz.',
+'Currently':'Actuellement','Humidity':'Humidité','Barometer':'Baromètre','Today':'Aujourd’hui','Tonight':'Ce soir','LOCAL WEATHER':'MÉTÉO LOCALE',
+'National Weather Service · updated {0}':'National Weather Service · mis à jour à {0}',
+'Couldn’t reach the National Weather Service. Showing the last forecast.':'Impossible de joindre le National Weather Service. Dernières prévisions affichées.',
+'Couldn’t reach the National Weather Service · sample shown':'Impossible de joindre le National Weather Service · exemple affiché',
+'Loading your forecast… sample shown':'Chargement des prévisions… exemple affiché',
+'Sample forecast · the TV app shows live weather for {0}':'Prévisions d’exemple · l’appli télé affiche la météo en direct pour {0}',
+'Forecast details from the National Weather Service are in English.':'Les détails des prévisions du National Weather Service sont en anglais.',
+'Sunny':'Ensoleillé','Clear':'Dégagé','Mostly Sunny':'Plutôt ensoleillé','Partly Cloudy':'Partiellement nuageux','Cloudy':'Nuageux','Showers':'Averses','T-Storms':'Orages','Snow':'Neige','Fog':'Brouillard','Breezy':'Venteux',
+'Clear skies tonight with lows in the upper 40s':'Ciel dégagé ce soir, minimum près de 8 °C','A cold front brings showers Tuesday':'Un front froid apporte des averses mardi','Pollen: Low':'Pollen : faible',
+'Starting':'Lancement de','Opening':'Ouverture de','in Pluto TV…':'dans Pluto TV…',
+'{0} Not Found':'{0} introuvable','{0} isn’t installed on this Google TV.':'{0} n’est pas installée sur cette Google TV.','Press OK to open Google Play, or BACK to cancel.':'Appuyez sur OK pour ouvrir Google Play, ou RETOUR pour annuler.',
+'Prototype: on your Google TV this opens the real app. Press BACK to return here.':'Prototype : sur votre Google TV, l’appli s’ouvre vraiment. RETOUR pour revenir ici.',
+'Pluto TV Not Found':'Pluto TV introuvable','The Pluto TV app isn’t installed on this Google TV.':'L’appli Pluto TV n’est pas installée sur cette Google TV.','Press OK to get it free from Google Play, or BACK to cancel.':'Appuyez sur OK pour l’obtenir gratuitement sur Google Play, ou RETOUR pour annuler.',
+'Reminder Set':'Rappel programmé','Reminder Cleared':'Rappel annulé','We’ll remind you when {0} starts at {1} on Ch {2}.':'Nous vous le rappellerons quand {0} commencera à {1} au canal {2}.','{0} on Ch {1}.':'{0} au canal {1}.',
+'Starting Now':'Ça commence','{0} is starting on Ch {1}.':'{0} commence au canal {1}.','Press OK to watch, or BACK to dismiss.':'Appuyez sur OK pour regarder, ou RETOUR pour ignorer.',
+'Settings Restored':'Réglages rétablis','All settings and favorites are back to their defaults.':'Tous les réglages et favoris sont revenus à leurs valeurs d’origine.',
+'Channel Unavailable':'Chaîne non disponible','{0} couldn’t be played in NyxVision right now.':'Impossible de lire {0} dans NyxVision pour le moment.','Press OK to open it in the Pluto TV app instead, or BACK to stay here.':'Appuyez sur OK pour l’ouvrir dans l’appli Pluto TV, ou RETOUR pour rester ici.',
+'Checking GitHub for a newer NyxVision…':'Recherche d’une nouvelle version de NyxVision sur GitHub…','Updates are checked on your TV. This preview is always the newest version.':'Les mises à jour se vérifient sur votre télé. Cet aperçu est toujours à jour.',
+'Update Available':'Mise à jour offerte','A newer NyxVision (build {0}) is ready.':'Une nouvelle version de NyxVision ({0}) est prête.','Go to Settings → Check for Updates to install it.':'Allez dans Paramètres → Rechercher les mises à jour pour l’installer.',
+'NyxVision build {0} is ready (you have {1}).':'NyxVision version {0} est prête (vous avez la {1}).','Press OK to download and install it, or BACK for later.':'Appuyez sur OK pour la télécharger et l’installer, ou RETOUR pour plus tard.',
+'Up to Date':'À jour','You have the newest NyxVision ({0}).':'Vous avez la plus récente version de NyxVision ({0}).','Couldn’t reach GitHub. Check the internet connection and try again.':'Impossible de joindre GitHub. Vérifiez la connexion Internet et réessayez.',
+'Updating NyxVision':'Mise à jour de NyxVision','Downloading… {0}%':'Téléchargement… {0} %','Android’s installer is opening. Choose {0} or {1}.':'L’installateur d’Android s’ouvre. Choisissez {0} ou {1}.','Install':'Installer','Update':'Mettre à jour',
+'NyxVision keeps your settings, favorites and last channel.':'NyxVision conserve vos réglages, vos favoris et votre dernière chaîne.',
+'One-Time Permission':'Autorisation unique','Turn on {0} for NyxVision, then press BACK. The update installs right after.':'Activez {0} pour NyxVision, puis appuyez sur RETOUR. La mise à jour s’installe ensuite.','Allow from this source':'Autoriser cette source',
+'This only lets NyxVision install its own updates. You can turn it off again later.':'Cela permet seulement à NyxVision d’installer ses propres mises à jour. Vous pourrez le désactiver plus tard.',
+'Update Didn’t Finish':'Mise à jour inachevée','The download was interrupted.':'Le téléchargement a été interrompu.','Press OK to try again, or BACK to cancel.':'Appuyez sur OK pour réessayer, ou RETOUR pour annuler.',
+'When on, NyxVision changes its colors and decorations by itself on each holiday.':'Lorsqu’ils sont activés, NyxVision change ses couleurs et décorations seul à chaque fête.',
+'Today:':'Aujourd’hui :','Set a holiday to {0} to skip it, or {1} to use it today.':'Réglez une fête sur {0} pour l’ignorer, ou sur {1} pour l’utiliser aujourd’hui.',
+'Runs':'Période','Date':'Date','Auto':'Auto','On Now':'Maintenant','Turns on by itself on its date.':'S’active seul à sa date.','Turns on by itself on its dates.':'S’active seul à ses dates.',
+'Skipped. This holiday won’t change the look.':'Ignoré. Cette fête ne change pas l’apparence.','On now, whatever the date. Switch back to Auto to end it.':'Activé maintenant, peu importe la date. Revenez à Auto pour l’arrêter.','Date not known':'Date inconnue',
+'Nyx was here.':'Nyx est passée par ici.','Press any button':'Appuyez sur n’importe quelle touche',
+'TUNING':'SYNTONISATION','NO SIGNAL':'AUCUN SIGNAL','PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV':'APPUYEZ SUR OK DANS LE GUIDE POUR REGARDER DANS PLUTO TV',
+'Initializing…':'Initialisation…','Acquiring signal…':'Recherche du signal…','Downloading program guide… {0}%':'Téléchargement du guide horaire… {0} %','Welcome to NyxVision':'Bienvenue sur NyxVision','Press OK to skip':'Appuyez sur OK pour passer',
+'Bailey’s Birthday':'Anniversaire de Bailey','Happy Birthday, Bailey!':'Joyeux anniversaire, Bailey !',
+'Taylor’s Birthday':'Anniversaire de Taylor','Happy Birthday, Taylor!':'Joyeux anniversaire, Taylor !',
+'New Year’s Day':'Jour de l’An','Happy New Year!':'Bonne année !',
+'Martin Luther King Jr. Day':'Journée Martin Luther King Jr.',
+'Lunar New Year':'Nouvel An lunaire','Happy Lunar New Year!':'Bonne année lunaire !',
+'Groundhog Day':'Jour de la marmotte',
+'Valentine’s Day':'Saint-Valentin','Happy Valentine’s Day':'Joyeuse Saint-Valentin',
+'Presidents’ Day':'Journée des présidents',
+'Mardi Gras':'Mardi gras',
+'Pi Day':'Journée de Pi',
+'St. Patrick’s Day':'Saint-Patrick','Happy St. Patrick’s Day':'Joyeuse Saint-Patrick',
+'First Day of Spring':'Premier jour du printemps',
+'April Fools’ Day':'Poisson d’avril',
+'Easter':'Pâques','Happy Easter':'Joyeuses Pâques',
+'Earth Day':'Jour de la Terre',
+'Arbor Day':'Journée de l’arbre',
+'May Day':'Premier mai',
+'Star Wars Day':'Journée Star Wars','May the Fourth Be With You':'Que la Force soit avec vous',
+'Cinco de Mayo':'Cinco de Mayo',
+'Mother’s Day':'Fête des mères','Happy Mother’s Day':'Bonne fête des mères',
+'Memorial Day':'Memorial Day',
+'Pride Month':'Mois des fiertés','Happy Pride':'Joyeuse Fierté',
+'National Donut Day':'Journée nationale du beigne',
+'Flag Day':'Jour du drapeau',
+'Juneteenth':'Juneteenth',
+'Father’s Day':'Fête des pères','Happy Father’s Day':'Bonne fête des pères',
+'First Day of Summer':'Premier jour de l’été',
+'Independence Day':'Jour de l’Indépendance','Happy 4th of July':'Joyeux 4 juillet',
+'National Ice Cream Day':'Journée nationale de la crème glacée',
+'National Hot Dog Day':'Journée nationale du hot-dog',
+'National Dog Day':'Journée nationale du chien',
+'Labor Day':'Fête du Travail',
+'Talk Like a Pirate Day':'Journée « Parlez comme un pirate »','Ahoy, Matey!':'Ohé, moussaillon !',
+'First Day of Fall':'Premier jour de l’automne',
+'Veterans Day':'Journée des anciens combattants','Thank You, Veterans':'Merci aux anciens combattants',
+'Black Friday':'Vendredi fou','Black Friday Deals':'Aubaines du Vendredi fou',
+'Winter Solstice':'Solstice d’hiver',
+'New Year’s Eve':'Réveillon du Nouvel An','Happy New Year’s Eve':'Joyeux réveillon !',
+'Halloween':'Halloween','Happy Halloween':'Joyeuse Halloween',
+'Thanksgiving':'Action de grâce','Happy Thanksgiving':'Joyeuse Action de grâce',
+'Christmas':'Noël','Merry Christmas':'Joyeux Noël'
+},
+es:{
+'Main Menu':'Menú principal','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
+'Watch TV':'Ver TV',
+'Return to full-screen television on your current channel.':'Vuelva a la televisión en pantalla completa en su canal actual.',
+'Browse what’s on now and up to 24 hours ahead.':'Vea qué hay ahora y hasta 24 horas después.',
+'Movies, series and kids’ shows from your streaming services.':'Películas, series y programas infantiles de sus servicios de streaming.',
+'Pick favorite channels for quick surfing and a shorter guide.':'Elija canales favoritos para cambiar rápido y tener una guía más corta.',
+'Open the apps installed on your TV, switch inputs, or check the weather.':'Abra las apps instaladas en su TV o consulte el clima.',
+'Sounds, clock, channel banner, parental controls and more.':'Sonidos, reloj, banner de canal, control parental y más.',
+'Local Weather':'Clima local','Google TV Settings':'Configuración de Google TV',
+'Live TV channels from your DIRECTV subscription.':'Canales en vivo de su suscripción a DIRECTV.',
+'Movies and series from Netflix.':'Películas y series de Netflix.',
+'Videos, music and creators on YouTube.':'Videos, música y creadores en YouTube.',
+'Next-day TV, originals and movies from Hulu.':'TV del día siguiente, originales y películas de Hulu.',
+'Disney, Pixar, Marvel, Star Wars and National Geographic.':'Disney, Pixar, Marvel, Star Wars y National Geographic.',
+'HBO series, Warner Bros. movies and more.':'Series de HBO, películas de Warner Bros. y más.',
+'CBS shows, live sports and Paramount movies.':'Programas de CBS, deportes en vivo y películas de Paramount.',
+'NBC shows, live sports and Peacock originals.':'Programas de NBC, deportes en vivo y originales de Peacock.',
+'A cable-style local forecast screen.':'Una pantalla de pronóstico local al estilo del cable.',
+'Every other app installed on your Google TV.':'Todas las demás apps instaladas en su Google TV.',
+'Open the stick’s original settings menu. Nothing there is replaced.':'Abre el menú de configuración original del dispositivo. No se reemplaza nada.',
+'Not installed · OK opens Google Play':'No instalada · OK abre Google Play','Press OK to view':'Pulse OK para ver','Press OK to launch':'Pulse OK para abrir',
+'Installed App':'App instalada',
+'Press OK to open it. Press HOME on your remote any time to come back, then open the cable box.':'Pulse OK para abrirla. Pulse INICIO para volver y luego abra NyxVision.',
+'Sample list. On your Google TV, every installed app shows up here automatically.':'Lista de ejemplo. En su Google TV, todas sus apps aparecen aquí automáticamente.',
+'No other apps found':'No se encontraron otras apps',
+'Live TV':'TV en vivo','Movies':'Películas','Premium Series':'Series premium','Next-Day TV':'TV del día siguiente','CBS & Paramount':'CBS y Paramount','NBC & Peacock':'NBC y Peacock','Kids & Family':'Niños y familia','Music Videos':'Videos musicales',
+'Your live channels and DVR recordings.':'Sus canales en vivo y grabaciones.',
+'Feature films and new releases.':'Largometrajes y estrenos.',
+'Drama and comedy from premium networks.':'Drama y comedia de cadenas premium.',
+'Catch up on broadcast shows the day after they air.':'Póngase al día con programas al día siguiente de su emisión.',
+'CBS primetime, news and Paramount movies.':'Horario estelar de CBS, noticias y películas de Paramount.',
+'NBC primetime, late night and live sports.':'Horario estelar de NBC, programas nocturnos y deportes en vivo.',
+'Animated movies and family favorites.':'Películas animadas y favoritas de la familia.',
+'Music videos, concerts and live sessions.':'Videos musicales, conciertos y sesiones en vivo.',
+'Category':'Categoría','Available from':'Disponible en','Press OK to open {0}':'Pulse OK para abrir {0}',
+'Favorites':'Favoritos','{0} of {1}':'{0} de {1}',
+'Press OK to add or remove the highlighted channel.':'Pulse OK para agregar o quitar el canal resaltado.',
+'Channels appear here once the Pluto TV listings load.':'Los canales aparecen aquí cuando carga la programación de Pluto TV.',
+'Set {0} to {1} in Settings to surf only your favorites.':'Ponga {0} en {1} en Configuración para cambiar solo entre sus favoritos.',
+'Guide Shows':'La guía muestra',
+'Language':'Idioma','Region':'Región',
+'Navigation Sounds':'Sonidos de navegación','Clock Format':'Formato de hora','Channel Banner':'Banner de canal','Parental Controls':'Control parental',
+'Pluto TV Listings':'Programación de Pluto TV','Pluto TV Plays In':'Pluto TV se ve en','Pluto Channels':'Canales de Pluto','Radar Channel Music':'Música del canal de radar',
+'Check for Updates':'Buscar actualizaciones','About NyxVision':'Acerca de NyxVision','Restore Defaults':'Restablecer valores',
+'On':'Sí','Off':'No','12-Hour':'12 horas','24-Hour':'24 horas','3 sec':'3 s','5 sec':'5 s','8 sec':'8 s','All Channels':'Todos los canales',
+'Pluto TV App':'App de Pluto TV','Top 50':'Los 50 primeros','All':'Todos','Smooth Jazz':'Jazz suave',
+'🇺🇸 United States':'🇺🇸 Estados Unidos','🇨🇦 Canada':'🇨🇦 Canadá',
+'The language of every menu, screen and holiday greeting.':'El idioma de cada menú, pantalla y saludo festivo.',
+'Sets the TV rating symbols and weather units. Canada uses the Canadian rating symbols, °C, km/h and kPa.':'Define los símbolos de clasificación y las unidades del clima. Canadá usa los símbolos canadienses, °C, km/h y kPa.',
+'The short beeps you hear when you press remote buttons.':'Los pitidos cortos al pulsar los botones del control.',
+'How times appear in the guide, banner and header.':'Cómo se ve la hora en la guía, el banner y el encabezado.',
+'How long the blue info banner stays on screen after you change channels.':'Cuánto tiempo se ve el banner de información al cambiar de canal.',
+'When on, channels rated TV-14 or higher are blocked. On a real TV this ties into the TV’s own PIN where supported.':'Cuando está activado, se bloquean los canales clasificados TV-14 o superior.',
+'Show every channel in the guide, or only your favorites. CH ▲/▼ follows the same list.':'Mostrar todos los canales en la guía o solo sus favoritos. CH ▲/▼ sigue la misma lista.',
+'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.':'Agrega los canales gratis de Pluto TV a la guía desde el canal 200.',
+'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.':'NyxVision reproduce los canales de Pluto aquí mismo: en pantalla completa, en la vista previa y al cambiar canales. App de Pluto TV los abre en Pluto.',
+'How many Pluto TV channels appear in the guide. All is several hundred.':'Cuántos canales de Pluto TV aparecen en la guía. Todos son varios cientos.',
+'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.':'Elija qué temas festivos se activan solos, desactive los que quiera o ponga uno ahora mismo.',
+'Soft jazz that plays while you watch the Metro Atlanta Radar channel. You can also press OK on that channel to switch it.':'Jazz suave mientras ve el canal de radar de Atlanta. También puede pulsar OK en ese canal para cambiarlo.',
+'Looks for a newer NyxVision on GitHub. If there is one, NyxVision downloads it and opens the installer. Your settings and favorites carry over.':'Busca una versión más nueva de NyxVision en GitHub, la descarga y abre el instalador. Su configuración y favoritos se conservan.',
+'NyxVision digital cable, named after Nyx the Siamese cat.':'Cable digital NyxVision, llamado así por Nyx, la gata siamesa.',
+'Put every setting and favorite back the way it shipped.':'Devuelve toda la configuración y los favoritos a como venían.',
+'Receiver':'Receptor','Guide data: {0}':'Datos de la guía: {0}','sample lineup':'programación de ejemplo','New build ready':'Nueva versión lista','Classic':'Clásico','Classic Blue':'Azul clásico',
+'build {0}':'versión {0}','preview':'vista previa','local build':'versión local',
+'Highlight':'Resaltar','Select':'Seleccionar','Exit to TV':'Volver a la TV','Launch':'Abrir','Open':'Abrir','Add / Remove':'Agregar / Quitar','Change':'Cambiar','Browse':'Explorar','Watch':'Ver','Remind':'Recordar','Page':'Página','Details':'Detalles','Exit':'Salir','Auto / Off / On Now':'Auto / No / Ahora','Open in Pluto TV':'Abrir en Pluto TV',
+'On now · Press OK to watch':'En emisión · Pulse OK para ver','On now · Press OK to watch in Pluto TV':'En emisión · OK para ver en Pluto TV','Press OK to set a reminder':'Pulse OK para un recordatorio',
+'Reminder':'Recordatorio','NEW':'NUEVO','Locked':'Bloqueado','No Listings':'Sin programación','Loading Listings…':'Cargando programación…',
+'Turn on Pluto TV Listings in Settings to fill the guide.':'Active la programación de Pluto TV en Configuración para llenar la guía.',
+'Getting the Pluto TV lineup. This takes a few seconds.':'Obteniendo los canales de Pluto TV. Tarda unos segundos.',
+'Pluto TV listings are unavailable right now.':'La programación de Pluto TV no está disponible en este momento.',
+'Listings not available for this time.':'Programación no disponible para este horario.','Listings not available.':'Programación no disponible.',
+'Next: {0} at {1}':'Después: {0} a las {1}','Favorite':'Favorito','OK Guide · ◀ Menu':'OK Guía · ◀ Menú','OK Jazz · ◀ Menu':'OK Jazz · ◀ Menú',
+'Channel Locked':'Canal bloqueado','{0} is blocked by Parental Controls. Turn them off in Settings to watch.':'{0} está bloqueado por el control parental. Desactívelo en Configuración para verlo.',
+'No Channels':'Sin canales','Tuning In…':'Sintonizando…','Turn on Pluto TV Listings in Settings to get channels.':'Active la programación de Pluto TV en Configuración para obtener canales.',
+'{0} Press ◀ for the main menu.':'{0} Pulse ◀ para el menú principal.','Loading the channel lineup. This takes a few seconds.':'Cargando la lista de canales. Tarda unos segundos.',
+'Now Watching':'Viendo ahora','No channel tuned yet':'Aún no hay canal sintonizado','Hi / Lo':'Máx / Mín','Wind':'Viento','Loading weather…':'Cargando el clima…','Weather unavailable right now.':'Clima no disponible por ahora.','Live weather shows here on your TV.':'El clima en vivo aparece aquí en su TV.',
+'Metro Atlanta Doppler Radar':'Radar Doppler de Atlanta','Metro Atlanta Radar':'Radar de Atlanta','Sample radar · live loop unavailable':'Radar de ejemplo · animación en vivo no disponible','NWS Peachtree City · KFFC loop':'NWS Peachtree City · animación KFFC','OK to switch':'OK para cambiar',
+'Jazz On':'Jazz activado','Jazz Off':'Jazz apagado','Jazz warming up…':'Preparando el jazz…','Jazz unavailable':'Jazz no disponible','Jazz starting…':'Iniciando el jazz…','Jazz starting… press OK again if silent':'Iniciando el jazz… pulse OK otra vez si no suena',
+'METRO ATLANTA RADAR':'RADAR DE ATLANTA','LIVE RADAR':'RADAR EN VIVO','RADAR OFFLINE · SAMPLE':'RADAR SIN CONEXIÓN · EJEMPLO','SAMPLE RADAR':'RADAR DE EJEMPLO',
+'The latest radar loop for metro Atlanta from the National Weather Service. While watching, press OK to turn smooth jazz on or off.':'La animación de radar más reciente de Atlanta del National Weather Service. Pulse OK para activar o apagar el jazz.',
+'Currently':'Ahora','Humidity':'Humedad','Barometer':'Barómetro','Today':'Hoy','Tonight':'Esta noche','LOCAL WEATHER':'CLIMA LOCAL',
+'National Weather Service · updated {0}':'National Weather Service · actualizado a las {0}',
+'Couldn’t reach the National Weather Service. Showing the last forecast.':'No se pudo conectar con el National Weather Service. Se muestra el último pronóstico.',
+'Couldn’t reach the National Weather Service · sample shown':'No se pudo conectar con el National Weather Service · se muestra un ejemplo',
+'Loading your forecast… sample shown':'Cargando su pronóstico… se muestra un ejemplo',
+'Sample forecast · the TV app shows live weather for {0}':'Pronóstico de ejemplo · la app de TV muestra el clima en vivo de {0}',
+'Forecast details from the National Weather Service are in English.':'Los detalles del pronóstico del National Weather Service están en inglés.',
+'Sunny':'Soleado','Clear':'Despejado','Mostly Sunny':'Mayormente soleado','Partly Cloudy':'Parcialmente nublado','Cloudy':'Nublado','Showers':'Chubascos','T-Storms':'Tormentas','Snow':'Nieve','Fog':'Niebla','Breezy':'Ventoso',
+'Clear skies tonight with lows in the upper 40s':'Cielo despejado esta noche, mínima cerca de 8 °C','A cold front brings showers Tuesday':'Un frente frío trae chubascos el martes','Pollen: Low':'Polen: bajo',
+'Starting':'Abriendo','Opening':'Abriendo','in Pluto TV…':'en Pluto TV…',
+'{0} Not Found':'{0} no encontrada','{0} isn’t installed on this Google TV.':'{0} no está instalada en este Google TV.','Press OK to open Google Play, or BACK to cancel.':'Pulse OK para abrir Google Play, o ATRÁS para cancelar.',
+'Prototype: on your Google TV this opens the real app. Press BACK to return here.':'Prototipo: en su Google TV se abre la app real. Pulse ATRÁS para volver.',
+'Pluto TV Not Found':'Pluto TV no encontrada','The Pluto TV app isn’t installed on this Google TV.':'La app de Pluto TV no está instalada en este Google TV.','Press OK to get it free from Google Play, or BACK to cancel.':'Pulse OK para obtenerla gratis en Google Play, o ATRÁS para cancelar.',
+'Reminder Set':'Recordatorio programado','Reminder Cleared':'Recordatorio eliminado','We’ll remind you when {0} starts at {1} on Ch {2}.':'Le avisaremos cuando {0} empiece a las {1} en el canal {2}.','{0} on Ch {1}.':'{0} en el canal {1}.',
+'Starting Now':'Empieza ahora','{0} is starting on Ch {1}.':'{0} está empezando en el canal {1}.','Press OK to watch, or BACK to dismiss.':'Pulse OK para ver, o ATRÁS para descartar.',
+'Settings Restored':'Configuración restablecida','All settings and favorites are back to their defaults.':'Toda la configuración y los favoritos volvieron a sus valores originales.',
+'Channel Unavailable':'Canal no disponible','{0} couldn’t be played in NyxVision right now.':'No se pudo reproducir {0} en NyxVision en este momento.','Press OK to open it in the Pluto TV app instead, or BACK to stay here.':'Pulse OK para abrirlo en la app de Pluto TV, o ATRÁS para quedarse aquí.',
+'Checking GitHub for a newer NyxVision…':'Buscando una versión más nueva de NyxVision en GitHub…','Updates are checked on your TV. This preview is always the newest version.':'Las actualizaciones se buscan en su TV. Esta vista previa siempre es la versión más nueva.',
+'Update Available':'Actualización disponible','A newer NyxVision (build {0}) is ready.':'Una versión más nueva de NyxVision ({0}) está lista.','Go to Settings → Check for Updates to install it.':'Vaya a Configuración → Buscar actualizaciones para instalarla.',
+'NyxVision build {0} is ready (you have {1}).':'La versión {0} de NyxVision está lista (usted tiene la {1}).','Press OK to download and install it, or BACK for later.':'Pulse OK para descargarla e instalarla, o ATRÁS para más tarde.',
+'Up to Date':'Actualizado','You have the newest NyxVision ({0}).':'Tiene la versión más nueva de NyxVision ({0}).','Couldn’t reach GitHub. Check the internet connection and try again.':'No se pudo conectar con GitHub. Revise la conexión a internet e inténtelo de nuevo.',
+'Updating NyxVision':'Actualizando NyxVision','Downloading… {0}%':'Descargando… {0} %','Android’s installer is opening. Choose {0} or {1}.':'Se está abriendo el instalador de Android. Elija {0} o {1}.','Install':'Instalar','Update':'Actualizar',
+'NyxVision keeps your settings, favorites and last channel.':'NyxVision conserva su configuración, sus favoritos y su último canal.',
+'One-Time Permission':'Permiso único','Turn on {0} for NyxVision, then press BACK. The update installs right after.':'Active {0} para NyxVision y pulse ATRÁS. La actualización se instala enseguida.','Allow from this source':'Permitir desde esta fuente',
+'This only lets NyxVision install its own updates. You can turn it off again later.':'Esto solo permite que NyxVision instale sus propias actualizaciones. Puede desactivarlo después.',
+'Update Didn’t Finish':'La actualización no terminó','The download was interrupted.':'La descarga se interrumpió.','Press OK to try again, or BACK to cancel.':'Pulse OK para intentarlo de nuevo, o ATRÁS para cancelar.',
+'When on, NyxVision changes its colors and decorations by itself on each holiday.':'Cuando están activados, NyxVision cambia sus colores y decoraciones solo en cada festividad.',
+'Today:':'Hoy:','Set a holiday to {0} to skip it, or {1} to use it today.':'Ponga una festividad en {0} para omitirla, o en {1} para usarla hoy.',
+'Runs':'Periodo','Date':'Fecha','Auto':'Auto','On Now':'Ahora','Turns on by itself on its date.':'Se activa solo en su fecha.','Turns on by itself on its dates.':'Se activa solo en sus fechas.',
+'Skipped. This holiday won’t change the look.':'Omitida. Esta festividad no cambiará el aspecto.','On now, whatever the date. Switch back to Auto to end it.':'Activado ahora, sin importar la fecha. Vuelva a Auto para terminarlo.','Date not known':'Fecha desconocida',
+'Nyx was here.':'Nyx estuvo aquí.','Press any button':'Pulse cualquier botón',
+'TUNING':'SINTONIZANDO','NO SIGNAL':'SIN SEÑAL','PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV':'PULSE OK EN LA GUÍA PARA VER EN PLUTO TV',
+'Initializing…':'Iniciando…','Acquiring signal…':'Buscando señal…','Downloading program guide… {0}%':'Descargando la guía de programación… {0} %','Welcome to NyxVision':'Bienvenido a NyxVision','Press OK to skip':'Pulse OK para omitir',
+'Bailey’s Birthday':'Cumpleaños de Bailey','Happy Birthday, Bailey!':'¡Feliz cumpleaños, Bailey!',
+'Taylor’s Birthday':'Cumpleaños de Taylor','Happy Birthday, Taylor!':'¡Feliz cumpleaños, Taylor!',
+'New Year’s Day':'Año Nuevo','Happy New Year!':'¡Feliz Año Nuevo!',
+'Martin Luther King Jr. Day':'Día de Martin Luther King Jr.',
+'Lunar New Year':'Año Nuevo Lunar','Happy Lunar New Year!':'¡Feliz Año Nuevo Lunar!',
+'Groundhog Day':'Día de la Marmota',
+'Valentine’s Day':'Día de San Valentín','Happy Valentine’s Day':'Feliz Día de San Valentín',
+'Presidents’ Day':'Día de los Presidentes',
+'Mardi Gras':'Martes de Carnaval',
+'Pi Day':'Día de Pi',
+'St. Patrick’s Day':'Día de San Patricio','Happy St. Patrick’s Day':'Feliz Día de San Patricio',
+'First Day of Spring':'Primer día de primavera',
+'April Fools’ Day':'Día de las Bromas de Abril',
+'Easter':'Pascua','Happy Easter':'Felices Pascuas',
+'Earth Day':'Día de la Tierra',
+'Arbor Day':'Día del Árbol',
+'May Day':'Primero de Mayo',
+'Star Wars Day':'Día de Star Wars','May the Fourth Be With You':'Que la Fuerza te acompañe',
+'Cinco de Mayo':'Cinco de Mayo',
+'Mother’s Day':'Día de las Madres','Happy Mother’s Day':'Feliz Día de las Madres',
+'Memorial Day':'Día de los Caídos',
+'Pride Month':'Mes del Orgullo','Happy Pride':'Feliz Orgullo',
+'National Donut Day':'Día Nacional de la Dona',
+'Flag Day':'Día de la Bandera',
+'Juneteenth':'Juneteenth',
+'Father’s Day':'Día del Padre','Happy Father’s Day':'Feliz Día del Padre',
+'First Day of Summer':'Primer día de verano',
+'Independence Day':'Día de la Independencia','Happy 4th of July':'Feliz 4 de Julio',
+'National Ice Cream Day':'Día Nacional del Helado',
+'National Hot Dog Day':'Día Nacional del Hot Dog',
+'National Dog Day':'Día Nacional del Perro',
+'Labor Day':'Día del Trabajo',
+'Talk Like a Pirate Day':'Día de Hablar como Pirata','Ahoy, Matey!':'¡Ahoy, marinero!',
+'First Day of Fall':'Primer día de otoño',
+'Veterans Day':'Día de los Veteranos','Thank You, Veterans':'Gracias, veteranos',
+'Black Friday':'Viernes Negro','Black Friday Deals':'Ofertas de Viernes Negro',
+'Winter Solstice':'Solsticio de invierno',
+'New Year’s Eve':'Nochevieja','Happy New Year’s Eve':'¡Feliz Nochevieja!',
+'Halloween':'Halloween','Happy Halloween':'Feliz Halloween',
+'Thanksgiving':'Día de Acción de Gracias','Happy Thanksgiving':'Feliz Día de Acción de Gracias',
+'Christmas':'Navidad','Merry Christmas':'Feliz Navidad'
+}};
+function T(s){let r=(SET.lang&&I18N[SET.lang]&&I18N[SET.lang][s])||s;for(let i=1;i<arguments.length;i++)r=r.split('{'+(i-1)+'}').join(arguments[i]);return r}
+// translate the text between tags of a finished screen, so data labels and holiday names follow the language
+function trText(t){const D=I18N[SET.lang];if(!D)return t;if(D[t])return D[t];
+  const m=t.match(/^([\s◀▶★⏰♪·•:]*)(.*?)([\s◀▶★⏰♪·•:]*)$/);
+  if(m&&m[2]&&D[m[2]])return m[1]+D[m[2]]+m[3];return t}
+function trHTML(h){if(!I18N[SET.lang])return h;return h.replace(/>([^<>]+)</g,(m,t)=>'>'+trText(t)+'<')}
+const DAYN={en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],fr:['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'],es:['dom','lun','mar','mié','jue','vie','sáb']};
+const MONN={en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],fr:['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'],es:['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']};
+function dayName(i){return (DAYN[SET.lang]||DAYN.en)[i]}
+function monName(i){return (MONN[SET.lang]||MONN.en)[i]}
+/* ---------------- region: United States / Canada ---------------- */
+const isCA=()=>SET.region==='ca';
+function tU(f){return f==null?f:(isCA()?Math.round((f-32)*5/9):f)}
+function windU(s){return isCA()?String(s).replace(/(\d+)\s*mph/g,(m,n)=>Math.round(n*1.609)+' km/h'):s}
+function baroU(s){return isCA()?String(s).replace(/([\d.]+)\s*in/,(m,n)=>(n*3.386).toFixed(1)+' kPa'):s}
+const CA_RATE={'TV-Y':'C','TV-Y7':'C8','TV-Y7-FV':'C8','TV-G':'G','TV-PG':'PG','TV-14':'14+','TV-MA':'18+','G':'G','PG':'PG','PG-13':'14+','R':'18+','NC-17':'18+','14+':'14+','18+':'18+','C':'C','C8':'C8'};
+function caBadge(code){const fs=code.length===1?235:code.length===2?190:168;
+  return '<svg class="cab" viewBox="30 10 480 400" width="40" height="33" role="img" aria-label="'+code+'"><path d="M54,108 L262,108 L262,82 L277,96 L313,30 L344,96 L381,80 L367,180 L433,124 L442,156 L478,155 L462,210 L487,219 L403,290 L403,389 L54,389 Z" fill="#000" stroke="#fff" stroke-width="30" stroke-linejoin="miter" stroke-miterlimit="8"/><text x="'+(code.length>2?232:226)+'" y="'+(code.length>2?328:338)+'" text-anchor="middle" font-family="Archivo,\'Arial Black\',sans-serif" font-weight="900" font-size="'+fs+'" fill="#fff" letter-spacing="-6">'+code+'</text></svg>'}
+function rateHTML(r){if(!r)return '';if(isCA()){const c=CA_RATE[String(r).toUpperCase().replace(/\s/g,'')];if(c)return caBadge(c)}return '<span class="rate">'+esc(r)+'</span>'}
 
 function tune(ci){
   if(!has(ci))return;
@@ -490,8 +837,8 @@ function guideKey(k){
     while(nt<g.win)g.win-=SLOT;const pp=progAt(f.ci,nt);g.ft=Math.max(pp.start,g.win);snd.nav();render();return}
   if(k==='ok'){const f=gFocus();const now=Date.now();
     if(f.p.start<=now&&f.p.end>now){snd.ok();if(CH[f.ci].pluto&&SET.plutoPlay!=='box'){launchPluto(f.ci)}else{S.screen='watch';tune(f.ci);}}
-    else{const key=f.ci+':'+f.p.start;if(S.reminders.has(key)){S.reminders.delete(key);dialog('Reminder Cleared',esc(f.p.title)+' on Ch '+CH[f.ci].n+'.',1600)}
-      else{S.reminders.add(key);dialog('Reminder Set','We’ll remind you when <b>'+esc(f.p.title)+'</b> starts at '+fmtT(f.p.start)+' on Ch '+CH[f.ci].n+'.',2000)}snd.ok()}
+    else{const key=f.ci+':'+f.p.start;if(S.reminders.has(key)){S.reminders.delete(key);dialog('Reminder Cleared',T('{0} on Ch {1}.',esc(f.p.title),CH[f.ci].n),1600)}
+      else{S.reminders.add(key);dialog('Reminder Set',T('We’ll remind you when {0} starts at {1} on Ch {2}.','<b>'+esc(f.p.title)+'</b>',fmtT(f.p.start),CH[f.ci].n),2000)}snd.ok()}
     return}
   if(k==='fav'){const f=gFocus();toggleFav(f.ci);return}
 }
@@ -503,7 +850,7 @@ function dialog(title,body,ms){S.dialog={title:title,body:body};clearTimeout(dlg
 function launch(app){
   if(NATIVE){
     if(app.sys){NATIVE.openSettings();return}
-    if(!app.pkg){dialog(esc(app.label)+' Not Found',esc(app.label)+' isn’t installed on this Google TV.<small>Press OK to open Google Play, or BACK to cancel.</small>');S.dialog.onOk=()=>NATIVE.openStore(app.pkgs?app.pkgs[0]:'');return}
+    if(!app.pkg){dialog(T('{0} Not Found',esc(app.label)),T('{0} isn’t installed on this Google TV.',esc(app.label))+'<small>Press OK to open Google Play, or BACK to cancel.</small>');S.dialog.onOk=()=>NATIVE.openStore(app.pkgs?app.pkgs[0]:'');return}
     dialog(esc(app.label),'<span class="wait"></span>Starting <b>'+esc(app.label)+'</b>…',1500);
     setTimeout(()=>{try{NATIVE.launchApp(app.pkg)}catch(e){}},350);return;
   }
@@ -513,6 +860,7 @@ function launch(app){
 /* ---------------- input ---------------- */
 let entryT=0;
 function press(k){
+  if(S.screen==='boot'){if(k==='ok'&&performance.now()-BOOTSEQ.t0>800)endBoot();return}
   if(S.screen==='egg'){if(performance.now()-EGG.t0>800)go('set');return}
   try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
   if(S.dialog){if(k==='ok'||k==='back'){const f=(k==='ok')&&S.dialog.onOk;S.dialog=null;clearTimeout(dlgT);snd.back();render();if(f)f()}return}
@@ -564,7 +912,7 @@ function press(k){
     if(it.action&&it.k==='about'){if(k!=='ok')return;const now=Date.now();EGGC.n=(now-EGGC.t<1600)?EGGC.n+1:1;EGGC.t=now;snd.nav();if(EGGC.n>=5){EGGC.n=0;startEgg()}else render();return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF,{themeState:{}});FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+RADARS[radarIdx];render()}return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -602,10 +950,10 @@ const radarLbl=document.createElement('span');radarLbl.className='rlbl';
 const radarDot=document.createElement('span');radarDot.className='dot2';
 radarBox.append(radarCv,radarImg,radarDot,radarLbl);
 function radarSrc(){radarAt=Date.now();radarFail=false;radarImg.hidden=false;radarCv.hidden=true;radarDot.hidden=true;
-  radarLbl.textContent='LIVE RADAR \u00B7 '+RADARS[radarIdx];
+  radarLbl.textContent=T('LIVE RADAR')+' \u00B7 '+RADARS[radarIdx];
   radarImg.src='https://radar.weather.gov/ridge/standard/'+RADARS[radarIdx]+'_loop.gif?t='+Math.floor(Date.now()/600000)}
-radarImg.onerror=()=>{if(radarIdx<RADARS.length-1){radarIdx++;radarSrc()}else{radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'}};
-if(window.CableNative)radarSrc();else{radarFail=true;radarImg.hidden=true;radarDot.hidden=false;radarLbl.textContent='SAMPLE RADAR'}
+radarImg.onerror=()=>{if(radarIdx<RADARS.length-1){radarIdx++;radarSrc()}else{radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR')}};
+if(window.CableNative)radarSrc();else{radarFail=true;radarImg.hidden=true;radarDot.hidden=false;radarLbl.textContent=T('SAMPLE RADAR')}
 const radarFull=document.createElement('div');radarFull.style.cssText='position:absolute;inset:0';
 const radarFullImg=document.createElement('img');radarFullImg.alt='';
 const radarFullCv=document.createElement('canvas');radarFullCv.width=480;radarFullCv.height=270;
@@ -618,7 +966,7 @@ function drawRadarSample(ctx,t,w,h){w=w||288;h=h||216;ctx.save();ctx.scale(w/288
   for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(i*48,0);ctx.lineTo(i*48+20,h);ctx.stroke()}ctx.beginPath();ctx.moveTo(0,90);ctx.bezierCurveTo(90,70,180,120,288,96);ctx.stroke();
   const blobs=[['#3fd36b',46],['#e8d53a',24],['#e2493a',10]];for(let j=0;j<3;j++){const bx=((t*10+j*120)%420)-60,by=60+j*48;blobs.forEach(([cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}ctx.restore()}
 const ui=$('#ui');
-const hdr=t=>'<div class="hdr"><div class="brand"><svg class="cat" viewBox="0 0 32 30" width="32" height="30" aria-hidden="true"><path d="M4 13 L5 1 L13 8 Z M28 13 L27 1 L19 8 Z" fill="#3b2618" stroke="#041040" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5.5 L7.6 10 L10.5 8 Z M25 5.5 L24.4 10 L21.5 8 Z" fill="#c98f8a"/><ellipse cx="16" cy="17" rx="13" ry="11.5" fill="#efe2c8" stroke="#041040" stroke-width="1.2"/><path d="M16 9.5 C10 10 6.5 15 7.5 20 C9 26 23 26 24.5 20 C25.5 15 22 10 16 9.5 Z" fill="#4a2f1e"/><path d="M8.6 15.6 Q11.6 13.4 14 16 Q11.2 17.6 8.6 15.6 Z M23.4 15.6 Q20.4 13.4 18 16 Q20.8 17.6 23.4 15.6 Z" fill="#4fb6ff"/><path d="M11.4 15.2 v1.2 M20.6 15.2 v1.2" stroke="#06113d" stroke-width="1.3" stroke-linecap="round"/><path d="M14.6 19.4 h2.8 l-1.4 1.6 Z" fill="#d79a9a"/><path d="M16 21 v1.2 M16 22.2 q-1.6 1.2 -3 .4 M16 22.2 q1.6 1.2 3 .4" stroke="#1a0f08" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M4 19.5 l5 .6 M4 22 l5 -.4 M28 19.5 l-5 .6 M28 22 l-5 -.4" stroke="#efe2c8" stroke-width=".8" stroke-linecap="round"/></svg><b>NyxVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="hdrmid">'+decoIcon(0,22)+'<div class="title">'+t+'</div>'+decoIcon(1,22)+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
+const hdr=t=>{const L=String(T(t||'')).length;return '<div class="hdr" style="--tsz:'+(L>26?14:L>20?16:19)+'px"><div class="brand"><svg class="cat" viewBox="0 0 32 30" width="32" height="30" aria-hidden="true"><path d="M4 13 L5 1 L13 8 Z M28 13 L27 1 L19 8 Z" fill="#3b2618" stroke="#041040" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5.5 L7.6 10 L10.5 8 Z M25 5.5 L24.4 10 L21.5 8 Z" fill="#c98f8a"/><ellipse cx="16" cy="17" rx="13" ry="11.5" fill="#efe2c8" stroke="#041040" stroke-width="1.2"/><path d="M16 9.5 C10 10 6.5 15 7.5 20 C9 26 23 26 24.5 20 C25.5 15 22 10 16 9.5 Z" fill="#4a2f1e"/><path d="M8.6 15.6 Q11.6 13.4 14 16 Q11.2 17.6 8.6 15.6 Z M23.4 15.6 Q20.4 13.4 18 16 Q20.8 17.6 23.4 15.6 Z" fill="#4fb6ff"/><path d="M11.4 15.2 v1.2 M20.6 15.2 v1.2" stroke="#06113d" stroke-width="1.3" stroke-linecap="round"/><path d="M14.6 19.4 h2.8 l-1.4 1.6 Z" fill="#d79a9a"/><path d="M16 21 v1.2 M16 22.2 q-1.6 1.2 -3 .4 M16 22.2 q1.6 1.2 3 .4" stroke="#1a0f08" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M4 19.5 l5 .6 M4 22 l5 -.4 M28 19.5 l-5 .6 M28 22 l-5 -.4" stroke="#efe2c8" stroke-width=".8" stroke-linecap="round"/></svg><b>NyxVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="hdrmid">'+decoIcon(0,22)+'<div class="title">'+t+'</div>'+decoIcon(1,22)+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>'};
 const ftr=items=>'<div class="ftr">'+items.map(x=>'<span>'+x+'</span>').join('')+footDeco()+'</div>';
 
 function menuHTML(list,sel,x,y,w,fmt,max){
@@ -631,8 +979,8 @@ function nowLine(ci){if(!has(ci))return 'No channel tuned yet';const p=progAt(ci
 function homeWx(){
   const W=WX&&WX.now?WX:null,d=W&&W.days[0];
   return '<div class="box bevel mini" style="left:748px;top:238px;width:136px;height:184px"><div class="lbl">Columbus, GA</div>'+
-   (W?'<div style="display:flex;align-items:center;gap:4px"><div class="tmp2">'+W.now.temp+'\u00B0</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:48px;height:39px"></canvas></div><div style="font:800 16px var(--display);color:var(--hi)">'+esc(W.now.cond)+'</div>'+
-    (d?'<div class="row2"><span>Hi / Lo</span><span>'+(d.hi!=null?d.hi+'\u00B0':'\u2014')+' / '+(d.lo!=null?d.lo+'\u00B0':'\u2014')+'</span></div>':'')+'<div class="row2"><span>Wind</span><span>'+esc(W.now.wind)+'</span></div>'
+   (W?'<div style="display:flex;align-items:center;gap:4px"><div class="tmp2">'+tU(W.now.temp)+'\u00B0</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:48px;height:39px"></canvas></div><div style="font:800 16px var(--display);color:var(--hi)">'+esc(W.now.cond)+'</div>'+
+    (d?'<div class="row2"><span>Hi / Lo</span><span>'+(d.hi!=null?tU(d.hi)+'\u00B0':'\u2014')+' / '+(d.lo!=null?tU(d.lo)+'\u00B0':'\u2014')+'</span></div>':'')+'<div class="row2"><span>Wind</span><span>'+esc(windU(W.now.wind))+'</span></div>'
     :'<p style="margin-top:8px">'+(NATIVE?(WXERR?'Weather unavailable right now.':'Loading weather\u2026'):'Live weather shows here on your TV.')+'</p>')+'</div>';
 }
 
@@ -640,17 +988,17 @@ function render(){
   const sc=S.screen;let h='';
   $('#video').style.visibility=(sc==='watch')?'visible':'hidden';
   if(sc==='watch'&&!has(S.ch)){
-    h+='<div class="lock"><div class="box bevel"><h3>'+(PLUTO_ERR||!SET.pluto?'No Channels':'Tuning In…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to get channels.':PLUTO_ERR?esc(PLUTO_ERR)+' Press ◀ for the main menu.':'Loading the channel lineup. This takes a few seconds.')+'</p></div></div>';
+    h+='<div class="lock"><div class="box bevel"><h3>'+(PLUTO_ERR||!SET.pluto?'No Channels':'Tuning In…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to get channels.':PLUTO_ERR?T('{0} Press \u25C0 for the main menu.',T(PLUTO_ERR)):'Loading the channel lineup. This takes a few seconds.')+'</p></div></div>';
   }
   else if(sc==='watch'){
     if(CH[S.ch].radar){h+='<div class="rfull radar-full-slot"></div><div class="rtop"><b>Metro Atlanta Doppler Radar</b><span class="clk">'+clockStr()+'</span></div>'+
       '<div class="rbot"><span>'+(radarFullFail?'Sample radar \u00B7 live loop unavailable':'NWS Peachtree City \u00B7 KFFC loop')+'</span><span class="mus">\u266A '+jazzLabel()+'</span><span>OK to switch</span></div>'}
-    if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>Ch '+CH[S.ch].n+' '+CH[S.ch].call+' is blocked by Parental Controls. Turn them off in Settings to watch.</p></div></div>';
+    if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>'+T('{0} is blocked by Parental Controls. Turn them off in Settings to watch.','Ch '+CH[S.ch].n+' '+esc(CH[S.ch].call))+'</p></div></div>';
     if(Date.now()<S.bannerUntil||S.entry){
       const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
       h+='<div class="banner"><div class="num"><b>'+c.n+'</b><span>'+c.call+'</span></div><div class="mid"><h2>'+esc(p.title)+'</h2>'+
-        '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
-        '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">Next: '+esc(nx.title)+' at '+fmtT(nx.start)+'</div></div>'+
+        '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span>'+rateHTML(p.rating)+''+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
+        '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">'+T('Next: {0} at {1}',esc(nx.title),fmtT(nx.start))+'</div></div>'+
         '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(isFav(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl" style="white-space:nowrap;letter-spacing:.06em">'+(CH[S.ch].radar?'OK Jazz':'OK Guide')+' \u00B7 \u25C0 Menu</div></div></div>';
     }
     if(S.entry)h+='<div class="entry">'+S.entry+(S.entry.length<3?'-':'')+'</div>';
@@ -687,39 +1035,40 @@ function render(){
     h+='<div class="bg">'+bgDeco()+'</div>'+hdr('On Demand')+menuHTML(OD,S.idx.od,40,66,380,x=>x.label)+
       '<div class="box bevel" style="left:460px;top:66px;width:424px;height:378px"><div class="lbl">Category</div><h3 style="font-size:32px;margin-top:4px">'+it.label+'</h3><p>'+it.desc+'</p>'+
       '<div class="lbl" style="margin-top:26px">Available from</div><div class="mi" style="margin-top:8px;width:300px">'+it.app+'</div>'+
-      '<p style="margin-top:22px;color:var(--hi);font-weight:700">Press OK to open '+it.app+'</p></div>'+
+      '<p style="margin-top:22px;color:var(--hi);font-weight:700">'+T('Press OK to open {0}',it.app)+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Open','<i>BACK</i>Main Menu']);
   }
   else if(sc==='my'){
     h+='<div class="bg">'+bgDeco()+'</div>'+hdr('My Channels')+menuHTML(CH,S.idx.my,40,62,460,(c,i)=>'<span class="n" style="width:34px">'+c.n+'</span><span class="t">'+(c.pluto?esc(c.name):c.call+' · '+esc(c.name))+'</span>'+(isFav(i)?'<span class="star">★</span>':''),8)+
-      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+CH.filter((c,i)=>isFav(i)).length+' of '+CH.length+'</h3>'+
-      '<p>'+(CH.length?'Press OK to add or remove the highlighted channel.':'Channels appear here once the Pluto TV listings load.')+'</p><p>Set <b style="color:#fff">Guide Shows</b> to <b style="color:#fff">My Channels</b> in Settings to surf only your favorites.</p></div>'+
+      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+T('{0} of {1}',CH.filter((c,i)=>isFav(i)).length,CH.length)+'</h3>'+
+      '<p>'+(CH.length?'Press OK to add or remove the highlighted channel.':'Channels appear here once the Pluto TV listings load.')+'</p><p>'+T('Set {0} to {1} in Settings to surf only your favorites.','<b style="color:#fff">'+T('Guide Shows')+'</b>','<b style="color:#fff">'+T('My Channels')+'</b>')+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Add / Remove ★','<i>BACK</i>Main Menu']);
   }
   else if(sc==='set'){
     const it=SETS[S.idx.set];
     h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':x.k==='update'&&UPD.state==='available'?'<span class="v">New build ready ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
-      '<div class="box bevel" style="left:580px;top:66px;width:304px;height:240px"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
-      '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT \u00B7 '+buildLabel()+'<br>Guide data: '+(NATIVE?'Pluto TV + NWS':'sample lineup')+'</p></div>'+
+      '<div class="box bevel" style="left:580px;top:66px;width:304px;height:216px;overflow:hidden"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
+      '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT \u00B7 '+buildLabel()+'<br>'+T('Guide data: {0}',NATIVE?'Pluto TV + NWS':T('sample lineup'))+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>Main Menu']);
   }
   else if(sc==='wx'){h+=wxHTML()}
+  else if(sc==='boot'){h+=bootHTML()}
   else if(sc==='egg'){h+='<canvas id="eggc" width="960" height="540" style="position:absolute;inset:0"></canvas>'}
   else if(sc==='themes'){
     const L=themeList(),i=Math.min(S.idx.themes,L.length-1),it=L[i],cur=pickTheme(new Date());
     h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Holiday Themes')+menuHTML(L,i,40,62,500,x=>{
       if(x.master)return '<span class="t">Holiday Themes</span><span class="v">◀ '+(SET.themesOn?'On':'Off')+' ▶</span>';
       const st=themeState(x.id);return '<span class="t">'+(cur===x?'★ ':'')+esc(x.name)+'</span><span class="v">◀ '+(st==='auto'?'Auto':st==='off'?'Off':'On Now')+' ▶</span>'},8);
-    if(it.master)h+='<div class="box bevel" style="left:580px;top:62px;width:304px;height:386px"><h3>Holiday Themes</h3><p>When on, NyxVision changes its colors and decorations by itself on each holiday.</p><p>Today: <b style="color:#fff">'+(cur?esc(cur.name):'Classic Blue')+'</b></p><p>Set a holiday to <b style="color:#fff">Off</b> to skip it, or <b style="color:#fff">On Now</b> to use it today.</p></div>';
+    if(it.master)h+='<div class="box bevel" style="left:580px;top:62px;width:304px;height:386px"><h3>Holiday Themes</h3><p>When on, NyxVision changes its colors and decorations by itself on each holiday.</p><p>'+T('Today:')+' <b style="color:#fff">'+T(cur?cur.name:'Classic Blue')+'</b></p><p>'+T('Set a holiday to {0} to skip it, or {1} to use it today.','<b style="color:#fff">'+T('Off')+'</b>','<b style="color:#fff">'+T('On Now')+'</b>')+'</p></div>';
     else{const pl=it.pal,st=themeState(it.id);
       h+='<div class="box bevel" style="left:580px;top:62px;width:304px;height:386px"><div class="lbl">'+(it.range?'Runs':'Date')+'</div><h3 style="margin-top:4px">'+esc(it.name)+'</h3><p style="color:#fff;margin-bottom:4px">'+themeDates(it)+'</p>'+
         '<div class="motifs">'+it.motifs.map(m=>motifHTML(m,40,'position:static;display:inline-block')).join('')+'</div>'+
         '<div>'+[pl.b,pl.p,pl.h,pl.c,pl.n,pl.hi].map(c=>'<span class="sw" style="background:'+c+'"></span>').join('')+'</div>'+
-        '<p style="margin-top:12px">'+(st==='auto'?'Turns on by itself on its date'+(it.range?'s':'')+'.':st==='off'?'Skipped. This holiday won’t change the look.':'On now, whatever the date. Switch back to Auto to end it.')+'</p></div>';}
+        '<p style="margin-top:12px">'+(st==='auto'?(it.range?'Turns on by itself on its dates.':'Turns on by itself on its date.'):st==='off'?'Skipped. This holiday won’t change the look.':'On now, whatever the date. Switch back to Auto to end it.')+'</p></div>';}
     h+=ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Auto / Off / On Now','<i>BACK</i>Settings']);
   }
   if(S.dialog)h+='<div class="dlg"><div class="t">'+S.dialog.title+'</div><div class="b">'+S.dialog.body+'</div></div>';
-  ui.innerHTML=h;
+  ui.innerHTML=trHTML(h);
   const slot=ui.querySelector('.pv-slot');if(slot)slot.appendChild(pv);
   const rf=ui.querySelector('.radar-full-slot');if(rf){rf.appendChild(radarFull);if(NATIVE&&Date.now()-radarFullAt>5*MIN)radarFullSrc()}
   updateJazz();
@@ -736,7 +1085,7 @@ function guideHTML(){
   const onNow=p.start<=now&&p.end>now;
   let h='<div class="bg">'+bgDeco()+'</div>'+hdr('TV Guide')+
    '<div class="ginfo"><div class="pv bevel pv-slot"></div><div class="gtext bevel"><h2>'+esc(p.title)+'</h2>'+
-   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
+   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+rateHTML(p.rating)+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
    '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'On now · Press OK to watch in Pluto TV':'On now · Press OK to watch'):'Press OK to set a reminder')+'</p></div></div>';
   const gw=936-150, ppm=gw/90;
   h+='<div class="trow"><div class="d">'+fmtDate(g.win)+'</div>';
@@ -763,19 +1112,19 @@ function wxHTML(){
   const live=!!WX;
   const d=new Date();
   const sample={now:{temp:58,cond:'Partly Cloudy',hum:'62%',wind:'NW 9 mph',baro:'30.08 in'},
-    days:[['Sunny',64,47],['Partly Cloudy',61,45],['Showers',55,44],['Breezy',58,41],['Mostly Sunny',63,46]].map((c,i)=>({name:i===0?'Today':DAYS[new Date(d.getTime()+i*86400000).getDay()],cond:c[0],hi:c[1],lo:c[2]})),
+    days:[['Sunny',64,47],['Partly Cloudy',61,45],['Showers',55,44],['Breezy',58,41],['Mostly Sunny',63,46]].map((c,i)=>({name:i===0?'Today':'#'+new Date(d.getTime()+i*86400000).getDay(),cond:c[0],hi:c[1],lo:c[2]})),
     ticker:['Clear skies tonight with lows in the upper 40s','A cold front brings showers Tuesday','Pollen: Low']};
   const W=WX||sample;
-  const days=W.days.map(x=>'<div class="wxd"><div class="dn">'+esc(x.name)+'</div><canvas class="wxi" data-c="'+x.cond+'" width="64" height="52"></canvas><div class="c">'+x.cond+'</div><div class="hi2">'+(x.hi!=null?x.hi+'°':'—')+'</div><div class="lo">'+(x.lo!=null?x.lo+'°':'—')+'</div></div>').join('');
+  const days=W.days.map(x=>'<div class="wxd"><div class="dn">'+(x.name[0]==='#'?dayName(+x.name.slice(1)):esc(x.name))+'</div><canvas class="wxi" data-c="'+x.cond+'" width="64" height="52"></canvas><div class="c">'+x.cond+'</div><div class="hi2">'+(x.hi!=null?tU(x.hi)+'°':'—')+'</div><div class="lo">'+(x.lo!=null?tU(x.lo)+'°':'—')+'</div></div>').join('');
   let note;
-  if(live)note=(WXERR?WXERR:'National Weather Service · updated '+fmtT(W.updated));
+  if(live)note=(WXERR?WXERR:T('National Weather Service · updated {0}',fmtT(W.updated)))+(SET.lang!=='en'?' \u00B7 '+T('Forecast details from the National Weather Service are in English.'):'');
   else if(NATIVE)note=WXERR?'Couldn’t reach the National Weather Service · sample shown':'Loading your forecast… sample shown';
-  else note='Sample forecast · the TV app shows live weather for '+WXLOC.label;
+  else note=T('Sample forecast · the TV app shows live weather for {0}',WXLOC.label);
   return '<div class="wx">'+bgDeco()+'</div><div class="wxh"><b>Your Local Forecast</b><div class="clk">'+clockStr()+'</div></div>'+
-   '<div class="wxnow"><div class="lbl">'+esc(WXLOC.label)+'</div><div class="tmp">'+W.now.temp+'°</div><div class="cond">'+esc(W.now.cond)+'</div>'+
-   '<div class="row"><span>Humidity</span><span>'+W.now.hum+'</span></div><div class="row"><span>Wind</span><span>'+esc(W.now.wind)+'</span></div><div class="row"><span>Barometer</span><span>'+W.now.baro+'</span></div></div>'+
+   '<div class="wxnow"><div class="lbl">'+esc(WXLOC.label)+'</div><div class="tmp">'+tU(W.now.temp)+'°</div><div class="cond">'+esc(W.now.cond)+'</div>'+
+   '<div class="row"><span>Humidity</span><span>'+W.now.hum+'</span></div><div class="row"><span>Wind</span><span>'+esc(windU(W.now.wind))+'</span></div><div class="row"><span>Barometer</span><span>'+baroU(W.now.baro)+'</span></div></div>'+
    '<div class="wxdays">'+days+'</div><div class="sample">'+note+'</div>'+
-   '<div class="ticker'+(live&&W.alerts?' alert':'')+'"><div>LOCAL WEATHER • '+W.ticker.map(esc).join(' • ')+'</div></div>'+
+   '<div class="ticker'+(live&&W.alerts?' alert':'')+'"><div>'+T('LOCAL WEATHER')+' • '+W.ticker.map(x=>esc(WX?x:T(x))).join(' • ')+'</div></div>'+
    ftr(['<i>BACK</i>Applications','<i>MENU</i>Main Menu']);
 }
 function drawWxIcons(){
@@ -804,7 +1153,7 @@ function txt(ctx,s,x,y,size,col,align,weight){ctx.font=(weight||800)+' '+size+'p
 
 function drawScene(ctx,w,h,ci,t){
   const c=CH[ci];
-  if(!c){const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2a1206');g.addColorStop(1,'#0c0603');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);const k=w/480;ctx.save();ctx.scale(k,k);txt(ctx,'NyxVision',240,128,30,'#f5b83a','center',900);txt(ctx,'TUNING'+'...'.slice(0,1+Math.floor(t*2)%3),240,160,13,'#f6cf8f','center',700);ctx.restore();return}const k=w/480;ctx.save();ctx.scale(k,k);w=480;h=270;
+  if(!c){const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2a1206');g.addColorStop(1,'#0c0603');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);const k=w/480;ctx.save();ctx.scale(k,k);txt(ctx,'NyxVision',240,128,30,'#f5b83a','center',900);txt(ctx,T('TUNING')+'...'.slice(0,1+Math.floor(t*2)%3),240,160,13,'#f6cf8f','center',700);ctx.restore();return}const k=w/480;ctx.save();ctx.scale(k,k);w=480;h=270;
   if(locked(ci)){ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);txt(ctx,'🔒',240,150,40,'#fff','center');ctx.restore();return}
   switch(c.scene){
   case 'bars':{const cols=['#c0c0c0','#c0c000','#00c0c0','#00c000','#c000c0','#c00000','#0000c0'];cols.forEach((cl,i)=>{ctx.fillStyle=cl;ctx.fillRect(i*w/7,0,w/7+1,h*.67)});
@@ -826,7 +1175,7 @@ function drawScene(ctx,w,h,ci,t){
     ctx.strokeStyle='#4b6290';ctx.lineWidth=1;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(i*90,40);ctx.lineTo(i*90+30,270);ctx.stroke()}
     const blobs=[[0,'#3fd36b',60],[40,'#e8d53a',34],[70,'#e2493a',16]];
     for(let j=0;j<3;j++){const bx=((t*14+j*170)%640)-80,by=110+j*40;blobs.forEach(([o,cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}
-    ctx.fillStyle='rgba(6,20,80,.85)';ctx.fillRect(0,0,w,30);txt(ctx,'DOPPLER RADAR',12,21,15,'#ffd21a');txt(ctx,(WX?WX.now.temp:58)+'\u00B0',468,21,17,'#fff','right');break}
+    ctx.fillStyle='rgba(6,20,80,.85)';ctx.fillRect(0,0,w,30);txt(ctx,'DOPPLER RADAR',12,21,15,'#ffd21a');txt(ctx,tU(WX?WX.now.temp:58)+'\u00B0',468,21,17,'#fff','right');break}
   case 'ocean':case 'ocean2':{const g=ctx.createLinearGradient(0,0,0,h*.6);const warm=c.scene==='ocean';g.addColorStop(0,warm?'#ff7e5f':'#5fb4ff');g.addColorStop(1,warm?'#feb47b':'#cdeaff');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     ctx.fillStyle=warm?'#fff3b0':'#fffbe0';ctx.beginPath();ctx.arc(warm?240:380,warm?150:60,warm?40:24,0,7);ctx.fill();
     for(let L=0;L<5;L++){ctx.fillStyle=['#1d4e89','#1b5e9e','#2470b5','#2c84c9','#3a98da'][L];ctx.beginPath();ctx.moveTo(0,h);const base=150+L*24;for(let x=0;x<=w;x+=8)ctx.lineTo(x,base+Math.sin(x/(30+L*6)+t*(1+L*.3))*(4+L));ctx.lineTo(w,h);ctx.fill()}
@@ -855,10 +1204,10 @@ function drawScene(ctx,w,h,ci,t){
     for(let s=0;s<2;s++){ctx.fillStyle='#8c1a26';for(let i=0;i<5;i++){ctx.beginPath();const x0=s?480-i*18:i*18;ctx.ellipse(x0,135,14,140,0,0,7);ctx.fill()}}
     ctx.fillStyle='#222';ctx.fillRect(238,150,4,100);ctx.beginPath();ctx.arc(240,148,7,0,7);ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(266,130+Math.sin(t*2)*2,14,0,7);ctx.fill();ctx.fillRect(254,144+Math.sin(t*2)*2,24,90);break}
   case 'radar':{if(radarFullImg.complete&&radarFullImg.naturalWidth&&!radarFullFail){ctx.fillStyle='#0a0d12';ctx.fillRect(0,0,w,h);const iw=radarFullImg.naturalWidth,ih=radarFullImg.naturalHeight,k2=Math.min(w/iw,h/ih);ctx.drawImage(radarFullImg,(w-iw*k2)/2,(h-ih*k2)/2,iw*k2,ih*k2)}else drawRadarSample(ctx,t,w,h);
-    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,w,26);txt(ctx,'METRO ATLANTA RADAR',10,18,13,'#ffd21a');break}
+    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,w,26);txt(ctx,T('METRO ATLANTA RADAR'),10,18,13,'#ffd21a');break}
   case 'pluto':{const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#1a1450');g.addColorStop(1,'#07051f');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     txt(ctx,String(c.n),240,118,64,'#ffd21a','center',900);txt(ctx,c.name.length>30?c.name.slice(0,30)+'…':c.name,240,152,18,'#fff','center',800);
-    const msg=(PLAY.on&&PLAY.ci===ci)?'TUNING'+'...'.slice(0,1+Math.floor(t*2)%3):(SET.plutoPlay==='box'?'NO SIGNAL':'PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV');txt(ctx,msg,240,186,13,'#a6d4ff','center',700);break}
+    const msg=(PLAY.on&&PLAY.ci===ci)?T('TUNING')+'...'.slice(0,1+Math.floor(t*2)%3):T(SET.plutoPlay==='box'?'NO SIGNAL':'PRESS OK IN THE GUIDE TO WATCH IN PLUTO TV');txt(ctx,msg,240,186,13,'#a6d4ff','center',700);break}
   case 'shop':{const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#2b0a5c');g.addColorStop(1,'#b0126a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
     const s=Math.abs(Math.cos(t));ctx.fillStyle='#ffd21a';ctx.fillRect(160+(1-s)*50,60,100*s+20,100);ctx.fillStyle='#e3a800';ctx.fillRect(160+(1-s)*50+100*s+20,70,30*(1-s)+8,100);
     txt(ctx,'$19.95',350,110,34,'#fff','center',900);txt(ctx,'+ S&H',350,132,14,'#ffd21a','center');ctx.fillStyle='#ffd21a';ctx.fillRect(0,205,w,40);txt(ctx,'CALL NOW 1-800-555-0199',240,232,20,'#2b0a5c','center',900);
@@ -885,6 +1234,7 @@ function loop(ms){
     const ci=(S.screen==='guide'&&S.g)?S.ch:S.ch;
     stat?drawStatic(pctx,320,180):drawScene(pctx,320,180,ci,t);
   }
+  if(S.screen==='boot')bootTick();
   if(S.screen==='egg'){const ec=document.getElementById('eggc');const et=(performance.now()-EGG.t0)/1000;if(ec)eggScene(ec.getContext('2d'),et);if(et>14)go('set')}
   if(radarFail&&radarBox.isConnected)drawRadarSample(radarCv.getContext('2d'),t);
   if(radarFullFail&&radarFull.isConnected)drawRadarSample(radarFullCv.getContext('2d'),t,480,270);
@@ -948,7 +1298,7 @@ async function loadWeather(){
     };
     const days=[];
     for(let i=0;i<per.length&&days.length<5;i++){const p=per[i];
-      if(p.isDaytime){const night=per[i+1];days.push({name:days.length===0&&/today|this/i.test(p.name)?'Today':p.name.slice(0,3),hi:p.temperature,lo:night&&!night.isDaytime?night.temperature:null,cond:wxCat(p.shortForecast)})}
+      if(p.isDaytime){const night=per[i+1];days.push({name:days.length===0&&/today|this/i.test(p.name)?'Today':'#'+new Date(p.startTime).getDay(),hi:p.temperature,lo:night&&!night.isDaytime?night.temperature:null,cond:wxCat(p.shortForecast)})}
       else if(i===0){days.push({name:'Tonight',hi:null,lo:p.temperature,cond:wxCat(p.shortForecast)})}
     }
     const tick=alerts.map(a=>'⚠ '+a.toUpperCase()).concat(per.slice(0,3).map(p=>p.name.toUpperCase()+': '+p.detailedForecast));
@@ -1040,7 +1390,7 @@ async function plutoUrls(ci){
   return urls;
 }
 const PLAY={on:false,ready:false,ci:-1};
-function canPlay(ci){return !!(NATIVE&&NATIVE.playStream&&CH[ci]&&CH[ci].pluto&&SET.plutoPlay==='box')}
+function canPlay(ci){return !!(S.screen!=='boot'&&NATIVE&&NATIVE.playStream&&CH[ci]&&CH[ci].pluto&&SET.plutoPlay==='box')}
 async function applyStream(){
   const ci=S.ch;
   if(!canPlay(ci)){if(PLAY.on&&NATIVE.stopStream)NATIVE.stopStream();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;syncVideo();return}
@@ -1068,7 +1418,7 @@ function syncVideo(){
 function playerState(st){
   if(st==='ready')PLAY.ready=true;
   if(st==='error'&&PLAY.on){const ci=PLAY.ci;PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;syncVideo();
-    dialog('Channel Unavailable',esc(CH[ci]?CH[ci].name:'This channel')+' couldn’t be played in NyxVision right now.<small>Press OK to open it in the Pluto TV app instead, or BACK to stay here.</small>');
+    dialog('Channel Unavailable',T('{0} couldn’t be played in NyxVision right now.',esc(CH[ci]?CH[ci].name:'This channel'))+'<small>Press OK to open it in the Pluto TV app instead, or BACK to stay here.</small>');
     S.dialog.onOk=()=>launchPluto(ci);}
 }
 
@@ -1163,52 +1513,52 @@ const thanksgiving=y=>nthWd(y,11,4,4);
 const LUNAR={2025:[1,29],2026:[2,17],2027:[2,6],2028:[1,26],2029:[2,13],2030:[2,3],2031:[1,23],2032:[2,11],2033:[1,31],2034:[2,19],2035:[2,8]};
 const fx=(m,d)=>y=>new Date(y,m-1,d);
 // palette: b background, p panels, h header, c guide cells, n on-now cells, hi highlight, l label text
-const T=(id,name,date,pal,motifs,greet,range)=>({id:id,name:name,date:date,range:range||null,pal:pal,motifs:motifs,greet:greet||''});
+const TH=(id,name,date,pal,motifs,greet,range)=>({id:id,name:name,date:date,range:range||null,pal:pal,motifs:motifs,greet:greet||''});
 const P=(b,p,h,c,n,hi,l)=>({b:b,p:p,h:h,c:c,n:n,hi:hi,l:l});
 const RWB=P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa');
 const THEMES=[
- T('bailey','Bailey’s Birthday',fx(8,26),P('#1f2a3d','#3a5a8a','#b5835a','#4a6fa5','#a8734a','#ffd8a8','#e6f0ff'),['🐶','🎂','🦴','🎈'],'Happy Birthday, Bailey!'),
- T('taylor','Taylor’s Birthday',fx(11,8),P('#24123a','#5a2d82','#b8860b','#6a3a9a','#c48a1a','#f7d774','#efdcff'),['🎂','🎈','🎉','✨'],'Happy Birthday, Taylor!'),
- T('newyear','New Year’s Day',fx(1,1),P('#121212','#3a3a3a','#8a6d1f','#4d4d4d','#a8862a','#f2c94c','#e0e0e0'),['🎆','🕛','🥂'],'Happy New Year!'),
- T('mlk','Martin Luther King Jr. Day',y=>nthWd(y,1,1,3),P('#0e1f4d','#1f3a7a','#b22234','#3b4f8f','#b22234','#ffffff','#cfd8ff'),['🕊️','☮️']),
- T('lunar','Lunar New Year',y=>LUNAR[y]?new Date(y,LUNAR[y][0]-1,LUNAR[y][1]):null,P('#4a0606','#8b1010','#b8860b','#9c1c1c','#c0392b','#ffd34d','#ffd9a0'),['🐉','🏮','🧧'],'Happy Lunar New Year!'),
- T('groundhog','Groundhog Day',fx(2,2),P('#2b1d12','#5a3d22','#3f7a3a','#4a7c3a','#3d7fb8','#9fd8f2','#cfe8f7'),['🦫','🌤️','☀️']),
- T('valentine','Valentine’s Day',fx(2,14),P('#3d0717','#8c1236','#c2185b','#a3153f','#d81b60','#ffc0d3','#ffd6e2'),['❤️','🌹','💘'],'Happy Valentine’s Day'),
- T('presidents','Presidents’ Day',y=>nthWd(y,2,1,3),RWB,['⭐','🇺🇸']),
- T('mardigras','Mardi Gras',y=>addDays(easter(y),-47),P('#2a0a3d','#4b1a6e','#2e7d32','#5e2a8a','#2e7d32','#f5c518','#e9d5ff'),['🎭','📿','⚜️']),
- T('piday','Pi Day',fx(3,14),P('#0b2445','#1b4f8a','#2563b0','#2a5c9c','#3a78c4','#ffffff','#dbe9ff'),['π','🥧','⭕']),
- T('stpat','St. Patrick’s Day',fx(3,17),P('#06301a','#0f5a2e','#1b7a3c','#17703a','#a8861e','#ffd54a','#c8f0d0'),['☘️','🍀','🌈'],'Happy St. Patrick’s Day'),
- T('spring','First Day of Spring',fx(3,20),P('#2e3b2a','#6a4a6e','#c46a94','#5e8a4a','#b8628a','#fff2a8','#ffe1ee'),['🌸','🦋','☀️']),
- T('aprilfools','April Fools’ Day',fx(4,1),P('#2a1440','#5a2a8a','#d9731a','#6b34a3','#d9731a','#ffe14d','#ffe0b3'),['🃏','🤡','🎈']),
- T('easter','Easter',y=>easter(y),P('#2c2a4a','#5a5a9a','#b86e9c','#5f86b8','#b86e9c','#fff3a3','#ffe3f1'),['🥚','🐰','🧺'],'Happy Easter'),
- T('earth','Earth Day',fx(4,22),P('#08303a','#1f6a4a','#1f6fb0','#2d7d46','#2a74b8','#a8e6a1','#d4f5e0'),['🌍','🌳','♻️']),
- T('arbor','Arbor Day',y=>nthWd(y,4,5,-1),P('#16261a','#2f5233','#4a3220','#2f6b3a','#6b4a2a','#b5d98a','#e2efcf'),['🌳','🍃','🌱']),
- T('mayday','May Day',fx(5,1),P('#2f2a1a','#7a4a6a','#4f8a3a','#a0527a','#4f8a3a','#ffe873','#ffe1f0'),['🌼','🎀','🌷']),
- T('starwars','Star Wars Day',fx(5,4),P('#05070d','#16213e','#0f3c8a','#1c2f5e','#1f5fd1','#ffe81f','#bcd2ff'),['⭐','🚀','✨'],'May the Fourth Be With You'),
- T('cinco','Cinco de Mayo',fx(5,5),P('#0b2e18','#1a6b3a','#b2232a','#1f7a42','#b2232a','#ffffff','#e8f5e9'),['🇲🇽','🎊','🌵']),
- T('mothers','Mother’s Day',y=>nthWd(y,5,0,2),P('#2f1f35','#6b4a85','#b8628a','#7a5a96','#b8628a','#fff3e0','#f6e6ff'),['💐','💗','🌷'],'Happy Mother’s Day'),
- T('memorial','Memorial Day',y=>nthWd(y,5,1,-1),RWB,['🇺🇸','⭐','🌺']),
- T('pride','Pride Month',null,P('#1a1a2e','#3a2a6e','#7b2cbf','#2a6fdb','#d9480f','#ffd60a','#ffd1f2'),['🏳️‍🌈','❤️','🌈'],'Happy Pride',y=>[new Date(y,5,1),new Date(y,5,30)]),
- T('donut','National Donut Day',y=>nthWd(y,6,5,1),P('#2b1a12','#6a3f2a','#c25a85','#7a4a32','#b85480','#ffc2d9','#ffe0ec'),['🍩','☕','✨']),
- T('flagday','Flag Day',fx(6,14),RWB,['🇺🇸','⭐']),
- T('juneteenth','Juneteenth',fx(6,19),P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa'),['🌟','⭐','✊🏾']),
- T('fathers','Father’s Day',y=>nthWd(y,6,0,3),P('#0d1b2a','#1b3a5c','#2f5d3a','#24476e','#5c4128','#cfe3b4','#d6e4f0'),['👔','🔧','❤️'],'Happy Father’s Day'),
- T('summer','First Day of Summer',fx(6,21),P('#073b4c','#0f7c8a','#e07a1f','#11807a','#e07a1f','#ffe066','#d8fbff'),['☀️','🕶️','🏖️']),
- T('july4','Independence Day',fx(7,4),P('#0a1638','#1c3a8c','#b31942','#24479a','#b31942','#ffffff','#dfe7ff'),['🎆','🇺🇸','🦅'],'Happy 4th of July'),
- T('icecream','National Ice Cream Day',y=>nthWd(y,7,0,3),P('#2c2433','#4f7f74','#b86e8e','#5a8f84','#b86e8e','#fff4d6','#ffe4ef'),['🍦','🍨','🍧']),
- T('hotdog','National Hot Dog Day',y=>nthWd(y,7,3,3),P('#2e1a0e','#8a2a1a','#b5841f','#9c3a22','#b5841f','#ffd23f','#f3dfbf'),['🌭','🔥','🍔']),
- T('dogday','National Dog Day',fx(8,26),P('#2a2118','#4a6a8a','#8a6a48','#5a7a9a','#8a5a38','#f2d3a8','#e6eef8'),['🐾','🐕','🦴']),
- T('labor','Labor Day',y=>nthWd(y,9,1,1),RWB,['🇺🇸','🔨','🛠️']),
- T('pirate','Talk Like a Pirate Day',fx(9,19),P('#0a0a0a','#2a1a1a','#8b1a1a','#3a2020','#9c1f1f','#e0b84a','#f0d9a0'),['🏴‍☠️','☠️','⛵'],'Ahoy, Matey!'),
- T('fall','First Day of Fall',fx(9,22),P('#2a1208','#6b2a1a','#b5541d','#6e1f2a','#b5541d','#f5b83a','#f6cf8f'),['🍂','🌰','🎃']),
- T('veterans','Veterans Day',fx(11,11),RWB,['🇺🇸','⭐','🎖️'],'Thank You, Veterans'),
- T('blackfriday','Black Friday',y=>addDays(thanksgiving(y),1),P('#0b0b0b','#2a2a2a','#c8102e','#333333','#c8102e','#ffd400','#ffe680'),['🏷️','🛍️','💥'],'Black Friday Deals'),
- T('solstice','Winter Solstice',fx(12,21),P('#0b1a2e','#24466b','#4f7fa8','#2e5a85','#4f86b8','#e8f6ff','#d8ecff'),['❄️','🌙','✨']),
- T('nye','New Year’s Eve',fx(12,31),P('#0d0d0d','#333333','#8a6d1f','#454545','#a8862a','#f2c94c','#e0e0e0'),['🕛','🎆','🥂'],'Happy New Year’s Eve'),
+ TH('bailey','Bailey’s Birthday',fx(8,26),P('#1f2a3d','#3a5a8a','#b5835a','#4a6fa5','#a8734a','#ffd8a8','#e6f0ff'),['🐶','🎂','🦴','🎈'],'Happy Birthday, Bailey!'),
+ TH('taylor','Taylor’s Birthday',fx(11,8),P('#24123a','#5a2d82','#b8860b','#6a3a9a','#c48a1a','#f7d774','#efdcff'),['🎂','🎈','🎉','✨'],'Happy Birthday, Taylor!'),
+ TH('newyear','New Year’s Day',fx(1,1),P('#121212','#3a3a3a','#8a6d1f','#4d4d4d','#a8862a','#f2c94c','#e0e0e0'),['🎆','🕛','🥂'],'Happy New Year!'),
+ TH('mlk','Martin Luther King Jr. Day',y=>nthWd(y,1,1,3),P('#0e1f4d','#1f3a7a','#b22234','#3b4f8f','#b22234','#ffffff','#cfd8ff'),['🕊️','☮️']),
+ TH('lunar','Lunar New Year',y=>LUNAR[y]?new Date(y,LUNAR[y][0]-1,LUNAR[y][1]):null,P('#4a0606','#8b1010','#b8860b','#9c1c1c','#c0392b','#ffd34d','#ffd9a0'),['🐉','🏮','🧧'],'Happy Lunar New Year!'),
+ TH('groundhog','Groundhog Day',fx(2,2),P('#2b1d12','#5a3d22','#3f7a3a','#4a7c3a','#3d7fb8','#9fd8f2','#cfe8f7'),['🦫','🌤️','☀️']),
+ TH('valentine','Valentine’s Day',fx(2,14),P('#3d0717','#8c1236','#c2185b','#a3153f','#d81b60','#ffc0d3','#ffd6e2'),['❤️','🌹','💘'],'Happy Valentine’s Day'),
+ TH('presidents','Presidents’ Day',y=>nthWd(y,2,1,3),RWB,['⭐','🇺🇸']),
+ TH('mardigras','Mardi Gras',y=>addDays(easter(y),-47),P('#2a0a3d','#4b1a6e','#2e7d32','#5e2a8a','#2e7d32','#f5c518','#e9d5ff'),['🎭','📿','⚜️']),
+ TH('piday','Pi Day',fx(3,14),P('#0b2445','#1b4f8a','#2563b0','#2a5c9c','#3a78c4','#ffffff','#dbe9ff'),['π','🥧','⭕']),
+ TH('stpat','St. Patrick’s Day',fx(3,17),P('#06301a','#0f5a2e','#1b7a3c','#17703a','#a8861e','#ffd54a','#c8f0d0'),['☘️','🍀','🌈'],'Happy St. Patrick’s Day'),
+ TH('spring','First Day of Spring',fx(3,20),P('#2e3b2a','#6a4a6e','#c46a94','#5e8a4a','#b8628a','#fff2a8','#ffe1ee'),['🌸','🦋','☀️']),
+ TH('aprilfools','April Fools’ Day',fx(4,1),P('#2a1440','#5a2a8a','#d9731a','#6b34a3','#d9731a','#ffe14d','#ffe0b3'),['🃏','🤡','🎈']),
+ TH('easter','Easter',y=>easter(y),P('#2c2a4a','#5a5a9a','#b86e9c','#5f86b8','#b86e9c','#fff3a3','#ffe3f1'),['🥚','🐰','🧺'],'Happy Easter'),
+ TH('earth','Earth Day',fx(4,22),P('#08303a','#1f6a4a','#1f6fb0','#2d7d46','#2a74b8','#a8e6a1','#d4f5e0'),['🌍','🌳','♻️']),
+ TH('arbor','Arbor Day',y=>nthWd(y,4,5,-1),P('#16261a','#2f5233','#4a3220','#2f6b3a','#6b4a2a','#b5d98a','#e2efcf'),['🌳','🍃','🌱']),
+ TH('mayday','May Day',fx(5,1),P('#2f2a1a','#7a4a6a','#4f8a3a','#a0527a','#4f8a3a','#ffe873','#ffe1f0'),['🌼','🎀','🌷']),
+ TH('starwars','Star Wars Day',fx(5,4),P('#05070d','#16213e','#0f3c8a','#1c2f5e','#1f5fd1','#ffe81f','#bcd2ff'),['⭐','🚀','✨'],'May the Fourth Be With You'),
+ TH('cinco','Cinco de Mayo',fx(5,5),P('#0b2e18','#1a6b3a','#b2232a','#1f7a42','#b2232a','#ffffff','#e8f5e9'),['🇲🇽','🎊','🌵']),
+ TH('mothers','Mother’s Day',y=>nthWd(y,5,0,2),P('#2f1f35','#6b4a85','#b8628a','#7a5a96','#b8628a','#fff3e0','#f6e6ff'),['💐','💗','🌷'],'Happy Mother’s Day'),
+ TH('memorial','Memorial Day',y=>nthWd(y,5,1,-1),RWB,['🇺🇸','⭐','🌺']),
+ TH('pride','Pride Month',null,P('#1a1a2e','#3a2a6e','#7b2cbf','#2a6fdb','#d9480f','#ffd60a','#ffd1f2'),['🏳️‍🌈','❤️','🌈'],'Happy Pride',y=>[new Date(y,5,1),new Date(y,5,30)]),
+ TH('donut','National Donut Day',y=>nthWd(y,6,5,1),P('#2b1a12','#6a3f2a','#c25a85','#7a4a32','#b85480','#ffc2d9','#ffe0ec'),['🍩','☕','✨']),
+ TH('flagday','Flag Day',fx(6,14),RWB,['🇺🇸','⭐']),
+ TH('juneteenth','Juneteenth',fx(6,19),P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa'),['🌟','⭐','✊🏾']),
+ TH('fathers','Father’s Day',y=>nthWd(y,6,0,3),P('#0d1b2a','#1b3a5c','#2f5d3a','#24476e','#5c4128','#cfe3b4','#d6e4f0'),['👔','🔧','❤️'],'Happy Father’s Day'),
+ TH('summer','First Day of Summer',fx(6,21),P('#073b4c','#0f7c8a','#e07a1f','#11807a','#e07a1f','#ffe066','#d8fbff'),['☀️','🕶️','🏖️']),
+ TH('july4','Independence Day',fx(7,4),P('#0a1638','#1c3a8c','#b31942','#24479a','#b31942','#ffffff','#dfe7ff'),['🎆','🇺🇸','🦅'],'Happy 4th of July'),
+ TH('icecream','National Ice Cream Day',y=>nthWd(y,7,0,3),P('#2c2433','#4f7f74','#b86e8e','#5a8f84','#b86e8e','#fff4d6','#ffe4ef'),['🍦','🍨','🍧']),
+ TH('hotdog','National Hot Dog Day',y=>nthWd(y,7,3,3),P('#2e1a0e','#8a2a1a','#b5841f','#9c3a22','#b5841f','#ffd23f','#f3dfbf'),['🌭','🔥','🍔']),
+ TH('dogday','National Dog Day',fx(8,26),P('#2a2118','#4a6a8a','#8a6a48','#5a7a9a','#8a5a38','#f2d3a8','#e6eef8'),['🐾','🐕','🦴']),
+ TH('labor','Labor Day',y=>nthWd(y,9,1,1),RWB,['🇺🇸','🔨','🛠️']),
+ TH('pirate','Talk Like a Pirate Day',fx(9,19),P('#0a0a0a','#2a1a1a','#8b1a1a','#3a2020','#9c1f1f','#e0b84a','#f0d9a0'),['🏴‍☠️','☠️','⛵'],'Ahoy, Matey!'),
+ TH('fall','First Day of Fall',fx(9,22),P('#2a1208','#6b2a1a','#b5541d','#6e1f2a','#b5541d','#f5b83a','#f6cf8f'),['🍂','🌰','🎃']),
+ TH('veterans','Veterans Day',fx(11,11),RWB,['🇺🇸','⭐','🎖️'],'Thank You, Veterans'),
+ TH('blackfriday','Black Friday',y=>addDays(thanksgiving(y),1),P('#0b0b0b','#2a2a2a','#c8102e','#333333','#c8102e','#ffd400','#ffe680'),['🏷️','🛍️','💥'],'Black Friday Deals'),
+ TH('solstice','Winter Solstice',fx(12,21),P('#0b1a2e','#24466b','#4f7fa8','#2e5a85','#4f86b8','#e8f6ff','#d8ecff'),['❄️','🌙','✨']),
+ TH('nye','New Year’s Eve',fx(12,31),P('#0d0d0d','#333333','#8a6d1f','#454545','#a8862a','#f2c94c','#e0e0e0'),['🕛','🎆','🥂'],'Happy New Year’s Eve'),
  // the three long ones
- T('halloween','Halloween',null,P('#0e0614','#3a1a52','#c0500e','#4a2266','#c0500e','#ff9f1c','#e6c8ff'),['🎃','🦇','👻'],'Happy Halloween',y=>[new Date(y,9,1),new Date(y,9,31)]),
- T('thanksgiving','Thanksgiving',null,P('#5a2410','#7a3412','#b5531d','#7a2626','#b5531d','#f5b83a','#f6cf8f'),['#leaf:#d9661f','#turkey','#pumpkin','#oak:#e3a92b'],'Happy Thanksgiving',y=>[new Date(y,10,1),thanksgiving(y)]),
- T('christmas','Christmas',null,P('#0b2a17','#14532d','#b3131b','#1d6b3a','#b3131b','#f4c542','#ffe7a8'),['🎄','🎅','🎁','✨'],'Merry Christmas',y=>[addDays(thanksgiving(y),2),new Date(y,11,25)])
+ TH('halloween','Halloween',null,P('#0e0614','#3a1a52','#c0500e','#4a2266','#c0500e','#ff9f1c','#e6c8ff'),['🎃','🦇','👻'],'Happy Halloween',y=>[new Date(y,9,1),new Date(y,9,31)]),
+ TH('thanksgiving','Thanksgiving',null,P('#5a2410','#7a3412','#b5531d','#7a2626','#b5531d','#f5b83a','#f6cf8f'),['#leaf:#d9661f','#turkey','#pumpkin','#oak:#e3a92b'],'Happy Thanksgiving',y=>[new Date(y,10,1),thanksgiving(y)]),
+ TH('christmas','Christmas',null,P('#0b2a17','#14532d','#b3131b','#1d6b3a','#b3131b','#f4c542','#ffe7a8'),['🎄','🎅','🎁','✨'],'Merry Christmas',y=>[addDays(thanksgiving(y),2),new Date(y,11,25)])
 ];
 const sameDay=(a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
 function themeOn(th,d){const y=d.getFullYear();
@@ -1221,10 +1571,10 @@ function pickTheme(d){
   const ok=t=>themeState(t.id)!=='off'&&themeOn(t,d);
   return THEMES.find(t=>!t.range&&ok(t))||THEMES.find(t=>t.range&&ok(t))||null;   // single days win over long themes
 }
-function themeDates(th){const now=new Date(),y=now.getFullYear(),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const f=d=>M[d.getMonth()]+' '+d.getDate();
+function themeDates(th){const now=new Date(),y=now.getFullYear();
+  const f=d=>SET.lang==='en'?monName(d.getMonth())+' '+d.getDate():d.getDate()+' '+monName(d.getMonth());
   if(th.range){let r=th.range(y);if(r[1]<new Date(y,now.getMonth(),now.getDate()))r=th.range(y+1);return f(r[0])+' – '+f(r[1])}
-  let d=th.date(y);if(!d||d<new Date(y,now.getMonth(),now.getDate()))d=th.date(y+1);return d?DAYS[d.getDay()]+', '+f(d):'Date not known'}
+  let d=th.date(y);if(!d||d<new Date(y,now.getMonth(),now.getDate()))d=th.date(y+1);return d?dayName(d.getDay())+', '+f(d):T('Date not known')}
 // color helpers
 function hx(c){c=c.replace('#','');return [0,2,4].map(i=>parseInt(c.substr(i,2),16))}
 function mix(a,b,t){const A=hx(a),B=hx(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
@@ -1260,7 +1610,7 @@ function bgDeco(){if(!THEME)return '';return SPOTS.map((s2,i)=>motifHTML(THEME.m
 const REPO='BBGINN77/cable-box';
 const UPD={state:'idle',latest:0,url:null,checkedAt:0,pct:0};
 function localBuild(){try{return NATIVE&&NATIVE.appVersion?NATIVE.appVersion():0}catch(e){return 0}}
-function buildLabel(){const b=localBuild();return b>100?'build '+(b-100):(NATIVE?'local build':'preview')}
+function buildLabel(){const b=localBuild();return b>100?T('build {0}',b-100):T(NATIVE?'local build':'preview')}
 async function checkUpdate(manual){
   if(!NATIVE){if(manual)dialog('Check for Updates','Updates are checked on your TV. This preview is always the newest version.',2600);return}
   if(manual)dialog('Check for Updates','<span class="wait"></span>Checking GitHub for a newer NyxVision…');
@@ -1274,20 +1624,20 @@ async function checkUpdate(manual){
       if(manual)askUpdate();
       else{let told=null;try{told=localStorage.getItem('cablebox-told')}catch(e){}
         if(told!==String(n)&&S.screen!=='egg'){try{localStorage.setItem('cablebox-told',String(n))}catch(e){}
-          dialog('Update Available','A newer NyxVision (build '+n+') is ready.<small>Go to Settings → Check for Updates to install it.</small>',5000)}}}
-    else{UPD.state='current';if(manual)dialog('Up to Date','You have the newest NyxVision ('+buildLabel()+').',2600)}
+          dialog('Update Available',T('A newer NyxVision (build {0}) is ready.',n)+'<small>Go to Settings → Check for Updates to install it.</small>',5000)}}}
+    else{UPD.state='current';if(manual)dialog('Up to Date',T('You have the newest NyxVision ({0}).',buildLabel()),2600)}
   }catch(e){if(manual)dialog('Check for Updates','Couldn’t reach GitHub. Check the internet connection and try again.',3200)}
   if(S.screen==='set')render();
 }
 function askUpdate(){const n=UPD.latest-100;
-  dialog('Update Available','NyxVision build '+n+' is ready (you have '+buildLabel()+').<small>Press OK to download and install it, or BACK for later.</small>');S.dialog.onOk=startUpdate}
+  dialog('Update Available',T('NyxVision build {0} is ready (you have {1}).',n,buildLabel())+'<small>Press OK to download and install it, or BACK for later.</small>');S.dialog.onOk=startUpdate}
 function startUpdate(){if(!UPD.url)return;UPD.state='downloading';UPD.pct=0;
-  dialog('Updating NyxVision','<span class="wait"></span>Downloading… 0%');try{NATIVE.installUpdate(UPD.url)}catch(e){updateState('error')}}
-function updateProgress(p){UPD.pct=p;if(UPD.state==='downloading'&&S.dialog){S.dialog.body='<span class="wait"></span>Downloading… '+p+'%';render()}}
+  dialog('Updating NyxVision','<span class="wait"></span>'+T('Downloading… {0}%',0));try{NATIVE.installUpdate(UPD.url)}catch(e){updateState('error')}}
+function updateProgress(p){UPD.pct=p;if(UPD.state==='downloading'&&S.dialog){S.dialog.body='<span class="wait"></span>'+T('Downloading… {0}%',p);render()}}
 function updateState(st){
-  if(st==='installing'){UPD.state='installing';dialog('Updating NyxVision','Android’s installer is opening. Choose <b>Install</b> or <b>Update</b>.<small>NyxVision keeps your settings, favorites and last channel.</small>',7000)}
-  else if(st==='permission'){UPD.state='permission';dialog('One-Time Permission','Turn on <b>Allow from this source</b> for NyxVision, then press BACK. The update installs right after.<small>This only lets NyxVision install its own updates. You can turn it off again later.</small>',12000)}
-  else if(st==='error'){UPD.state='available';dialog('Update Didn’t Finish','The download was interrupted.<small>Press OK to try again, or BACK to cancel.</small>');S.dialog.onOk=startUpdate}
+  if(st==='installing'){UPD.state='installing';dialog('Updating NyxVision',T('Android’s installer is opening. Choose {0} or {1}.','<b>'+T('Install')+'</b>','<b>'+T('Update')+'</b>')+'<small>NyxVision keeps your settings, favorites and last channel.</small>',7000)}
+  else if(st==='permission'){UPD.state='permission';dialog('One-Time Permission',T('Turn on {0} for NyxVision, then press BACK. The update installs right after.','<b>'+T('Allow from this source')+'</b>')+'<small>This only lets NyxVision install its own updates. You can turn it off again later.</small>',12000)}
+  else if(st==='error'){UPD.state='available';dialog('Update Didn’t Finish',T('The download was interrupted.')+'<small>Press OK to try again, or BACK to cancel.</small>');S.dialog.onOk=startUpdate}
 }
 
 /* ---------------- Easter egg: Nyx (Settings > About NyxVision, press OK 5 times) ---------------- */
@@ -1384,16 +1734,39 @@ function eggScene(x,t){
   else{const cx=X1+(t-8.8)*200;
     x.fillStyle='rgba(30,18,10,.55)';for(let px=X1+30;px<Math.min(cx-20,960);px+=46){x.beginPath();x.arc(px,500+((px/46|0)%2)*10,5,0,7);x.fill()}
     if(cx<1080){const ph=t*11;catSide(x,cx,FLOOR-30,S1,1,0,[Math.sin(ph)*12,-Math.sin(ph)*12,-Math.sin(ph)*12,Math.sin(ph)*12],0)}}
-  if(t>9.4){const a=Math.min(1,(t-9.4)/.8);x.globalAlpha=a;x.textAlign='center';x.font='italic 900 44px Archivo, Arial Black, sans-serif';x.fillStyle='#041040';x.fillText('Nyx was here.',483,130);x.fillStyle='#fff';x.fillText('Nyx was here.',480,127);
-    x.font='700 16px "Archivo Narrow", Arial, sans-serif';x.fillStyle='#a6d4ff';x.fillText('Press any button',480,160);x.globalAlpha=1}
+  if(t>9.4){const a=Math.min(1,(t-9.4)/.8);x.globalAlpha=a;x.textAlign='center';x.font='italic 900 44px Archivo, Arial Black, sans-serif';x.fillStyle='#041040';x.fillText(T('Nyx was here.'),483,130);x.fillStyle='#fff';x.fillText(T('Nyx was here.'),480,127);
+    x.font='700 16px "Archivo Narrow", Arial, sans-serif';x.fillStyle='#a6d4ff';x.fillText(T('Press any button'),480,160);x.globalAlpha=1}
 }
+
+/* ---------------- boot-up sequence (like powering on a 2004 cable box) ---------------- */
+const BOOTSEQ={t0:0,pct:0,next:'watch'};
+function bootHTML(){
+  const cat=(hdr.toString().match(/<svg class="cat"[\s\S]*?<\/svg>/)||[''])[0];
+  return '<div class="bg">'+bgDeco()+'</div><div class="boot"><div class="blogo">'+cat.replace('width="32" height="30"','width="96" height="90"')+'<div><b>NyxVision</b><span>DIGITAL CABLE</span></div></div>'+
+    '<div class="bmsg" id="bmsg">'+T('Initializing\u2026')+'</div><div class="bbar"><div id="bbar"></div></div>'+
+    '<div class="bfoot"><span>NyxVision DCT \u00B7 '+buildLabel()+'</span><span class="bled" id="bled">BOOT</span></div><div class="bskip">'+T('Press OK to skip')+'</div></div>';
+}
+function bootTick(){
+  const t=(performance.now()-BOOTSEQ.t0)/1000;let msg,target;
+  const ready=!NATIVE||CH.length>BASE||PLUTO_ERR||!SET.pluto;
+  if(t<.9){msg=T('Initializing\u2026');target=8}
+  else if(t<1.9){msg=T('Acquiring signal\u2026');target=22}
+  else{target=ready?100:Math.min(92,22+(t-1.9)*12);BOOTSEQ.pct=Math.min(target,BOOTSEQ.pct+2.2);msg=T('Downloading program guide\u2026 {0}%',Math.round(BOOTSEQ.pct))}
+  if(t<1.9)BOOTSEQ.pct=Math.min(target,BOOTSEQ.pct+1.2);
+  if(BOOTSEQ.pct>=100&&t>3.4)msg=T('Welcome to NyxVision');
+  const m=document.getElementById('bmsg'),b=document.getElementById('bbar'),l=document.getElementById('bled');
+  if(m&&m.textContent!==msg)m.textContent=msg;if(b)b.style.width=BOOTSEQ.pct.toFixed(1)+'%';
+  if(l){const d=new Date();l.textContent=t<1.9?'BOOT':t<3?'L-'+(1+Math.floor(t*2)%3):(d.getHours()%12||12)+(d.getSeconds()%2?':':' ')+pad(d.getMinutes())}
+  if((BOOTSEQ.pct>=100&&t>4.1)||t>9)endBoot();
+}
+function endBoot(){if(S.screen!=='boot')return;S.screen=BOOTSEQ.next;if(S.screen==='watch'){S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+300}render();applyStream()}
 
 /* reminders: pop up when a reminded show starts */
 function checkReminders(){
   const now=Date.now();
   S.reminders.forEach(key=>{const parts=key.split(':'),ci=+parts[0],st=+parts[1];
     if(st<=now&&now-st<10*MIN&&CH[ci]){S.reminders.delete(key);const p=progAt(ci,st);
-      dialog('Starting Now','<b>'+esc(p.title)+'</b> is starting on Ch '+CH[ci].n+' '+esc(CH[ci].call)+'.<small>Press OK to watch, or BACK to dismiss.</small>');snd.ok();
+      dialog('Starting Now',T('{0} is starting on Ch {1}.','<b>'+esc(p.title)+'</b>',CH[ci].n+' '+esc(CH[ci].call))+'<small>Press OK to watch, or BACK to dismiss.</small>');snd.ok();
       S.dialog.onOk=()=>{if(CH[ci].pluto&&SET.plutoPlay!=='box')launchPluto(ci);else{S.screen='watch';tune(ci)}}}
     else if(st<now-10*MIN)S.reminders.delete(key)});
 }
@@ -1401,7 +1774,8 @@ setInterval(()=>{checkReminders();if(NATIVE&&UPD.checkedAt&&Date.now()-UPD.check
 
 applyTheme();
 /* Android TV integration: the app forwards remote buttons here */
-if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();S.screen='watch';S.bannerUntil=Date.now()+SET.bannerSec*1000;}
+if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();}
+BOOTSEQ.next=NATIVE?'watch':'home';BOOTSEQ.t0=performance.now();S.screen='boot';document.documentElement.lang=SET.lang||'en';
 window.cable={
   press:press,
   httpDone:httpDone,
