@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Everything stays HTTPS-only except MARTA's older train-arrivals address, which only answers over plain HTTP. -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">developer.itsmarta.com</domain>
+    </domain-config>
+</network-security-config>

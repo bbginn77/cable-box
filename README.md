@@ -107,6 +107,8 @@ The optional extras below would each get their own written plan and your approva
   - Transit boards with a NyxVision-drawn map and live line status, no key needed:
     New York City Subway (MTA alerts + station data from data.ny.gov), Boston subway (MBTA V3 API:
     routes, live train positions, alerts) and Philadelphia Regional Rail (SEPTA TrainView).
+    Atlanta MARTA rail: NyxVision-drawn map of the Red, Gold, Blue and Green lines; live trains, line
+    status and next trains need a free MARTA developer key (Settings → MARTA Train Key).
     If your Weather Location is in one of those cities, its board comes first, marked YOUR AREA.
     Official agency logos and maps aren't copied; line colors are the agencies' published colors.
 - **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
