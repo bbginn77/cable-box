@@ -276,7 +276,7 @@ class MainActivity : AppCompatActivity() {
         val t = st.track
         if (t != null) {
             o.put("name", t.name ?: "").put("artist", t.artist?.name ?: "").put("album", t.album?.name ?: "")
-                .put("dur", t.duration).put("uri", t.uri ?: "")
+                .put("dur", t.duration).put("uri", t.uri ?: "").put("albumUri", t.album?.uri ?: "")
             val iu = t.imageUri
             if (iu?.raw != null && iu.raw != spArtUri) {
                 spArtUri = iu.raw
@@ -561,6 +561,29 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }.setErrorCallback { e -> spSend("spList", JSONObject().put("err", e.javaClass.simpleName).toString()) }
+            }
+        }
+
+        /** Settings → Disconnect Spotify: stop talking to the Spotify app and forget everything from it. */
+        @JavascriptInterface
+        fun spotifyDisconnect() {
+            runOnUiThread {
+                try { spSub?.cancel() } catch (e: Exception) {}
+                spSub = null
+                try { SpotifyAppRemote.disconnect(spRemote) } catch (e: Exception) {}
+                spRemote = null
+                spItems.clear()
+                spArtUri = null
+            }
+        }
+
+        /** "Open in Spotify": the album (or track) in the Spotify app. */
+        @JavascriptInterface
+        fun spotifyOpen(uri: String) {
+            runOnUiThread {
+                if (!uri.startsWith("spotify:")) return@runOnUiThread
+                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)).setPackage("com.spotify.music")) }
+                catch (e: Exception) { try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri))) } catch (e2: Exception) {} }
             }
         }
 
