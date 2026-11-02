@@ -249,6 +249,17 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .wxalert{position:absolute;left:24px;right:24px;top:100px;height:320px;background:rgba(90,8,16,.85);padding:20px 26px;box-sizing:border-box;overflow:hidden}
 .wxalert h3{font:900 28px var(--display);margin:0 0 12px;color:#ffd0d0}.wxalert p{font:600 19px/1.35 var(--ui);margin:0 0 10px}
 .wxtk{bottom:0}
+.gaga .rfull{right:360px!important}
+.gaga .wxbig{width:300px}.gaga .wxbig .tmp{font-size:92px}.gaga .wxbrow canvas{width:84px!important;height:68px!important}
+.gaga .wxside{left:336px;right:360px}.gaga .wxside .row{font-size:17px}
+.gaga .wxdays{right:360px!important}.gaga .wxd .c{font-size:12px}.gaga .wxd .hi2{font-size:24px}
+.gaga .wxalert{right:360px}
+.gaga .wxwait{left:24px!important;width:540px!important}
+#ytbox{position:absolute;left:616px;top:100px;width:320px}
+#ytbox .ytv{width:320px;height:180px;background:#000;border:2px solid var(--k9ec0ff)}
+#ytbox iframe{width:100%;height:100%;border:0;display:block}
+#ytbox .ytl{margin-top:8px;padding:8px 12px;background:var(--kwxnow);display:flex;flex-direction:column;gap:2px}
+#ytbox .ytl b{font:900 18px var(--display);color:var(--hi)}#ytbox .ytl span{font:600 14px var(--ui);color:var(--dim)}
 /* location search */
 .lkt{font:700 28px var(--ui);letter-spacing:.06em;white-space:pre;overflow:hidden}
 .lkc{font:700 28px var(--ui);color:var(--hi);animation:blink 1s steps(2) infinite}
@@ -492,6 +503,7 @@ function loadInstalled(){
     a.pkg=hit?hit.pkg:null;a.installed=!!hit;});
 }
 function appByLabel(l){return APPS.find(a=>a.label===l)}
+function appsList(){return APPS.filter(a=>!a.pride||(THEME&&THEME.id==='pride'))}
 const SAMPLE_MORE=['Spotify','Pluto TV','Tubi','Plex','Twitch','Google Play Store'].map(l=>({label:l,pkg:null,sample:true}));
 function themeList(){return [{master:true,label:'Holiday Themes'}].concat(THEMES.filter(regionOK))}
 function moreList(){if(!NATIVE)return SAMPLE_MORE;const mine=APPS.filter(a=>a.pkg).map(a=>a.pkg);const l=INSTALLED.filter(x=>mine.indexOf(x.pkg)<0);return l.length?l:[{label:'No other apps found',pkg:null}]}
@@ -508,7 +520,7 @@ const SETS=[
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
- {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz'],names:['Off','Seasonal','Smooth Jazz'],desc:'Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.'},
+ {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz'],names:['Off','Seasonal','Smooth Jazz'],desc:'Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.'},
  {k:'gcol',label:'Guide Colors',vals:[true,false],names:['On','Off'],desc:'Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.'},
  {k:'idents',label:'Station IDs',vals:[true,false],names:['On','Off'],desc:'Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.'},
  {k:'update',label:'Check for Updates',action:true,desc:'Looks for a newer NyxVision on GitHub. If there is one, NyxVision downloads it and opens the installer. Your settings and favorites carry over.'},
@@ -548,7 +560,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','
 /* ---------------- languages: English (built in), Français, Español ---------------- */
 const I18N={
 fr:{
-'Main Menu':'Menu principal','Weather Location':'Lieu météo','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Choisissez la ville ou le code postal pour la Météo NyxVision, le menu principal et l’écran des prévisions.','Type a ZIP code, postal code or city, then choose Search.':'Tapez un code ZIP, un code postal ou une ville, puis choisissez Rechercher.','Now showing: {0}':'Affiché : {0}','Results':'Résultats','Searching…':'Recherche…','Results appear here after you search.':'Les résultats s’affichent ici après la recherche.','No places found. Check the spelling and try again.':'Aucun lieu trouvé. Vérifiez l’orthographe et réessayez.','Couldn’t search right now. Check the internet connection.':'Recherche impossible pour le moment. Vérifiez la connexion Internet.','Location search works on your TV or tablet.':'La recherche de lieu fonctionne sur votre télé ou votre tablette.','Space':'Espace','Delete':'Effacer','Clear':'Vider','Search':'Rechercher','Move':'Déplacer','Type':'Taper','Choose':'Choisir','Weather Location Set':'Lieu météo enregistré','NyxVision Weather now shows {0}.':'La Météo NyxVision affiche maintenant {0}.','NyxVision Weather':'Météo NyxVision','NYXVISION WEATHER':'MÉTÉO NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Conditions actuelles','Extended Forecast':'Prévisions à long terme','Weather Alerts':'Alertes météo','Radar map not available for this location.':'Carte radar non disponible pour ce lieu.','NO RADAR HERE · SAMPLE':'PAS DE RADAR ICI · EXEMPLE','Tap here for music':'Touchez ici pour la musique','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, conditions actuelles et prévisions à long terme pour votre région. Appuyez sur OK pour activer ou couper la musique.','{0}: high {1}°, low {2}°, {3}':'{0} : max {1}°, min {2}°, {3}','{0}: low {1}°, {2}':'{0} : min {1}°, {2}','Open-Meteo forecast · updated {0}':'Prévisions Open-Meteo · mises à jour à {0}','Weather Channel Music':'Musique de la chaîne météo','Seasonal':'Saisonnière','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Musique pour la Météo NyxVision (canal 4). Saisonnière suit le thème de fête : clochettes d’hiver à Noël, orgue lugubre à l’Halloween, folk des récoltes à l’automne, musique de fête aux anniversaires et célébrations, et jazz doux le reste du temps.','Music Off':'Musique désactivée','{0} On':'{0} activé','Music warming up…':'La musique se prépare…','Music unavailable':'Musique non disponible','Music starting…':'La musique démarre…','Music starting… press OK again if silent':'La musique démarre… appuyez de nouveau sur OK si c’est muet','Winter Bells':'Clochettes d’hiver','Spooky Organ':'Orgue lugubre','Harvest Folk':'Folk des récoltes','Party Mix':'Musique de fête','Guide Colors':'Couleurs du guide','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colore le guide par type : films, séries, nouvelles, sports, jeunesse et musique. Sur la première ligne du guide, appuyez sur ▲ pour n’afficher qu’un type.','Filter':'Filtre','Series':'Séries','News':'Nouvelles','Sports':'Sports','Kids':'Jeunesse','Music':'Musique','Movie':'Film','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'Rien dans {0} pour le moment. Appuyez sur ◀ ou ▶ pour choisir un autre type.','Pick type':'Choisir le type','Station IDs':'Identifications de chaîne','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'De courtes pauses NyxVision de temps en temps quand vous changez de chaîne, et à l’heure et à la demie.','You’re watching NyxVision':'Vous regardez NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'Nyx a attrapé la feuille !','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
+'Main Menu':'Menu principal','Lady Gaga on YouTube':'Lady Gaga sur YouTube','Now Playing':'En lecture','Official music videos · YouTube':'Vidéoclips officiels · YouTube','Pride Disco':'Disco de la Fierté','Weather Location':'Lieu météo','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Choisissez la ville ou le code postal pour la Météo NyxVision, le menu principal et l’écran des prévisions.','Type a ZIP code, postal code or city, then choose Search.':'Tapez un code ZIP, un code postal ou une ville, puis choisissez Rechercher.','Now showing: {0}':'Affiché : {0}','Results':'Résultats','Searching…':'Recherche…','Results appear here after you search.':'Les résultats s’affichent ici après la recherche.','No places found. Check the spelling and try again.':'Aucun lieu trouvé. Vérifiez l’orthographe et réessayez.','Couldn’t search right now. Check the internet connection.':'Recherche impossible pour le moment. Vérifiez la connexion Internet.','Location search works on your TV or tablet.':'La recherche de lieu fonctionne sur votre télé ou votre tablette.','Space':'Espace','Delete':'Effacer','Clear':'Vider','Search':'Rechercher','Move':'Déplacer','Type':'Taper','Choose':'Choisir','Weather Location Set':'Lieu météo enregistré','NyxVision Weather now shows {0}.':'La Météo NyxVision affiche maintenant {0}.','NyxVision Weather':'Météo NyxVision','NYXVISION WEATHER':'MÉTÉO NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Conditions actuelles','Extended Forecast':'Prévisions à long terme','Weather Alerts':'Alertes météo','Radar map not available for this location.':'Carte radar non disponible pour ce lieu.','NO RADAR HERE · SAMPLE':'PAS DE RADAR ICI · EXEMPLE','Tap here for music':'Touchez ici pour la musique','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, conditions actuelles et prévisions à long terme pour votre région. Appuyez sur OK pour activer ou couper la musique.','{0}: high {1}°, low {2}°, {3}':'{0} : max {1}°, min {2}°, {3}','{0}: low {1}°, {2}':'{0} : min {1}°, {2}','Open-Meteo forecast · updated {0}':'Prévisions Open-Meteo · mises à jour à {0}','Weather Channel Music':'Musique de la chaîne météo','Seasonal':'Saisonnière','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Musique pour la Météo NyxVision (canal 4). Saisonnière suit le thème de fête : les vidéoclips officiels de Lady Gaga (par YouTube) pendant le Mois des fiertés, clochettes d’hiver à Noël, orgue lugubre à l’Halloween, folk des récoltes à l’automne, musique de fête aux anniversaires et célébrations, et jazz doux le reste du temps.','Music Off':'Musique désactivée','{0} On':'{0} activé','Music warming up…':'La musique se prépare…','Music unavailable':'Musique non disponible','Music starting…':'La musique démarre…','Music starting… press OK again if silent':'La musique démarre… appuyez de nouveau sur OK si c’est muet','Winter Bells':'Clochettes d’hiver','Spooky Organ':'Orgue lugubre','Harvest Folk':'Folk des récoltes','Party Mix':'Musique de fête','Guide Colors':'Couleurs du guide','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colore le guide par type : films, séries, nouvelles, sports, jeunesse et musique. Sur la première ligne du guide, appuyez sur ▲ pour n’afficher qu’un type.','Filter':'Filtre','Series':'Séries','News':'Nouvelles','Sports':'Sports','Kids':'Jeunesse','Music':'Musique','Movie':'Film','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'Rien dans {0} pour le moment. Appuyez sur ◀ ou ▶ pour choisir un autre type.','Pick type':'Choisir le type','Station IDs':'Identifications de chaîne','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'De courtes pauses NyxVision de temps en temps quand vous changez de chaîne, et à l’heure et à la demie.','You’re watching NyxVision':'Vous regardez NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'Nyx a attrapé la feuille !','TV Guide':'Guide télé','Applications':'Applications','More Apps':'Autres applis','On Demand':'Sur demande','My Channels':'Mes chaînes','Settings':'Paramètres','Holiday Themes':'Thèmes de fêtes','Your Local Forecast':'Vos prévisions locales',
 'Watch TV':'Regarder la télé',
 'Return to full-screen television on your current channel.':'Retour à la télé en plein écran sur votre chaîne actuelle.',
 'Browse what’s on now and up to 24 hours ahead.':'Voyez ce qui joue maintenant et jusqu’à 24 heures à l’avance.',
@@ -705,7 +717,7 @@ fr:{
 'Family Day':'Fête de la famille','Happy Family Day':'Bonne fête de la famille','Victoria Day':'Fête de Victoria','Happy Victoria Day':'Bonne fête de Victoria','National Indigenous Peoples Day':'Journée nationale des peuples autochtones','Saint-Jean-Baptiste Day':'Fête nationale du Québec','Happy Saint-Jean-Baptiste Day':'Bonne Fête nationale !','Canada Day':'Fête du Canada','Happy Canada Day':'Bonne fête du Canada !','Civic Holiday':'Congé civique','Labour Day':'Fête du Travail','Happy Labour Day':'Bonne fête du Travail','National Day for Truth and Reconciliation':'Journée nationale de la vérité et de la réconciliation','Every Child Matters':'Chaque enfant compte','Remembrance Day':'Jour du Souvenir','Lest We Forget':'Nous nous souviendrons','Boxing Day':'Lendemain de Noël','Happy Boxing Day':'Joyeux lendemain de Noël'
 },
 es:{
-'Main Menu':'Menú principal','Weather Location':'Ubicación del clima','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Elija la ciudad o el código postal para Clima NyxVision, el menú principal y la pantalla del pronóstico.','Type a ZIP code, postal code or city, then choose Search.':'Escriba un código ZIP, código postal o ciudad, y elija Buscar.','Now showing: {0}':'Mostrando: {0}','Results':'Resultados','Searching…':'Buscando…','Results appear here after you search.':'Los resultados aparecen aquí después de buscar.','No places found. Check the spelling and try again.':'No se encontraron lugares. Revise la ortografía e inténtelo de nuevo.','Couldn’t search right now. Check the internet connection.':'No se pudo buscar ahora. Revise la conexión a internet.','Location search works on your TV or tablet.':'La búsqueda de ubicación funciona en su TV o tablet.','Space':'Espacio','Delete':'Borrar','Clear':'Limpiar','Search':'Buscar','Move':'Mover','Type':'Escribir','Choose':'Elegir','Weather Location Set':'Ubicación guardada','NyxVision Weather now shows {0}.':'Clima NyxVision ahora muestra {0}.','NyxVision Weather':'Clima NyxVision','NYXVISION WEATHER':'CLIMA NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Condiciones actuales','Extended Forecast':'Pronóstico extendido','Weather Alerts':'Alertas del clima','Radar map not available for this location.':'Mapa de radar no disponible para esta ubicación.','NO RADAR HERE · SAMPLE':'SIN RADAR AQUÍ · EJEMPLO','Tap here for music':'Toque aquí para la música','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, condiciones actuales y pronóstico extendido de su zona. Pulse OK para activar o apagar la música.','{0}: high {1}°, low {2}°, {3}':'{0}: máx {1}°, mín {2}°, {3}','{0}: low {1}°, {2}':'{0}: mín {1}°, {2}','Open-Meteo forecast · updated {0}':'Pronóstico de Open-Meteo · actualizado a las {0}','Weather Channel Music':'Música del canal del clima','Seasonal':'De temporada','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Música para Clima NyxVision (canal 4). De temporada sigue el tema festivo: campanas de invierno en Navidad, un órgano tenebroso en Halloween, folk de cosecha en otoño, música de fiesta en cumpleaños y celebraciones, y jazz suave el resto del tiempo.','Music Off':'Música apagada','{0} On':'{0} activado','Music warming up…':'Preparando la música…','Music unavailable':'Música no disponible','Music starting…':'Iniciando la música…','Music starting… press OK again if silent':'Iniciando la música… pulse OK otra vez si no suena','Winter Bells':'Campanas de invierno','Spooky Organ':'Órgano tenebroso','Harvest Folk':'Folk de cosecha','Party Mix':'Mezcla de fiesta','Guide Colors':'Colores de la guía','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colorea la guía por tipo: películas, series, noticias, deportes, niños y música. En la primera fila de la guía, pulse ▲ para ver solo un tipo.','Filter':'Filtro','Series':'Series','News':'Noticias','Sports':'Deportes','Kids':'Niños','Music':'Música','Movie':'Película','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'No hay nada en {0} ahora. Pulse ◀ o ▶ para elegir otro tipo.','Pick type':'Elegir tipo','Station IDs':'Identificaciones del canal','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'Breves pausas de NyxVision de vez en cuando al cambiar de canal, y a la hora y a la media hora.','You’re watching NyxVision':'Está viendo NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'¡Nyx atrapó la hoja!','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
+'Main Menu':'Menú principal','Lady Gaga on YouTube':'Lady Gaga en YouTube','Now Playing':'Reproduciendo','Official music videos · YouTube':'Videos musicales oficiales · YouTube','Pride Disco':'Disco del Orgullo','Weather Location':'Ubicación del clima','Set the city or ZIP code for NyxVision Weather, the main menu and the forecast screen.':'Elija la ciudad o el código postal para Clima NyxVision, el menú principal y la pantalla del pronóstico.','Type a ZIP code, postal code or city, then choose Search.':'Escriba un código ZIP, código postal o ciudad, y elija Buscar.','Now showing: {0}':'Mostrando: {0}','Results':'Resultados','Searching…':'Buscando…','Results appear here after you search.':'Los resultados aparecen aquí después de buscar.','No places found. Check the spelling and try again.':'No se encontraron lugares. Revise la ortografía e inténtelo de nuevo.','Couldn’t search right now. Check the internet connection.':'No se pudo buscar ahora. Revise la conexión a internet.','Location search works on your TV or tablet.':'La búsqueda de ubicación funciona en su TV o tablet.','Space':'Espacio','Delete':'Borrar','Clear':'Limpiar','Search':'Buscar','Move':'Mover','Type':'Escribir','Choose':'Elegir','Weather Location Set':'Ubicación guardada','NyxVision Weather now shows {0}.':'Clima NyxVision ahora muestra {0}.','NyxVision Weather':'Clima NyxVision','NYXVISION WEATHER':'CLIMA NYXVISION','Doppler Radar':'Radar Doppler','Current Conditions':'Condiciones actuales','Extended Forecast':'Pronóstico extendido','Weather Alerts':'Alertas del clima','Radar map not available for this location.':'Mapa de radar no disponible para esta ubicación.','NO RADAR HERE · SAMPLE':'SIN RADAR AQUÍ · EJEMPLO','Tap here for music':'Toque aquí para la música','Radar, current conditions and the extended forecast for your area. Press OK to turn the music on or off.':'Radar, condiciones actuales y pronóstico extendido de su zona. Pulse OK para activar o apagar la música.','{0}: high {1}°, low {2}°, {3}':'{0}: máx {1}°, mín {2}°, {3}','{0}: low {1}°, {2}':'{0}: mín {1}°, {2}','Open-Meteo forecast · updated {0}':'Pronóstico de Open-Meteo · actualizado a las {0}','Weather Channel Music':'Música del canal del clima','Seasonal':'De temporada','Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.':'Música para Clima NyxVision (canal 4). De temporada sigue el tema festivo: los videos oficiales de Lady Gaga (por YouTube) en el Mes del Orgullo, campanas de invierno en Navidad, un órgano tenebroso en Halloween, folk de cosecha en otoño, música de fiesta en cumpleaños y celebraciones, y jazz suave el resto del tiempo.','Music Off':'Música apagada','{0} On':'{0} activado','Music warming up…':'Preparando la música…','Music unavailable':'Música no disponible','Music starting…':'Iniciando la música…','Music starting… press OK again if silent':'Iniciando la música… pulse OK otra vez si no suena','Winter Bells':'Campanas de invierno','Spooky Organ':'Órgano tenebroso','Harvest Folk':'Folk de cosecha','Party Mix':'Mezcla de fiesta','Guide Colors':'Colores de la guía','Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.':'Colorea la guía por tipo: películas, series, noticias, deportes, niños y música. En la primera fila de la guía, pulse ▲ para ver solo un tipo.','Filter':'Filtro','Series':'Series','News':'Noticias','Sports':'Deportes','Kids':'Niños','Music':'Música','Movie':'Película','Nothing in {0} right now. Press ◀ or ▶ to pick another type.':'No hay nada en {0} ahora. Pulse ◀ o ▶ para elegir otro tipo.','Pick type':'Elegir tipo','Station IDs':'Identificaciones del canal','Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.':'Breves pausas de NyxVision de vez en cuando al cambiar de canal, y a la hora y a la media hora.','You’re watching NyxVision':'Está viendo NyxVision','Channel {0}':'Canal {0}','Nyx caught the leaf!':'¡Nyx atrapó la hoja!','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
 'Watch TV':'Ver TV',
 'Return to full-screen television on your current channel.':'Vuelva a la televisión en pantalla completa en su canal actual.',
 'Browse what’s on now and up to 24 hours ahead.':'Vea qué hay ahora y hasta 24 horas después.',
@@ -985,7 +997,7 @@ function press(k){
       save();snd.nav();applyTheme();render();return}
     return}
   // list screens
-  const lists={home:HOME,apps:APPS,od:OD,my:CH,set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
+  const lists={home:HOME,apps:appsList(),od:OD,my:CH,set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
   let i=S.idx[sc];
   if(k==='up'||k==='down'){const ni=i+(k==='up'?-1:1);if(ni<0||ni>=list.length){snd.bump();return}S.idx[sc]=ni;snd.nav();render();return}
   if(k==='chup'||k==='chdn'){S.idx[sc]=Math.max(0,Math.min(list.length-1,i+(k==='chup'?-5:5)));snd.nav();render();return}
@@ -1103,8 +1115,8 @@ function render(){
   }
   else if(sc==='guide'){h+=guideHTML()}
   else if(sc==='apps'){
-    const it=APPS[S.idx.apps];
-    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Applications')+menuHTML(APPS,S.idx.apps,40,66,380,x=>x.label,8)+
+    const AL=appsList();if(S.idx.apps>=AL.length)S.idx.apps=0;const it=AL[S.idx.apps];
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Applications')+menuHTML(AL,S.idx.apps,40,66,380,x=>x.label,8)+
       '<div class="box bevel" style="left:460px;top:66px;width:424px;height:378px"><div style="height:150px;display:flex;align-items:center;justify-content:center;background:'+it.col+';border:2px solid #fff;box-shadow:inset 0 0 0 4px rgba(0,0,0,.25);font:900 40px var(--display);text-shadow:3px 3px 0 rgba(0,0,0,.5)">'+esc(it.label)+'</div>'+
       '<h3 style="margin-top:16px">'+esc(it.label)+'</h3><p>'+it.desc+'</p>'+
       (NATIVE&&it.keys&&!it.installed?'<p style="color:#ffb3b3;font-weight:700">Not installed · OK opens Google Play</p>':'<p style="color:var(--hi);font-weight:700">Press OK to '+(it.wx||it.more?'view':'launch')+'</p>')+'</div>'+
@@ -1162,6 +1174,7 @@ function render(){
   updateJazz();
   const rs=ui.querySelector('.radar-slot');if(rs){rs.appendChild(radarBox);if(NATIVE&&Date.now()-radarAt>10*MIN){radarIdx=0;radarSrc()}}
   syncVideo();
+  try{syncGaga()}catch(e){}
   try{if(NATIVE&&NATIVE.keepAwake){const w=sc==='watch'||sc==='boot';if(w!==render.awake){render.awake=w;NATIVE.keepAwake(w)}}}catch(e){}
   try{const tb=document.getElementById('tbar');if(tb&&sc!=='watch')tb.classList.remove('show')}catch(e){}
   clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
@@ -1497,7 +1510,7 @@ function wxChannelHTML(){
     '<div class="wxseg"><b>'+T(SEGNAME[seg])+'</b><span class="dots">'+wxSegs().map(x=>'<i class="'+(x===seg?'on':'')+'"></i>').join('')+'</span></div>';
   if(seg==='radar'){h+='<div class="rfull radar-full-slot" style="top:96px;bottom:84px;left:24px;right:24px;border:2px solid var(--k9ec0ff)"></div>';
     if(!rs||radarFullFail)h+='<div class="wxnote">'+(rs?T('Sample radar · live loop unavailable'):T('Radar map not available for this location.'))+'</div>'}
-  else if(!W)h+='<div class="box bevel" style="left:200px;top:180px;width:520px"><h3>'+T('Your Local Forecast')+'</h3><p>'+(NATIVE?(WXERR?T('Weather unavailable right now.'):T('Loading weather…')):T('Live weather shows here on your TV.'))+'</p></div>';
+  else if(!W)h+='<div class="box bevel wxwait" style="left:200px;top:180px;width:520px"><h3>'+T('Your Local Forecast')+'</h3><p>'+(NATIVE?(WXERR?T('Weather unavailable right now.'):T('Loading weather…')):T('Live weather shows here on your TV.'))+'</p></div>';
   else if(seg==='now'){const d=W.days[0];
     h+='<div class="wxbig bevel"><div class="lbl">'+esc(L.label)+'</div><div class="wxbrow"><div class="tmp">'+tU(W.now.temp)+'°</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:150px;height:122px"></canvas></div><div class="cond">'+esc(W.now.cond)+'</div></div>'+
       '<div class="wxside bevel">'+[['Humidity',W.now.hum],['Wind',esc(windU(W.now.wind))],['Barometer',baroU(W.now.baro)]].concat(d?[['Hi / Lo',(d.hi!=null?tU(d.hi)+'°':'—')+' / '+(d.lo!=null?tU(d.lo)+'°':'—')]]:[]).map(r=>'<div class="row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('')+'</div>'}
@@ -1728,12 +1741,23 @@ function barParty(t0,B){const ch=P_PARTY[JAZZ.bar%4],r=ch.b-12;
   for(let i=0;i<8;i++)brush(t0+i*B/2,.04,.018,8500);
   const pent=[77,79,81,84,86];for(let i=0;i<8;i++)if(Math.random()<.28)bellNote(pick(pent),t0+i*B/2,.04);
   JAZZ.bar++}
-const MSTY={jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
+const P_DISCO=[{b:45,v:[64,67,69,72]},{b:38,v:[62,65,69,72]},{b:43,v:[62,65,67,71]},{b:48,v:[64,67,71,72]}];
+function stab(notes,t,vol){const c=JAZZ.ctx;notes.forEach(m=>{const o=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();o.type='sawtooth';o.frequency.value=mtof(m);f.type='lowpass';f.frequency.setValueAtTime(2600,t);f.frequency.exponentialRampToValueAtTime(700,t+.22);
+  o.connect(f);f.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+.28);o.start(t);o.stop(t+.3)})}
+function barDisco(t0,B){const ch=P_DISCO[JAZZ.bar%4],r=ch.b-12;
+  ch.v.forEach(m=>epNote(m,t0,B*3.8,.35));
+  for(let i=0;i<4;i++){thump(t0+i*B,.24);brush(t0+i*B+B/2,.05,.03,8800)}
+  [1,3].forEach(i=>{brush(t0+i*B,.12,.07,1500);brush(t0+i*B+.012,.1,.05,1900)});
+  for(let i=0;i<8;i++)bassNote(i%2?r+12:r,t0+i*B/2,B*.42);
+  [1.5,3.5].forEach(x=>stab(ch.v,t0+x*B,.018));
+  const pent=[76,79,81,84,88];for(let i=0;i<8;i++)if(Math.random()<.22)bellNote(pick(pent),t0+i*B/2,.035);
+  JAZZ.bar++}
+const MSTY={disco:{bpm:118,bar:barDisco},jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
 const STYLE_OF={christmas:'winter',solstice:'winter',boxing:'winter',halloween:'spooky',thanksgiving:'harvest',thanksca:'harvest',fall:'harvest',
-  newyear:'party',nye:'party',bailey:'party',taylor:'party',july4:'party',canadaday:'party',cinco:'party',mardigras:'party',stpat:'party',pride:'party'};
-const STYLE_NAME={jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
+  newyear:'party',nye:'party',bailey:'party',taylor:'party',july4:'party',canadaday:'party',cinco:'party',mardigras:'party',stpat:'party',pride:'disco'};
+const STYLE_NAME={gaga:'Lady Gaga on YouTube',disco:'Pride Disco',jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
 function musicOn(){return SET.music&&SET.music!=='off'}
-function musicStyle(){if(SET.music==='jazz')return 'jazz';return (THEME&&STYLE_OF[THEME.id])||'jazz'}
+function musicStyle(){if(SET.music==='jazz')return 'jazz';const st=(THEME&&STYLE_OF[THEME.id])||'jazz';return (st==='disco'&&NATIVE)?'gaga':st}
 
 let APP_PAUSED=false;
 /* On the TV, the web view can keep page audio muted, so NyxVision composes a ~90-second loop
@@ -1764,10 +1788,10 @@ async function nativeJazzOn(style){
   if(JAZZ.nWant){if(JAZZ.nStyle===style)NATIVE.jazzPlay(style,true);else nativeJazzOn(JAZZ.nStyle)}
 }
 function jazzNative(st){JAZZ.nState=st;if(S.screen==='watch')render()}
-function jazzLabel(){if(!musicOn())return T('Music Off');const nm=T(STYLE_NAME[musicStyle()]);
+function jazzLabel(){if(!musicOn())return T('Music Off');if(musicStyle()==='gaga')return T('Lady Gaga on YouTube');const nm=T(STYLE_NAME[musicStyle()]);
   if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?T('{0} On',nm):JAZZ.nState==='preparing'?T('Music warming up\u2026'):JAZZ.nState==='error'?T('Music unavailable'):T('Music starting\u2026');
   if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return T('{0} On',nm);return T('Music starting\u2026 press OK again if silent')}
-function updateJazz(){const want=!APP_PAUSED&&musicOn()&&has(S.ch)&&CH[S.ch].radar,style=musicStyle();
+function updateJazz(){const style=musicStyle(),want=!APP_PAUSED&&musicOn()&&has(S.ch)&&CH[S.ch].radar&&style!=='gaga';
   if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant&&style===JAZZ.nStyle)return;JAZZ.nWant=want;JAZZ.nStyle=style;if(want)nativeJazzOn(style);else NATIVE.jazzPlay(style,false);return}
   if(want)jazzStart(style);else jazzStop()}
 
@@ -2134,7 +2158,7 @@ function endBoot(){if(S.screen!=='boot')return;S.screen=BOOTSEQ.next;if(S.screen
 
 /* ---------------- touch: tap, swipe, and a pop-up control bar (Android tablet) ---------------- */
 const TOUCH=window.CableNative?!!(window.CableNative.isTouch&&window.CableNative.isTouch()):false;
-const LISTS={home:()=>HOME,apps:()=>APPS,od:()=>OD,my:()=>CH,set:()=>SETS,more:()=>moreList(),themes:()=>themeList()};
+const LISTS={home:()=>HOME,apps:()=>appsList(),od:()=>OD,my:()=>CH,set:()=>SETS,more:()=>moreList(),themes:()=>themeList()};
 let tdown=null,tbarT=0;
 function showTbar(){const b=document.getElementById('tbar');if(!b||!TOUCH)return;b.classList.add('show');clearTimeout(tbarT);tbarT=setTimeout(()=>b.classList.remove('show'),4500)}
 function tapAt(el,x){
@@ -2183,6 +2207,21 @@ if(TOUCH){document.documentElement.classList.add('touch');
   tb.addEventListener('click',e=>{const b=e.target.closest('button');if(b){press(b.dataset.k);showTbar()}});
   screenEl.appendChild(tb)}
 
+/* ---------------- Pride Month on NyxVision Weather: Lady Gaga's official videos in YouTube's embedded player ---------------- */
+const GAGA_LIST='UU07Kxew-cMIaykMOkzqHtBQ';   // uploads of the official LadyGagaVEVO channel
+const ytbox=document.createElement('div');ytbox.id='ytbox';ytbox.hidden=true;
+ytbox.innerHTML='<div class="ytv"></div><div class="ytl"><b>♪ '+'Now Playing'+'</b><span>Lady Gaga · '+'Official music videos · YouTube'+'</span></div>';
+stage.appendChild(ytbox);
+function syncGaga(){
+  const want=!!(NATIVE&&!APP_PAUSED&&S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].radar&&!locked(S.ch)&&musicOn()&&musicStyle()==='gaga');
+  stage.classList.toggle('gaga',want);ytbox.hidden=!want;
+  const v=ytbox.querySelector('.ytv');let f=v.querySelector('iframe');
+  ytbox.querySelector('.ytl b').textContent='♪ '+T('Now Playing');ytbox.querySelector('.ytl span').textContent='Lady Gaga · '+T('Official music videos · YouTube');
+  if(want&&!f){f=document.createElement('iframe');f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');f.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+    f.src='https://www.youtube.com/embed/videoseries?list='+GAGA_LIST+'&autoplay=1&loop=1&playsinline=1&rel=0&hl='+(SET.lang||'en');v.appendChild(f)}
+  else if(!want&&f)f.remove();   // leaving the channel stops the music
+}
+
 /* reminders: pop up when a reminded show starts */
 function checkReminders(){
   const now=Date.now();
@@ -2206,7 +2245,7 @@ window.cable={
   updateState:updateState,
   jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
-  pause:function(){APP_PAUSED=true;updateJazz()},
+  pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}},
   dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
   resume:function(){APP_PAUSED=false;applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
@@ -2215,7 +2254,7 @@ window.cable={
 };
 render();
 if(NATIVE){loadWeather();loadPluto();setTimeout(()=>checkUpdate(false),15000);
-  setTimeout(()=>{const st=musicStyle();if(NATIVE.jazzPlay&&!NATIVE.jazzReady(st)&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn(st).then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
+  setTimeout(()=>{const st=musicStyle();if(MSTY[st]&&NATIVE.jazzPlay&&!NATIVE.jazzReady(st)&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn(st).then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
 })();
 </script>
 

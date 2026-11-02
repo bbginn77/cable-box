@@ -21,6 +21,8 @@
         </intent>
         <package android:name="com.android.vending" />
         <package android:name="tv.pluto.android" />
+        <package android:name="com.google.android.youtube.tv" />
+        <package android:name="com.google.android.youtube" />
     </queries>
 
     <application

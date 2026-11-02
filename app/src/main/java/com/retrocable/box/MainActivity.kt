@@ -458,6 +458,23 @@ class MainActivity : AppCompatActivity() {
             }.start()
         }
 
+        /** Opens a web link (e.g. a YouTube search) in the first installed app from the list. False if none took it. */
+        @JavascriptInterface
+        fun openLink(pkgsJson: String, url: String): Boolean {
+            val arr = JSONArray(pkgsJson)
+            for (i in 0 until arr.length()) {
+                val pkg = arr.getString(i)
+                if (packageManager.getLaunchIntentForPackage(pkg) == null &&
+                    packageManager.getLeanbackLaunchIntentForPackage(pkg) == null) continue
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).setPackage(pkg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                if (intent.resolveActivity(packageManager) != null) {
+                    runOnUiThread { try { startActivity(intent) } catch (e: Exception) {} }
+                    return true
+                }
+            }
+            return false
+        }
+
         /** Opens a Pluto TV channel in the Pluto TV app. Returns false if Pluto TV isn't installed. */
         @JavascriptInterface
         fun openPluto(slug: String): Boolean {
