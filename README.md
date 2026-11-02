@@ -1,7 +1,9 @@
 # Cable Box for Google TV
 
 An early-2000s digital cable box interface for the onn Google TV stick: main menu,
-program guide, channel surfing, On Demand, favorites and settings. It opens your real
+program guide, channel surfing, On Demand, favorites and settings. Every channel is a real Pluto TV
+channel playing inside the box; the main menu shows local radar and current conditions.
+In November it switches to a Thanksgiving theme (Settings → Theme). It opens your real
 streaming apps: DIRECTV, Netflix, YouTube, Hulu, Disney+, HBO Max, Paramount+ and Peacock.
 
 It installs as a normal app. It does **not** root the stick, change developer settings,

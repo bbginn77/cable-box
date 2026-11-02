@@ -18,7 +18,11 @@
   --display:"Archivo","Arial Black",Helvetica,sans-serif;
   --ui:"Archivo Narrow","Arial Narrow",Helvetica,Arial,sans-serif;
   color-scheme:dark;
+  --k041040:#041040;--k050f3a:#050f3a;--k06123f:#06123f;--k061650:#061650;--k071a55:#071a55;--k081a58:#081a58;--k081a5c:#081a5c;--k082063:#082063;--k0a1a55:#0a1a55;--k0b2268:#0b2268;--k0b2569:#0b2569;--k0d2a7c:#0d2a7c;--k0e2780:#0e2780;--k0f2569:#0f2569;--k0f2672:#0f2672;--k10093a:#10093a;--k12318a:#12318a;--k143a96:#143a96;--k173586:#173586;--k173f9e:#173f9e;--k183689:#183689;--k1a1460:#1a1460;--k1a3a92:#1a3a92;--k1d3ea6:#1d3ea6;--k2148b4:#2148b4;--k2348b0:#2348b0;--k24164f:#24164f;--k2a4aa4:#2a4aa4;--k2a4fae:#2a4fae;--k2a4fb4:#2a4fb4;--k2a58c0:#2a58c0;--k2a62c9:#2a62c9;--k5b44b0:#5b44b0;--k6f9cf0:#6f9cf0;--k7fa8f5:#7fa8f5;--k86acf4:#86acf4;--k8a80e0:#8a80e0;--k8fb3f5:#8fb3f5;--k9ec0ff:#9ec0ff;--kc9c4ff:#c9c4ff;--kdfe8ff:#dfe8ff;--ke6ecff:#e6ecff;--kwxnow:rgba(6,20,80,.55);
 }
+/* Thanksgiving theme: harvest browns, burnt orange, cranberry and gold */
+.fall{--k041040:#1f0a03;--k050f3a:#1e0a04;--k06123f:#241005;--k061650:#2a1006;--k071a55:#2e1207;--k081a58:#2c1207;--k081a5c:#3e1709;--k082063:#2a0f05;--k0a1a55:#2e1207;--k0b2268:#4a1e0a;--k0b2569:#3e1709;--k0d2a7c:#5a2410;--k0e2780:#6a2c10;--k0f2569:#3c1a0b;--k0f2672:#7a3010;--k10093a:#2a0808;--k12318a:#7a3412;--k143a96:#6e2c10;--k173586:#6b2e10;--k173f9e:#7a3412;--k183689:#5a2a12;--k1a1460:#3d0c0c;--k1a3a92:#7a3412;--k1d3ea6:#b5531d;--k2148b4:#a8501c;--k2348b0:#a3471a;--k24164f:#4a1a2a;--k2a4aa4:#6e3418;--k2a4fae:#8e3e16;--k2a4fb4:#9a4a1a;--k2a58c0:#a8501c;--k2a62c9:#b8641f;--k5b44b0:#8e4a5e;--k6f9cf0:#e08a4a;--k7fa8f5:#e39a5f;--k86acf4:#f0a96b;--k8a80e0:#d98a7a;--k8fb3f5:#f3b07a;--k9ec0ff:#f2b27c;--kc9c4ff:#f0c4b4;--kdfe8ff:#ffeedd;--ke6ecff:#fff1e2;--kwxnow:rgba(40,14,4,.6);
+  --cell:#7a2626;--cellNow:#b5531d;--chan:#3b1d0e;--ice:#f6cf8f;--dim:#ecd3b6;--hi:#f5b83a}
 body{background:var(--room);color:var(--text);font-family:var(--ui);
   padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:16px}
 .app{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:18px;max-width:1380px;margin:0 auto;align-items:start}
@@ -36,33 +40,34 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .tvframe:fullscreen .screen{height:100%;aspect-ratio:auto;border-radius:0}
 
 /* ---------- cable-box UI (stage coordinates) ---------- */
-.bg{position:absolute;inset:0;background:linear-gradient(180deg,#0e2780 0%,#081a5c 45%,#050f3a 100%)}
+.bg{position:absolute;inset:0;background:linear-gradient(180deg,var(--k0e2780) 0%,var(--k081a5c) 45%,var(--k050f3a) 100%)}
 .hdr{position:absolute;left:0;right:0;top:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;
-  background:linear-gradient(#1d3ea6,#0f2672);border-bottom:2px solid #6f9cf0;box-shadow:0 2px 0 #041040}
+  background:linear-gradient(var(--k1d3ea6),var(--k0f2672));border-bottom:2px solid var(--k6f9cf0);box-shadow:0 2px 0 var(--k041040)}
 .brand{display:flex;align-items:baseline;gap:8px}
-.brand b{font:900 21px var(--display);letter-spacing:-.01em;font-style:italic;color:#fff;text-shadow:2px 2px 0 #041040}
-.brand .cat{align-self:center;flex:none;filter:drop-shadow(2px 2px 0 #041040)}
+.brand b{font:900 21px var(--display);letter-spacing:-.01em;font-style:italic;color:#fff;text-shadow:2px 2px 0 var(--k041040)}
+.brand .cat{align-self:center;flex:none;filter:drop-shadow(2px 2px 0 var(--k041040))}
 .brand span{font:700 12px var(--ui);letter-spacing:.22em;color:var(--ice)}
-.hdr .title{font:800 19px var(--display);letter-spacing:.06em;text-transform:uppercase;text-shadow:2px 2px 0 #041040}
-.clk{font:700 19px var(--ui);text-shadow:2px 2px 0 #041040;font-variant-numeric:tabular-nums}
-.ftr{position:absolute;left:0;right:0;bottom:0;height:34px;display:flex;align-items:center;gap:22px;padding:0 22px;background:#06123f;border-top:2px solid #2a4fae;font:600 15px var(--ui);color:var(--dim)}
-.ftr i{font-style:normal;display:inline-block;min-width:22px;padding:1px 6px;margin-right:6px;border:1px solid #6f9cf0;border-radius:3px;color:#fff;background:#173586;text-align:center;font-weight:700}
+.hdr .title{font:800 19px var(--display);letter-spacing:.06em;text-transform:uppercase;text-shadow:2px 2px 0 var(--k041040)}
+.clk{font:700 19px var(--ui);text-shadow:2px 2px 0 var(--k041040);font-variant-numeric:tabular-nums}
+.ftr{position:absolute;left:0;right:0;bottom:0;height:34px;display:flex;align-items:center;gap:22px;padding:0 22px;background:var(--k06123f);border-top:2px solid var(--k2a4fae);font:600 15px var(--ui);color:var(--dim)}
+.ftr i{font-style:normal;display:inline-block;min-width:22px;padding:1px 6px;margin-right:6px;border:1px solid var(--k6f9cf0);border-radius:3px;color:#fff;background:var(--k173586);text-align:center;font-weight:700}
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:1px solid rgba(255,255,255,.5)}
-.bevel{border:2px solid;border-color:#7fa8f5 #0a1a55 #0a1a55 #7fa8f5}
+.bevel{border:2px solid;border-color:var(--k7fa8f5) var(--k0a1a55) var(--k0a1a55) var(--k7fa8f5)}
 .pv{background:#000;position:relative}
 .pv canvas{width:100%;height:100%;display:block}
 
 /* menu list */
 .menu{position:absolute;display:flex;flex-direction:column;gap:6px}
-.mi{height:44px;display:flex;align-items:center;padding:0 16px;font:700 22px var(--ui);letter-spacing:.02em;background:linear-gradient(#2348b0,#173586);
-  border:2px solid;border-color:#86acf4 #0a1a55 #0a1a55 #86acf4;color:#fff;text-shadow:1px 1px 0 #041040;gap:12px}
+.mi{height:44px;display:flex;align-items:center;padding:0 16px;font:700 22px var(--ui);letter-spacing:.02em;background:linear-gradient(var(--k2348b0),var(--k173586));
+  border:2px solid;border-color:var(--k86acf4) var(--k0a1a55) var(--k0a1a55) var(--k86acf4);color:#fff;text-shadow:1px 1px 0 var(--k041040);gap:12px}
 .mi .n{font:800 15px var(--display);color:var(--ice);width:20px}
 .mi.hi{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);text-shadow:none;border-color:#fff6b8 #8a6c00 #8a6c00 #fff6b8}
 .mi.hi .n{color:#5a4500}
+.mi .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mi .v{margin-left:auto;font-weight:600;font-size:19px}
 .mi .star{margin-left:auto;color:var(--hi);font-size:20px}
 .mi.hi .star{color:#7a5a00}
-.box{position:absolute;background:linear-gradient(#183689,#0f2569);padding:16px 18px}
+.box{position:absolute;background:linear-gradient(var(--k183689),var(--k0f2569));padding:16px 18px}
 .box h3{margin:0 0 8px;font:800 22px var(--display);letter-spacing:.01em}
 .box p{margin:0 0 8px;font:500 17px/1.35 var(--ui);color:var(--dim)}
 .lbl{font:700 13px var(--ui);letter-spacing:.18em;text-transform:uppercase;color:var(--ice)}
@@ -70,45 +75,45 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 /* guide */
 .ginfo{position:absolute;left:12px;right:12px;top:54px;height:152px;display:flex;gap:14px}
 .ginfo .pv{width:256px;height:144px;flex:none}
-.gtext{flex:1;min-width:0;background:linear-gradient(#183689,#0f2569);padding:10px 16px;overflow:hidden}
+.gtext{flex:1;min-width:0;background:linear-gradient(var(--k183689),var(--k0f2569));padding:10px 16px;overflow:hidden}
 .gtext h2{margin:0 0 4px;font:800 26px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gmeta{font:700 16px var(--ui);color:var(--ice);margin-bottom:6px;display:flex;gap:14px;flex-wrap:wrap}
 .rate{border:1px solid var(--ice);padding:0 5px;border-radius:2px}
 .gtext p{margin:0;font:500 16px/1.32 var(--ui);color:var(--dim)}
 .rem{color:var(--hi)}
 .trow{position:absolute;left:12px;right:12px;top:214px;height:28px;display:flex;font:700 16px var(--ui)}
-.trow .d{width:150px;flex:none;background:#081a58;display:flex;align-items:center;padding-left:10px;color:var(--hi)}
-.trow .s{flex:1;background:linear-gradient(#2a4fb4,#1a3a92);border-left:2px solid #0a1a55;display:flex;align-items:center;padding-left:10px}
+.trow .d{width:150px;flex:none;background:var(--k081a58);display:flex;align-items:center;padding-left:10px;color:var(--hi)}
+.trow .s{flex:1;background:linear-gradient(var(--k2a4fb4),var(--k1a3a92));border-left:2px solid var(--k0a1a55);display:flex;align-items:center;padding-left:10px}
 .grid{position:absolute;left:12px;right:12px;top:244px}
 .grow{position:relative;height:38px;margin-bottom:3px}
-.gch{position:absolute;left:0;top:0;width:148px;height:38px;background:var(--chan);border:1px solid #2a4aa4;display:flex;align-items:center;gap:8px;padding:0 8px;box-sizing:border-box}
+.gch{position:absolute;left:0;top:0;width:148px;height:38px;background:var(--chan);border:1px solid var(--k2a4aa4);display:flex;align-items:center;gap:8px;padding:0 8px;box-sizing:border-box}
 .gch b{font:800 19px var(--display);width:36px;text-align:right;font-variant-numeric:tabular-nums}
 .gch span{font:700 16px var(--ui);color:var(--ice);letter-spacing:.04em}
 .gch .fv{margin-left:auto;color:var(--hi);font-size:14px}
-.grow.cur .gch{background:#2a4fb4}
-.cell{position:absolute;top:0;height:38px;box-sizing:border-box;background:var(--cell);border:1px solid;border-color:#8a80e0 #1a1460 #1a1460 #8a80e0;
-  display:flex;align-items:center;padding:0 9px;font:700 17px var(--ui);white-space:nowrap;overflow:hidden;text-shadow:1px 1px 0 #10093a}
-.cell.now{background:var(--cellNow);border-color:#8fb3f5 #0a1a55 #0a1a55 #8fb3f5;text-shadow:1px 1px 0 #041040}
+.grow.cur .gch{background:var(--k2a4fb4)}
+.cell{position:absolute;top:0;height:38px;box-sizing:border-box;background:var(--cell);border:1px solid;border-color:var(--k8a80e0) var(--k1a1460) var(--k1a1460) var(--k8a80e0);
+  display:flex;align-items:center;padding:0 9px;font:700 17px var(--ui);white-space:nowrap;overflow:hidden;text-shadow:1px 1px 0 var(--k10093a)}
+.cell.now{background:var(--cellNow);border-color:var(--k8fb3f5) var(--k0a1a55) var(--k0a1a55) var(--k8fb3f5);text-shadow:1px 1px 0 var(--k041040)}
 .cell.hi{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);text-shadow:none;border-color:#fff6b8 #8a6c00 #8a6c00 #fff6b8}
 .cell .ar{color:var(--ice);margin-right:5px;font-size:13px}
 .cell.hi .ar{color:#6b5000}
 .cell .rm{margin-left:6px;color:var(--hi)}
 .cell.hi .rm{color:#7a2a00}
-.lockedrow .cell{color:#c9c4ff}
-.grow.pl .gch{background:#24164f;border-color:#5b44b0}
+.lockedrow .cell{color:var(--kc9c4ff)}
+.grow.pl .gch{background:var(--k24164f);border-color:var(--k5b44b0)}
 .grow.pl .gch b{font-size:16px;width:34px}
 .grow.pl .gch span{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92px}
 
 /* watch banner */
-.banner{position:absolute;left:24px;right:24px;bottom:22px;height:118px;display:flex;background:linear-gradient(#2148b4 0%,#12318a 55%,#0b2268 100%);
-  border:2px solid;border-color:#9ec0ff #061650 #061650 #9ec0ff;box-shadow:0 6px 0 rgba(0,0,0,.35)}
-.banner .num{width:150px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(#0d2a7c,#071a55);border-right:2px solid #061650}
+.banner{position:absolute;left:24px;right:24px;bottom:22px;height:118px;display:flex;background:linear-gradient(var(--k2148b4) 0%,var(--k12318a) 55%,var(--k0b2268) 100%);
+  border:2px solid;border-color:var(--k9ec0ff) var(--k061650) var(--k061650) var(--k9ec0ff);box-shadow:0 6px 0 rgba(0,0,0,.35)}
+.banner .num{width:150px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(var(--k0d2a7c),var(--k071a55));border-right:2px solid var(--k061650)}
 .banner .num b{font:900 52px/1 var(--display);color:var(--hi);text-shadow:3px 3px 0 #000;font-variant-numeric:tabular-nums}
 .banner .num span{font:700 17px var(--ui);letter-spacing:.14em;margin-top:4px}
 .banner .mid{flex:1;min-width:0;padding:10px 16px}
-.banner h2{margin:0;font:800 26px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:2px 2px 0 #041040}
+.banner h2{margin:0;font:800 26px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:2px 2px 0 var(--k041040)}
 .banner .meta{font:700 16px var(--ui);color:var(--ice);margin:3px 0 7px;display:flex;gap:14px}
-.prog{height:8px;background:#061650;border:1px solid #7fa8f5;width:340px}
+.prog{height:8px;background:var(--k061650);border:1px solid var(--k7fa8f5);width:340px}
 .prog div{height:100%;background:var(--hi)}
 .banner .next{font:600 15px var(--ui);color:var(--dim);margin-top:7px}
 .banner .rt{width:150px;flex:none;padding:10px 14px;text-align:right;display:flex;flex-direction:column;justify-content:space-between}
@@ -118,28 +123,28 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .lock .box{position:static;width:460px;text-align:center}
 
 /* dialog */
-.dlg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;background:linear-gradient(#183689,#0f2569);border:2px solid;border-color:#9ec0ff #061650 #061650 #9ec0ff;box-shadow:0 10px 0 rgba(0,0,0,.45)}
+.dlg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;background:linear-gradient(var(--k183689),var(--k0f2569));border:2px solid;border-color:var(--k9ec0ff) var(--k061650) var(--k061650) var(--k9ec0ff);box-shadow:0 10px 0 rgba(0,0,0,.45)}
 .dlg .t{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);font:800 19px var(--display);padding:8px 14px;letter-spacing:.02em}
-.dlg .b{padding:16px 18px;font:500 18px/1.4 var(--ui);color:#e6ecff}
+.dlg .b{padding:16px 18px;font:500 18px/1.4 var(--ui);color:var(--ke6ecff)}
 .dlg .b small{display:block;margin-top:10px;font-size:15px;color:var(--dim)}
 .wait{display:inline-block;width:14px;height:14px;border:3px solid var(--ice);border-right-color:transparent;border-radius:50%;animation:sp 1s steps(8) infinite;vertical-align:-2px;margin-right:8px}
 @keyframes sp{to{transform:rotate(360deg)}}
 
 /* weather */
-.wx{position:absolute;inset:0;background:linear-gradient(180deg,#2a62c9 0%,#173f9e 40%,#0b2569 100%)}
+.wx{position:absolute;inset:0;background:linear-gradient(180deg,var(--k2a62c9) 0%,var(--k173f9e) 40%,var(--k0b2569) 100%)}
 .wxh{position:absolute;left:30px;top:22px;right:30px;display:flex;justify-content:space-between;align-items:center}
-.wxh b{font:900 30px var(--display);font-style:italic;text-shadow:3px 3px 0 #082063}
-.wxnow{position:absolute;left:30px;top:84px;width:380px;height:240px;background:rgba(6,20,80,.55);border:2px solid #9ec0ff;padding:16px 20px;box-sizing:border-box}
-.wxnow .tmp{font:900 92px/1 var(--display);text-shadow:4px 4px 0 #061650}
+.wxh b{font:900 30px var(--display);font-style:italic;text-shadow:3px 3px 0 var(--k082063)}
+.wxnow{position:absolute;left:30px;top:84px;width:380px;height:240px;background:var(--kwxnow);border:2px solid var(--k9ec0ff);padding:16px 20px;box-sizing:border-box}
+.wxnow .tmp{font:900 92px/1 var(--display);text-shadow:4px 4px 0 var(--k061650)}
 .wxnow .cond{font:800 24px var(--display);color:var(--hi);margin:6px 0 10px}
-.wxnow .row{font:600 17px var(--ui);color:#dfe8ff;display:flex;justify-content:space-between;margin-top:3px}
+.wxnow .row{font:600 17px var(--ui);color:var(--kdfe8ff);display:flex;justify-content:space-between;margin-top:3px}
 .wxdays{position:absolute;left:430px;right:30px;top:84px;height:240px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.wxd{background:linear-gradient(#2a58c0,#143a96);border:2px solid;border-color:#9ec0ff #061650 #061650 #9ec0ff;text-align:center;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.wxd{background:linear-gradient(var(--k2a58c0),var(--k143a96));border:2px solid;border-color:var(--k9ec0ff) var(--k061650) var(--k061650) var(--k9ec0ff);text-align:center;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px}
 .wxd .dn{font:800 18px var(--display);color:var(--hi)}
 .wxd .hi2{font:900 30px var(--display)}
 .wxd .lo{font:700 18px var(--ui);color:var(--ice)}
-.wxd .c{font:600 14px var(--ui);color:#dfe8ff}
-.ticker{position:absolute;left:0;right:0;bottom:34px;height:38px;background:#061650;border-top:2px solid var(--hi);overflow:hidden;white-space:nowrap}
+.wxd .c{font:600 14px var(--ui);color:var(--kdfe8ff)}
+.ticker{position:absolute;left:0;right:0;bottom:34px;height:38px;background:var(--k061650);border-top:2px solid var(--hi);overflow:hidden;white-space:nowrap}
 .ticker.alert{border-top-color:#ff4d4d;background:#4a0b12}
 .ticker div{display:inline-block;padding-left:100%;font:700 19px/38px var(--ui);animation:tk 26s linear infinite}
 @keyframes tk{to{transform:translateX(-100%)}}
@@ -171,6 +176,22 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
   .dpad{grid-column:1;grid-row:2 / span 2}
   .chv{grid-column:2}
 }
+/* seasonal decorations (only in the Thanksgiving theme) */
+.deco{display:none;position:absolute;pointer-events:none}
+.fall .deco{display:block}
+.bg .deco{opacity:.16}
+.hdr .deco{position:static;display:none}
+.fall .hdr .deco{display:inline-block}
+.hdrmid{display:flex;align-items:center;gap:10px}
+.ftr .deco{position:static;margin-left:auto}
+.fall .ftr .deco{display:flex;gap:6px;align-items:flex-end}
+/* main menu weather widgets */
+.radar{position:absolute;overflow:hidden;background:#0b0f14}
+.radar img,.radar canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.radar .rlbl{position:absolute;left:0;top:0;padding:3px 8px;background:var(--k061650);font:700 12px var(--ui);letter-spacing:.14em;color:var(--hi)}
+.radar .dot2{position:absolute;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid #d8343a;left:calc(50% - 6px);top:calc(48% - 6px)}
+.mini .tmp2{font:900 52px/1 var(--display);margin:2px 0}
+.mini .row2{display:flex;justify-content:space-between;font:600 15px var(--ui);color:var(--dim);margin-top:3px}
 /* full-screen mode inside the Android TV app */
 .tv body{padding:0;overflow:hidden;background:transparent}
 .tv,.tv #stage,.tv #ui{background:transparent}
@@ -185,6 +206,14 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 <body>
 
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="leaf" viewBox="0 0 100 100"><path d="M50 4 L57 24 L70 16 L66 37 L86 31 L77 47 L94 54 L73 62 L78 77 L58 69 L53 88 L50 90 L47 88 L42 69 L22 77 L27 62 L6 54 L23 47 L14 31 L34 37 L30 16 L43 24 Z"/><path d="M50 88 L50 99" stroke="#5a3010" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="oak" viewBox="0 0 60 100"><path d="M30 4 C38 10 44 14 40 22 C50 22 54 30 44 36 C54 40 54 50 42 52 C52 58 50 68 38 68 C42 78 36 84 30 88 C24 84 18 78 22 68 C10 68 8 58 18 52 C6 50 6 40 16 36 C6 30 10 22 20 22 C16 14 22 10 30 4 Z"/><path d="M30 86 L30 99" stroke="#5a3010" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="pumpkin" viewBox="0 0 100 90"><path d="M48 16 C46 8 50 3 58 2 L60 7 C55 8 53 11 54 17 Z" fill="#4e6b1f"/><ellipse cx="30" cy="54" rx="24" ry="32" fill="#c9561a"/><ellipse cx="70" cy="54" rx="24" ry="32" fill="#c9561a"/><ellipse cx="50" cy="54" rx="22" ry="34" fill="#e0701f"/><path d="M50 22 C44 40 44 70 50 88 M50 22 C56 40 56 70 50 88" stroke="#a8440f" stroke-width="3" fill="none"/><path d="M60 14 C70 6 80 12 74 20" stroke="#4e6b1f" stroke-width="3" fill="none"/></symbol>
+    <symbol id="turkey" viewBox="0 0 100 100"><g><ellipse cx="50" cy="40" rx="11" ry="30" fill="#b8322a" transform="rotate(-60 50 62)"/><ellipse cx="50" cy="40" rx="11" ry="30" fill="#e0701f" transform="rotate(-30 50 62)"/><ellipse cx="50" cy="38" rx="11" ry="30" fill="#e3a92b"/><ellipse cx="50" cy="40" rx="11" ry="30" fill="#e0701f" transform="rotate(30 50 62)"/><ellipse cx="50" cy="40" rx="11" ry="30" fill="#b8322a" transform="rotate(60 50 62)"/></g><ellipse cx="50" cy="66" rx="22" ry="20" fill="#6b3a1a"/><circle cx="50" cy="44" r="10" fill="#7a4520"/><circle cx="46" cy="42" r="2" fill="#fff"/><circle cx="54" cy="42" r="2" fill="#fff"/><circle cx="46" cy="42" r="1" fill="#000"/><circle cx="54" cy="42" r="1" fill="#000"/><path d="M47 47 L53 47 L50 52 Z" fill="#e3a92b"/><path d="M52 50 C55 54 54 58 51 58" stroke="#c4232b" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M42 86 L40 96 M58 86 L60 96" stroke="#e3a92b" stroke-width="3" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
 <div class="app">
   <div class="tvframe" id="tvframe">
     <div class="screen" id="screen">
@@ -310,13 +339,16 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box'};
-const BASE=CH.length; // channels 2-99 are the box's own; Pluto TV rows are added after these
-let SET=Object.assign({},DEF), FAV=new Set([0,2,3,4,8,10]);
-try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(j.fav)FAV=new Set(j.fav)}}catch(e){}
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',theme:'auto'};
+CH.forEach(c=>c.key='v'+c.n);
+if(window.CableNative)CH.length=0; // TV app: only channels with real video (Pluto TV)
+const BASE=CH.length; // demo channels exist only in the browser preview
+const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
+let SET=Object.assign({},DEF), FAV=DEF_FAV();
+try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(Array.isArray(j.fav)&&j.fav.every(x=>typeof x==='string'))FAV=new Set(j.fav)}}catch(e){}
 function save(){try{localStorage.setItem('cablebox',JSON.stringify({set:SET,fav:[...FAV]}))}catch(e){}}
 
-const S={screen:'home',prev:'home',ch:0,last:0,idx:{home:0,apps:0,od:0,my:0,set:0,more:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
+const S={screen:'home',prev:'home',ch:CH.length?0:-1,last:CH.length?0:-1,idx:{home:0,apps:0,od:0,my:0,set:0,more:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
 
 const HOME=[
  {label:'Watch TV',to:'watch',desc:'Return to full-screen television on your current channel.'},
@@ -373,6 +405,7 @@ const SETS=[
  {k:'pluto',label:'Pluto TV Listings',vals:[true,false],names:['On','Off'],desc:'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.'},
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
+ {k:'theme',label:'Theme',vals:['auto','fall','blue'],names:['Seasonal','Thanksgiving','Classic Blue'],desc:'Seasonal uses the Thanksgiving colors in November and classic cable blue the rest of the year.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
 ];
 
@@ -395,20 +428,24 @@ const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function fmtDate(ms){const d=new Date(ms);return DAYS[d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate()}
 function clockStr(){return fmtDate(Date.now())+'&nbsp;&nbsp;'+fmtT(Date.now())}
 function floor30(t){return Math.floor(t/SLOT)*SLOT}
-function locked(ci){return SET.parental&&(CH[ci].mature)}
+function locked(ci){return has(ci)&&SET.parental&&!!CH[ci].mature}
 // channels you can flip through in full screen (the box's own)
-function baseList(){const all=[];for(let i=0;i<BASE;i++)all.push(i);if(SET.guideFav&&FAV.size){return all.filter(i=>FAV.has(i))}return all}
-function plutoRows(){const L=[];for(let i=BASE;i<CH.length;i++)L.push(i);return L}
-function surfList(){const L=baseList();return (!SET.guideFav&&SET.plutoPlay==='box'&&NATIVE)?L.concat(plutoRows()):L}
+function has(ci){return ci>=0&&ci<CH.length}
+function isFav(ci){return has(ci)&&FAV.has(CH[ci].key)}
+function favFilter(L){return (SET.guideFav&&L.some(isFav))?L.filter(isFav):L}
+function allList(){const L=[];for(let i=0;i<CH.length;i++)L.push(i);return L}
+function surfList(){return favFilter(allList().filter(i=>!CH[i].pluto||SET.plutoPlay==='box'||!NATIVE))}
 // rows in the guide: your channels plus Pluto TV rows
-function guideList(){const L=baseList();return SET.guideFav?L:L.concat(plutoRows())}
+function guideList(){return favFilter(allList())}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
 function tune(ci){
+  if(!has(ci))return;
+  try{localStorage.setItem('cablebox-lastch',CH[ci].key)}catch(e){}
   if(ci===S.ch){S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
   S.last=S.ch;S.ch=ci;S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
 }
-function chStep(dir){const L=surfList();let p=L.indexOf(S.ch);if(p<0)p=0;p=(p+dir+L.length)%L.length;tune(L[p])}
+function chStep(dir){const L=surfList();if(!L.length){snd.bump();return}let p=L.indexOf(S.ch);if(p<0)p=0;p=(p+dir+L.length)%L.length;tune(L[p])}
 
 function go(screen){S.prev=S.screen;S.screen=screen;if(screen==='guide')initGuide();if(screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;render()}
 
@@ -416,9 +453,10 @@ function go(screen){S.prev=S.screen;S.screen=screen;if(screen==='guide')initGuid
 const ROWS=6, WIN=90*MIN;
 function initGuide(){const L=guideList();let row=L.indexOf(S.ch);if(row<0)row=0;const now=Date.now();
   S.g={row:row,top:Math.max(0,Math.min(row-2,L.length-ROWS)),win:floor30(now),ft:now}}
-function gFocus(){const L=guideList();const ci=L[S.g.row];return {ci:ci,p:progAt(ci,Math.max(S.g.ft,S.g.win))}}
+function gFocus(){const L=guideList();if(!L.length)return null;const ci=L[S.g.row];return {ci:ci,p:progAt(ci,Math.max(S.g.ft,S.g.win))}}
 function guideKey(k){
   const L=guideList(),g=S.g;
+  if(!L.length){snd.bump();return}
   if(g.row>=L.length){g.row=L.length-1}
   if(k==='up'||k==='down'||k==='chup'||k==='chdn'){
     const step=k==='up'?-1:k==='down'?1:k==='chup'?-ROWS:ROWS;
@@ -437,9 +475,9 @@ function guideKey(k){
     else{const key=f.ci+':'+f.p.start;if(S.reminders.has(key)){S.reminders.delete(key);dialog('Reminder Cleared',esc(f.p.title)+' on Ch '+CH[f.ci].n+'.',1600)}
       else{S.reminders.add(key);dialog('Reminder Set','We’ll remind you when <b>'+esc(f.p.title)+'</b> starts at '+fmtT(f.p.start)+' on Ch '+CH[f.ci].n+'.',2000)}snd.ok()}
     return}
-  if(k==='fav'){const f=gFocus();if(f.ci<BASE)toggleFav(f.ci);return}
+  if(k==='fav'){const f=gFocus();toggleFav(f.ci);return}
 }
-function toggleFav(ci){if(FAV.has(ci))FAV.delete(ci);else FAV.add(ci);save();snd.ok();render()}
+function toggleFav(ci){if(!has(ci))return;const k=CH[ci].key;if(FAV.has(k))FAV.delete(k);else FAV.add(k);save();snd.ok();render()}
 
 /* ---------------- dialog ---------------- */
 let dlgT=0;
@@ -477,20 +515,20 @@ function press(k){
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     if(k==='left'){snd.ok();go('home');return}
     if(k==='right'){snd.ok();go('guide');return}
-    if(k==='fav'){if(S.ch<BASE)toggleFav(S.ch);S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
+    if(k==='fav'){toggleFav(S.ch);S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     return;
   }
   if(sc==='guide'){if(k==='info'){const f=gFocus();snd.nav();dialog(esc(f.p.title),esc(f.p.desc)+'<small>Ch '+CH[f.ci].n+' '+CH[f.ci].call+' · '+fmtT(f.p.start)+'–'+fmtT(f.p.end)+' · '+f.p.rating+'</small>');return}guideKey(k);return}
   if(sc==='wx'){return}
   // list screens
-  const lists={home:HOME,apps:APPS,od:OD,my:CH.slice(0,BASE),set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
+  const lists={home:HOME,apps:APPS,od:OD,my:CH,set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
   let i=S.idx[sc];
   if(k==='up'||k==='down'){const ni=i+(k==='up'?-1:1);if(ni<0||ni>=list.length){snd.bump();return}S.idx[sc]=ni;snd.nav();render();return}
   if(k==='chup'||k==='chdn'){S.idx[sc]=Math.max(0,Math.min(list.length-1,i+(k==='chup'?-5:5)));snd.nav();render();return}
   const it=list[i];
   if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
-    if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF);FAV=new Set([0,2,3,4,8,10]);save();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();return}
+    if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF);FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='theme'){applyTheme();render()}return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -519,9 +557,28 @@ document.addEventListener('fullscreenchange',()=>{$('#fs').textContent=document.
 
 /* ---------------- rendering ---------------- */
 const pv=document.createElement('canvas');pv.width=320;pv.height=180;
+const RADARS=['KFFC','KMXX','KEOX'];let radarIdx=0,radarFail=false,radarAt=0;
+const radarBox=document.createElement('div');radarBox.style.cssText='position:absolute;inset:0';
+const radarImg=document.createElement('img');radarImg.alt='';
+const radarCv=document.createElement('canvas');radarCv.width=288;radarCv.height=216;
+const radarLbl=document.createElement('span');radarLbl.className='rlbl';
+const radarDot=document.createElement('span');radarDot.className='dot2';
+radarBox.append(radarCv,radarImg,radarDot,radarLbl);
+function radarSrc(){radarAt=Date.now();radarFail=false;radarImg.hidden=false;radarCv.hidden=true;radarDot.hidden=true;
+  radarLbl.textContent='LIVE RADAR \u00B7 '+RADARS[radarIdx];
+  radarImg.src='https://radar.weather.gov/ridge/standard/'+RADARS[radarIdx]+'_loop.gif?t='+Math.floor(Date.now()/600000)}
+radarImg.onerror=()=>{if(radarIdx<RADARS.length-1){radarIdx++;radarSrc()}else{radarFail=true;radarImg.hidden=true;radarCv.hidden=false;radarDot.hidden=false;radarLbl.textContent=NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'}};
+if(window.CableNative)radarSrc();else{radarFail=true;radarImg.hidden=true;radarDot.hidden=false;radarLbl.textContent='SAMPLE RADAR'}
+function drawRadarSample(ctx,t){const w=288,h=216;ctx.fillStyle='#1b2433';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#3c4b66';ctx.lineWidth=1;
+  for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(i*48,0);ctx.lineTo(i*48+20,h);ctx.stroke()}ctx.beginPath();ctx.moveTo(0,90);ctx.bezierCurveTo(90,70,180,120,288,96);ctx.stroke();
+  const blobs=[['#3fd36b',46],['#e8d53a',24],['#e2493a',10]];for(let j=0;j<3;j++){const bx=((t*10+j*120)%420)-60,by=60+j*48;blobs.forEach(([cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}}
 const ui=$('#ui');
-const hdr=t=>'<div class="hdr"><div class="brand"><svg class="cat" viewBox="0 0 32 30" width="32" height="30" aria-hidden="true"><path d="M4 13 L5 1 L13 8 Z M28 13 L27 1 L19 8 Z" fill="#3b2618" stroke="#041040" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5.5 L7.6 10 L10.5 8 Z M25 5.5 L24.4 10 L21.5 8 Z" fill="#c98f8a"/><ellipse cx="16" cy="17" rx="13" ry="11.5" fill="#efe2c8" stroke="#041040" stroke-width="1.2"/><path d="M16 9.5 C10 10 6.5 15 7.5 20 C9 26 23 26 24.5 20 C25.5 15 22 10 16 9.5 Z" fill="#4a2f1e"/><path d="M8.6 15.6 Q11.6 13.4 14 16 Q11.2 17.6 8.6 15.6 Z M23.4 15.6 Q20.4 13.4 18 16 Q20.8 17.6 23.4 15.6 Z" fill="#4fb6ff"/><path d="M11.4 15.2 v1.2 M20.6 15.2 v1.2" stroke="#06113d" stroke-width="1.3" stroke-linecap="round"/><path d="M14.6 19.4 h2.8 l-1.4 1.6 Z" fill="#d79a9a"/><path d="M16 21 v1.2 M16 22.2 q-1.6 1.2 -3 .4 M16 22.2 q1.6 1.2 3 .4" stroke="#1a0f08" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M4 19.5 l5 .6 M4 22 l5 -.4 M28 19.5 l-5 .6 M28 22 l-5 -.4" stroke="#efe2c8" stroke-width=".8" stroke-linecap="round"/></svg><b>NyxVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="title">'+t+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
-const ftr=items=>'<div class="ftr">'+items.map(x=>'<span>'+x+'</span>').join('')+'</div>';
+const hdr=t=>'<div class="hdr"><div class="brand"><svg class="cat" viewBox="0 0 32 30" width="32" height="30" aria-hidden="true"><path d="M4 13 L5 1 L13 8 Z M28 13 L27 1 L19 8 Z" fill="#3b2618" stroke="#041040" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5.5 L7.6 10 L10.5 8 Z M25 5.5 L24.4 10 L21.5 8 Z" fill="#c98f8a"/><ellipse cx="16" cy="17" rx="13" ry="11.5" fill="#efe2c8" stroke="#041040" stroke-width="1.2"/><path d="M16 9.5 C10 10 6.5 15 7.5 20 C9 26 23 26 24.5 20 C25.5 15 22 10 16 9.5 Z" fill="#4a2f1e"/><path d="M8.6 15.6 Q11.6 13.4 14 16 Q11.2 17.6 8.6 15.6 Z M23.4 15.6 Q20.4 13.4 18 16 Q20.8 17.6 23.4 15.6 Z" fill="#4fb6ff"/><path d="M11.4 15.2 v1.2 M20.6 15.2 v1.2" stroke="#06113d" stroke-width="1.3" stroke-linecap="round"/><path d="M14.6 19.4 h2.8 l-1.4 1.6 Z" fill="#d79a9a"/><path d="M16 21 v1.2 M16 22.2 q-1.6 1.2 -3 .4 M16 22.2 q1.6 1.2 3 .4" stroke="#1a0f08" stroke-width=".9" fill="none" stroke-linecap="round"/><path d="M4 19.5 l5 .6 M4 22 l5 -.4 M28 19.5 l-5 .6 M28 22 l-5 -.4" stroke="#efe2c8" stroke-width=".8" stroke-linecap="round"/></svg><b>NyxVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="hdrmid"><svg class="deco" width="20" height="20" style="fill:#e3a92b;transform:rotate(-20deg)"><use href="#leaf"/></svg><div class="title">'+t+'</div><svg class="deco" width="20" height="20" style="fill:#d9661f;transform:rotate(25deg)"><use href="#oak"/></svg></div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
+const ftr=items=>'<div class="ftr">'+items.map(x=>'<span>'+x+'</span>').join('')+'<span class="deco"><svg width="26" height="24"><use href="#pumpkin"/></svg><svg width="28" height="28"><use href="#turkey"/></svg><svg width="20" height="20" style="fill:#b8322a"><use href="#leaf"/></svg></span></div>';
+const LEAVES=[[18,410,90,'#d9661f',-25,'leaf'],[870,80,70,'#e3a92b',30,'oak'],[905,420,60,'#b8322a',15,'leaf'],[400,470,46,'#e3a92b',-40,'oak'],[300,60,40,'#b8322a',50,'leaf']];
+function bgDeco(){return LEAVES.map(l=>'<svg class="deco" width="'+l[2]+'" height="'+l[2]+'" style="left:'+l[0]+'px;top:'+l[1]+'px;fill:'+l[3]+';transform:rotate('+l[4]+'deg)"><use href="#'+l[5]+'"/></svg>').join('')}
+function applyTheme(){const fall=SET.theme==='fall'||(SET.theme==='auto'&&new Date().getMonth()===10);document.documentElement.classList.toggle('fall',fall)}
+applyTheme();
 
 function menuHTML(list,sel,x,y,w,fmt,max){
   max=max||list.length;let start=Math.max(0,Math.min(sel-Math.floor(max/2),list.length-max));
@@ -529,35 +586,47 @@ function menuHTML(list,sel,x,y,w,fmt,max){
   list.slice(start,start+max).forEach((it,j)=>{const i=start+j;h+='<div class="mi'+(i===sel?' hi':'')+'">'+fmt(it,i)+'</div>'});
   return h+'</div>';
 }
-function nowLine(ci){const p=progAt(ci,Date.now());return '<b>Ch '+CH[ci].n+' '+CH[ci].call+'</b> · '+esc(p.title)+'<br>'+fmtT(p.start)+' – '+fmtT(p.end)}
+function nowLine(ci){if(!has(ci))return 'No channel tuned yet';const p=progAt(ci,Date.now());const one='display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';return '<b style="font-size:22px;display:block">Ch '+CH[ci].n+'</b><span style="'+one+';color:var(--ice)">'+esc(CH[ci].name)+'</span><span style="'+one+'">'+esc(p.title)+'</span><span style="'+one+'">'+fmtT(p.start,true)+'\u2013'+fmtT(p.end)+'</span>'}
+function homeWx(){
+  const W=WX&&WX.now?WX:null,d=W&&W.days[0];
+  return '<div class="box bevel mini" style="left:748px;top:238px;width:136px;height:184px"><div class="lbl">Columbus, GA</div>'+
+   (W?'<div style="display:flex;align-items:center;gap:4px"><div class="tmp2">'+W.now.temp+'\u00B0</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:48px;height:39px"></canvas></div><div style="font:800 16px var(--display);color:var(--hi)">'+esc(W.now.cond)+'</div>'+
+    (d?'<div class="row2"><span>Hi / Lo</span><span>'+(d.hi!=null?d.hi+'\u00B0':'\u2014')+' / '+(d.lo!=null?d.lo+'\u00B0':'\u2014')+'</span></div>':'')+'<div class="row2"><span>Wind</span><span>'+esc(W.now.wind)+'</span></div>'
+    :'<p style="margin-top:8px">'+(NATIVE?(WXERR?'Weather unavailable right now.':'Loading weather\u2026'):'Live weather shows here on your TV.')+'</p>')+'</div>';
+}
 
 function render(){
   const sc=S.screen;let h='';
   $('#video').style.visibility=(sc==='watch')?'visible':'hidden';
-  if(sc==='watch'){
+  if(sc==='watch'&&!has(S.ch)){
+    h+='<div class="lock"><div class="box bevel"><h3>'+(PLUTO_ERR||!SET.pluto?'No Channels':'Tuning In…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to get channels.':PLUTO_ERR?esc(PLUTO_ERR)+' Press ◀ for the main menu.':'Loading the channel lineup. This takes a few seconds.')+'</p></div></div>';
+  }
+  else if(sc==='watch'){
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>Ch '+CH[S.ch].n+' '+CH[S.ch].call+' is blocked by Parental Controls. Turn them off in Settings to watch.</p></div></div>';
     if(Date.now()<S.bannerUntil||S.entry){
       const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
       h+='<div class="banner"><div class="num"><b>'+c.n+'</b><span>'+c.call+'</span></div><div class="mid"><h2>'+esc(p.title)+'</h2>'+
         '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
         '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">Next: '+esc(nx.title)+' at '+fmtT(nx.start)+'</div></div>'+
-        '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(FAV.has(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl">OK Guide · ◀ Menu</div></div></div>';
+        '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(isFav(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl">OK Guide · ◀ Menu</div></div></div>';
     }
     if(S.entry)h+='<div class="entry">'+S.entry+(S.entry.length<3?'-':'')+'</div>';
   }
   else if(sc==='home'){
     const it=HOME[S.idx.home];
-    h+='<div class="bg"></div>'+hdr('Main Menu')+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Main Menu')+
       menuHTML(HOME,S.idx.home,40,78,360,(x,i)=>'<span class="n">'+(i+1)+'</span>'+x.label)+
-      '<div class="box bevel" style="left:40px;top:388px;width:324px;height:66px"><p style="margin:0">'+it.desc+'</p></div>'+
-      '<div class="pv bevel pv-slot" style="left:448px;top:78px;width:472px;height:266px;position:absolute"></div>'+
-      '<div class="box bevel" style="left:448px;top:358px;width:436px;height:96px"><div class="lbl">Now Watching</div><p style="margin-top:6px;color:#fff;font-size:18px">'+nowLine(S.ch)+'</p></div>'+
+      '<div class="box bevel" style="left:40px;top:412px;width:324px;padding-block:10px"><p style="margin:0;font-size:16px">'+it.desc+'</p></div>'+
+      '<div class="pv bevel pv-slot" style="left:448px;top:62px;width:288px;height:162px;position:absolute"></div>'+
+      '<div class="box bevel" style="left:748px;top:62px;width:136px;height:130px;overflow:hidden"><div class="lbl">Now Watching</div><div style="margin-top:6px;color:#fff;font:500 15px/1.3 var(--ui)">'+nowLine(S.ch)+'</div></div>'+
+      '<div class="radar bevel radar-slot" style="left:448px;top:238px;width:288px;height:216px"></div>'+
+      homeWx()+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Select','<i>GUIDE</i>TV Guide','<i>MENU</i>Exit to TV']);
   }
   else if(sc==='guide'){h+=guideHTML()}
   else if(sc==='apps'){
     const it=APPS[S.idx.apps];
-    h+='<div class="bg"></div>'+hdr('Applications')+menuHTML(APPS,S.idx.apps,40,66,380,x=>x.label,8)+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Applications')+menuHTML(APPS,S.idx.apps,40,66,380,x=>x.label,8)+
       '<div class="box bevel" style="left:460px;top:66px;width:424px;height:378px"><div style="height:150px;display:flex;align-items:center;justify-content:center;background:'+it.col+';border:2px solid #fff;box-shadow:inset 0 0 0 4px rgba(0,0,0,.25);font:900 40px var(--display);text-shadow:3px 3px 0 rgba(0,0,0,.5)">'+esc(it.label)+'</div>'+
       '<h3 style="margin-top:16px">'+esc(it.label)+'</h3><p>'+it.desc+'</p>'+
       (NATIVE&&it.keys&&!it.installed?'<p style="color:#ffb3b3;font-weight:700">Not installed · OK opens Google Play</p>':'<p style="color:var(--hi);font-weight:700">Press OK to '+(it.wx||it.more?'view':'launch')+'</p>')+'</div>'+
@@ -565,28 +634,28 @@ function render(){
   }
   else if(sc==='more'){
     const L=moreList(),it=L[Math.min(S.idx.more,L.length-1)];
-    h+='<div class="bg"></div>'+hdr('More Apps')+menuHTML(L,Math.min(S.idx.more,L.length-1),40,66,460,x=>esc(x.label),8)+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('More Apps')+menuHTML(L,Math.min(S.idx.more,L.length-1),40,66,460,x=>esc(x.label),8)+
       '<div class="box bevel" style="left:540px;top:66px;width:344px;height:378px"><div class="lbl">Installed App</div><h3 style="font-size:28px;margin:6px 0 10px">'+esc(it.label)+'</h3>'+
       (NATIVE?'<p>Press OK to open it. Press HOME on your remote any time to come back, then open the cable box.</p>':'<p>Sample list. On your Google TV, every installed app shows up here automatically.</p>')+'</div>'+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Open','<i>BACK</i>Applications']);
   }
   else if(sc==='od'){
     const it=OD[S.idx.od];
-    h+='<div class="bg"></div>'+hdr('On Demand')+menuHTML(OD,S.idx.od,40,66,380,x=>x.label)+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('On Demand')+menuHTML(OD,S.idx.od,40,66,380,x=>x.label)+
       '<div class="box bevel" style="left:460px;top:66px;width:424px;height:378px"><div class="lbl">Category</div><h3 style="font-size:32px;margin-top:4px">'+it.label+'</h3><p>'+it.desc+'</p>'+
       '<div class="lbl" style="margin-top:26px">Available from</div><div class="mi" style="margin-top:8px;width:300px">'+it.app+'</div>'+
       '<p style="margin-top:22px;color:var(--hi);font-weight:700">Press OK to open '+it.app+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Open','<i>BACK</i>Main Menu']);
   }
   else if(sc==='my'){
-    h+='<div class="bg"></div>'+hdr('My Channels')+menuHTML(CH.slice(0,BASE),S.idx.my,40,62,460,(c,i)=>'<span class="n" style="width:34px">'+c.n+'</span>'+c.call+' · '+esc(c.name)+(FAV.has(i)?'<span class="star">★</span>':''),8)+
-      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+FAV.size+' of '+BASE+'</h3>'+
-      '<p>Press OK to add or remove the highlighted channel.</p><p>Set <b style="color:#fff">Guide Shows</b> to <b style="color:#fff">My Channels</b> in Settings to surf only your favorites.</p></div>'+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('My Channels')+menuHTML(CH,S.idx.my,40,62,460,(c,i)=>'<span class="n" style="width:34px">'+c.n+'</span><span class="t">'+(c.pluto?esc(c.name):c.call+' · '+esc(c.name))+'</span>'+(isFav(i)?'<span class="star">★</span>':''),8)+
+      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+CH.filter((c,i)=>isFav(i)).length+' of '+CH.length+'</h3>'+
+      '<p>'+(CH.length?'Press OK to add or remove the highlighted channel.':'Channels appear here once the Pluto TV listings load.')+'</p><p>Set <b style="color:#fff">Guide Shows</b> to <b style="color:#fff">My Channels</b> in Settings to surf only your favorites.</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>OK</i>Add / Remove ★','<i>BACK</i>Main Menu']);
   }
   else if(sc==='set'){
     const it=SETS[S.idx.set];
-    h+='<div class="bg"></div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?'':'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'))+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?'':'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'))+
       '<div class="box bevel" style="left:580px;top:66px;width:304px;height:240px"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
       '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT prototype v0.1<br>Guide data: sample lineup</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>Main Menu']);
@@ -595,15 +664,18 @@ function render(){
   if(S.dialog)h+='<div class="dlg"><div class="t">'+S.dialog.title+'</div><div class="b">'+S.dialog.body+'</div></div>';
   ui.innerHTML=h;
   const slot=ui.querySelector('.pv-slot');if(slot)slot.appendChild(pv);
+  const rs=ui.querySelector('.radar-slot');if(rs){rs.appendChild(radarBox);if(NATIVE&&Date.now()-radarAt>10*MIN){radarIdx=0;radarSrc()}}
   syncVideo();
   clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
 }
 
 function guideHTML(){
-  const L=guideList(),g=S.g;if(g.row>=L.length)g.row=L.length-1;
+  const L=guideList(),g=S.g;
+  if(!L.length)return '<div class="bg">'+bgDeco()+'</div>'+hdr('TV Guide')+'<div class="box bevel" style="left:200px;top:180px;width:520px"><h3>'+(PLUTO_ERR||!SET.pluto?'No Listings':'Loading Listings…')+'</h3><p>'+(!SET.pluto?'Turn on Pluto TV Listings in Settings to fill the guide.':PLUTO_ERR?esc(PLUTO_ERR):'Getting the Pluto TV lineup. This takes a few seconds.')+'</p></div>'+ftr(['<i>BACK</i>Exit']);
+  if(g.row>=L.length)g.row=L.length-1;
   const f=gFocus(),now=Date.now(),c=CH[f.ci],p=f.p,remK=f.ci+':'+p.start;
   const onNow=p.start<=now&&p.end>now;
-  let h='<div class="bg"></div>'+hdr('TV Guide')+
+  let h='<div class="bg">'+bgDeco()+'</div>'+hdr('TV Guide')+
    '<div class="ginfo"><div class="pv bevel pv-slot"></div><div class="gtext bevel"><h2>'+esc(p.title)+'</h2>'+
    '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+esc(c.pluto?c.name:c.call)+'</span>'+(p.rating?'<span class="rate">'+esc(p.rating)+'</span>':'')+''+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
    '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?(c.pluto&&SET.plutoPlay!=='box'?'On now · Press OK to watch in Pluto TV':'On now · Press OK to watch'):'Press OK to set a reminder')+'</p></div></div>';
@@ -613,7 +685,7 @@ function guideHTML(){
   h+='</div><div class="grid">';
   for(let r=g.top;r<Math.min(L.length,g.top+ROWS);r++){
     const ci=L[r],ch=CH[ci],lk=locked(ci);
-    h+='<div class="grow'+(ci===S.ch?' cur':'')+(ch.pluto?' pl':'')+(lk?' lockedrow':'')+'"><div class="gch"><b>'+ch.n+'</b><span>'+ch.call+'</span>'+(FAV.has(ci)?'<span class="fv">★</span>':'')+'</div>';
+    h+='<div class="grow'+(ci===S.ch?' cur':'')+(ch.pluto?' pl':'')+(lk?' lockedrow':'')+'"><div class="gch"><b>'+ch.n+'</b><span>'+ch.call+'</span>'+(isFav(ci)?'<span class="fv">★</span>':'')+'</div>';
     for(const pr of ch.sched){
       if(pr.end<=g.win||pr.start>=g.win+WIN)continue;
       const s=Math.max(pr.start,g.win),e=Math.min(pr.end,g.win+WIN);
@@ -640,7 +712,7 @@ function wxHTML(){
   if(live)note=(WXERR?WXERR:'National Weather Service · updated '+fmtT(W.updated));
   else if(NATIVE)note=WXERR?'Couldn’t reach the National Weather Service · sample shown':'Loading your forecast… sample shown';
   else note='Sample forecast · the TV app shows live weather for '+WXLOC.label;
-  return '<div class="wx"></div><div class="wxh"><b>Your Local Forecast</b><div class="clk">'+clockStr()+'</div></div>'+
+  return '<div class="wx">'+bgDeco()+'</div><div class="wxh"><b>Your Local Forecast</b><div class="clk">'+clockStr()+'</div></div>'+
    '<div class="wxnow"><div class="lbl">'+esc(WXLOC.label)+'</div><div class="tmp">'+W.now.temp+'°</div><div class="cond">'+esc(W.now.cond)+'</div>'+
    '<div class="row"><span>Humidity</span><span>'+W.now.hum+'</span></div><div class="row"><span>Wind</span><span>'+esc(W.now.wind)+'</span></div><div class="row"><span>Barometer</span><span>'+W.now.baro+'</span></div></div>'+
    '<div class="wxdays">'+days+'</div><div class="sample">'+note+'</div>'+
@@ -650,7 +722,7 @@ function wxHTML(){
 function drawWxIcons(){
   ui.querySelectorAll('canvas.wxi').forEach(cv=>{const x=cv.getContext('2d'),c=cv.dataset.c;x.clearRect(0,0,64,52);
     const sun=(cx,cy,r)=>{x.fillStyle='#ffd21a';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.strokeStyle='#ffd21a';x.lineWidth=3;for(let a=0;a<8;a++){const t=a*Math.PI/4;x.beginPath();x.moveTo(cx+Math.cos(t)*(r+4),cy+Math.sin(t)*(r+4));x.lineTo(cx+Math.cos(t)*(r+9),cy+Math.sin(t)*(r+9));x.stroke()}};
-    const moon=(cx,cy,r)=>{x.fillStyle='#f4f1c9';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.fillStyle='#1d48a6';x.beginPath();x.arc(cx+6,cy-4,r-1,0,7);x.fill()};
+    const moon=(cx,cy,r)=>{x.fillStyle='#f4f1c9';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.globalCompositeOperation='destination-out';x.beginPath();x.arc(cx+6,cy-4,r-1,0,7);x.fill();x.globalCompositeOperation='source-over'};
     const cloud=(cx,cy,col)=>{x.fillStyle=col;x.beginPath();x.arc(cx-10,cy,10,0,7);x.arc(cx+4,cy-6,13,0,7);x.arc(cx+16,cy+2,9,0,7);x.rect(cx-10,cy,26,10);x.fill()};
     const rain=()=>{x.strokeStyle='#8fd0ff';x.lineWidth=3;for(let i=0;i<4;i++){x.beginPath();x.moveTo(20+i*8,36);x.lineTo(16+i*8,46);x.stroke()}};
     if(c==='Sunny')sun(32,26,12);else if(c==='Clear')moon(30,26,13);
@@ -672,7 +744,8 @@ const stars=[];{const r=rng(5);for(let i=0;i<160;i++)stars.push({x:r()*2-1,y:r()
 function txt(ctx,s,x,y,size,col,align,weight){ctx.font=(weight||800)+' '+size+'px Archivo, Arial, sans-serif';ctx.fillStyle=col;ctx.textAlign=align||'left';ctx.fillText(s,x,y)}
 
 function drawScene(ctx,w,h,ci,t){
-  const c=CH[ci];const k=w/480;ctx.save();ctx.scale(k,k);w=480;h=270;
+  const c=CH[ci];
+  if(!c){const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2a1206');g.addColorStop(1,'#0c0603');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);const k=w/480;ctx.save();ctx.scale(k,k);txt(ctx,'NyxVision',240,128,30,'#f5b83a','center',900);txt(ctx,'TUNING'+'...'.slice(0,1+Math.floor(t*2)%3),240,160,13,'#f6cf8f','center',700);ctx.restore();return}const k=w/480;ctx.save();ctx.scale(k,k);w=480;h=270;
   if(locked(ci)){ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);txt(ctx,'🔒',240,150,40,'#fff','center');ctx.restore();return}
   switch(c.scene){
   case 'bars':{const cols=['#c0c0c0','#c0c000','#00c0c0','#00c000','#c000c0','#c00000','#0000c0'];cols.forEach((cl,i)=>{ctx.fillStyle=cl;ctx.fillRect(i*w/7,0,w/7+1,h*.67)});
@@ -750,6 +823,7 @@ function loop(ms){
     const ci=(S.screen==='guide'&&S.g)?S.ch:S.ch;
     stat?drawStatic(pctx,320,180):drawScene(pctx,320,180,ci,t);
   }
+  if(radarFail&&radarBox.isConnected)drawRadarSample(radarCv.getContext('2d'),t);
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -764,7 +838,7 @@ try{new ResizeObserver(fit).observe(screenEl)}catch(e){window.addEventListener('
 fit();
 
 const origRender=render;
-render=function(){origRender();if(S.screen==='wx')drawWxIcons()};
+render=function(){origRender();if(S.screen==='wx'||S.screen==='home')drawWxIcons()};
 
 /* ---------------- web requests through the Android app ---------------- */
 let httpId=0;const httpWait={};
@@ -816,7 +890,7 @@ async function loadWeather(){
     const tick=alerts.map(a=>'⚠ '+a.toUpperCase()).concat(per.slice(0,3).map(p=>p.name.toUpperCase()+': '+p.detailedForecast));
     WX={now:now,days:days,ticker:tick,alerts:alerts.length,updated:Date.now()};WXERR=null;WXAT=Date.now();
   }catch(e){WXERR='Couldn’t reach the National Weather Service. Showing the last forecast.';WXAT=Date.now()-25*MIN}
-  if(S.screen==='wx')render();
+  if(S.screen==='wx'||S.screen==='home')render();
 }
 
 /* ---------------- Pluto TV listings ---------------- */
@@ -853,7 +927,7 @@ function fillSched(progs,name){
   return out;
 }
 async function loadPluto(){
-  if(!SET.pluto){if(S.ch>=BASE){S.ch=0;applyStream()}if(S.last>=BASE)S.last=0;CH.length=BASE;PLUTO_ERR=null;if(S.screen==='guide')render();return}
+  if(!SET.pluto){if(S.ch>=BASE){S.ch=BASE?0:-1;applyStream()}if(S.last>=BASE)S.last=BASE?0:-1;CH.length=BASE;PLUTO_ERR=null;if(S.screen==='guide')render();return}
   if(!NATIVE||plutoBusy)return;
   plutoBusy=true;
   const now=Date.now(),start=new Date(floor30(now)-SLOT).toISOString(),stop=new Date(now+6*3600000).toISOString();
@@ -865,11 +939,13 @@ async function loadPluto(){
   const curId=S.ch>=BASE&&CH[S.ch]?CH[S.ch].pluto.id:null,lastId=S.last>=BASE&&CH[S.last]?CH[S.last].pluto.id:null;
   CH.length=BASE;
   list.slice(0,SET.plutoCount).forEach((c,i)=>{
-    CH.push({n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'pluto',pluto:{slug:c.slug,id:c.id,num:c.num,stitched:c.stitched||''},sched:fillSched(c.progs,c.name)});
+    CH.push({key:'p'+c.id,n:200+i,call:c.name.length>11?c.name.slice(0,11):c.name,name:c.name,g:'pluto',scene:'pluto',pluto:{slug:c.slug,id:c.id,num:c.num,stitched:c.stitched||''},sched:fillSched(c.progs,c.name)});
   });
   const find=id=>{for(let i=BASE;i<CH.length;i++)if(CH[i].pluto.id===id)return i;return -1};
-  if(curId){const i=find(curId);if(i<0){S.ch=0;applyStream()}else{S.ch=i;PLAY.ci=PLAY.on?i:-1}}
-  if(lastId){const i=find(lastId);S.last=i<0?0:i}
+  if(curId){const i=find(curId);if(i<0){S.ch=BASE?0:-1;applyStream()}else{S.ch=i;PLAY.ci=PLAY.on?i:-1}}
+  if(lastId){const i=find(lastId);S.last=i<0?(BASE?0:-1):i}
+  if(!has(S.ch)&&CH.length){let saved=null;try{saved=localStorage.getItem('cablebox-lastch')}catch(e){}
+    let pick=CH.findIndex(c=>c.key===saved);if(pick<0)pick=BASE<CH.length?BASE:0;S.staticUntil=0;tune(pick)}
   PLUTO_ERR=null;PLUTOAT=Date.now();
   if(S.screen==='guide')render();
 }
