@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Retro Cable Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=Archivo:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Layout: a 960x540 cable-box stage scaled to fit the TV frame, with an on-screen remote beside it (wide) or below it (narrow) */
+:root{
+  --navy:#06113d; --navy2:#0d2270; --panel:#16328a; --panelHi:#2348b0;
+  --cell:#40389a; --cellNow:#2c58b8; --chan:#0f2466;
+  --hi:#ffd21a; --hiText:#0b0b18; --ice:#a6d4ff; --text:#ffffff; --dim:#b9c7ef;
+  --room:#0c0e14; --plastic:#1e2028; --plastic2:#2c2f39; --btn:#3a3e4a; --btnText:#e8eaf0;
+  --red:#d8343a; --green:#2fae4f; --blue:#2f6fd8; --yellow:#e8c21b;
+  --display:"Archivo","Arial Black",Helvetica,sans-serif;
+  --ui:"Archivo Narrow","Arial Narrow",Helvetica,Arial,sans-serif;
+  color-scheme:dark;
+}
+body{background:var(--room);color:var(--text);font-family:var(--ui);
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:16px}
+.app{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:18px;max-width:1380px;margin:0 auto;align-items:start}
+@media (max-width:760px),(max-aspect-ratio:1/1){.app{grid-template-columns:minmax(0,1fr)}}
+.tvframe{background:linear-gradient(#25272e,#121318);border-radius:14px;padding:12px 12px 8px;box-shadow:0 18px 50px rgba(0,0,0,.6),inset 0 1px 0 #3a3d47}
+.screen{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#000;border-radius:3px}
+.under{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 4px 2px;color:#7d8394;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.under button{background:none;border:1px solid #3a3d47;color:#aab0bf;font:600 12px var(--ui);letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:4px;cursor:pointer}
+.led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3cff6b;box-shadow:0 0 6px #3cff6b;margin-right:6px;vertical-align:1px}
+#stage{position:absolute;left:0;top:0;width:960px;height:540px;transform-origin:0 0;font-family:var(--ui);user-select:none;-webkit-user-select:none}
+#video{position:absolute;inset:0;width:960px;height:540px;display:block}
+#ui{position:absolute;inset:0}
+.tvframe:fullscreen{padding:0;border-radius:0;display:flex;align-items:center;background:#000}
+.tvframe:fullscreen .under{display:none}
+.tvframe:fullscreen .screen{height:100%;aspect-ratio:auto;border-radius:0}
+
+/* ---------- cable-box UI (stage coordinates) ---------- */
+.bg{position:absolute;inset:0;background:linear-gradient(180deg,#0e2780 0%,#081a5c 45%,#050f3a 100%)}
+.hdr{position:absolute;left:0;right:0;top:0;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;
+  background:linear-gradient(#1d3ea6,#0f2672);border-bottom:2px solid #6f9cf0;box-shadow:0 2px 0 #041040}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand b{font:900 21px var(--display);letter-spacing:-.01em;font-style:italic;color:#fff;text-shadow:2px 2px 0 #041040}
+.brand span{font:700 12px var(--ui);letter-spacing:.22em;color:var(--ice)}
+.hdr .title{font:800 19px var(--display);letter-spacing:.06em;text-transform:uppercase;text-shadow:2px 2px 0 #041040}
+.clk{font:700 19px var(--ui);text-shadow:2px 2px 0 #041040;font-variant-numeric:tabular-nums}
+.ftr{position:absolute;left:0;right:0;bottom:0;height:34px;display:flex;align-items:center;gap:22px;padding:0 22px;background:#06123f;border-top:2px solid #2a4fae;font:600 15px var(--ui);color:var(--dim)}
+.ftr i{font-style:normal;display:inline-block;min-width:22px;padding:1px 6px;margin-right:6px;border:1px solid #6f9cf0;border-radius:3px;color:#fff;background:#173586;text-align:center;font-weight:700}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:1px solid rgba(255,255,255,.5)}
+.bevel{border:2px solid;border-color:#7fa8f5 #0a1a55 #0a1a55 #7fa8f5}
+.pv{background:#000;position:relative}
+.pv canvas{width:100%;height:100%;display:block}
+
+/* menu list */
+.menu{position:absolute;display:flex;flex-direction:column;gap:6px}
+.mi{height:44px;display:flex;align-items:center;padding:0 16px;font:700 22px var(--ui);letter-spacing:.02em;background:linear-gradient(#2348b0,#173586);
+  border:2px solid;border-color:#86acf4 #0a1a55 #0a1a55 #86acf4;color:#fff;text-shadow:1px 1px 0 #041040;gap:12px}
+.mi .n{font:800 15px var(--display);color:var(--ice);width:20px}
+.mi.hi{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);text-shadow:none;border-color:#fff6b8 #8a6c00 #8a6c00 #fff6b8}
+.mi.hi .n{color:#5a4500}
+.mi .v{margin-left:auto;font-weight:600;font-size:19px}
+.mi .star{margin-left:auto;color:var(--hi);font-size:20px}
+.mi.hi .star{color:#7a5a00}
+.box{position:absolute;background:linear-gradient(#183689,#0f2569);padding:16px 18px}
+.box h3{margin:0 0 8px;font:800 22px var(--display);letter-spacing:.01em}
+.box p{margin:0 0 8px;font:500 17px/1.35 var(--ui);color:var(--dim)}
+.lbl{font:700 13px var(--ui);letter-spacing:.18em;text-transform:uppercase;color:var(--ice)}
+
+/* guide */
+.ginfo{position:absolute;left:12px;right:12px;top:54px;height:152px;display:flex;gap:14px}
+.ginfo .pv{width:256px;height:144px;flex:none}
+.gtext{flex:1;min-width:0;background:linear-gradient(#183689,#0f2569);padding:10px 16px;overflow:hidden}
+.gtext h2{margin:0 0 4px;font:800 26px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gmeta{font:700 16px var(--ui);color:var(--ice);margin-bottom:6px;display:flex;gap:14px;flex-wrap:wrap}
+.rate{border:1px solid var(--ice);padding:0 5px;border-radius:2px}
+.gtext p{margin:0;font:500 16px/1.32 var(--ui);color:var(--dim)}
+.rem{color:var(--hi)}
+.trow{position:absolute;left:12px;right:12px;top:214px;height:28px;display:flex;font:700 16px var(--ui)}
+.trow .d{width:150px;flex:none;background:#081a58;display:flex;align-items:center;padding-left:10px;color:var(--hi)}
+.trow .s{flex:1;background:linear-gradient(#2a4fb4,#1a3a92);border-left:2px solid #0a1a55;display:flex;align-items:center;padding-left:10px}
+.grid{position:absolute;left:12px;right:12px;top:244px}
+.grow{position:relative;height:38px;margin-bottom:3px}
+.gch{position:absolute;left:0;top:0;width:148px;height:38px;background:var(--chan);border:1px solid #2a4aa4;display:flex;align-items:center;gap:8px;padding:0 8px;box-sizing:border-box}
+.gch b{font:800 19px var(--display);width:36px;text-align:right;font-variant-numeric:tabular-nums}
+.gch span{font:700 16px var(--ui);color:var(--ice);letter-spacing:.04em}
+.gch .fv{margin-left:auto;color:var(--hi);font-size:14px}
+.grow.cur .gch{background:#2a4fb4}
+.cell{position:absolute;top:0;height:38px;box-sizing:border-box;background:var(--cell);border:1px solid;border-color:#8a80e0 #1a1460 #1a1460 #8a80e0;
+  display:flex;align-items:center;padding:0 9px;font:700 17px var(--ui);white-space:nowrap;overflow:hidden;text-shadow:1px 1px 0 #10093a}
+.cell.now{background:var(--cellNow);border-color:#8fb3f5 #0a1a55 #0a1a55 #8fb3f5;text-shadow:1px 1px 0 #041040}
+.cell.hi{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);text-shadow:none;border-color:#fff6b8 #8a6c00 #8a6c00 #fff6b8}
+.cell .ar{color:var(--ice);margin-right:5px;font-size:13px}
+.cell.hi .ar{color:#6b5000}
+.cell .rm{margin-left:6px;color:var(--hi)}
+.cell.hi .rm{color:#7a2a00}
+.lockedrow .cell{color:#c9c4ff}
+
+/* watch banner */
+.banner{position:absolute;left:24px;right:24px;bottom:22px;height:118px;display:flex;background:linear-gradient(#2148b4 0%,#12318a 55%,#0b2268 100%);
+  border:2px solid;border-color:#9ec0ff #061650 #061650 #9ec0ff;box-shadow:0 6px 0 rgba(0,0,0,.35)}
+.banner .num{width:150px;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(#0d2a7c,#071a55);border-right:2px solid #061650}
+.banner .num b{font:900 52px/1 var(--display);color:var(--hi);text-shadow:3px 3px 0 #000;font-variant-numeric:tabular-nums}
+.banner .num span{font:700 17px var(--ui);letter-spacing:.14em;margin-top:4px}
+.banner .mid{flex:1;min-width:0;padding:10px 16px}
+.banner h2{margin:0;font:800 26px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:2px 2px 0 #041040}
+.banner .meta{font:700 16px var(--ui);color:var(--ice);margin:3px 0 7px;display:flex;gap:14px}
+.prog{height:8px;background:#061650;border:1px solid #7fa8f5;width:340px}
+.prog div{height:100%;background:var(--hi)}
+.banner .next{font:600 15px var(--ui);color:var(--dim);margin-top:7px}
+.banner .rt{width:150px;flex:none;padding:10px 14px;text-align:right;display:flex;flex-direction:column;justify-content:space-between}
+.banner .rt .clk{font-size:22px}
+.entry{position:absolute;right:30px;top:24px;font:900 48px var(--display);color:var(--hi);text-shadow:3px 3px 0 #000;letter-spacing:.06em}
+.lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.lock .box{position:static;width:460px;text-align:center}
+
+/* dialog */
+.dlg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:520px;background:linear-gradient(#183689,#0f2569);border:2px solid;border-color:#9ec0ff #061650 #061650 #9ec0ff;box-shadow:0 10px 0 rgba(0,0,0,.45)}
+.dlg .t{background:linear-gradient(#ffe45c,#f2c200);color:var(--hiText);font:800 19px var(--display);padding:8px 14px;letter-spacing:.02em}
+.dlg .b{padding:16px 18px;font:500 18px/1.4 var(--ui);color:#e6ecff}
+.dlg .b small{display:block;margin-top:10px;font-size:15px;color:var(--dim)}
+.wait{display:inline-block;width:14px;height:14px;border:3px solid var(--ice);border-right-color:transparent;border-radius:50%;animation:sp 1s steps(8) infinite;vertical-align:-2px;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* weather */
+.wx{position:absolute;inset:0;background:linear-gradient(180deg,#2a62c9 0%,#173f9e 40%,#0b2569 100%)}
+.wxh{position:absolute;left:30px;top:22px;right:30px;display:flex;justify-content:space-between;align-items:center}
+.wxh b{font:900 30px var(--display);font-style:italic;text-shadow:3px 3px 0 #082063}
+.wxnow{position:absolute;left:30px;top:84px;width:380px;height:240px;background:rgba(6,20,80,.55);border:2px solid #9ec0ff;padding:16px 20px;box-sizing:border-box}
+.wxnow .tmp{font:900 92px/1 var(--display);text-shadow:4px 4px 0 #061650}
+.wxnow .cond{font:800 24px var(--display);color:var(--hi);margin:6px 0 10px}
+.wxnow .row{font:600 17px var(--ui);color:#dfe8ff;display:flex;justify-content:space-between;margin-top:3px}
+.wxdays{position:absolute;left:430px;right:30px;top:84px;height:240px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.wxd{background:linear-gradient(#2a58c0,#143a96);border:2px solid;border-color:#9ec0ff #061650 #061650 #9ec0ff;text-align:center;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.wxd .dn{font:800 18px var(--display);color:var(--hi)}
+.wxd .hi2{font:900 30px var(--display)}
+.wxd .lo{font:700 18px var(--ui);color:var(--ice)}
+.wxd .c{font:600 14px var(--ui);color:#dfe8ff}
+.ticker{position:absolute;left:0;right:0;bottom:34px;height:38px;background:#061650;border-top:2px solid var(--hi);overflow:hidden;white-space:nowrap}
+.ticker div{display:inline-block;padding-left:100%;font:700 19px/38px var(--ui);animation:tk 26s linear infinite}
+@keyframes tk{to{transform:translateX(-100%)}}
+.sample{position:absolute;left:30px;top:336px;font:600 14px var(--ui);color:var(--ice);letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- remote ---------- */
+.remote{background:linear-gradient(90deg,#17191f,var(--plastic) 30%,var(--plastic2) 70%,#17191f);border-radius:36px 36px 46px 46px;padding:20px 18px 22px;
+  box-shadow:0 14px 40px rgba(0,0,0,.6),inset 0 1px 0 #444855;display:flex;flex-direction:column;gap:14px;max-width:240px;margin:0 auto;width:100%;box-sizing:border-box}
+.rrow{display:flex;justify-content:space-between;gap:8px}
+.rb{flex:1;background:linear-gradient(#4a4f5d,var(--btn));color:var(--btnText);border:none;border-radius:8px;padding:8px 0;font:700 12px var(--ui);letter-spacing:.08em;cursor:pointer;
+  box-shadow:0 2px 0 #0b0c10,inset 0 1px 0 rgba(255,255,255,.15);touch-action:manipulation}
+.rb:active,.rb.press{transform:translateY(2px);box-shadow:0 0 0 #0b0c10}
+.rb:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+.rb.menu{background:linear-gradient(#3f6fd6,#24489e)}
+.rb.guide{background:linear-gradient(#e2c13a,#b8930f);color:#1a1400}
+.dpad{position:relative;width:160px;height:160px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 40%,#4a4f5d,#2a2d36);box-shadow:0 3px 0 #0b0c10,inset 0 1px 0 rgba(255,255,255,.12)}
+.dpad .rb{position:absolute;border-radius:6px;background:transparent;box-shadow:none;font-size:18px;color:#cfd3dd;width:50px;height:46px;padding:0}
+.dpad .u{left:55px;top:4px}.dpad .d{left:55px;bottom:4px}.dpad .l{left:4px;top:57px;width:46px;height:46px}.dpad .r{right:4px;top:57px;width:46px;height:46px}
+.dpad .ok{left:47px;top:47px;width:66px;height:66px;border-radius:50%;background:linear-gradient(#5b6170,#3a3e4a);box-shadow:0 2px 0 #0b0c10;font-size:15px;color:#fff}
+.chv{display:flex;gap:10px;align-items:stretch}
+.chv .stack{display:flex;flex-direction:column;gap:6px;width:56px}
+.chv .stack .rb{padding:10px 0}
+.keys{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.keys .rb{padding:7px 0;font-size:14px}
+.hint{font:500 12px/1.5 var(--ui);color:#80869a;text-align:center;letter-spacing:.02em}
+@media (max-width:760px),(max-aspect-ratio:1/1){
+  .remote{max-width:420px;display:grid;grid-template-columns:1fr 1fr;align-items:center;border-radius:28px}
+  .remote .rrow,.remote .hint{grid-column:1 / -1}
+  .dpad{grid-column:1;grid-row:2 / span 2}
+  .chv{grid-column:2}
+}
+/* full-screen mode inside the Android TV app */
+.tv body{padding:0;overflow:hidden;background:#000}
+.tv .app{display:block;max-width:none}
+.tv .remote,.tv .under{display:none}
+.tv .tvframe{padding:0;border-radius:0;box-shadow:none;background:#000}
+.tv .screen{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0}
+@media (prefers-reduced-motion:reduce){.ticker div,.wait{animation:none}}
+</style>
+<style>html,body{margin:0}body{font-size:14px}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="app">
+  <div class="tvframe" id="tvframe">
+    <div class="screen" id="screen">
+      <div id="stage">
+        <canvas id="video" width="480" height="270"></canvas>
+        <div id="ui"></div>
+      </div>
+    </div>
+    <div class="under"><span><span class="led"></span>Digital Receiver · Prototype</span><button id="fs" type="button">Full screen</button></div>
+  </div>
+
+  <div class="remote" id="remote" aria-label="Remote control">
+    <div class="rrow">
+      <button class="rb menu" data-k="menu" type="button">MENU</button>
+      <button class="rb guide" data-k="guide" type="button">GUIDE</button>
+      <button class="rb" data-k="info" type="button">INFO</button>
+    </div>
+    <div class="dpad">
+      <button class="rb u" data-k="up" type="button" aria-label="Up">▲</button>
+      <button class="rb l" data-k="left" type="button" aria-label="Left">◀</button>
+      <button class="rb ok" data-k="ok" type="button">OK</button>
+      <button class="rb r" data-k="right" type="button" aria-label="Right">▶</button>
+      <button class="rb d" data-k="down" type="button" aria-label="Down">▼</button>
+    </div>
+    <div class="rrow">
+      <button class="rb" data-k="back" type="button">BACK</button>
+      <button class="rb" data-k="last" type="button">LAST</button>
+      <button class="rb" data-k="fav" type="button">★ FAV</button>
+    </div>
+    <div class="chv">
+      <div class="stack">
+        <button class="rb" data-k="chup" type="button">CH ▲</button>
+        <button class="rb" data-k="chdn" type="button">CH ▼</button>
+      </div>
+      <div class="keys">
+        <button class="rb" data-k="1" type="button">1</button><button class="rb" data-k="2" type="button">2</button><button class="rb" data-k="3" type="button">3</button>
+        <button class="rb" data-k="4" type="button">4</button><button class="rb" data-k="5" type="button">5</button><button class="rb" data-k="6" type="button">6</button>
+        <button class="rb" data-k="7" type="button">7</button><button class="rb" data-k="8" type="button">8</button><button class="rb" data-k="9" type="button">9</button>
+        <span></span><button class="rb" data-k="0" type="button">0</button><span></span>
+      </div>
+    </div>
+    <div class="hint">Keyboard: arrows · Enter = OK · Esc = Back<br>M menu · G guide · I info · PgUp/PgDn channel · 0–9</div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const MIN=60000, SLOT=30*MIN;
+
+/* ---------------- channel lineup (invented, sample programming) ---------------- */
+const CH=[
+ {n:2, call:'WKBX', name:'Channel 2 News', g:'news', scene:'news'},
+ {n:3, call:'TOON', name:'Toon Town', g:'kids', scene:'cartoon'},
+ {n:4, call:'WXNW', name:'Weather Now', g:'weather', scene:'weather'},
+ {n:5, call:'NATR', name:'Nature Network', g:'nature', scene:'ocean'},
+ {n:7, call:'SPRT', name:'Sports Central', g:'sports', scene:'sports'},
+ {n:9, call:'MHTV', name:'Music Hits TV', g:'music', scene:'music'},
+ {n:11,call:'SCFI', name:'Sci-Fi Classics', g:'scifi', scene:'space'},
+ {n:13,call:'PACC', name:'Public Access 13', g:'public', scene:'bars'},
+ {n:22,call:'CLAS', name:'Classic Movies', g:'movies', scene:'film'},
+ {n:25,call:'COOK', name:'Kitchen Channel', g:'cooking', scene:'cooking'},
+ {n:31,call:'ARCD', name:'Retro Arcade TV', g:'games', scene:'arcade'},
+ {n:38,call:'GTWY', name:'Getaway TV', g:'travel', scene:'ocean2'},
+ {n:42,call:'LATE', name:'Late Night Laughs', g:'comedy', scene:'stage', mature:true},
+ {n:50,call:'SHOP', name:'Home Shopping 50', g:'shop', scene:'shop'},
+ {n:99,call:'PRVW', name:'Digital Preview', g:'promo', scene:'bars'}
+];
+const TITLES={
+ news:['Morning Report','Midday News','Evening News at 6','Newsline Tonight','The Business Hour','Late Edition'],
+ kids:['Captain Comet','The Doodlebugs','Robo Pals','Professor Puzzle','Sock Puppet Theater','Saturday Toon Block'],
+ weather:['Local on the 8s','Weather Center Live','Storm Watch','Weekend Outlook'],
+ nature:['Ocean Giants','Wild Plains','Into the Rainforest','Night Creatures','Coral Kingdom'],
+ sports:['Sports Tonight','College Hoops: State vs. Tech','Bowling Classics','Highlight Reel','Fantasy Hour'],
+ music:['Top 20 Countdown','Unplugged Sessions','Video Vault: 1999','Request Line','Pop Rewind'],
+ scifi:['Orbit Patrol','The Outer Rim','Nebula 9','Signal From Beyond','Moonbase Seven'],
+ public:['Town Council Meeting','Community Bulletin','Local Bowling League','School Board Replay'],
+ movies:['The Silver Road (1952)','Rainy Streets (1947)','The Long Summer (1958)','Western Theater','Midnight Matinee'],
+ cooking:['Grill Masters','30-Minute Suppers','Bake It Easy','Kitchen Rescue'],
+ games:['High Score','Cheat Codes Live','Pixel Quest Weekly','Speedrun Sunday'],
+ travel:['Island Hopping','Road Trip USA','Hidden Beaches','Rail Journeys'],
+ comedy:['Comedy Club Late','Stand-Up Spotlight','The Late Late Laugh','Improv Night'],
+ shop:['Jewelry Showcase','Kitchen Gadget Hour','Electronics Today','Holiday Gift Shop'],
+ promo:['Digital Cable Preview','What’s On Demand']
+};
+const DESC={
+ news:['Local headlines, traffic and weather from the anchor desk.','The day’s top stories with reports from around the region.'],
+ kids:['Animated adventures for the whole family.','A brand-new episode full of slapstick and silly songs.'],
+ weather:['Your local forecast every ten minutes, plus regional radar.','Tracking the storm system moving in from the west.'],
+ nature:['Narrated wildlife documentary filmed over two years.','Up close with animals in their natural habitat.'],
+ sports:['Scores, highlights and analysis from tonight’s games.','Live coverage with pre-game and post-game shows.'],
+ music:['The week’s most requested music videos.','Acoustic performances recorded live in the studio.'],
+ scifi:['A crew on the edge of known space faces a strange signal.','Classic science fiction, remastered.'],
+ public:['Locally produced community programming.','Recorded live at the municipal building.'],
+ movies:['A classic feature presented uncut and commercial-free.','Black-and-white drama from Hollywood’s golden age.'],
+ cooking:['Simple weeknight recipes with step-by-step tips.','A chef helps a struggling diner turn things around.'],
+ games:['Retro gaming news, reviews and viewer high scores.','Speedrunners attempt record times live.'],
+ travel:['Exploring sunny coastlines and small towns.','A scenic journey with local food and culture.'],
+ comedy:['Stand-up sets from rising comedians. Adult language.','Late-night improv and sketch comedy.'],
+ shop:['Shop from home. Call now, operators are standing by.','Today’s special values, while supplies last.'],
+ promo:['Previews of what’s on your digital cable lineup.','Tour the new interactive program guide.']
+};
+const DUR={news:[30,60,60],kids:[30,30,30,60],weather:[30,60],nature:[60,60,30],sports:[60,120,90,30],music:[60,30,60],scifi:[60,60,30],public:[30,60,90],movies:[120,90,120],cooking:[30,30,60],games:[30,60],travel:[30,60],comedy:[30,60],shop:[60,60,120],promo:[30]};
+const RAT={news:'TV-G',kids:'TV-Y7',weather:'TV-G',nature:'TV-G',sports:'TV-G',music:'TV-PG',scifi:'TV-PG',public:'TV-G',movies:'TV-PG',cooking:'TV-G',games:'TV-PG',travel:'TV-G',comedy:'TV-14',shop:'TV-G',promo:'TV-G'};
+
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const day0=new Date();day0.setHours(0,0,0,0);
+const D0=day0.getTime()-24*3600000;
+CH.forEach((c,i)=>{
+  const r=rng(i*7919+31);const titles=TITLES[c.g],durs=DUR[c.g],ds=DESC[c.g];
+  let t=D0,k=Math.floor(r()*titles.length);const out=[];
+  while(t<D0+72*3600000){
+    const d=durs[Math.floor(r()*durs.length)];k=(k+1+Math.floor(r()*2))%titles.length;
+    out.push({title:titles[k],start:t,end:t+d*MIN,rating:RAT[c.g],desc:ds[Math.floor(r()*ds.length)],isNew:r()<.3});
+    t+=d*MIN;
+  }
+  c.sched=out;
+});
+function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.end)return p}return s[s.length-1]}
+function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
+
+/* ---------------- state & settings ---------------- */
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false};
+let SET=Object.assign({},DEF), FAV=new Set([0,2,3,4,8,10]);
+try{const j=JSON.parse(localStorage.getItem('cablebox')||'null');if(j){Object.assign(SET,j.set||{});if(j.fav)FAV=new Set(j.fav)}}catch(e){}
+function save(){try{localStorage.setItem('cablebox',JSON.stringify({set:SET,fav:[...FAV]}))}catch(e){}}
+
+const S={screen:'home',prev:'home',ch:0,last:0,idx:{home:0,apps:0,od:0,my:0,set:0,more:0},g:null,bannerUntil:0,staticUntil:0,dialog:null,entry:'',reminders:new Set()};
+
+const HOME=[
+ {label:'Watch TV',to:'watch',desc:'Return to full-screen television on your current channel.'},
+ {label:'TV Guide',to:'guide',desc:'Browse what’s on now and up to 24 hours ahead.'},
+ {label:'On Demand',to:'od',desc:'Movies, series and kids’ shows from your streaming services.'},
+ {label:'My Channels',to:'my',desc:'Pick favorite channels for quick surfing and a shorter guide.'},
+ {label:'Applications',to:'apps',desc:'Open the apps installed on your TV, switch inputs, or check the weather.'},
+ {label:'Settings',to:'set',desc:'Sounds, clock, channel banner, parental controls and more.'}
+];
+/* Your streaming apps. pkgs = known Google TV package names; keys = words matched against installed app names as a fallback. */
+const APPS=[
+ {label:'DIRECTV',col:'#0a5cc2',pkgs:['com.att.tv','com.directv.dtvlatam','com.att.tv.openvideo'],keys:['directv'],desc:'Live TV channels from your DIRECTV subscription.'},
+ {label:'Netflix',col:'#9b0d14',pkgs:['com.netflix.ninja'],keys:['netflix'],desc:'Movies and series from Netflix.'},
+ {label:'YouTube',col:'#c4161c',pkgs:['com.google.android.youtube.tv','com.google.android.youtube.tvunplugged'],keys:['youtube'],desc:'Videos, music and creators on YouTube.'},
+ {label:'Hulu',col:'#1c8a4a',pkgs:['com.hulu.livingroomplus','com.hulu.plus'],keys:['hulu'],desc:'Next-day TV, originals and movies from Hulu.'},
+ {label:'Disney+',col:'#123a8c',pkgs:['com.disney.disneyplus'],keys:['disney'],desc:'Disney, Pixar, Marvel, Star Wars and National Geographic.'},
+ {label:'HBO Max',col:'#2a2f8f',pkgs:['com.wbd.stream','com.hbo.hbonow'],keys:['hbo max','max'],desc:'HBO series, Warner Bros. movies and more.'},
+ {label:'Paramount+',col:'#0b4fbf',pkgs:['com.cbs.ott','com.cbs.app'],keys:['paramount'],desc:'CBS shows, live sports and Paramount movies.'},
+ {label:'Peacock',col:'#1a1a2e',pkgs:['com.peacocktv.peacockandroid'],keys:['peacock'],desc:'NBC shows, live sports and Peacock originals.'},
+ {label:'Local Weather',col:'#2a62c9',desc:'A cable-style local forecast screen.',wx:true},
+ {label:'More Apps',col:'#3a3e4a',desc:'Every other app installed on your Google TV.',more:true},
+ {label:'Google TV Settings',col:'#3a3e4a',desc:'Open the stick’s original settings menu. Nothing there is replaced.',sys:true}
+];
+const OD=[
+ {label:'Live TV',app:'DIRECTV',desc:'Your live channels and DVR recordings.'},
+ {label:'Movies',app:'Netflix',desc:'Feature films and new releases.'},
+ {label:'Premium Series',app:'HBO Max',desc:'Drama and comedy from premium networks.'},
+ {label:'Next-Day TV',app:'Hulu',desc:'Catch up on broadcast shows the day after they air.'},
+ {label:'CBS & Paramount',app:'Paramount+',desc:'CBS primetime, news and Paramount movies.'},
+ {label:'NBC & Peacock',app:'Peacock',desc:'NBC primetime, late night and live sports.'},
+ {label:'Kids & Family',app:'Disney+',desc:'Animated movies and family favorites.'},
+ {label:'Music Videos',app:'YouTube',desc:'Music videos, concerts and live sessions.'}
+];
+/* bridge to the Android app (absent in the browser prototype) */
+const NATIVE=window.CableNative||null;
+let INSTALLED=[];
+function loadInstalled(){
+  if(!NATIVE)return;
+  try{INSTALLED=JSON.parse(NATIVE.installedApps()||'[]')}catch(e){INSTALLED=[]}
+  APPS.forEach(a=>{if(!a.keys)return;
+    let hit=INSTALLED.find(x=>a.pkgs.indexOf(x.pkg)>=0);
+    if(!hit)hit=INSTALLED.find(x=>a.keys.some(k=>{const n=x.label.toLowerCase();return k.length<4?n===k:n.indexOf(k)>=0}));
+    a.pkg=hit?hit.pkg:null;a.installed=!!hit;});
+}
+function appByLabel(l){return APPS.find(a=>a.label===l)}
+const SAMPLE_MORE=['Spotify','Pluto TV','Tubi','Plex','Twitch','Google Play Store'].map(l=>({label:l,pkg:null,sample:true}));
+function moreList(){if(!NATIVE)return SAMPLE_MORE;const mine=APPS.filter(a=>a.pkg).map(a=>a.pkg);const l=INSTALLED.filter(x=>mine.indexOf(x.pkg)<0);return l.length?l:[{label:'No other apps found',pkg:null}]}
+const SETS=[
+ {k:'sound',label:'Navigation Sounds',vals:[true,false],names:['On','Off'],desc:'The short beeps you hear when you press remote buttons.'},
+ {k:'clock24',label:'Clock Format',vals:[false,true],names:['12-Hour','24-Hour'],desc:'How times appear in the guide, banner and header.'},
+ {k:'bannerSec',label:'Channel Banner',vals:[3,5,8],names:['3 sec','5 sec','8 sec'],desc:'How long the blue info banner stays on screen after you change channels.'},
+ {k:'parental',label:'Parental Controls',vals:[false,true],names:['Off','On'],desc:'When on, channels rated TV-14 or higher are blocked. On a real TV this ties into the TV’s own PIN where supported.'},
+ {k:'guideFav',label:'Guide Shows',vals:[false,true],names:['All Channels','My Channels'],desc:'Show every channel in the guide, or only your favorites. CH ▲/▼ follows the same list.'},
+ {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
+];
+
+/* ---------------- sound ---------------- */
+let AC=null;
+function tone(f,d,type,vol,delay){
+  if(!SET.sound)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+    const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+(delay||0);
+    o.type=type||'square';o.frequency.value=f;g.gain.setValueAtTime(vol||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.02);}catch(e){}
+}
+const snd={nav:()=>tone(1320,.045,'square',.035),ok:()=>{tone(880,.06,'square',.04);tone(1320,.08,'square',.04,.06)},back:()=>tone(520,.08,'square',.04),bump:()=>tone(180,.09,'sawtooth',.035),ch:()=>tone(2000,.03,'square',.025)};
+
+/* ---------------- helpers ---------------- */
+function fmtT(ms,short){const d=new Date(ms);let h=d.getHours(),m=d.getMinutes();
+  if(SET.clock24)return pad(h)+':'+pad(m);
+  const ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+pad(m)+(short?'':' '+ap)}
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function fmtDate(ms){const d=new Date(ms);return DAYS[d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate()}
+function clockStr(){return fmtDate(Date.now())+'&nbsp;&nbsp;'+fmtT(Date.now())}
+function floor30(t){return Math.floor(t/SLOT)*SLOT}
+function locked(ci){return SET.parental&&(CH[ci].mature)}
+function surfList(){if(SET.guideFav&&FAV.size){return CH.map((c,i)=>i).filter(i=>FAV.has(i))}return CH.map((c,i)=>i)}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function tune(ci){
+  if(ci===S.ch){S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
+  S.last=S.ch;S.ch=ci;S.staticUntil=performance.now()+260;S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();
+}
+function chStep(dir){const L=surfList();let p=L.indexOf(S.ch);if(p<0)p=0;p=(p+dir+L.length)%L.length;tune(L[p])}
+
+function go(screen){S.prev=S.screen;S.screen=screen;if(screen==='guide')initGuide();if(screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;render()}
+
+/* ---------------- guide ---------------- */
+const ROWS=6, WIN=90*MIN;
+function initGuide(){const L=surfList();let row=L.indexOf(S.ch);if(row<0)row=0;const now=Date.now();
+  S.g={row:row,top:Math.max(0,Math.min(row-2,L.length-ROWS)),win:floor30(now),ft:now}}
+function gFocus(){const L=surfList();const ci=L[S.g.row];return {ci:ci,p:progAt(ci,Math.max(S.g.ft,S.g.win))}}
+function guideKey(k){
+  const L=surfList(),g=S.g;
+  if(g.row>=L.length){g.row=L.length-1}
+  if(k==='up'||k==='down'||k==='chup'||k==='chdn'){
+    const step=k==='up'?-1:k==='down'?1:k==='chup'?-ROWS:ROWS;
+    const nr=Math.max(0,Math.min(L.length-1,g.row+step));if(nr===g.row){snd.bump();return}
+    g.row=nr;if(g.row<g.top)g.top=g.row;if(g.row>=g.top+ROWS)g.top=g.row-ROWS+1;
+    // keep focus time inside the newly focused program so up/down feels natural
+    snd.nav();render();return;
+  }
+  if(k==='right'){const f=gFocus();if(f.p.end>Date.now()+24*3600000){snd.bump();return}
+    g.ft=f.p.end;while(g.ft>=g.win+WIN)g.win+=SLOT;snd.nav();render();return}
+  if(k==='left'){const f=gFocus();const nt=Math.max(f.p.start,g.win)-1;const minT=floor30(Date.now());
+    if(nt<minT){snd.bump();return}
+    while(nt<g.win)g.win-=SLOT;const pp=progAt(f.ci,nt);g.ft=Math.max(pp.start,g.win);snd.nav();render();return}
+  if(k==='ok'){const f=gFocus();const now=Date.now();
+    if(f.p.start<=now&&f.p.end>now){snd.ok();tune(f.ci);S.screen='watch';render();}
+    else{const key=f.ci+':'+f.p.start;if(S.reminders.has(key)){S.reminders.delete(key);dialog('Reminder Cleared',esc(f.p.title)+' on Ch '+CH[f.ci].n+'.',1600)}
+      else{S.reminders.add(key);dialog('Reminder Set','We’ll remind you when <b>'+esc(f.p.title)+'</b> starts at '+fmtT(f.p.start)+' on Ch '+CH[f.ci].n+'.',2000)}snd.ok()}
+    return}
+  if(k==='fav'){const f=gFocus();toggleFav(f.ci);return}
+}
+function toggleFav(ci){if(FAV.has(ci))FAV.delete(ci);else FAV.add(ci);save();snd.ok();render()}
+
+/* ---------------- dialog ---------------- */
+let dlgT=0;
+function dialog(title,body,ms){S.dialog={title:title,body:body};clearTimeout(dlgT);if(ms)dlgT=setTimeout(()=>{S.dialog=null;render()},ms);render()}
+function launch(app){
+  if(NATIVE){
+    if(app.sys){NATIVE.openSettings();return}
+    if(!app.pkg){dialog(esc(app.label)+' Not Found',esc(app.label)+' isn’t installed on this Google TV.<small>Press OK to open Google Play, or BACK to cancel.</small>');S.dialog.onOk=()=>NATIVE.openStore(app.pkgs?app.pkgs[0]:'');return}
+    dialog(esc(app.label),'<span class="wait"></span>Starting <b>'+esc(app.label)+'</b>…',1500);
+    setTimeout(()=>{try{NATIVE.launchApp(app.pkg)}catch(e){}},350);return;
+  }
+  dialog(esc(app.label),'<span class="wait"></span>Starting <b>'+esc(app.label)+'</b>…<small>Prototype: on your Google TV this opens the real app. Press BACK to return here.</small>',2600);
+}
+
+/* ---------------- input ---------------- */
+let entryT=0;
+function press(k){
+  if(S.dialog){if(k==='ok'||k==='back'){const f=(k==='ok')&&S.dialog.onOk;S.dialog=null;clearTimeout(dlgT);snd.back();render();if(f)f()}return}
+  if(/^[0-9]$/.test(k)){
+    S.entry=(S.entry+k).slice(-2);snd.nav();
+    if(S.screen!=='watch'){S.screen='watch'}
+    clearTimeout(entryT);
+    entryT=setTimeout(()=>{const n=parseInt(S.entry,10);S.entry='';let best=0,bd=1e9;CH.forEach((c,i)=>{const d=Math.abs(c.n-n);if(d<bd){bd=d;best=i}});tune(best)},1300);
+    render();return;
+  }
+  if(k==='menu'){if(S.screen==='home'){snd.back();go('watch')}else{snd.ok();go('home')}return}
+  if(k==='guide'){if(S.screen==='guide'){snd.back();go('watch')}else{snd.ok();go('guide')}return}
+  if(k==='last'){snd.ok();const l=S.last;if(S.screen!=='watch')S.screen='watch';tune(l);return}
+  const sc=S.screen;
+  if(k==='back'){snd.back();if(sc==='watch'){tune(S.last);return}
+    if(sc==='home'){go('watch');return} if(sc==='wx'||sc==='more'){go('apps');return} if(sc==='guide'){go('watch');return} go('home');return}
+  if(sc==='watch'){
+    if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
+    if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
+    if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
+    if(k==='left'){snd.ok();go('home');return}
+    if(k==='right'){snd.ok();go('guide');return}
+    if(k==='fav'){toggleFav(S.ch);S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
+    return;
+  }
+  if(sc==='guide'){if(k==='info'){const f=gFocus();snd.nav();dialog(esc(f.p.title),esc(f.p.desc)+'<small>Ch '+CH[f.ci].n+' '+CH[f.ci].call+' · '+fmtT(f.p.start)+'–'+fmtT(f.p.end)+' · '+f.p.rating+'</small>');return}guideKey(k);return}
+  if(sc==='wx'){return}
+  // list screens
+  const lists={home:HOME,apps:APPS,od:OD,my:CH,set:SETS,more:moreList()};const list=lists[sc];if(!list)return;
+  let i=S.idx[sc];
+  if(k==='up'||k==='down'){const ni=i+(k==='up'?-1:1);if(ni<0||ni>=list.length){snd.bump();return}S.idx[sc]=ni;snd.nav();render();return}
+  if(k==='chup'||k==='chdn'){S.idx[sc]=Math.max(0,Math.min(list.length-1,i+(k==='chup'?-5:5)));snd.nav();render();return}
+  const it=list[i];
+  if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
+    if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF);FAV=new Set([0,2,3,4,8,10]);save();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();return}
+  if(k==='ok'||k==='right'){
+    if(sc==='home'){snd.ok();go(it.to);return}
+    if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
+    if(sc==='od'){snd.ok();launch(appByLabel(it.app)||{label:it.app});return}
+    if(sc==='more'){snd.ok();launch(it);return}
+    if(sc==='my'&&k==='ok'){toggleFav(i);return}
+  }
+  if(k==='fav'&&sc==='my'){toggleFav(i);return}
+  if(k==='left'){snd.back();go('home')}
+}
+document.addEventListener('keydown',e=>{
+  const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',Enter:'ok',' ':'ok',Escape:'back',Backspace:'back',
+    m:'menu',M:'menu',g:'guide',G:'guide',i:'info',I:'info',l:'last',L:'last',f:'fav',F:'fav',PageUp:'chup',PageDown:'chdn','+':'chup','-':'chdn',
+    MediaTrackNext:'chup',MediaTrackPrevious:'chdn',ContextMenu:'menu',GoBack:'back',BrowserBack:'back'};
+  let k=map[e.key];if(!k&&/^[0-9]$/.test(e.key))k=e.key;
+  if(e.keyCode===461)k='back'; // LG webOS back
+  if(e.keyCode===10009)k='back'; // Samsung Tizen return
+  if(!k)return;e.preventDefault();press(k);
+});
+document.querySelectorAll('#remote .rb').forEach(b=>{
+  b.addEventListener('click',()=>{press(b.dataset.k)});
+});
+$('#fs').addEventListener('click',()=>{const el=$('#tvframe');
+  try{if(document.fullscreenElement){document.exitFullscreen()}else if(el.requestFullscreen){el.requestFullscreen().catch(()=>{})}}catch(e){}});
+document.addEventListener('fullscreenchange',()=>{$('#fs').textContent=document.fullscreenElement?'Exit full screen':'Full screen';fit()});
+
+/* ---------------- rendering ---------------- */
+const pv=document.createElement('canvas');pv.width=320;pv.height=180;
+const ui=$('#ui');
+const hdr=t=>'<div class="hdr"><div class="brand"><b>MetroVision</b><span>DIGITAL CABLE</span></div>'+(t?'<div class="title">'+t+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>';
+const ftr=items=>'<div class="ftr">'+items.map(x=>'<span>'+x+'</span>').join('')+'</div>';
+
+function menuHTML(list,sel,x,y,w,fmt,max){
+  max=max||list.length;let start=Math.max(0,Math.min(sel-Math.floor(max/2),list.length-max));
+  let h='<div class="menu" style="left:'+x+'px;top:'+y+'px;width:'+w+'px">';
+  list.slice(start,start+max).forEach((it,j)=>{const i=start+j;h+='<div class="mi'+(i===sel?' hi':'')+'">'+fmt(it,i)+'</div>'});
+  return h+'</div>';
+}
+function nowLine(ci){const p=progAt(ci,Date.now());return '<b>Ch '+CH[ci].n+' '+CH[ci].call+'</b> · '+esc(p.title)+'<br>'+fmtT(p.start)+' – '+fmtT(p.end)}
+
+function render(){
+  const sc=S.screen;let h='';
+  $('#video').style.visibility=(sc==='watch')?'visible':'hidden';
+  if(sc==='watch'){
+    if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>Ch '+CH[S.ch].n+' '+CH[S.ch].call+' is blocked by Parental Controls. Turn them off in Settings to watch.</p></div></div>';
+    if(Date.now()<S.bannerUntil||S.entry){
+      const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
+      h+='<div class="banner"><div class="num"><b>'+c.n+'</b><span>'+c.call+'</span></div><div class="mid"><h2>'+esc(p.title)+'</h2>'+
+        '<div class="meta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span class="rate">'+p.rating+'</span>'+(p.isNew?'<span>NEW</span>':'')+'<span>'+esc(c.name)+'</span></div>'+
+        '<div class="prog"><div style="width:'+pct.toFixed(1)+'%"></div></div><div class="next">Next: '+esc(nx.title)+' at '+fmtT(nx.start)+'</div></div>'+
+        '<div class="rt"><div class="clk">'+fmtT(Date.now())+'</div><div class="lbl">'+(FAV.has(S.ch)?'★ Favorite':'&nbsp;')+'</div><div class="lbl">OK Guide · ◀ Menu</div></div></div>';
+    }
+    if(S.entry)h+='<div class="entry">'+S.entry+(S.entry.length<2?'-':'')+'</div>';
+  }
+  else if(sc==='home'){
+    const it=HOME[S.idx.home];
+    h+='<div class="bg"></div>'+hdr('Main Menu')+
+      menuHTML(HOME,S.idx.home,40,78,360,(x,i)=>'<span class="n">'+(i+1)+'</span>'+x.label)+
+      '<div class="box bevel" style="left:40px;top:388px;width:324px;height:66px"><p style="margin:0">'+it.desc+'</p></div>'+
+      '<div class="pv bevel pv-slot" style="left:448px;top:78px;width:472px;height:266px;position:absolute"></div>'+
+      '<div class="box bevel" style="left:448px;top:358px;width:436px;height:96px"><div class="lbl">Now Watching</div><p style="margin-top:6px;color:#fff;font-size:18px">'+nowLine(S.ch)+'</p></div>'+
+      ftr(['<i>▲▼</i>Highlight','<i>OK</i>Select','<i>GUIDE</i>TV Guide','<i>MENU</i>Exit to TV']);
+  }
+  else if(sc==='guide'){h+=guideHTML()}
+  else if(sc==='apps'){
+    const it=APPS[S.idx.apps];
+    h+='<div class="bg"></div>'+hdr('Applications')+menuHTML(APPS,S.idx.apps,40,66,380,x=>x.label,8)+
+      '<div class="box bevel" style="left:460px;top:66px;width:424px;height:378px"><div style="height:150px;display:flex;align-items:center;justify-content:center;background:'+it.col+';border:2px solid #fff;box-shadow:inset 0 0 0 4px rgba(0,0,0,.25);font:900 40px var(--display);text-shadow:3px 3px 0 rgba(0,0,0,.5)">'+esc(it.label)+'</div>'+
+      '<h3 style="margin-top:16px">'+esc(it.label)+'</h3><p>'+it.desc+'</p>'+
+      (NATIVE&&it.keys&&!it.installed?'<p style="color:#ffb3b3;font-weight:700">Not installed · OK opens Google Play</p>':'<p style="color:var(--hi);font-weight:700">Press OK to '+(it.wx||it.more?'view':'launch')+'</p>')+'</div>'+
+      ftr(['<i>▲▼</i>Highlight','<i>OK</i>Launch','<i>BACK</i>Main Menu']);
+  }
+  else if(sc==='more'){
+    const L=moreList(),it=L[Math.min(S.idx.more,L.length-1)];
+    h+='<div class="bg"></div>'+hdr('More Apps')+menuHTML(L,Math.min(S.idx.more,L.length-1),40,66,460,x=>esc(x.label),8)+
+      '<div class="box bevel" style="left:540px;top:66px;width:344px;height:378px"><div class="lbl">Installed App</div><h3 style="font-size:28px;margin:6px 0 10px">'+esc(it.label)+'</h3>'+
+      (NATIVE?'<p>Press OK to open it. Press HOME on your remote any time to come back, then open the cable box.</p>':'<p>Sample list. On your Google TV, every installed app shows up here automatically.</p>')+'</div>'+
+      ftr(['<i>▲▼</i>Highlight','<i>OK</i>Open','<i>BACK</i>Applications']);
+  }
+  else if(sc==='od'){
+    const it=OD[S.idx.od];
+    h+='<div class="bg"></div>'+hdr('On Demand')+menuHTML(OD,S.idx.od,40,66,380,x=>x.label)+
+      '<div class="box bevel" style="left:460px;top:66px;width:424px;height:378px"><div class="lbl">Category</div><h3 style="font-size:32px;margin-top:4px">'+it.label+'</h3><p>'+it.desc+'</p>'+
+      '<div class="lbl" style="margin-top:26px">Available from</div><div class="mi" style="margin-top:8px;width:300px">'+it.app+'</div>'+
+      '<p style="margin-top:22px;color:var(--hi);font-weight:700">Press OK to open '+it.app+'</p></div>'+
+      ftr(['<i>▲▼</i>Highlight','<i>OK</i>Open','<i>BACK</i>Main Menu']);
+  }
+  else if(sc==='my'){
+    h+='<div class="bg"></div>'+hdr('My Channels')+menuHTML(CH,S.idx.my,40,62,460,(c,i)=>'<span class="n" style="width:34px">'+c.n+'</span>'+c.call+' · '+esc(c.name)+(FAV.has(i)?'<span class="star">★</span>':''),8)+
+      '<div class="box bevel" style="left:540px;top:62px;width:344px;height:386px"><div class="lbl">Favorites</div><h3 style="font-size:40px;margin:4px 0 10px">'+FAV.size+' of '+CH.length+'</h3>'+
+      '<p>Press OK to add or remove the highlighted channel.</p><p>Set <b style="color:#fff">Guide Shows</b> to <b style="color:#fff">My Channels</b> in Settings to surf only your favorites.</p></div>'+
+      ftr(['<i>▲▼</i>Highlight','<i>OK</i>Add / Remove ★','<i>BACK</i>Main Menu']);
+  }
+  else if(sc==='set'){
+    const it=SETS[S.idx.set];
+    h+='<div class="bg"></div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?'':'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'))+
+      '<div class="box bevel" style="left:580px;top:66px;width:304px;height:240px"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
+      '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">MetroVision DCT prototype v0.1<br>Guide data: sample lineup</p></div>'+
+      ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>Main Menu']);
+  }
+  else if(sc==='wx'){h+=wxHTML()}
+  if(S.dialog)h+='<div class="dlg"><div class="t">'+S.dialog.title+'</div><div class="b">'+S.dialog.body+'</div></div>';
+  ui.innerHTML=h;
+  const slot=ui.querySelector('.pv-slot');if(slot)slot.appendChild(pv);
+  clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
+}
+
+function guideHTML(){
+  const L=surfList(),g=S.g;if(g.row>=L.length)g.row=L.length-1;
+  const f=gFocus(),now=Date.now(),c=CH[f.ci],p=f.p,remK=f.ci+':'+p.start;
+  const onNow=p.start<=now&&p.end>now;
+  let h='<div class="bg"></div>'+hdr('TV Guide')+
+   '<div class="ginfo"><div class="pv bevel pv-slot"></div><div class="gtext bevel"><h2>'+esc(p.title)+'</h2>'+
+   '<div class="gmeta"><span>'+fmtT(p.start)+' – '+fmtT(p.end)+'</span><span>Ch '+c.n+' '+c.call+'</span><span class="rate">'+p.rating+'</span>'+(p.isNew?'<span>NEW</span>':'')+(S.reminders.has(remK)?'<span class="rem">⏰ Reminder</span>':'')+'</div>'+
+   '<p>'+esc(p.desc)+'</p><p style="margin-top:6px;color:var(--hi);font-weight:700">'+(onNow?'On now · Press OK to watch':'Press OK to set a reminder')+'</p></div></div>';
+  const gw=936-150, ppm=gw/90;
+  h+='<div class="trow"><div class="d">'+fmtDate(g.win)+'</div>';
+  for(let s=0;s<3;s++)h+='<div class="s">'+fmtT(g.win+s*SLOT)+'</div>';
+  h+='</div><div class="grid">';
+  for(let r=g.top;r<Math.min(L.length,g.top+ROWS);r++){
+    const ci=L[r],ch=CH[ci],lk=locked(ci);
+    h+='<div class="grow'+(ci===S.ch?' cur':'')+(lk?' lockedrow':'')+'"><div class="gch"><b>'+ch.n+'</b><span>'+ch.call+'</span>'+(FAV.has(ci)?'<span class="fv">★</span>':'')+'</div>';
+    for(const pr of ch.sched){
+      if(pr.end<=g.win||pr.start>=g.win+WIN)continue;
+      const s=Math.max(pr.start,g.win),e=Math.min(pr.end,g.win+WIN);
+      const x=150+(s-g.win)/MIN*ppm,w=(e-s)/MIN*ppm;
+      const hi=(r===g.row&&pr===p),nw=pr.start<=now&&pr.end>now;
+      h+='<div class="cell'+(hi?' hi':nw?' now':'')+'" style="left:'+x.toFixed(1)+'px;width:'+(w-2).toFixed(1)+'px">'+
+        (pr.start<g.win?'<span class="ar">◀</span>':'')+(lk?'Locked':esc(pr.title))+(S.reminders.has(ci+':'+pr.start)?'<span class="rm">⏰</span>':'')+(pr.end>g.win+WIN?'<span class="ar" style="margin-left:auto;padding-left:6px">▶</span>':'')+'</div>';
+    }
+    h+='</div>';
+  }
+  h+='</div>'+ftr(['<i>▲▼◀▶</i>Browse','<i>OK</i>'+(onNow?'Watch':'Remind'),'<i>CH</i>Page','<span class="dot" style="background:var(--yellow)"></span>FAV ★','<i>INFO</i>Details']);
+  return h;
+}
+
+function wxHTML(){
+  const d=new Date();const days=[];const cond=[['Sunny',64,47],['Partly Cloudy',61,45],['Showers',55,44],['Breezy',58,41],['Mostly Sunny',63,46]];
+  for(let i=0;i<5;i++){const dd=new Date(d.getTime()+i*86400000);days.push('<div class="wxd"><div class="dn">'+(i===0?'Today':DAYS[dd.getDay()])+'</div><canvas class="wxi" data-c="'+cond[i][0]+'" width="64" height="52"></canvas><div class="c">'+cond[i][0]+'</div><div class="hi2">'+cond[i][1]+'°</div><div class="lo">'+cond[i][2]+'°</div></div>')}
+  return '<div class="wx"></div><div class="wxh"><b>Your Local Forecast</b><div class="clk">'+clockStr()+'</div></div>'+
+   '<div class="wxnow"><div class="lbl">Currently</div><div class="tmp">58°</div><div class="cond">Partly Cloudy</div>'+
+   '<div class="row"><span>Humidity</span><span>62%</span></div><div class="row"><span>Wind</span><span>NW 9 mph</span></div><div class="row"><span>Barometer</span><span>30.08 in ↑</span></div></div>'+
+   '<div class="wxdays">'+days.join('')+'</div><div class="sample">Sample forecast · live data comes with the TV version</div>'+
+   '<div class="ticker"><div>LOCAL WEATHER • Clear skies tonight with lows in the upper 40s • A cold front brings showers Tuesday • Sunrise 6:34 AM • Sunset 4:58 PM • Pollen: Low • UV Index: 3 Moderate</div></div>'+
+   ftr(['<i>BACK</i>Applications','<i>MENU</i>Main Menu']);
+}
+function drawWxIcons(){
+  ui.querySelectorAll('canvas.wxi').forEach(cv=>{const x=cv.getContext('2d'),c=cv.dataset.c;x.clearRect(0,0,64,52);
+    const sun=(cx,cy,r)=>{x.fillStyle='#ffd21a';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();x.strokeStyle='#ffd21a';x.lineWidth=3;for(let a=0;a<8;a++){const t=a*Math.PI/4;x.beginPath();x.moveTo(cx+Math.cos(t)*(r+4),cy+Math.sin(t)*(r+4));x.lineTo(cx+Math.cos(t)*(r+9),cy+Math.sin(t)*(r+9));x.stroke()}};
+    const cloud=(cx,cy,col)=>{x.fillStyle=col;x.beginPath();x.arc(cx-10,cy,10,0,7);x.arc(cx+4,cy-6,13,0,7);x.arc(cx+16,cy+2,9,0,7);x.rect(cx-10,cy,26,10);x.fill()};
+    if(c==='Sunny')sun(32,26,12);else if(c==='Mostly Sunny'){sun(26,22,10);cloud(36,32,'#e8eefc')}
+    else if(c==='Partly Cloudy'){sun(22,18,9);cloud(34,28,'#e8eefc')}
+    else if(c==='Showers'){cloud(30,20,'#c3cde4');x.strokeStyle='#8fd0ff';x.lineWidth=3;for(let i=0;i<4;i++){x.beginPath();x.moveTo(20+i*8,36);x.lineTo(16+i*8,46);x.stroke()}}
+    else {cloud(30,22,'#e8eefc');x.strokeStyle='#a6d4ff';x.lineWidth=2;for(let i=0;i<3;i++){x.beginPath();x.moveTo(8,38+i*5);x.lineTo(50-i*8,38+i*5);x.stroke()}}
+  });
+}
+
+/* ---------------- channel "programming" scenes ---------------- */
+const noiseC=document.createElement('canvas');noiseC.width=160;noiseC.height=90;const nx=noiseC.getContext('2d');const nImg=nx.createImageData(160,90);
+function drawStatic(ctx,w,h){const d=nImg.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}nx.putImageData(nImg,0,0);ctx.imageSmoothingEnabled=false;ctx.drawImage(noiseC,0,0,w,h);ctx.imageSmoothingEnabled=true}
+const stars=[];{const r=rng(5);for(let i=0;i<160;i++)stars.push({x:r()*2-1,y:r()*2-1,z:r()})}
+function txt(ctx,s,x,y,size,col,align,weight){ctx.font=(weight||800)+' '+size+'px Archivo, Arial, sans-serif';ctx.fillStyle=col;ctx.textAlign=align||'left';ctx.fillText(s,x,y)}
+
+function drawScene(ctx,w,h,ci,t){
+  const c=CH[ci];const k=w/480;ctx.save();ctx.scale(k,k);w=480;h=270;
+  if(locked(ci)){ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);txt(ctx,'🔒',240,150,40,'#fff','center');ctx.restore();return}
+  switch(c.scene){
+  case 'bars':{const cols=['#c0c0c0','#c0c000','#00c0c0','#00c000','#c000c0','#c00000','#0000c0'];cols.forEach((cl,i)=>{ctx.fillStyle=cl;ctx.fillRect(i*w/7,0,w/7+1,h*.67)});
+    const c2=['#0000c0','#111','#c000c0','#111','#00c0c0','#111','#c0c0c0'];c2.forEach((cl,i)=>{ctx.fillStyle=cl;ctx.fillRect(i*w/7,h*.67,w/7+1,h*.08)});
+    ctx.fillStyle='#00214c';ctx.fillRect(0,h*.75,w*.18,h*.25);ctx.fillStyle='#fff';ctx.fillRect(w*.18,h*.75,w*.18,h*.25);ctx.fillStyle='#32006a';ctx.fillRect(w*.36,h*.75,w*.18,h*.25);ctx.fillStyle='#111';ctx.fillRect(w*.54,h*.75,w*.46,h*.25);
+    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(150,104,180,40);txt(ctx,c.call+'  '+c.n,240,131,20,'#fff','center');break}
+  case 'news':{const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'#123a8a');g.addColorStop(1,'#061a4a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='rgba(120,170,255,.25)';for(let i=0;i<12;i++){ctx.beginPath();ctx.arc(330,90,20+i*16,0,7);ctx.stroke()}
+    ctx.fillStyle='#e9c46a';ctx.beginPath();ctx.arc(150,105,28,0,7);ctx.fill();ctx.fillStyle='#1e2a44';ctx.fillRect(108,135,84,70);ctx.fillStyle='#b23a3a';ctx.fillRect(145,138,10,40);
+    ctx.fillStyle='#3a4f7a';ctx.fillRect(40,180,250,40);ctx.fillStyle='#55709f';ctx.fillRect(40,180,250,6);
+    ctx.fillStyle='#b80f1d';ctx.fillRect(0,206,w,26);txt(ctx,'LIVE',12,225,15,'#fff');ctx.fillStyle='#fff';ctx.fillRect(56,206,w,26);txt(ctx,'COUNCIL APPROVES NEW BUS ROUTES',64,225,15,'#0b1a44');
+    ctx.fillStyle='#071a4f';ctx.fillRect(0,232,w,38);const s='TRAFFIC: I-95 DELAYS NEAR EXIT 12  •  WEATHER: CLEAR, LOW 47  •  SCHOOL BOARD MEETS THURSDAY  •  ';
+    ctx.font='700 15px Archivo, Arial, sans-serif';const tw=ctx.measureText(s).width;const off=(t*50)%tw;txt(ctx,s+s,10-off,256,15,'#ffd21a','left',700);break}
+  case 'cartoon':{ctx.fillStyle='#6fd3ff';ctx.fillRect(0,0,w,h);ctx.fillStyle='#fff';[[80,50],[300,40],[420,70]].forEach(([x,y],i)=>{x=(x+t*10*(i+1))%560-40;ctx.beginPath();ctx.arc(x,y,16,0,7);ctx.arc(x+18,y-6,20,0,7);ctx.arc(x+38,y,15,0,7);ctx.fill()});
+    ctx.fillStyle='#5cc94a';ctx.fillRect(0,200,w,70);const cols=['#ff5a5f','#ffb400','#8b5cf6'];
+    cols.forEach((cl,i)=>{const x=120+i*120,y=190-Math.abs(Math.sin(t*3+i))*90;ctx.fillStyle='rgba(0,0,0,.2)';ctx.beginPath();ctx.ellipse(x,200,24,6,0,0,7);ctx.fill();ctx.fillStyle=cl;ctx.beginPath();ctx.arc(x,y-24,26,0,7);ctx.fill();
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x-9,y-30,7,0,7);ctx.arc(x+9,y-30,7,0,7);ctx.fill();ctx.fillStyle='#000';ctx.beginPath();ctx.arc(x-8,y-29,3,0,7);ctx.arc(x+10,y-29,3,0,7);ctx.fill()});break}
+  case 'weather':{ctx.fillStyle='#14213d';ctx.fillRect(0,0,w,h);ctx.fillStyle='#2b3a5c';ctx.beginPath();ctx.moveTo(0,60);ctx.lineTo(180,40);ctx.lineTo(300,80);ctx.lineTo(480,50);ctx.lineTo(480,270);ctx.lineTo(0,270);ctx.fill();
+    ctx.strokeStyle='#4b6290';ctx.lineWidth=1;for(let i=0;i<6;i++){ctx.beginPath();ctx.moveTo(i*90,40);ctx.lineTo(i*90+30,270);ctx.stroke()}
+    const blobs=[[0,'#3fd36b',60],[40,'#e8d53a',34],[70,'#e2493a',16]];
+    for(let j=0;j<3;j++){const bx=((t*14+j*170)%640)-80,by=110+j*40;blobs.forEach(([o,cl,r])=>{const gr=ctx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,cl);gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(bx,by,r,0,7);ctx.fill()})}
+    ctx.fillStyle='rgba(6,20,80,.85)';ctx.fillRect(0,0,w,30);txt(ctx,'DOPPLER RADAR',12,21,15,'#ffd21a');txt(ctx,'58°',468,21,17,'#fff','right');break}
+  case 'ocean':case 'ocean2':{const g=ctx.createLinearGradient(0,0,0,h*.6);const warm=c.scene==='ocean';g.addColorStop(0,warm?'#ff7e5f':'#5fb4ff');g.addColorStop(1,warm?'#feb47b':'#cdeaff');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.fillStyle=warm?'#fff3b0':'#fffbe0';ctx.beginPath();ctx.arc(warm?240:380,warm?150:60,warm?40:24,0,7);ctx.fill();
+    for(let L=0;L<5;L++){ctx.fillStyle=['#1d4e89','#1b5e9e','#2470b5','#2c84c9','#3a98da'][L];ctx.beginPath();ctx.moveTo(0,h);const base=150+L*24;for(let x=0;x<=w;x+=8)ctx.lineTo(x,base+Math.sin(x/(30+L*6)+t*(1+L*.3))*(4+L));ctx.lineTo(w,h);ctx.fill()}
+    if(!warm){ctx.fillStyle='#2d6a4f';ctx.beginPath();ctx.moveTo(30,160);ctx.quadraticCurveTo(90,110,160,160);ctx.fill();ctx.fillStyle='#5a3e2b';ctx.fillRect(94,100,5,40);ctx.fillStyle='#2d6a4f';ctx.beginPath();ctx.ellipse(96,98,22,7,.3,0,7);ctx.fill()}break}
+  case 'sports':{ctx.fillStyle='#2f8f3a';ctx.fillRect(0,0,w,h);for(let i=0;i<8;i++){ctx.fillStyle=i%2?'#2a8434':'#33983f';ctx.fillRect(i*60,0,60,h)}
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(20,30,440,220);ctx.beginPath();ctx.moveTo(240,30);ctx.lineTo(240,250);ctx.stroke();ctx.beginPath();ctx.arc(240,140,34,0,7);ctx.stroke();
+    const bx=240+Math.sin(t*1.3)*170,by=140+Math.sin(t*2.1)*80;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(bx,by,5,0,7);ctx.fill();
+    ctx.fillStyle='#0b1a44';ctx.fillRect(12,8,190,22);txt(ctx,'HOME 21   AWAY 17   Q3',20,24,13,'#fff');ctx.fillStyle='#ffd21a';ctx.fillRect(176,8,26,22);txt(ctx,'8:42',189,24,10,'#000','center');break}
+  case 'music':{ctx.fillStyle='#1a0638';ctx.fillRect(0,0,w,h);for(let i=0;i<24;i++){const v=(Math.sin(t*4+i*.7)+Math.sin(t*2.3+i*1.3)+2)/4;const bh=20+v*170;const hue=280-i*8;ctx.fillStyle='hsl('+hue+',85%,60%)';ctx.fillRect(14+i*19,240-bh,14,bh)}
+    txt(ctx,'TOP 20 COUNTDOWN',20,30,16,'#fff');txt(ctx,'#'+(1+Math.floor(t/6)%20),460,30,18,'#ffd21a','right');break}
+  case 'space':{ctx.fillStyle='#02030a';ctx.fillRect(0,0,w,h);stars.forEach(s=>{let z=(s.z-t*.15)%1;if(z<=0)z+=1;const x=240+s.x/z*60,y=135+s.y/z*60;if(x<0||x>w||y<0||y>h)return;ctx.fillStyle='rgba(255,255,255,'+(1-z)+')';ctx.fillRect(x,y,2*(1-z)+.5,2*(1-z)+.5)});
+    ctx.fillStyle='#9aa4b5';ctx.beginPath();ctx.moveTo(240,120+Math.sin(t)*4);ctx.lineTo(210,150+Math.sin(t)*4);ctx.lineTo(270,150+Math.sin(t)*4);ctx.fill();ctx.fillStyle='#ff9b3d';ctx.fillRect(232,150+Math.sin(t)*4,16,6+Math.random()*5);break}
+  case 'film':{ctx.fillStyle='#d8c7a1';ctx.fillRect(0,0,w,h);const n=3-Math.floor(t%3);const a=(t%1)*Math.PI*2;
+    ctx.strokeStyle='#3a3226';ctx.lineWidth=3;ctx.beginPath();ctx.arc(240,135,90,0,7);ctx.stroke();ctx.beginPath();ctx.arc(240,135,70,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(0,135);ctx.lineTo(w,135);ctx.moveTo(240,0);ctx.lineTo(240,h);ctx.stroke();
+    ctx.fillStyle='rgba(58,50,38,.35)';ctx.beginPath();ctx.moveTo(240,135);ctx.arc(240,135,90,-Math.PI/2,-Math.PI/2+a);ctx.fill();txt(ctx,String(n),240,170,96,'#2a241b','center',900);
+    for(let i=0;i<3;i++){if(Math.random()<.5){ctx.fillStyle='rgba(30,25,20,.5)';ctx.fillRect(Math.random()*w,0,1,h)}}
+    const vg=ctx.createRadialGradient(240,135,80,240,135,280);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.75)');ctx.fillStyle=vg;ctx.fillRect(0,0,w,h);break}
+  case 'cooking':{ctx.fillStyle='#f3e3c3';ctx.fillRect(0,0,w,h);for(let i=0;i<10;i++){ctx.fillStyle=i%2?'#e7d2a8':'#f3e3c3';ctx.fillRect(i*48,0,48,150)}ctx.fillStyle='#7a4a2a';ctx.fillRect(0,170,w,100);
+    ctx.fillStyle='#555';ctx.beginPath();ctx.ellipse(240,175,90,20,0,0,7);ctx.fill();ctx.fillStyle='#888';ctx.fillRect(150,120,180,55);ctx.fillStyle='#999';ctx.beginPath();ctx.ellipse(240,120,90,18,0,0,7);ctx.fill();ctx.fillStyle='#c0502a';ctx.beginPath();ctx.ellipse(240,122,80,13,0,0,7);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=4;for(let i=0;i<3;i++){ctx.beginPath();for(let y=0;y<60;y+=4){const x=200+i*40+Math.sin(y/8+t*3+i)*8;y?ctx.lineTo(x,105-y):ctx.moveTo(x,105)}ctx.stroke()}
+    txt(ctx,'30-MINUTE SUPPERS',16,30,15,'#7a2a10');break}
+  case 'arcade':{ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);ctx.fillStyle='#fff';for(let y=10;y<h;y+=20)ctx.fillRect(238,y,4,10);
+    const px=(t*1.6)%2,bx=px<1?40+px*400:440-(px-1)*400,by=135+Math.sin(t*2.7)*110;ctx.fillRect(bx-4,by-4,8,8);
+    ctx.fillRect(24,by-25+Math.sin(t*5)*8,8,50);ctx.fillRect(448,by-25-Math.sin(t*4)*8,8,50);txt(ctx,String(3+Math.floor(t/7)%5),200,40,32,'#fff','right',900);txt(ctx,String(2+Math.floor(t/9)%6),280,40,32,'#fff','left',900);break}
+  case 'stage':{ctx.fillStyle='#120a14';ctx.fillRect(0,0,w,h);const g=ctx.createRadialGradient(240,230,10,240,200,170);g.addColorStop(0,'rgba(255,240,200,.75)');g.addColorStop(1,'rgba(255,240,200,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(200,0);ctx.lineTo(280,0);ctx.lineTo(380,270);ctx.lineTo(100,270);ctx.fill();
+    for(let s=0;s<2;s++){ctx.fillStyle='#8c1a26';for(let i=0;i<5;i++){ctx.beginPath();const x0=s?480-i*18:i*18;ctx.ellipse(x0,135,14,140,0,0,7);ctx.fill()}}
+    ctx.fillStyle='#222';ctx.fillRect(238,150,4,100);ctx.beginPath();ctx.arc(240,148,7,0,7);ctx.fill();ctx.fillStyle='#1a1a1a';ctx.beginPath();ctx.arc(266,130+Math.sin(t*2)*2,14,0,7);ctx.fill();ctx.fillRect(254,144+Math.sin(t*2)*2,24,90);break}
+  case 'shop':{const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#2b0a5c');g.addColorStop(1,'#b0126a');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    const s=Math.abs(Math.cos(t));ctx.fillStyle='#ffd21a';ctx.fillRect(160+(1-s)*50,60,100*s+20,100);ctx.fillStyle='#e3a800';ctx.fillRect(160+(1-s)*50+100*s+20,70,30*(1-s)+8,100);
+    txt(ctx,'$19.95',350,110,34,'#fff','center',900);txt(ctx,'+ S&H',350,132,14,'#ffd21a','center');ctx.fillStyle='#ffd21a';ctx.fillRect(0,205,w,40);txt(ctx,'CALL NOW 1-800-555-0199',240,232,20,'#2b0a5c','center',900);
+    txt(ctx,'ITEM #'+(4410+Math.floor(t/8)%9),16,30,13,'#fff');break}
+  }
+  ctx.globalAlpha=.55;txt(ctx,c.call,466,h-12,13,'#fff','right',900);ctx.globalAlpha=1;
+  ctx.restore();
+}
+
+const vctx=$('#video').getContext('2d'),pctx=pv.getContext('2d');
+let lastDraw=0;
+function loop(ms){
+  if(ms-lastDraw<32){requestAnimationFrame(loop);return} // ~30 fps keeps TV sticks cool
+  lastDraw=ms;
+  const t=ms/1000,stat=ms<S.staticUntil;
+  if(S.screen==='watch'){stat?drawStatic(vctx,480,270):drawScene(vctx,480,270,S.ch,t)}
+  else if(pv.isConnected){
+    const ci=(S.screen==='guide'&&S.g)?S.ch:S.ch;
+    stat?drawStatic(pctx,320,180):drawScene(pctx,320,180,ci,t);
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* clock + guide refresh */
+setInterval(()=>{ui.querySelectorAll('.clk').forEach(el=>{el.innerHTML=el.closest('.banner')?fmtT(Date.now()):clockStr()})},1000);
+
+/* scale stage to screen */
+const screenEl=$('#screen'),stage=$('#stage');
+function fit(){const w=screenEl.clientWidth,h=screenEl.clientHeight;const s=Math.min(w/960,h/540);stage.style.transform='scale('+s+')';stage.style.left=((w-960*s)/2)+'px';stage.style.top=((h-540*s)/2)+'px'}
+try{new ResizeObserver(fit).observe(screenEl)}catch(e){window.addEventListener('resize',fit)}
+fit();
+
+const origRender=render;
+render=function(){origRender();if(S.screen==='wx')drawWxIcons()};
+
+/* Android TV integration: the app forwards remote buttons here */
+if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();S.screen='watch';S.bannerUntil=Date.now()+SET.bannerSec*1000;}
+window.cable={
+  press:press,
+  resume:function(){loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit()}
+};
+render();
+})();
+</script>
+
+</body>
+</html>
