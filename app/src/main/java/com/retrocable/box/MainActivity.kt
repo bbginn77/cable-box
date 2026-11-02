@@ -163,6 +163,10 @@ class MainActivity : AppCompatActivity() {
         if (event.action == KeyEvent.ACTION_DOWN) {
             web.evaluateJavascript("window.cable&&cable.press('$name')", null)
         }
+        // Also hand the page a real copy of the key press. Android's web view only lets a page
+        // start sound (the radar channel's jazz) after a genuine button press; the page ignores
+        // these copies, so nothing happens twice. Back and Menu stay with the app.
+        if (name != "back" && name != "menu") web.dispatchKeyEvent(event)
         return true
     }
 

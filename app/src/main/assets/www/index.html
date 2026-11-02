@@ -511,6 +511,7 @@ function launch(app){
 /* ---------------- input ---------------- */
 let entryT=0;
 function press(k){
+  try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
   if(S.dialog){if(k==='ok'||k==='back'){const f=(k==='ok')&&S.dialog.onOk;S.dialog=null;clearTimeout(dlgT);snd.back();render();if(f)f()}return}
   if(/^[0-9]$/.test(k)){
     S.entry=(S.entry+k).slice(-3);snd.nav();
@@ -527,7 +528,7 @@ function press(k){
     if(sc==='home'){go('watch');return} if(sc==='wx'||sc==='more'){go('apps');return} if(sc==='themes'){go('set');return} if(sc==='guide'){go('watch');return} go('home');return}
   if(sc==='watch'){
     if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
-    if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){SET.jazz=!SET.jazz;save();snd.ok();updateJazz();render();return}
+    if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){SET.jazz=!SET.jazz;save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
     if(k==='left'){snd.ok();go('home');return}
@@ -569,6 +570,7 @@ function press(k){
   if(k==='left'){snd.back();go('home')}
 }
 document.addEventListener('keydown',e=>{
+  if(window.CableNative)return;
   const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',Enter:'ok',' ':'ok',Escape:'back',Backspace:'back',
     m:'menu',M:'menu',g:'guide',G:'guide',i:'info',I:'info',l:'last',L:'last',f:'fav',F:'fav',PageUp:'chup',PageDown:'chdn','+':'chup','-':'chdn',
     MediaTrackNext:'chup',MediaTrackPrevious:'chdn',ContextMenu:'menu',GoBack:'back',BrowserBack:'back'};
@@ -636,7 +638,7 @@ function render(){
   }
   else if(sc==='watch'){
     if(CH[S.ch].radar){h+='<div class="rfull radar-full-slot"></div><div class="rtop"><b>Metro Atlanta Doppler Radar</b><span class="clk">'+clockStr()+'</span></div>'+
-      '<div class="rbot"><span>'+(radarFullFail?'Sample radar \u00B7 live loop unavailable':'NWS Peachtree City \u00B7 KFFC loop')+'</span><span class="mus">\u266A Jazz '+(SET.jazz?'On':'Off')+'</span><span>OK to switch</span></div>'}
+      '<div class="rbot"><span>'+(radarFullFail?'Sample radar \u00B7 live loop unavailable':'NWS Peachtree City \u00B7 KFFC loop')+'</span><span class="mus">\u266A '+jazzLabel()+'</span><span>OK to switch</span></div>'}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>Ch '+CH[S.ch].n+' '+CH[S.ch].call+' is blocked by Parental Controls. Turn them off in Settings to watch.</p></div></div>';
     if(Date.now()<S.bannerUntil||S.entry){
       const c=CH[S.ch],p=progAt(S.ch,Date.now()),nx=nextProg(S.ch,p),pct=Math.min(100,(Date.now()-p.start)/(p.end-p.start)*100);
@@ -989,7 +991,7 @@ async function loadPluto(){
   try{list=await plutoV2(start,stop)}catch(e){}
   if(!list){try{list=await plutoV4(start)}catch(e){}}
   plutoBusy=false;
-  if(!list){PLUTO_ERR='Pluto TV listings are unavailable right now.';PLUTOAT=Date.now()-100*MIN;return}
+  if(!list){PLUTO_ERR='Pluto TV listings are unavailable right now.';PLUTOAT=Date.now()-100*MIN;if(!has(S.ch)&&CH.length){S.staticUntil=0;tune(0)}else if(S.screen==='guide'||S.screen==='watch')render();return}
   const curId=S.ch>=BASE&&CH[S.ch]?CH[S.ch].pluto.id:null,lastId=S.last>=BASE&&CH[S.last]?CH[S.last].pluto.id:null;
   CH.length=BASE;
   list.slice(0,SET.plutoCount).forEach((c,i)=>{
@@ -1102,11 +1104,12 @@ function jazzBar(t0){const ch=PROG[JAZZ.bar%PROG.length],sw=BEAT*.66;
   if(JAZZ.bar%2===1)for(let i=0;i<3;i++)if(Math.random()<.55)vibe(scale[Math.floor(Math.random()*scale.length)]+(Math.random()<.3?12:0),t0+BEAT*(i+.5+Math.random()*.4));
   JAZZ.bar++}
 function jazzTick(){const c=JAZZ.ctx;while(JAZZ.next<c.currentTime+1.2){jazzBar(JAZZ.next);JAZZ.next+=BEAT*4}}
-function jazzStart(){if(JAZZ.on)return;try{if(!JAZZ.ctx)jazzInit();const c=JAZZ.ctx;if(c.state==='suspended')c.resume();
+function jazzStart(){if(JAZZ.on){try{if(JAZZ.ctx.state!=='running')JAZZ.ctx.resume()}catch(e){}return}try{if(!JAZZ.ctx)jazzInit();const c=JAZZ.ctx;if(c.state==='suspended')c.resume();
   JAZZ.on=true;JAZZ.next=c.currentTime+.1;JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(.8,c.currentTime+1.5);
   jazzTick();JAZZ.timer=setInterval(jazzTick,250)}catch(e){JAZZ.on=false}}
 function jazzStop(){if(!JAZZ.on)return;JAZZ.on=false;clearInterval(JAZZ.timer);const c=JAZZ.ctx;try{JAZZ.out.gain.cancelScheduledValues(c.currentTime);JAZZ.out.gain.setValueAtTime(JAZZ.out.gain.value,c.currentTime);JAZZ.out.gain.linearRampToValueAtTime(0,c.currentTime+.8)}catch(e){}}
 let APP_PAUSED=false;
+function jazzLabel(){if(!SET.jazz)return 'Jazz Off';if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return 'Jazz On';return 'Jazz starting\u2026 press OK again if silent'}
 function updateJazz(){const want=!APP_PAUSED&&SET.jazz&&has(S.ch)&&CH[S.ch].radar;if(want)jazzStart();else jazzStop()}
 
 /* ---------------- holiday themes ---------------- */
