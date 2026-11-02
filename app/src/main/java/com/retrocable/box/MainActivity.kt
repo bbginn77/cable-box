@@ -310,7 +310,7 @@ class MainActivity : AppCompatActivity() {
                     val conn = URL(url).openConnection() as HttpURLConnection
                     conn.connectTimeout = 15000
                     conn.readTimeout = 30000
-                    conn.setRequestProperty("User-Agent", "RetroCableBox/0.3 (personal hobby project)")
+                    conn.setRequestProperty("User-Agent", "NyxVision/1.0 (personal hobby app)")
                     conn.setRequestProperty("Accept", "application/geo+json, application/json")
                     if (headersJson.isNotBlank()) {
                         val h = JSONObject(headersJson)
