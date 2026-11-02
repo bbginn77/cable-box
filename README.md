@@ -137,3 +137,7 @@ The optional extras below would each get their own written plan and your approva
 - **Classic Theater Pay-Per-View** (Settings → TV & Guide): channel 7 shows a 2000s pay-per-view order screen for each movie. Press OK and the box "dials out" (with modem sounds) and confirms the order, then the movie starts. It's free and nothing is ordered or charged. Turn it off to play movies straight away.
 - **Daily Guide Download** (Settings → TV & Guide): the first start each day shows an "Updating Program Guide" screen while listings, weather and movies load. OK skips it. **Update Program Guide Now** runs it any time.
 - Classic Theater skips propaganda, hate films, atrocity footage and adult films, by search filter and by title, subject and description checks.
+
+## On-screen remote (tablet)
+
+A round **REMOTE** button floats on screen on touch devices. Drag it anywhere; tap it to open a 2000s satellite-style remote (GUIDE, MENU, arrows, SELECT, VOL, CH, PREV CH, number pad, channel shortcuts WX/NEWS/TRAF/MOV/PRV). Drag the remote by its top edge; PWR or the button closes it. **Settings → On-Screen Remote Button** turns the button off and back on.

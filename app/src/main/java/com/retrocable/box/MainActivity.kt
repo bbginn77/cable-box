@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Base64
 import android.net.Uri
@@ -444,6 +445,18 @@ class MainActivity : AppCompatActivity() {
             packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_TOUCHSCREEN)
 
         /** Keeps the tablet's screen on while a channel is playing. */
+        /** On-screen remote VOL/MUTE: 1 = up, -1 = down, 0 = mute on/off. Shows Android's own volume slider. */
+        @JavascriptInterface
+        fun volume(dir: Int) {
+            runOnUiThread {
+                try {
+                    val am = getSystemService(AUDIO_SERVICE) as AudioManager
+                    val adj = when { dir > 0 -> AudioManager.ADJUST_RAISE; dir < 0 -> AudioManager.ADJUST_LOWER; else -> AudioManager.ADJUST_TOGGLE_MUTE }
+                    am.adjustStreamVolume(AudioManager.STREAM_MUSIC, adj, AudioManager.FLAG_SHOW_UI)
+                } catch (e: Exception) {}
+            }
+        }
+
         @JavascriptInterface
         fun keepAwake(on: Boolean) {
             runOnUiThread {
