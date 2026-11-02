@@ -109,6 +109,8 @@ The optional extras below would each get their own written plan and your approva
     routes, live train positions, alerts) and Philadelphia Regional Rail (SEPTA TrainView).
     Atlanta MARTA rail: NyxVision-drawn map of the Red, Gold, Blue and Green lines; live trains, line
     status and next trains need a free MARTA developer key (Settings → MARTA Train Key).
+    Under the lines, NyxVision draws water and major highways from the U.S. Census Bureau's public-domain
+    TIGER map data (downloaded once per city, then saved on the device).
     If your Weather Location is in one of those cities, its board comes first, marked YOUR AREA.
     Official agency logos and maps aren't copied; line colors are the agencies' published colors.
 - **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
