@@ -101,6 +101,14 @@ The optional extras below would each get their own written plan and your approva
   (unofficial, for personal use).
 - **Test Center** (Settings → Test Center): run any weather alert, a race call for each party, or the
   sports pop-ups and crawl. Each test jumps to a random channel and is clearly marked TEST.
+- **Nyx Traffic & Transit** (channel 6): press OK to switch views.
+  - Live Traffic: a TomTom traffic-flow map and nearby incidents for your Weather Location. Needs a
+    free TomTom developer key (developer.tomtom.com), typed into Settings → Traffic Map Key.
+  - Transit boards with a NyxVision-drawn map and live line status, no key needed:
+    New York City Subway (MTA alerts + station data from data.ny.gov), Boston subway (MBTA V3 API:
+    routes, live train positions, alerts) and Philadelphia Regional Rail (SEPTA TrainView).
+    If your Weather Location is in one of those cities, its board comes first, marked YOUR AREA.
+    Official agency logos and maps aren't copied; line colors are the agencies' published colors.
 - **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
   They play right inside NyxVision: full screen, in the guide's preview window, and CH ▲/▼
   surfs into them. Pluto's own ads stay in the stream. If a channel won't play, the box offers
