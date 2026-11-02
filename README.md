@@ -113,6 +113,11 @@ The optional extras below would each get their own written plan and your approva
     TIGER map data (downloaded once per city, then saved on the device).
     If your Weather Location is in one of those cities, its board comes first, marked YOUR AREA.
     Official agency logos and maps aren't copied; line colors are the agencies' published colors.
+- **Channel 1, NyxVision Preview**: what's on every channel now, with a scrolling guide and music.
+- **Channel 7, Nyx Classic Theater**: public-domain feature films from the Internet Archive, scheduled
+  like live TV (a new lineup every day) and played inside NyxVision.
+- **Local on the 8s** (Settings → Alerts & Tickers): a corner forecast every ten minutes.
+- **Games** (Main Menu): Chess vs Nyx (Easy/Medium/Hard, game saved) and Nyx & the Mice.
 - **Pluto TV listings**: free Pluto TV channels appear in the guide from channel 200 up.
   They play right inside NyxVision: full screen, in the guide's preview window, and CH ▲/▼
   surfs into them. Pluto's own ads stay in the stream. If a channel won't play, the box offers

@@ -130,13 +130,15 @@ class MainActivity : AppCompatActivity() {
         return p
     }
 
+    private var moviePos = 0L
+
     private fun startStream() {
         val p = ensurePlayer()
-        val item = MediaItem.Builder()
-            .setUri(streamUrls[streamIndex])
-            .setMimeType(MimeTypes.APPLICATION_M3U8)
-            .build()
-        p.setMediaItem(item)
+        val url = streamUrls[streamIndex]
+        val b = MediaItem.Builder().setUri(url)
+        if (!url.contains(".mp4", ignoreCase = true)) b.setMimeType(MimeTypes.APPLICATION_M3U8)
+        if (moviePos > 0) p.setMediaItem(b.build(), moviePos) else p.setMediaItem(b.build())
+        moviePos = 0L
         p.prepare()
         p.playWhenReady = true
     }
@@ -342,6 +344,17 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 streamUrls = list
                 streamIndex = 0
+                startStream()
+            }
+        }
+
+        /** Plays one progressive MP4 (Nyx Classic Theater), starting partway in so it runs like live TV. */
+        @JavascriptInterface
+        fun playMovie(url: String, startMs: Long) {
+            runOnUiThread {
+                streamUrls = listOf(url)
+                streamIndex = 0
+                moviePos = startMs
                 startStream()
             }
         }
