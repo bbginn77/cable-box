@@ -131,3 +131,9 @@ The optional extras below would each get their own written plan and your approva
 - `app/src/main/assets/www/index.html`: the whole interface (HTML, CSS and JavaScript).
 - `app/src/main/java/.../MainActivity.kt`: full-screen web view, remote buttons, opening apps.
 - `app/cablebox.keystore`: a fixed signing key so updates install over each other. Personal use only.
+
+## Pay-Per-View and the guide download
+
+- **Classic Theater Pay-Per-View** (Settings → TV & Guide): channel 7 shows a 2000s pay-per-view order screen for each movie. Press OK and the box "dials out" (with modem sounds) and confirms the order, then the movie starts. It's free and nothing is ordered or charged. Turn it off to play movies straight away.
+- **Daily Guide Download** (Settings → TV & Guide): the first start each day shows an "Updating Program Guide" screen while listings, weather and movies load. OK skips it. **Update Program Guide Now** runs it any time.
+- Classic Theater skips propaganda, hate films, atrocity footage and adult films, by search filter and by title, subject and description checks.

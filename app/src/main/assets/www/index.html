@@ -444,6 +444,24 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .pvr{display:grid;grid-template-columns:170px 1fr 1fr;align-items:center;height:36px;padding:0 10px;border-bottom:1px solid rgba(201,166,255,.18);font:700 17px var(--ui)}
 .pvr span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}.pvn{font-weight:900;color:#ffd21a}.pvx{color:#bfaee6;font-weight:600}
 .pvch.cat-movies{background:#7a2b2b}.pvch.cat-sports{background:#1f6a33}.pvch.cat-news{background:#1d4f8f}.pvch.cat-kids{background:#8a5a12}.pvch.cat-music{background:#7a1f6a}
+.ppvc{width:600px;padding:0 0 14px;text-align:left;background:linear-gradient(#14205e,#070d33);border:3px solid #e6c36a;box-sizing:border-box}
+.ppvh{display:flex;justify-content:space-between;align-items:baseline;padding:8px 18px;background:linear-gradient(#e6c36a,#a8822c);color:#2a1606}.ppvh b{font:italic 900 26px var(--display);letter-spacing:.04em}.ppvh span{font:800 13px var(--ui);letter-spacing:.12em;text-transform:uppercase}
+.ppvt{margin:14px 18px 4px;font:900 26px var(--display);color:#fff;line-height:1.1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.ppvt em{font-style:normal;color:#ffe7a8;font-size:20px}
+.ppvm{display:flex;gap:18px;margin:0 18px;font:700 15px var(--ui);color:#9ec0ff}
+.ppvx{margin:8px 18px 0;font:500 14px/1.35 var(--ui);color:#cfd8ef;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.ppvp{display:flex;align-items:baseline;gap:12px;margin:12px 18px 0;padding:8px 12px;background:#000a;border:2px solid #e6c36a55}.ppvp span{font:800 14px var(--ui);color:#9ec0ff;text-transform:uppercase;letter-spacing:.1em}.ppvp b{font:900 30px var(--display);color:#7dff8a}.ppvp em{font:700 15px var(--ui);color:#ffe7a8;font-style:normal}
+.ppvk{margin:12px 18px 0;padding:8px;text-align:center;font:900 19px var(--ui);color:#2a1606;background:linear-gradient(#ffe7a8,#e6c36a);animation:ppvb 1.2s steps(2) infinite}@keyframes ppvb{50%{filter:brightness(.8)}}
+.ppvc small{display:block;margin:10px 18px 0;font:600 12px var(--ui);color:#9aa4b8;text-align:center}
+.ppvd{margin:10px 18px 0}.ppvd div{display:flex;gap:10px;align-items:baseline;padding:4px 0;font:700 17px var(--ui);color:#5d6a8a}.ppvd i{width:22px;font-style:normal;text-align:center}.ppvd em{margin-left:auto;font:600 14px var(--ui);font-style:normal;color:#9ec0ff}
+.ppvd .done{color:#cfd8ef}.ppvd .done i{color:#7dff8a}.ppvd .on{color:#fff}.ppvd .on i{color:#ffe7a8;animation:ppvb .6s steps(2) infinite}
+.ppvb{width:auto;margin:12px 18px 0}
+.gdl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.gdlbox{width:560px;padding:18px 24px 14px;background:linear-gradient(var(--k061650),#040a2a);border:3px solid var(--k9ec0ff);box-sizing:border-box;position:relative}
+.gdlh{display:flex;gap:14px;align-items:center}.gdlh b{display:block;font:italic 900 30px var(--display)}.gdlh span{display:block;font:700 15px var(--ui);color:var(--ice)}
+.gdll{margin:14px 0 0}.gdll div{display:flex;gap:10px;padding:3px 0;font:700 17px var(--ui);color:#5d6a8a}.gdll i{width:20px;font-style:normal;text-align:center}.gdll .done{color:#cfd8ef}.gdll .done i{color:#7dff8a}.gdll .on{color:#fff}.gdll .on i{color:#ffe7a8;animation:ppvb .6s steps(2) infinite}
+.gdlb{width:auto;margin:14px 0 6px}
+.gdlk{display:flex;justify-content:space-between;font:700 14px var(--ui);color:#9ec0ff}
+.gdlbox .bfoot{position:static;margin-top:12px;display:flex;justify-content:space-between;align-items:center}.gdlbox .bskip{position:static;margin-top:8px;text-align:center}
 .mvc{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#3b0d12,#120306)}
 .mvcard{width:560px;padding:22px 26px;text-align:center;background:linear-gradient(#5a0f17,#2a060b);border:3px solid #e6c36a}.mvcard h2{margin:8px 0 6px;font:900 34px var(--display);color:#ffe7a8}.mvcard p{margin:6px 0;font:600 18px var(--ui)}.mvcard .mvnow{font:900 24px var(--display);color:#fff}.mvcard small{display:block;margin-top:12px;font:600 12px var(--ui);color:#e6c36a;letter-spacing:.06em}
 .chb{position:absolute;left:44px;top:62px;width:416px;height:416px;display:grid;grid-template-columns:repeat(8,52px);grid-template-rows:repeat(8,52px);border:3px solid #3b2410;box-shadow:0 6px 0 rgba(0,0,0,.4)}
@@ -642,7 +660,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -730,6 +748,9 @@ const ALLSETS=[
  {k:'pluto',label:'Pluto TV Listings',vals:[true,false],names:['On','Off'],desc:'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.'},
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
+ {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
+ {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
+ {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
  {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
  {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz'],names:['Off','Seasonal','Smooth Jazz'],desc:'Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.'},
  {k:'gcol',label:'Guide Colors',vals:[true,false],names:['On','Off'],desc:'Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.'},
@@ -750,7 +771,7 @@ const ALLSETS=[
 const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
- {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls and Pluto TV options.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount']},
+ {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data on channel 6: MARTA trains and TomTom traffic. New keys go here too.',rows:['mkey','tkey']}];
 const STOP=['lang','region','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
 const SETS=[];
@@ -1191,6 +1212,7 @@ function press(k){
   if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].news&&newsKey(k))return;
   if(S.screen==='loc'&&!S.dialog){try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}locKey(k);return}
   if(S.screen==='boot'){if(k==='ok'&&performance.now()-BOOTSEQ.t0>800)endBoot();return}
+  if(S.screen==='gdl'){if((k==='ok'||k==='back')&&Date.now()-GDL.t0>800)gdlEnd();return}
   if(S.screen==='egg'){if(performance.now()-EGG.t0>800)go(EGG.ret||'set');return}
   try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
   if(S.dialog){if(k==='ok'||k==='back'){const f=(k==='ok')&&S.dialog.onOk;S.dialog=null;clearTimeout(dlgT);snd.back();render();if(f)f()}return}
@@ -1211,6 +1233,7 @@ function press(k){
   if(sc==='watch'){
     if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].traffic&&!locked(S.ch)&&!(Date.now()<S.bannerUntil)){ttNext();return}
+    if(k==='ok'&&has(S.ch)&&CH[S.ch].movies&&!locked(S.ch)&&NATIVE&&movPlaying()&&!ppvOk(movPlaying())){if(!PPV.st){snd.ok();S.bannerUntil=0;ppvStart()}return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){if(musicOn()){SET.musicLast=SET.music;SET.music='off'}else SET.music=SET.musicLast||'auto';save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
@@ -1246,10 +1269,11 @@ function press(k){
     if(it.action&&(it.k==='tkey'||it.k==='mkey')){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen('key',it.k);return}
     if(it.action&&(it.k==='sports'||it.k==='tests')){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx[it.k]=0;go(it.k);return}
     if(it.action&&it.k==='loc'){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen();return}
+    if(it.action&&it.k==='gdlnow'){if(k!=='ok'&&k!=='right')return;snd.ok();gdlStart('set');return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;snd.ok();dialog('Are You Sure?',T('This puts every setting and favorite back the way NyxVision shipped. Your service keys and weather location are kept.')+'<small>'+T('Press OK to restore defaults, or BACK to cancel.')+'</small>');
       S.dialog.onOk=()=>{const keep={tkey:SET.tkey,mkey:SET.mkey,loc:SET.loc};SET=Object.assign({},DEF,{themeState:{}},keep);FAV=DEF_FAV();save();applyTheme();setTimeout(()=>dialog('Settings Restored','All settings and favorites are back to their defaults.',1800),50)};return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='region'||it.k==='lang'){NEWSAT=0}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='ppv'){ppvCancel();applyStream()}if(it.k==='region'||it.k==='lang'){NEWSAT=0}
     if(it.k==='region'){applyTheme();render()}
     if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+curRadar();render()}return}
   if(k==='ok'||k==='right'){
@@ -1398,6 +1422,7 @@ function render(){
   }
   else if(sc==='wx'){h+=wxHTML()}
   else if(sc==='boot'){h+=bootHTML()}
+  else if(sc==='gdl'){h+=gdlHTML()}
   else if(sc==='loc'){h+=locHTML()}
   else if(sc==='sports'){h+=sportsHTML()}
   else if(sc==='games'){h+=gamesHTML()}
@@ -1427,7 +1452,7 @@ function render(){
   const rs=ui.querySelector('.radar-slot');if(rs){rs.appendChild(radarBox);if(NATIVE&&Date.now()-radarAt>10*MIN){radarIdx=0;radarSrc()}}
   syncVideo();
   try{syncGaga()}catch(e){}
-  try{if(NATIVE&&NATIVE.keepAwake){const w=sc==='watch'||sc==='boot';if(w!==render.awake){render.awake=w;NATIVE.keepAwake(w)}}}catch(e){}
+  try{if(NATIVE&&NATIVE.keepAwake){const w=sc==='watch'||sc==='boot'||sc==='gdl';if(w!==render.awake){render.awake=w;NATIVE.keepAwake(w)}}}catch(e){}
   try{const tb=document.getElementById('tbar');if(tb&&sc!=='watch')tb.classList.remove('show')}catch(e){}
   clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
   try{renderBop()}catch(e){}
@@ -2165,7 +2190,7 @@ async function plutoUrls(ci){
   return urls;
 }
 const PLAY={on:false,ready:false,ci:-1};
-function canPlay(ci){return !!(S.screen!=='boot'&&NATIVE&&CH[ci]&&((CH[ci].pluto&&NATIVE.playStream&&SET.plutoPlay==='box')||(CH[ci].movies&&NATIVE.playMovie&&movPlaying())))}
+function canPlay(ci){return !!(S.screen!=='boot'&&NATIVE&&CH[ci]&&((CH[ci].pluto&&NATIVE.playStream&&SET.plutoPlay==='box')||(CH[ci].movies&&NATIVE.playMovie&&movPlaying()&&ppvOk(movPlaying()))))}
 async function applyStream(){
   const ci=S.ch;
   if(!canPlay(ci)){if(PLAY.on&&NATIVE.stopStream)NATIVE.stopStream();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;syncVideo();return}
@@ -2791,7 +2816,7 @@ function bootTick(){
   if(l){const d=new Date();l.textContent=t<1.9?'BOOT':t<3?'L-'+(1+Math.floor(t*2)%3):(d.getHours()%12||12)+(d.getSeconds()%2?':':' ')+pad(d.getMinutes())}
   if((BOOTSEQ.pct>=100&&t>4.1)||t>9)endBoot();
 }
-function endBoot(){if(S.screen!=='boot')return;S.screen=BOOTSEQ.next;if(S.screen==='watch'){S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+300}render();applyStream()}
+function endBoot(){if(S.screen!=='boot')return;if(gdlDue()){gdlStart(BOOTSEQ.next);return}S.screen=BOOTSEQ.next;if(S.screen==='watch'){S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+300}render();applyStream()}
 
 /* ---------------- touch: tap, swipe, and a pop-up control bar (Android tablet) ---------------- */
 const TOUCH=window.CableNative?!!(window.CableNative.isTouch&&window.CableNative.isTouch()):false;
@@ -2800,7 +2825,7 @@ let tdown=null,tbarT=0;
 function showTbar(){const b=document.getElementById('tbar');if(!b||!TOUCH)return;b.classList.add('show');clearTimeout(tbarT);tbarT=setTimeout(()=>b.classList.remove('show'),4500)}
 function tapAt(el,x){
   const sc=S.screen;
-  if(sc==='boot'||sc==='egg'){press('ok');return}
+  if(sc==='boot'||sc==='egg'||sc==='gdl'){press('ok');return}
   if(S.dialog){press(el.closest('.dlg')?'ok':'back');return}
   if(sc==='loc'){const kk=el.closest('[data-key]');if(kk){const a=kk.dataset.key.split(',').map(Number);S.lk.y=a[0];S.lk.x=a[1];S.lk.focus='kb';locKey('ok');return}
     const rr=el.closest('[data-res]');if(rr){S.lk.ri=+rr.dataset.res;locChoose(S.lk.res[S.lk.ri]);return}}
@@ -2813,7 +2838,7 @@ function tapAt(el,x){
     if(S.nm){if(el.closest('.nnqr'))return;const b=stage.getBoundingClientRect();press(x<b.left+b.width*.33?'left':x>b.left+b.width*.67?'right':'ok');return}
     if(el.closest('.nnimg,.nntext,.nnhint')){press('ok');return}showTbar();press('info');return}
   if(sc==='watch'&&has(S.ch)&&CH[S.ch].traffic&&!el.closest('.banner')){if(el.closest('.ttmap,.ttpan,.wxseg')){S.bannerUntil=0;press('ok');return}showTbar();press('info');return}
-  if(sc==='watch'){if(el.closest('.rbot')){press('ok');return}if(el.closest('.banner')){press('guide');return}showTbar();press('info');return}
+  if(sc==='watch'){if(el.closest('.rbot')||el.closest('.ppvc')){press('ok');return}if(el.closest('.banner')){press('guide');return}showTbar();press('info');return}
   if(sc==='wx'){press('back');return}
   if(sc==='home'){
     if(el.closest('.pv-slot')){snd.ok();go('watch');return}
@@ -3145,9 +3170,22 @@ function alertChime(n){n=n||3;const seq=[];for(let r=0;r<n;r++)[[660,0],[990,.18
   if(NATIVE&&NATIVE.clipPlay){clipNative('alert');return}
   if(!SET.sound)return;seq.forEach(([f,d])=>tone(f,.15,'triangle',.09,d))}
 async function clipNative(name){try{if(!(NATIVE.jazzReady&&NATIVE.jazzReady('clip'+name))){const w=await renderClip(name);NATIVE.jazzBegin('clip'+name);const step=393216;for(let i=0;i<w.length;i+=step)NATIVE.jazzChunk('clip'+name,b64(w.subarray(i,i+step)))}NATIVE.clipPlay('clip'+name)}catch(e){}}
-async function renderClip(name){const sr=22050,dur=name==='alert'?3.2:1.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
+async function renderClip(name){const sr=22050,dur=name==='modem'?6.8:name==='alert'?3.2:1.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
   const beep=(f,t,d,type,v)=>{const o=off.createOscillator(),g=off.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(off.destination);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.setValueAtTime(v,t+d-.03);g.gain.linearRampToValueAtTime(0,t+d);o.start(t);o.stop(t+d+.02)};
-  if(name==='alert'){for(let r=0;r<3;r++)[[660,0],[990,.18],[660,.36],[990,.54]].forEach(([f,d])=>beep(f,r+d,.15,'triangle',.5))}
+  if(name==='modem'){const noise=(t,d,f,q,v)=>{const n=Math.ceil(sr*d),b=off.createBuffer(1,n,sr),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=Math.random()*2-1;
+      const src=off.createBufferSource(),bp=off.createBiquadFilter(),g=off.createGain();src.buffer=b;bp.type='bandpass';bp.frequency.value=f;bp.Q.value=q;src.connect(bp);bp.connect(g);g.connect(off.destination);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.setValueAtTime(v,t+d-.05);g.gain.linearRampToValueAtTime(0,t+d);src.start(t)};
+    beep(350,0,.7,'sine',.22);beep(440,0,.7,'sine',.22);
+    const DT={'1':[697,1209],'8':[852,1336],'0':[941,1336],'6':[770,1477],'9':[852,1477],'3':[697,1477],'4':[770,1209],'5':[770,1336]};
+    '18006993456'.split('').forEach((c,i)=>{const t=.85+i*.12;DT[c].forEach(f=>beep(f,t,.07,'sine',.2))});
+    beep(2100,2.35,1.0,'sine',.25);
+    for(let i=0;i<6;i++){beep(i%2?980:1650,3.45+i*.07,.06,'sine',.22)}
+    const o=off.createOscillator(),lfo=off.createOscillator(),lg=off.createGain(),g=off.createGain();o.type='sawtooth';o.frequency.value=1800;lfo.frequency.value=37;lg.gain.value=650;lfo.connect(lg);lg.connect(o.frequency);o.connect(g);g.connect(off.destination);
+    g.gain.setValueAtTime(0,3.9);g.gain.linearRampToValueAtTime(.09,3.95);g.gain.setValueAtTime(.09,5.0);g.gain.linearRampToValueAtTime(0,5.1);o.start(3.9);lfo.start(3.9);o.stop(5.2);lfo.stop(5.2);
+    beep(1200,3.9,1.2,'square',.05);noise(4.2,.9,2400,2,.25);
+    beep(300,5.1,.25,'triangle',.25);beep(250,5.12,.25,'triangle',.18);
+    noise(5.3,1.4,1800,.8,.32)}
+  else if(name==='alert'){for(let r=0;r<3;r++)[[660,0],[990,.18],[660,.36],[990,.54]].forEach(([f,d])=>beep(f,r+d,.15,'triangle',.5))}
   else if(name==='race'){[523,659,784,1047].forEach((f,i)=>beep(f,i*.12,.3,'square',.18));beep(1047,.6,.6,'triangle',.3)}
   else{[784,988].forEach((f,i)=>beep(f,i*.14,.22,'square',.2))}
   const buf=await off.startRendering(),d=buf.getChannelData(0),n=d.length,bytes=new Uint8Array(44+n*2),v=new DataView(bytes.buffer);
@@ -3364,7 +3402,11 @@ function previewHTML(){const L=pvList(),now=Date.now();
 
 /* ---------------- Nyx Classic Theater (ch 7): public-domain films from the Internet Archive ---------------- */
 const MOV={list:null,meta:{},sched:[],day:'',busy:false,err:null};
-try{MOV.meta=JSON.parse(localStorage.getItem('nyx-mov-meta')||'{}')}catch(e){}
+try{MOV.meta=JSON.parse(localStorage.getItem('nyx-mov-meta2')||'{}')}catch(e){}
+try{localStorage.removeItem('nyx-mov-meta');localStorage.removeItem('nyx-mov-list')}catch(e){}
+// Keep Nyx Classic Theater family-friendly: no propaganda, hate films, atrocity footage or adult films, whatever the Archive's popularity list says
+const MOV_BAD=/nazi|hitler|third reich|\breich|triumph of the will|triumph des willens|riefenstahl|goebbels|swastika|propagand|fascis|ku klux|\bklan\b|birth of a nation|eternal jew|ewige jude|jud s[uü]ss|white supremac|blackface|minstrel|pickaninny|holocaust|concentration camp|atrocit|snuff|nudis[tm]|nudity|naked|erotic|sexploit|stag film|striptease|burlesque|porn|xxx|adults? only|exploitation|mondo|cannibal|torture|lynching/i;
+function movBad(){return MOV_BAD.test(Array.prototype.slice.call(arguments).map(v=>Array.isArray(v)?v.join(' '):String(v||'')).join(' '))}
 function movDayStart(){const d=new Date();d.setHours(0,0,0,0);return d.getTime()}
 function movRng(seed){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function movLen(v){if(v==null)return 0;const s=String(v);if(s.indexOf(':')>=0){return s.split(':').reduce((a,b)=>a*60+(+b||0),0)}return +s||0}
@@ -3372,19 +3414,20 @@ async function movMeta(id){if(MOV.meta[id]!==undefined)return MOV.meta[id];
   let m=null;try{const j=JSON.parse(await http('https://archive.org/metadata/'+encodeURIComponent(id)));const files=(j.files||[]).filter(f=>/\.mp4$/i.test(f.name||''));
     const pick=files.find(f=>/h\.264/i.test(f.format||''))||files.find(f=>/512kb/i.test(f.name))||files[0];const md=j.metadata||{};
     const len=movLen(pick&&pick.length)||movLen(md.runtime);
-    if(pick&&len>=40*60&&len<=4*3600){const ds=stripHtml(Array.isArray(md.description)?md.description[0]:md.description||'');m=[pick.name,Math.round(len),String(Array.isArray(md.title)?md.title[0]:md.title||id),String(md.year||md.date||'').slice(0,4),ds.length>220?ds.slice(0,217).replace(/\s+\S*$/,'')+'…':ds]}}catch(e){return null}
-  MOV.meta[id]=m||0;try{const ks=Object.keys(MOV.meta);if(ks.length>220)ks.slice(0,ks.length-200).forEach(k=>delete MOV.meta[k]);localStorage.setItem('nyx-mov-meta',JSON.stringify(MOV.meta))}catch(e){}
+    if(pick&&len>=40*60&&len<=4*3600){const ds=stripHtml(Array.isArray(md.description)?md.description[0]:md.description||'');if(movBad(md.title,md.subject,ds,id))m=null;else m=[pick.name,Math.round(len),String(Array.isArray(md.title)?md.title[0]:md.title||id),String(md.year||md.date||'').slice(0,4),ds.length>220?ds.slice(0,217).replace(/\s+\S*$/,'')+'…':ds]}}catch(e){return null}
+  MOV.meta[id]=m||0;try{const ks=Object.keys(MOV.meta);if(ks.length>220)ks.slice(0,ks.length-200).forEach(k=>delete MOV.meta[k]);localStorage.setItem('nyx-mov-meta2',JSON.stringify(MOV.meta))}catch(e){}
   return MOV.meta[id]}
 async function loadMovies(){if(!NATIVE||MOV.busy)return;const day=String(movDayStart());if(MOV.day===day&&MOV.sched.length&&MOV.sched[MOV.sched.length-1].end>Date.now()+20*3600000)return;MOV.busy=true;
-  try{if(!MOV.list){let c=null;try{c=JSON.parse(localStorage.getItem('nyx-mov-list')||'null')}catch(e){}
+  try{if(!MOV.list){let c=null;try{c=JSON.parse(localStorage.getItem('nyx-mov-list2')||'null')}catch(e){}
       if(c&&Date.now()-c.at<7*86400000)MOV.list=c.ids;
-      else{const j=JSON.parse(await http('https://archive.org/advancedsearch.php?q='+encodeURIComponent('collection:feature_films AND mediatype:movies')+'&fl[]=identifier&sort[]=downloads+desc&rows=240&output=json'));
-        MOV.list=((j.response||{}).docs||[]).map(d=>d.identifier).filter(Boolean);try{localStorage.setItem('nyx-mov-list',JSON.stringify({at:Date.now(),ids:MOV.list}))}catch(e){}}}
+      else{const j=JSON.parse(await http('https://archive.org/advancedsearch.php?q='+encodeURIComponent('collection:feature_films AND mediatype:movies AND NOT subject:(propaganda OR nazi OR nazis OR hitler OR "third reich" OR fascism OR erotic OR nudity OR sexploitation OR exploitation) AND NOT title:(nazi OR hitler OR reich OR propaganda)')+'&fl[]=identifier&fl[]=title&fl[]=subject&sort[]=downloads+desc&rows=240&output=json'));
+        MOV.list=((j.response||{}).docs||[]).filter(d=>!movBad(d.title,d.subject,d.identifier)).map(d=>d.identifier).filter(Boolean);try{localStorage.setItem('nyx-mov-list2',JSON.stringify({at:Date.now(),ids:MOV.list}))}catch(e){}}}
     if(!MOV.list.length)throw new Error('empty');
     const rnd=movRng(+day/86400000|0),ids=MOV.list.slice();for(let i=ids.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]]}
     if(MOV.day!==day){MOV.day=day;MOV.sched=[]}
+    if(MOV.sched.some(m=>movBad(m.title,m.desc,m.id)))MOV.sched=[];
     let t=MOV.sched.length?MOV.sched[MOV.sched.length-1].end:+day,k=MOV.sched.length?MOV.sched[MOV.sched.length-1].k+1:0,tries=0;
-    while(t<Date.now()+26*3600000&&k<ids.length&&tries<60){tries++;const m=await movMeta(ids[k]);k++;if(!m)continue;
+    while(t<Date.now()+26*3600000&&k<ids.length&&tries<60){tries++;const m=await movMeta(ids[k]);k++;if(!m||movBad(m[2],m[4],ids[k-1]))continue;
       const end=t+Math.ceil((m[1]*1000+60000)/(15*MIN))*15*MIN;MOV.sched.push({k:k-1,id:ids[k-1],file:m[0],len:m[1]*1000,title:m[2],year:m[3],desc:m[4],start:t,end:end});t=end;movToGuide();
       if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].movies)applyStream()}
     MOV.err=null}catch(e){MOV.err='x'}
@@ -3394,6 +3437,7 @@ function movToGuide(){if(!MOV.sched.length)return;MOVIE_CH.sched=MOV.sched.map(m
 function movNow(){const t=Date.now();return MOV.sched.find(m=>m.start<=t&&t<m.end)||null}
 function movPlaying(){const m=movNow();return m&&Date.now()<m.start+m.len?m:null}
 function movieHTML(){const m=movNow(),pm=movPlaying();if(pm&&PLAY.on&&PLAY.ready)return '';
+  if(NATIVE&&pm&&!ppvOk(pm))return ppvHTML(pm);
   const nx=m?MOV.sched.find(x=>x.start>=m.end):MOV.sched.find(x=>x.start>Date.now());
   let h='<div class="mvc"><div class="mvcard bevel">'+catSvg(54)+'<h2>'+T('Nyx Classic Theater')+'</h2>';
   if(!NATIVE)h+='<p>'+T('Classic public-domain movies play here on your TV or tablet.')+'</p>';
@@ -3401,6 +3445,61 @@ function movieHTML(){const m=movNow(),pm=movPlaying();if(pm&&PLAY.on&&PLAY.ready
   else if(m)h+='<p class="mvnow">'+T('Intermission')+'</p><p>'+(nx?T('Up next: {0} at {1}',esc(nx.title),fmtT(nx.start)):'')+'</p>';
   else h+='<p>'+(MOV.err?T('Movies unavailable right now.'):T('Loading tonight’s movies…'))+'</p>';
   return h+'<small>'+T('Public-domain films from the Internet Archive')+'</small></div></div>'}
+
+/* ---------------- Pay-Per-View ordering for Classic Theater (a 2000s phone-line PPV order; nothing is really ordered or charged) ---------------- */
+const PPV={ord:{},st:null,t0:0,key:'',num:'',iv:0};
+try{PPV.ord=JSON.parse(localStorage.getItem('nyx-ppv')||'{}')}catch(e){}
+function ppvKey(m){return m.id+'@'+m.start}
+function ppvOk(m){return SET.ppv===false||!m||!!PPV.ord[ppvKey(m)]}
+function ppvSave(){try{const ks=Object.keys(PPV.ord);if(ks.length>30)ks.slice(0,ks.length-30).forEach(k=>delete PPV.ord[k]);localStorage.setItem('nyx-ppv',JSON.stringify(PPV.ord))}catch(e){}}
+const PPV_STEPS=[[0,'Dialing NyxVision Pay-Per-View…','1-800-NYX-FILM'],[2.6,'Connecting…','Handshake 2400 bps'],[5.4,'Sending your order…','Order #{0}'],[6.8,'Order confirmed!','Enjoy the show.']];
+function ppvStep(){const t=(Date.now()-PPV.t0)/1000;let i=0;PPV_STEPS.forEach((s,j)=>{if(t>=s[0])i=j});return i}
+function ppvStart(){const m=movPlaying();if(!m||PPV.st)return;PPV.st='dial';PPV.t0=Date.now();PPV.key=ppvKey(m);PPV.num=String(100000+Math.floor(Math.random()*900000));
+  if(NATIVE&&NATIVE.clipPlay)clipNative('modem');else if(SET.sound)[350,440].forEach(f=>tone(f,.6,'sine',.04));
+  clearInterval(PPV.iv);PPV.iv=setInterval(ppvTick,250);render()}
+function ppvCancel(){if(!PPV.st)return;PPV.st=null;clearInterval(PPV.iv);try{if(NATIVE&&NATIVE.clipPlay)NATIVE.clipPlay('none')}catch(e){}}
+function ppvTick(){if(!PPV.st)return;const m=movPlaying();
+  if(S.screen!=='watch'||!has(S.ch)||!CH[S.ch].movies||!m||ppvKey(m)!==PPV.key){ppvCancel();return}
+  const t=(Date.now()-PPV.t0)/1000;
+  if(t>=8.6){PPV.st=null;clearInterval(PPV.iv);PPV.ord[PPV.key]=Date.now();ppvSave();applyStream();render();return}
+  const i=ppvStep();if(i!==PPV.last){PPV.last=i;if(i===3)playCue('score');render()}else{const el=document.getElementById('ppvbar');if(el)el.style.width=Math.min(100,t/8.6*100).toFixed(1)+'%'}}
+function ppvHTML(m){const h0='<div class="mvc ppv"><div class="ppvc bevel"><div class="ppvh"><b>PAY-PER-VIEW</b><span>'+T('Nyx Classic Theater')+'</span></div>';
+  if(PPV.st){const i=ppvStep(),t=(Date.now()-PPV.t0)/1000;
+    return h0+'<div class="ppvt">'+esc(m.title)+(m.year?' <em>('+esc(m.year)+')</em>':'')+'</div><div class="ppvd">'+
+      PPV_STEPS.map((s,j)=>'<div class="'+(j<i?'done':j===i?'on':'')+'"><i>'+(j<i||i===3?'✔':j===i?'☎':'·')+'</i><span>'+T(s[1])+'</span><em>'+(j<=i?T(s[2],PPV.num):'')+'</em></div>').join('')+
+      '</div><div class="bbar ppvb"><div id="ppvbar" style="width:'+Math.min(100,t/8.6*100).toFixed(1)+'%"></div></div><small>'+T('Please hold. Your movie starts right after the order goes through.')+'</small></div></div>'}
+  return h0+'<div class="ppvt">'+esc(m.title)+(m.year?' <em>('+esc(m.year)+')</em>':'')+'</div>'+
+    '<div class="ppvm"><span>'+T('Showing {0} – {1}',fmtT(m.start),fmtT(m.end))+'</span><span>'+T('Started {0} min ago',Math.max(0,Math.round((Date.now()-m.start)/60000)))+'</span></div>'+
+    (m.desc?'<p class="ppvx">'+esc(m.desc)+'</p>':'')+
+    '<div class="ppvp"><span>'+T('Price')+'</span><b>$0.00</b><em>'+T('Free with NyxVision')+'</em></div>'+
+    '<div class="ppvk">'+(TOUCH?T('Tap here to order'):T('Press OK to order · BACK to cancel'))+'</div>'+
+    '<small>'+T('Just for fun: no real order is placed and nothing is charged.')+'</small></div></div>'}
+
+/* ---------------- Guide data download (once a day at power-on, like a 2004 cable box pulling listings off the cable) ---------------- */
+const GDL={t0:0,kb:0,ret:'watch',iv:0,done:0};
+function gdlDay(){return new Date().toDateString()}
+function gdlDue(){if(SET.gdl===false)return false;try{return localStorage.getItem('nyx-gdl-day')!==gdlDay()}catch(e){return false}}
+function gdlStart(ret){GDL.t0=Date.now();GDL.kb=900+Math.floor(Math.random()*600);GDL.ret=ret||'watch';GDL.done=0;S.screen='gdl';clearInterval(GDL.iv);GDL.iv=setInterval(gdlTick,200);render()}
+function gdlParts(){const t=(Date.now()-GDL.t0)/1000,d=new Date();
+  const lineup=!NATIVE||CH.length>BASE||!!PLUTO_ERR||!SET.pluto,wx=!NATIVE||!!WX||!!WXERR||!SET.loc&&t>4,mov=!NATIVE||MOV.sched.length>0||!!MOV.err||t>11;
+  const days=[];for(let i=0;i<7;i++){const x=new Date(d.getTime()+i*86400000);days.push(x)}
+  return [['Channel map',lineup&&t>1.2],['Program listings: {0}',t>2.2+0],['Weather data',wx&&t>4.6],['Classic Theater lineup',mov&&t>5.8],['Pay-Per-View events',mov&&t>6.8],['Checking for box software',t>7.6]].map((p,i)=>({label:i===1?T(p[0],(()=>{const n=Math.max(1,Math.min(7,Math.floor((t-2.2)/0.45)+1));return T('day {0} of 7',n)})()):T(p[0]),ok:i===1?t>2.2+7*0.45:p[1],on:false}))}
+function gdlPct(){const P=gdlParts(),t=(Date.now()-GDL.t0)/1000,n=P.filter(p=>p.ok).length;return Math.min(100,Math.max(n/P.length*100,Math.min(n/P.length*100+14,t*7)))}
+function gdlHTML(){const P=gdlParts(),pct=gdlPct(),first=P.findIndex(p=>!p.ok);if(first>=0)P[first].on=true;
+  const got=Math.round(GDL.kb*pct/100),done=pct>=100;
+  return '<div class="bg">'+bgDeco()+'</div><div class="gdl"><div class="gdlbox bevel"><div class="gdlh">'+catSvg(40)+'<div><b>'+T('Updating Program Guide')+'</b><span>'+T('Please do not unplug your cable box.')+'</span></div></div>'+
+    '<div class="gdll">'+P.map(p=>'<div class="'+(p.ok?'done':p.on?'on':'')+'"><i>'+(p.ok?'✔':p.on?'▶':'·')+'</i><span>'+esc(p.label)+'</span></div>').join('')+'</div>'+
+    '<div class="bbar gdlb"><div id="gdlbar" style="width:'+pct.toFixed(1)+'%"></div></div>'+
+    '<div class="gdlk"><span id="gdlkb">'+(done?T('Program guide updated · 7 days of listings'):T('Received {0} KB of {1} KB',got.toLocaleString(),GDL.kb.toLocaleString()))+'</span><span>'+T('Data carrier: OOB 75.25 MHz')+'</span></div>'+
+    '<div class="bfoot"><span>NyxVision DCT · '+buildLabel()+'</span><span class="bled">'+(done?'donE':'dL '+String(Math.round(pct)).padStart(2,'0'))+'</span></div><div class="bskip">'+T('Press OK to finish in the background')+'</div></div></div>'}
+function gdlTick(){if(S.screen!=='gdl'){clearInterval(GDL.iv);return}
+  const pct=gdlPct(),t=(Date.now()-GDL.t0)/1000;
+  if(pct>=100&&!GDL.done)GDL.done=Date.now();
+  if((GDL.done&&Date.now()-GDL.done>1600)||t>18){gdlEnd();return}
+  render()}
+function gdlEnd(){if(S.screen!=='gdl')return;clearInterval(GDL.iv);try{localStorage.setItem('nyx-gdl-day',gdlDay())}catch(e){}
+  if(GDL.ret==='set'){go('set');return}
+  S.screen=GDL.ret;if(S.screen==='watch'){S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+300}render();applyStream()}
 
 /* ---------------- Games ---------------- */
 const GAMES=[{k:'chess',label:'Chess vs Nyx',desc:'Play White against Nyx. Your game is saved when you leave.'},{k:'chessnew',label:'New Chess Game',desc:'Start a fresh game of chess.'},
@@ -3569,6 +3668,7 @@ if(NATIVE){loadWeather();loadPluto();setTimeout(loadMovies,12000);setTimeout(loa
   setTimeout(()=>{const st=musicStyle();if(MSTY[st]&&NATIVE.jazzPlay&&!NATIVE.jazzReady(st)&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn(st).then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
 })();
 </script>
+
 
 </body>
 </html>

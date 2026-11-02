@@ -414,8 +414,9 @@ class MainActivity : AppCompatActivity() {
         fun clipPlay(style: String) {
             runOnUiThread {
                 val f = musicFile(style)
-                if (!f.exists()) return@runOnUiThread
                 cuePlayer?.let { try { it.release() } catch (e: Exception) {} }
+                cuePlayer = null
+                if (!f.exists()) return@runOnUiThread   // clipPlay("none") just stops the current cue
                 val mp = MediaPlayer()
                 try {
                     mp.setAudioAttributes(AudioAttributes.Builder()
