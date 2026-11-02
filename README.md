@@ -1,4 +1,4 @@
-# Cable Box for Google TV
+# NyxVision for Google TV
 
 An early-2000s digital cable box interface for the onn Google TV stick: main menu,
 program guide, channel surfing, On Demand, favorites and settings. Every channel is a real Pluto TV
@@ -48,8 +48,9 @@ The file appears in `app/build/outputs/apk/`.
 5. On the Google TV home screen, find **Cable Box** under Apps, long-press it and
    move it to the front of the row.
 
-Updating later: rebuild, then repeat step 3. It installs over the old version and keeps
-your favorites and settings.
+Updating later: Settings → Check for Updates downloads the newest build from this repo and opens
+Android's installer (Android asks once to allow NyxVision to install its own updates). You can still
+repeat step 3 with Downloader. Either way it installs over the old version and keeps your settings.
 
 ## Backup and restore plan
 

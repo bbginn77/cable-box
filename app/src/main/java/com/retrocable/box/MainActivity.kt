@@ -17,6 +17,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import java.io.File
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
@@ -48,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     private var player: ExoPlayer? = null
     private var streamUrls: List<String> = emptyList()
     private var streamIndex = 0
+
+    // A downloaded update waiting for the one-time "install unknown apps" permission
+    private var pendingUpdate: File? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -177,6 +182,21 @@ class MainActivity : AppCompatActivity() {
         web.resumeTimers()
         // Coming back from Netflix etc. feels like the box waking up
         web.evaluateJavascript("window.cable&&cable.resume()", null)
+        // Back from the permission screen: install the update that was waiting
+        pendingUpdate?.let { if (packageManager.canRequestPackageInstalls()) { pendingUpdate = null; openInstaller(it) } }
+    }
+
+    private fun openInstaller(apk: File) {
+        val uri = FileProvider.getUriForFile(this, "$packageName.files", apk)
+        val i = Intent(Intent.ACTION_VIEW)
+            .setDataAndType(uri, "application/vnd.android.package-archive")
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(i)
+            js("cable.updateState('installing')")
+        } catch (e: Exception) {
+            js("cable.updateState('error')")
+        }
     }
 
     override fun onPause() {
@@ -302,6 +322,62 @@ class MainActivity : AppCompatActivity() {
                     videoSurface.visibility = View.VISIBLE
                 }
             }
+        }
+
+        /** This app's build number (100 + the GitHub build number). */
+        @JavascriptInterface
+        fun appVersion(): Int = try {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0).versionCode
+        } catch (e: Exception) { 0 }
+
+        /** Downloads a new NyxVision APK and opens Android's installer for it. */
+        @JavascriptInterface
+        fun installUpdate(url: String) {
+            Thread {
+                try {
+                    val out = File(cacheDir, "nyxvision-update.apk")
+                    val conn = URL(url).openConnection() as HttpURLConnection
+                    conn.instanceFollowRedirects = true
+                    conn.connectTimeout = 20000
+                    conn.readTimeout = 60000
+                    conn.setRequestProperty("User-Agent", "NyxVision-Updater")
+                    val total = conn.contentLengthLong
+                    var done = 0L
+                    var lastPct = -1
+                    conn.inputStream.use { input ->
+                        out.outputStream().use { output ->
+                            val buf = ByteArray(64 * 1024)
+                            while (true) {
+                                val n = input.read(buf)
+                                if (n < 0) break
+                                output.write(buf, 0, n)
+                                done += n
+                                if (total > 0) {
+                                    val pct = (done * 100 / total).toInt()
+                                    if (pct != lastPct) { lastPct = pct; runOnUiThread { js("cable.updateProgress($pct)") } }
+                                }
+                            }
+                        }
+                    }
+                    conn.disconnect()
+                    runOnUiThread {
+                        if (!packageManager.canRequestPackageInstalls()) {
+                            // One-time permission: let NyxVision install its own updates
+                            pendingUpdate = out
+                            js("cable.updateState('permission')")
+                            try {
+                                startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName"))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                            } catch (e: Exception) { js("cable.updateState('error')") }
+                        } else {
+                            openInstaller(out)
+                        }
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread { js("cable.updateState('error')") }
+                }
+            }.start()
         }
 
         /** Opens a Pluto TV channel in the Pluto TV app. Returns false if Pluto TV isn't installed. */

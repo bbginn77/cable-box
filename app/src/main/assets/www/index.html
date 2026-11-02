@@ -422,6 +422,8 @@ const SETS=[
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
  {k:'jazz',label:'Radar Channel Music',vals:[false,true],names:['Off','Smooth Jazz'],desc:'Soft jazz that plays while you watch the Metro Atlanta Radar channel. You can also press OK on that channel to switch it.'},
+ {k:'update',label:'Check for Updates',action:true,desc:'Looks for a newer NyxVision on GitHub. If there is one, NyxVision downloads it and opens the installer. Your settings and favorites carry over.'},
+ {k:'about',label:'About NyxVision',action:true,desc:'NyxVision digital cable, named after Nyx the Siamese cat.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped.'}
 ];
 
@@ -511,6 +513,7 @@ function launch(app){
 /* ---------------- input ---------------- */
 let entryT=0;
 function press(k){
+  if(S.screen==='egg'){if(performance.now()-EGG.t0>800)go('set');return}
   try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
   if(S.dialog){if(k==='ok'||k==='back'){const f=(k==='ok')&&S.dialog.onOk;S.dialog=null;clearTimeout(dlgT);snd.back();render();if(f)f()}return}
   if(/^[0-9]$/.test(k)){
@@ -538,6 +541,7 @@ function press(k){
   }
   if(sc==='guide'){if(k==='info'){const f=gFocus();snd.nav();dialog(esc(f.p.title),esc(f.p.desc)+'<small>Ch '+CH[f.ci].n+' '+CH[f.ci].call+' · '+fmtT(f.p.start)+'–'+fmtT(f.p.end)+' · '+f.p.rating+'</small>');return}guideKey(k);return}
   if(sc==='wx'){return}
+  if(sc==='egg'){if(performance.now()-EGG.t0>800){go('set')}return}
   if(sc==='themes'){const L=themeList();let i=S.idx.themes;
     if(k==='up'||k==='down'){const ni=i+(k==='up'?-1:1);if(ni<0||ni>=L.length){snd.bump();return}S.idx.themes=ni;snd.nav();render();return}
     if(k==='chup'||k==='chdn'){S.idx.themes=Math.max(0,Math.min(L.length-1,i+(k==='chup'?-8:8)));snd.nav();render();return}
@@ -556,6 +560,8 @@ function press(k){
   if(k==='chup'||k==='chdn'){S.idx[sc]=Math.max(0,Math.min(list.length-1,i+(k==='chup'?-5:5)));snd.nav();render();return}
   const it=list[i];
   if(sc==='set'&&(k==='left'||k==='right'||k==='ok')){
+    if(it.action&&it.k==='update'){if(k!=='ok')return;snd.ok();if(UPD.state==='available')askUpdate();else checkUpdate(true);return}
+    if(it.action&&it.k==='about'){if(k!=='ok')return;const now=Date.now();EGGC.n=(now-EGGC.t<1600)?EGGC.n+1:1;EGGC.t=now;snd.nav();if(EGGC.n>=5){EGGC.n=0;startEgg()}else render();return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF,{themeState:{}});FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
     let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();return}
@@ -692,12 +698,13 @@ function render(){
   }
   else if(sc==='set'){
     const it=SETS[S.idx.set];
-    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
+    h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Settings')+menuHTML(SETS,S.idx.set,40,66,500,x=>x.label+(x.action?(x.k==='themes'?'<span class="v">'+(THEME?esc(THEME.name):'Classic')+' ▶</span>':x.k==='update'&&UPD.state==='available'?'<span class="v">New build ready ▶</span>':''):'<span class="v">◀ '+x.names[x.vals.indexOf(SET[x.k])]+' ▶</span>'),8)+
       '<div class="box bevel" style="left:580px;top:66px;width:304px;height:240px"><h3>'+it.label+'</h3><p>'+it.desc+'</p></div>'+
-      '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT prototype v0.1<br>Guide data: sample lineup</p></div>'+
+      '<div class="box bevel" style="left:580px;top:322px;width:304px;height:122px"><div class="lbl">Receiver</div><p style="margin-top:6px">NyxVision DCT \u00B7 '+buildLabel()+'<br>Guide data: '+(NATIVE?'Pluto TV + NWS':'sample lineup')+'</p></div>'+
       ftr(['<i>▲▼</i>Highlight','<i>◀▶</i>Change','<i>BACK</i>Main Menu']);
   }
   else if(sc==='wx'){h+=wxHTML()}
+  else if(sc==='egg'){h+='<canvas id="eggc" width="960" height="540" style="position:absolute;inset:0"></canvas>'}
   else if(sc==='themes'){
     const L=themeList(),i=Math.min(S.idx.themes,L.length-1),it=L[i],cur=pickTheme(new Date());
     h+='<div class="bg">'+bgDeco()+'</div>'+hdr('Holiday Themes')+menuHTML(L,i,40,62,500,x=>{
@@ -878,6 +885,7 @@ function loop(ms){
     const ci=(S.screen==='guide'&&S.g)?S.ch:S.ch;
     stat?drawStatic(pctx,320,180):drawScene(pctx,320,180,ci,t);
   }
+  if(S.screen==='egg'){const ec=document.getElementById('eggc');const et=(performance.now()-EGG.t0)/1000;if(ec)eggScene(ec.getContext('2d'),et);if(et>14)go('set')}
   if(radarFail&&radarBox.isConnected)drawRadarSample(radarCv.getContext('2d'),t);
   if(radarFullFail&&radarFull.isConnected)drawRadarSample(radarFullCv.getContext('2d'),t,480,270);
   requestAnimationFrame(loop);
@@ -1215,6 +1223,138 @@ function footDeco(){return THEME?'<span class="deco">'+THEME.motifs.slice(0,3).m
 const SPOTS=[[18,410,90,-25],[870,80,70,30],[905,420,60,15],[400,470,46,-40],[300,60,40,50]];
 function bgDeco(){if(!THEME)return '';return SPOTS.map((s2,i)=>motifHTML(THEME.motifs[i%THEME.motifs.length],s2[2],'left:'+s2[0]+'px;top:'+s2[1]+'px;transform:rotate('+s2[3]+'deg)')).join('')}
 
+/* ---------------- updates from GitHub ---------------- */
+const REPO='BBGINN77/cable-box';
+const UPD={state:'idle',latest:0,url:null,checkedAt:0,pct:0};
+function localBuild(){try{return NATIVE&&NATIVE.appVersion?NATIVE.appVersion():0}catch(e){return 0}}
+function buildLabel(){const b=localBuild();return b>100?'build '+(b-100):(NATIVE?'local build':'preview')}
+async function checkUpdate(manual){
+  if(!NATIVE){if(manual)dialog('Check for Updates','Updates are checked on your TV. This preview is always the newest version.',2600);return}
+  if(manual)dialog('Check for Updates','<span class="wait"></span>Checking GitHub for a newer NyxVision…');
+  try{
+    const j=JSON.parse(await http('https://api.github.com/repos/'+REPO+'/releases/latest',{Accept:'application/vnd.github+json'}));
+    const n=parseInt(String(j.tag_name||'').replace(/\D+/g,''),10)||0;
+    const a=(j.assets||[]).find(x=>/\.apk$/i.test(x.name));
+    UPD.latest=n?100+n:0;UPD.url=a?a.browser_download_url:null;UPD.checkedAt=Date.now();
+    const have=localBuild();
+    if(UPD.url&&UPD.latest>have){UPD.state='available';
+      if(manual)askUpdate();
+      else{let told=null;try{told=localStorage.getItem('cablebox-told')}catch(e){}
+        if(told!==String(n)&&S.screen!=='egg'){try{localStorage.setItem('cablebox-told',String(n))}catch(e){}
+          dialog('Update Available','A newer NyxVision (build '+n+') is ready.<small>Go to Settings → Check for Updates to install it.</small>',5000)}}}
+    else{UPD.state='current';if(manual)dialog('Up to Date','You have the newest NyxVision ('+buildLabel()+').',2600)}
+  }catch(e){if(manual)dialog('Check for Updates','Couldn’t reach GitHub. Check the internet connection and try again.',3200)}
+  if(S.screen==='set')render();
+}
+function askUpdate(){const n=UPD.latest-100;
+  dialog('Update Available','NyxVision build '+n+' is ready (you have '+buildLabel()+').<small>Press OK to download and install it, or BACK for later.</small>');S.dialog.onOk=startUpdate}
+function startUpdate(){if(!UPD.url)return;UPD.state='downloading';UPD.pct=0;
+  dialog('Updating NyxVision','<span class="wait"></span>Downloading… 0%');try{NATIVE.installUpdate(UPD.url)}catch(e){updateState('error')}}
+function updateProgress(p){UPD.pct=p;if(UPD.state==='downloading'&&S.dialog){S.dialog.body='<span class="wait"></span>Downloading… '+p+'%';render()}}
+function updateState(st){
+  if(st==='installing'){UPD.state='installing';dialog('Updating NyxVision','Android’s installer is opening. Choose <b>Install</b> or <b>Update</b>.<small>NyxVision keeps your settings, favorites and last channel.</small>',7000)}
+  else if(st==='permission'){UPD.state='permission';dialog('One-Time Permission','Turn on <b>Allow from this source</b> for NyxVision, then press BACK. The update installs right after.<small>This only lets NyxVision install its own updates. You can turn it off again later.</small>',12000)}
+  else if(st==='error'){UPD.state='available';dialog('Update Didn’t Finish','The download was interrupted.<small>Press OK to try again, or BACK to cancel.</small>');S.dialog.onOk=startUpdate}
+}
+
+/* ---------------- Easter egg: Nyx (Settings > About NyxVision, press OK 5 times) ---------------- */
+const EGG={t0:0,fired:{}};const EGGC={n:0,t:0};
+function startEgg(){EGG.t0=performance.now();EGG.fired={};S.screen='egg';render()}
+const ease=t=>t<=0?0:t>=1?1:t*t*(3-2*t);
+const lerp=(a,b,t)=>a+(b-a)*t;
+function eggOnce(key,fn){if(!EGG.fired[key]){EGG.fired[key]=1;fn()}}
+function eggSound(kind){if(!SET.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const c=AC,t=c.currentTime,o=c.createOscillator(),g=c.createGain();
+  if(kind==='chirp'){o.type='triangle';o.frequency.setValueAtTime(520,t);o.frequency.exponentialRampToValueAtTime(980,t+.12);o.frequency.exponentialRampToValueAtTime(760,t+.22);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+.28);o.connect(g);o.start(t);o.stop(t+.3)}
+  else if(kind==='thump'){o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(55,t+.12);g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.15);o.connect(g);o.start(t);o.stop(t+.16)}
+  else{const f=c.createBiquadFilter();o.type='sawtooth';f.type='bandpass';f.Q.value=5;o.frequency.setValueAtTime(560,t);o.frequency.linearRampToValueAtTime(800,t+.18);o.frequency.linearRampToValueAtTime(500,t+.6);f.frequency.setValueAtTime(900,t);f.frequency.linearRampToValueAtTime(1700,t+.2);f.frequency.linearRampToValueAtTime(800,t+.6);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.05);g.gain.linearRampToValueAtTime(.09,t+.42);g.gain.exponentialRampToValueAtTime(.001,t+.65);o.connect(f);f.connect(g);o.start(t);o.stop(t+.67)}
+  g.connect(c.destination)}catch(e){}}
+const CREAM='#efe2c8',SHADE='#d3bf9b',POINT='#3f2818',POINT2='#5e3d27',EYE='#4fb6ff',PINK='#d79a9a';
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function eggRoom(x,t){
+  let g=x.createLinearGradient(0,0,0,470);g.addColorStop(0,'#2b3a5e');g.addColorStop(1,'#18213b');x.fillStyle=g;x.fillRect(0,0,960,470);
+  x.fillStyle='rgba(255,255,255,.035)';for(let i=0;i<960;i+=48)x.fillRect(i,0,22,470);
+  g=x.createLinearGradient(0,470,0,540);g.addColorStop(0,'#5e3c22');g.addColorStop(1,'#3a2414');x.fillStyle=g;x.fillRect(0,470,960,70);
+  x.strokeStyle='rgba(0,0,0,.25)';x.lineWidth=2;for(let i=60;i<1040;i+=110){x.beginPath();x.moveTo(i,470);x.lineTo(i-50,540);x.stroke()}
+  x.fillStyle='#d9cfbf';x.fillRect(0,460,960,10);
+  const flick=.22+Math.sin(t*9)*.02;const rg=x.createRadialGradient(480,355,30,480,355,420);rg.addColorStop(0,'rgba(90,150,255,'+flick+')');rg.addColorStop(1,'rgba(90,150,255,0)');x.fillStyle=rg;x.fillRect(0,0,960,540);
+  // the TV
+  x.fillStyle='rgba(0,0,0,.35)';x.beginPath();x.ellipse(480,474,170,10,0,0,7);x.fill();
+  x.fillStyle='#3a2414';x.fillRect(352,456,16,14);x.fillRect(592,456,16,14);
+  g=x.createLinearGradient(330,0,630,0);g.addColorStop(0,'#5e3b1e');g.addColorStop(.5,'#7a4e28');g.addColorStop(1,'#5e3b1e');x.fillStyle=g;rr(x,330,262,300,196,14);x.fill();
+  x.strokeStyle='rgba(0,0,0,.18)';x.lineWidth=1;for(let i=0;i<6;i++){x.beginPath();x.moveTo(334,300+i*28);x.bezierCurveTo(420,292+i*28,520,310+i*28,626,298+i*28);x.stroke()}
+  x.fillStyle='#161616';rr(x,348,278,226,152,18);x.fill();
+  x.save();rr(x,358,288,206,132,26);x.clip();
+  g=x.createLinearGradient(0,288,0,420);g.addColorStop(0,'#2a54c8');g.addColorStop(1,'#0b1f6a');x.fillStyle=g;x.fillRect(358,288,206,132);
+  x.textAlign='center';x.font='italic 900 26px Archivo, Arial Black, sans-serif';x.fillStyle='#041040';x.fillText('NyxVision',463,352);x.fillStyle='#fff';x.fillText('NyxVision',461,350);
+  x.font='700 11px "Archivo Narrow", Arial, sans-serif';x.fillStyle='#a6d4ff';x.fillText('DIGITAL CABLE  ·  CH 4',461,372);
+  x.fillStyle='rgba(0,0,0,.18)';for(let y=288;y<420;y+=3)x.fillRect(358,y,206,1);
+  x.fillStyle='rgba(255,255,255,.08)';x.beginPath();x.ellipse(415,312,70,22,-.3,0,7);x.fill();x.restore();
+  x.fillStyle='#262626';rr(x,584,284,34,146,6);x.fill();
+  x.fillStyle='#8a8a8a';x.beginPath();x.arc(601,310,8,0,7);x.arc(601,340,8,0,7);x.fill();
+  x.strokeStyle='#111';x.lineWidth=2;for(let i=0;i<6;i++){x.beginPath();x.moveTo(590,366+i*9);x.lineTo(612,366+i*9);x.stroke()}
+  x.fillStyle='#1d1d1d';x.beginPath();x.ellipse(588,261,18,6,0,0,7);x.fill();
+  x.strokeStyle='#c8c8c8';x.lineWidth=2.5;x.beginPath();x.moveTo(586,258);x.lineTo(560,188);x.moveTo(590,258);x.lineTo(626,194);x.stroke();
+  x.fillStyle='#c8c8c8';x.beginPath();x.arc(560,188,3.5,0,7);x.arc(626,194,3.5,0,7);x.fill();
+}
+function catLeg(x,sx,sy,ex,ey){const g=x.createLinearGradient(sx,sy,ex,ey);g.addColorStop(0,SHADE);g.addColorStop(.5,POINT2);g.addColorStop(1,POINT);
+  x.strokeStyle=g;x.lineWidth=11;x.lineCap='round';x.beginPath();x.moveTo(sx,sy);x.lineTo(ex,ey);x.stroke();x.fillStyle=POINT;x.beginPath();x.ellipse(ex,ey-1,7,5,0,0,7);x.fill()}
+function catHead(x,o){
+  x.fillStyle=POINT;x.beginPath();x.moveTo(-21,-4);x.lineTo(-17,-31);x.lineTo(-3,-17);x.fill();x.beginPath();x.moveTo(21,-4);x.lineTo(17,-31);x.lineTo(3,-17);x.fill();
+  x.fillStyle=PINK;x.beginPath();x.moveTo(-16,-10);x.lineTo(-15,-24);x.lineTo(-8,-16);x.fill();x.beginPath();x.moveTo(16,-10);x.lineTo(15,-24);x.lineTo(8,-16);x.fill();
+  x.fillStyle=CREAM;x.beginPath();x.ellipse(0,0,23,21,0,0,7);x.fill();
+  const rg=x.createRadialGradient(0,7,3,0,6,21);rg.addColorStop(0,POINT);rg.addColorStop(.7,POINT2);rg.addColorStop(1,'rgba(94,61,39,0)');x.fillStyle=rg;x.beginPath();x.ellipse(0,5,19,16,0,0,7);x.fill();
+  const eh=Math.max(.6,5*(1-o.blink));x.fillStyle=EYE;x.beginPath();x.ellipse(-8,-1,5.2,eh,-.15,0,7);x.fill();x.beginPath();x.ellipse(8,-1,5.2,eh,.15,0,7);x.fill();
+  if(eh>1.5){x.fillStyle='#08080c';x.beginPath();x.ellipse(-8,-1,1.3,eh*.85,0,0,7);x.fill();x.beginPath();x.ellipse(8,-1,1.3,eh*.85,0,0,7);x.fill()}
+  x.fillStyle=PINK;x.beginPath();x.moveTo(-2.6,7);x.lineTo(2.6,7);x.lineTo(0,9.6);x.fill();
+  if(o.tongue>0){x.fillStyle='#e07a8a';x.beginPath();x.ellipse(0,12.5,2.6,1.5+o.tongue*3,0,0,7);x.fill()}
+  x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=.8;[[-1,9.5],[-1,12],[1,9.5],[1,12]].forEach(([d,y])=>{x.beginPath();x.moveTo(d*6,y);x.lineTo(d*24,y+(y>10?2:-1));x.stroke()});
+}
+function catSit(x,cx,gy,s,o){x.save();x.translate(cx,gy);x.scale(s,s*(1-o.squash*.2));
+  x.strokeStyle=POINT;x.lineWidth=9;x.lineCap='round';x.beginPath();x.moveTo(18,-6);x.quadraticCurveTo(52,-4,46+o.tail*4,-30-o.tail*12);x.stroke();
+  x.fillStyle=SHADE;x.beginPath();x.ellipse(-15,-15,19,15,0,0,7);x.ellipse(15,-15,19,15,0,0,7);x.fill();
+  const bg=x.createLinearGradient(-28,0,28,0);bg.addColorStop(0,SHADE);bg.addColorStop(.5,CREAM);bg.addColorStop(1,SHADE);x.fillStyle=bg;x.beginPath();x.ellipse(0,-42,25,40,0,0,7);x.fill();
+  catLeg(x,-9,-48,-9,0);if(!o.paw)catLeg(x,9,-48,9,0);
+  x.save();x.translate(0,-88+(o.headDy||0));x.rotate(o.headTilt||0);catHead(x,o);x.restore();
+  if(o.paw)catLeg(x,9,-50,o.paw[0],o.paw[1]);
+  x.restore()}
+function catSide(x,cx,cy,s,dir,ang,legs,stretch){x.save();x.translate(cx,cy);x.scale(dir*s,s);x.rotate(ang);
+  x.strokeStyle=POINT;x.lineWidth=8;x.lineCap='round';x.beginPath();x.moveTo(-32,-6);x.quadraticCurveTo(-60,-30+stretch*20,-74,-6+stretch*4);x.stroke();
+  // legs: [backA, backB, frontA, frontB] offsets of paw x
+  [[-22,legs[0]],[-14,legs[1]],[18,legs[2]],[26,legs[3]]].forEach(([hx2,sw])=>catLeg(x,hx2,0,hx2+sw,24-Math.abs(sw)*.25));
+  const bg=x.createLinearGradient(0,-16,0,14);bg.addColorStop(0,SHADE);bg.addColorStop(.5,CREAM);bg.addColorStop(1,SHADE);x.fillStyle=bg;x.beginPath();x.ellipse(0,-2,36+stretch*6,15,0,0,7);x.fill();
+  x.fillStyle='rgba(94,61,39,.35)';x.beginPath();x.ellipse(-24,-4,12,12,0,0,7);x.fill();
+  x.save();x.translate(40+stretch*4,-14);x.scale(.72,.72);catHead(x,{blink:0,tongue:0});x.restore();
+  x.restore()}
+function eggScene(x,t){
+  eggRoom(x,t);
+  const FLOOR=470,TOP=262,X0=210,XT=452,X1=770,S1=1.25;
+  const blink=((t%2.7)<.13)?1:0;
+  const o={squash:0,paw:null,headTilt:0,headDy:0,blink:blink,tongue:0,tail:Math.sin(t*2.2)};
+  const leap=(xa,ya,xb,yb,k,h)=>{const cx=lerp(xa,xb,k),cy=lerp(ya,yb,k)-Math.sin(k*Math.PI)*h;const dx=xb-xa,dy=(yb-ya)-h*Math.PI*Math.cos(k*Math.PI);
+    const ang=Math.atan2(dy,dx)*.7;catSide(x,cx,cy-30,S1,1,ang,[-18,-24,22,28],Math.sin(k*Math.PI))};
+  if(t<1.0)catSit(x,X0,FLOOR,S1,o);
+  else if(t<1.4){o.squash=ease((t-1)/.4);catSit(x,X0,FLOOR,S1,o)}
+  else if(t<2.2){eggOnce('c1',()=>eggSound('chirp'));leap(X0,FLOOR,XT,TOP,(t-1.4)/.8,130)}
+  else if(t<2.5){eggOnce('t1',()=>eggSound('thump'));o.squash=1-ease((t-2.2)/.3);catSit(x,XT,TOP,S1,o)}
+  else if(t<3.0)catSit(x,XT,TOP,S1,o);
+  else if(t<6.4){const g=t-3.0,rest=[9,0],mouth=[5,-80];
+    if(g<.3){o.paw=[lerp(rest[0],mouth[0],ease(g/.3)),lerp(rest[1],mouth[1],ease(g/.3))]}
+    else if(g<1.9){o.paw=[mouth[0],mouth[1]+Math.sin(g*24)*2.5];o.headTilt=.16+Math.sin(g*12)*.05;o.headDy=4+Math.sin(g*12)*2;o.tongue=Math.max(0,Math.sin(g*24));o.blink=.6}
+    else if(g<3.2){const P=[[5,-80],[18,-98],[12,-118],[-6,-110],[-2,-86],[5,-80]],ph=((g-1.9)%.65)/.65,seg=ph*(P.length-1),i=Math.min(P.length-2,Math.floor(seg)),f=ease(seg-i);
+      o.paw=[lerp(P[i][0],P[i+1][0],f),lerp(P[i][1],P[i+1][1],f)];o.headTilt=.32;o.headDy=6;o.blink=.85}
+    else{o.paw=[lerp(mouth[0],rest[0],ease((g-3.2)/.2)),lerp(mouth[1],rest[1],ease((g-3.2)/.2))]}
+    catSit(x,XT,TOP,S1,o)}
+  else if(t<7.4){eggOnce('m1',()=>eggSound('meow'));if(t>6.8&&t<7.15)o.blink=Math.sin((t-6.8)/.35*Math.PI);catSit(x,XT,TOP,S1,o)}
+  else if(t<7.7){o.squash=ease((t-7.4)/.3);catSit(x,XT,TOP,S1,o)}
+  else if(t<8.5){eggOnce('c2',()=>eggSound('chirp'));leap(XT,TOP,X1,FLOOR,(t-7.7)/.8,70)}
+  else if(t<8.8){eggOnce('t2',()=>eggSound('thump'));o.squash=1-ease((t-8.5)/.3);catSit(x,X1,FLOOR,S1,o)}
+  else{const cx=X1+(t-8.8)*200;
+    x.fillStyle='rgba(30,18,10,.55)';for(let px=X1+30;px<Math.min(cx-20,960);px+=46){x.beginPath();x.arc(px,500+((px/46|0)%2)*10,5,0,7);x.fill()}
+    if(cx<1080){const ph=t*11;catSide(x,cx,FLOOR-30,S1,1,0,[Math.sin(ph)*12,-Math.sin(ph)*12,-Math.sin(ph)*12,Math.sin(ph)*12],0)}}
+  if(t>9.4){const a=Math.min(1,(t-9.4)/.8);x.globalAlpha=a;x.textAlign='center';x.font='italic 900 44px Archivo, Arial Black, sans-serif';x.fillStyle='#041040';x.fillText('Nyx was here.',483,130);x.fillStyle='#fff';x.fillText('Nyx was here.',480,127);
+    x.font='700 16px "Archivo Narrow", Arial, sans-serif';x.fillStyle='#a6d4ff';x.fillText('Press any button',480,160);x.globalAlpha=1}
+}
+
 /* reminders: pop up when a reminded show starts */
 function checkReminders(){
   const now=Date.now();
@@ -1224,7 +1364,7 @@ function checkReminders(){
       S.dialog.onOk=()=>{if(CH[ci].pluto&&SET.plutoPlay!=='box')launchPluto(ci);else{S.screen='watch';tune(ci)}}}
     else if(st<now-10*MIN)S.reminders.delete(key)});
 }
-setInterval(()=>{checkReminders();if(new Date().toDateString()!==THEME_DAY){applyTheme();render()}if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
+setInterval(()=>{checkReminders();if(NATIVE&&UPD.checkedAt&&Date.now()-UPD.checkedAt>12*3600000)checkUpdate(false);if(new Date().toDateString()!==THEME_DAY){applyTheme();render()}if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}},20000);
 
 applyTheme();
 /* Android TV integration: the app forwards remote buttons here */
@@ -1233,6 +1373,9 @@ window.cable={
   press:press,
   httpDone:httpDone,
   playerState:playerState,
+  updateProgress:updateProgress,
+  updateState:updateState,
+  egg:function(){startEgg()},
   pause:function(){APP_PAUSED=true;updateJazz()},
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
   resume:function(){APP_PAUSED=false;applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
@@ -1240,7 +1383,7 @@ window.cable={
     applyStream()}
 };
 render();
-if(NATIVE){loadWeather();loadPluto()}
+if(NATIVE){loadWeather();loadPluto();setTimeout(()=>checkUpdate(false),15000)}
 })();
 </script>
 

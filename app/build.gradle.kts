@@ -11,8 +11,10 @@ android {
         applicationId = "com.retrocable.box"
         minSdk = 26
         targetSdk = 34
-        versionCode = 6
-        versionName = "0.5.1"
+        // GitHub builds number themselves; the in-app updater compares these
+        val build = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 0
+        versionCode = 100 + build
+        versionName = "0.6 (build $build)"
     }
 
     // A fixed signing key, so each new build installs over the old one
