@@ -260,6 +260,35 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 #ytbox iframe{width:100%;height:100%;border:0;display:block}
 #ytbox .ytl{margin-top:8px;padding:8px 12px;background:var(--kwxnow);display:flex;flex-direction:column;gap:2px}
 #ytbox .ytl b{font:900 18px var(--display);color:var(--hi)}#ytbox .ytl span{font:600 14px var(--ui);color:var(--dim)}
+/* Pride Month: full rainbow */
+.pride .bg,.pride .wxc,.pride .wx{background:linear-gradient(160deg,#3a0808 0%,#3a2004 17%,#363004 33%,#06301a 50%,#081f4d 67%,#1e0b3a 83%,#2e0838 100%)}
+.pride .hdr,.pride .wxtop,.pride .rtop{border-bottom:0;box-shadow:none}
+.pride .hdr::after,.pride .wxtop::after{content:'';position:absolute;left:0;right:0;bottom:-8px;height:8px;background:linear-gradient(90deg,#e40303 0 14.3%,#ff8c00 0 28.6%,#ffed00 0 42.9%,#008026 0 57.1%,#004dff 0 71.4%,#4b0082 0 85.7%,#750787 0)}
+.pride .ftr{border-top:0}.pride .ftr::before{content:'';position:absolute;left:0;right:0;top:-6px;height:6px;background:linear-gradient(90deg,#e40303 0 14.3%,#ff8c00 0 28.6%,#ffed00 0 42.9%,#008026 0 57.1%,#004dff 0 71.4%,#4b0082 0 85.7%,#750787 0)}
+.pride .bbar div{background:linear-gradient(90deg,#e40303 0 14.3%,#ff8c00 0 28.6%,#ffed00 0 42.9%,#008026 0 57.1%,#004dff 0 71.4%,#4b0082 0 85.7%,#750787 0)}
+.pride .banner{border-image:linear-gradient(90deg,#e40303 0 14.3%,#ff8c00 0 28.6%,#ffed00 0 42.9%,#008026 0 57.1%,#004dff 0 71.4%,#4b0082 0 85.7%,#750787 0) 1}
+.pride .mi:nth-child(7n+1):not(.hi),.pride .lkr:nth-child(7n+1):not(.hi){background:linear-gradient(#d62a2a,#a01818);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+1) .gch,.pride .wxd:nth-child(7n+1),.pride .kbr:nth-child(7n+1) .kbk:not(.hi){background:linear-gradient(#d62a2a,#a01818)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+1) .cell:not(.hi){background:linear-gradient(#d62a2a,#a01818);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:nth-child(7n+2):not(.hi),.pride .lkr:nth-child(7n+2):not(.hi){background:linear-gradient(#e8780a,#b85a00);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+2) .gch,.pride .wxd:nth-child(7n+2),.pride .kbr:nth-child(7n+2) .kbk:not(.hi){background:linear-gradient(#e8780a,#b85a00)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+2) .cell:not(.hi){background:linear-gradient(#e8780a,#b85a00);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:nth-child(7n+3):not(.hi),.pride .lkr:nth-child(7n+3):not(.hi){background:linear-gradient(#d9b300,#a88800);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+3) .gch,.pride .wxd:nth-child(7n+3),.pride .kbr:nth-child(7n+3) .kbk:not(.hi){background:linear-gradient(#d9b300,#a88800)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+3) .cell:not(.hi){background:linear-gradient(#d9b300,#a88800);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:nth-child(7n+4):not(.hi),.pride .lkr:nth-child(7n+4):not(.hi){background:linear-gradient(#1f9a45,#0f6e2e);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+4) .gch,.pride .wxd:nth-child(7n+4),.pride .kbr:nth-child(7n+4) .kbk:not(.hi){background:linear-gradient(#1f9a45,#0f6e2e)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+4) .cell:not(.hi){background:linear-gradient(#1f9a45,#0f6e2e);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:nth-child(7n+5):not(.hi),.pride .lkr:nth-child(7n+5):not(.hi){background:linear-gradient(#2a63e0,#173fa8);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+5) .gch,.pride .wxd:nth-child(7n+5),.pride .kbr:nth-child(7n+5) .kbk:not(.hi){background:linear-gradient(#2a63e0,#173fa8)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+5) .cell:not(.hi){background:linear-gradient(#2a63e0,#173fa8);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:nth-child(7n+6):not(.hi),.pride .lkr:nth-child(7n+6):not(.hi){background:linear-gradient(#4b1a9e,#330f73);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+6) .gch,.pride .wxd:nth-child(7n+6),.pride .kbr:nth-child(7n+6) .kbk:not(.hi){background:linear-gradient(#4b1a9e,#330f73)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+6) .cell:not(.hi){background:linear-gradient(#4b1a9e,#330f73);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:nth-child(7n+7):not(.hi),.pride .lkr:nth-child(7n+7):not(.hi){background:linear-gradient(#8a1fa0,#611470);border-color:rgba(255,255,255,.55) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.55)}
+.pride .grow:nth-child(7n+7) .gch,.pride .wxd:nth-child(7n+7),.pride .kbr:nth-child(7n+7) .kbk:not(.hi){background:linear-gradient(#8a1fa0,#611470)}
+.pride .grid:not(.gcol) .grow:nth-child(7n+7) .cell:not(.hi){background:linear-gradient(#8a1fa0,#611470);border-color:rgba(255,255,255,.5) rgba(0,0,0,.5) rgba(0,0,0,.5) rgba(255,255,255,.5)}
+.pride .mi:not(.hi),.pride .gch,.pride .wxd,.pride .kbk{text-shadow:1px 1px 0 rgba(0,0,0,.6)}
 /* location search */
 .lkt{font:700 28px var(--ui);letter-spacing:.06em;white-space:pre;overflow:hidden}
 .lkc{font:700 28px var(--ui);color:var(--hi);animation:blink 1s steps(2) infinite}
@@ -1830,7 +1859,7 @@ const THEMES=[
  TH('cinco','Cinco de Mayo',fx(5,5),P('#0b2e18','#1a6b3a','#b2232a','#1f7a42','#b2232a','#ffffff','#e8f5e9'),['🇲🇽','🎊','🌵']),
  TH('mothers','Mother’s Day',y=>nthWd(y,5,0,2),P('#2f1f35','#6b4a85','#b8628a','#7a5a96','#b8628a','#fff3e0','#f6e6ff'),['💐','💗','🌷'],'Happy Mother’s Day'),
  TH('memorial','Memorial Day',y=>nthWd(y,5,1,-1),RWB,['🇺🇸','⭐','🌺']),
- TH('pride','Pride Month',null,P('#1a1a2e','#3a2a6e','#7b2cbf','#2a6fdb','#d9480f','#ffd60a','#ffd1f2'),['🏳️‍🌈','❤️','🌈'],'Happy Pride',y=>[new Date(y,5,1),new Date(y,5,30)]),
+ TH('pride','Pride Month',null,P('#1a0b2e','#3b1a6e','#4b0082','#5a2a9e','#7a1fa0','#ffffff','#ffd6f5'),['🏳️‍🌈','❤️','🌈'],'Happy Pride',y=>[new Date(y,5,1),new Date(y,5,30)]),
  TH('donut','National Donut Day',y=>nthWd(y,6,5,1),P('#2b1a12','#6a3f2a','#c25a85','#7a4a32','#b85480','#ffc2d9','#ffe0ec'),['🍩','☕','✨']),
  TH('flagday','Flag Day',fx(6,14),RWB,['🇺🇸','⭐']),
  TH('juneteenth','Juneteenth',fx(6,19),P('#0b1a3f','#1d3570','#a51c30','#2a4a8c','#a51c30','#ffffff','#d6defa'),['🌟','⭐','✊🏾']),
@@ -1906,7 +1935,7 @@ function themeVars(pl){const b=pl.b,p=pl.p,h=pl.h,c=pl.c,n=pl.n,hi=pl.hi,l=pl.l,
   Object.assign(out,{'--cell':c,'--cellNow':n,'--chan':dk(p,.45),'--hi':hi,'--hiText':light?'#0b0b18':'#ffffff','--ice':l,'--dim':mix(l,'#ffffff',.35)});
   return out}
 let THEME=null,THEME_VARS=[],THEME_DAY='';
-function applyTheme(){const root=document.documentElement;THEME=pickTheme(new Date());THEME_DAY=new Date().toDateString();
+function applyTheme(){const root=document.documentElement;THEME=pickTheme(new Date());THEME_DAY=new Date().toDateString();root.classList.toggle('pride',!!(THEME&&THEME.id==='pride'));
   THEME_VARS.forEach(k=>root.style.removeProperty(k));THEME_VARS=[];
   root.classList.toggle('themed',!!THEME);
   if(THEME){const v=themeVars(THEME.pal);Object.keys(v).forEach(k=>{root.style.setProperty(k,v[k]);THEME_VARS.push(k)})}}
