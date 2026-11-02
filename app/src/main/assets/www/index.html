@@ -421,7 +421,7 @@ function loadInstalled(){
 }
 function appByLabel(l){return APPS.find(a=>a.label===l)}
 const SAMPLE_MORE=['Spotify','Pluto TV','Tubi','Plex','Twitch','Google Play Store'].map(l=>({label:l,pkg:null,sample:true}));
-function themeList(){return [{master:true,label:'Holiday Themes'}].concat(THEMES)}
+function themeList(){return [{master:true,label:'Holiday Themes'}].concat(THEMES.filter(regionOK))}
 function moreList(){if(!NATIVE)return SAMPLE_MORE;const mine=APPS.filter(a=>a.pkg).map(a=>a.pkg);const l=INSTALLED.filter(x=>mine.indexOf(x.pkg)<0);return l.length?l:[{label:'No other apps found',pkg:null}]}
 const SETS=[
  {k:'lang',label:'Language',vals:['en','fr','es'],names:['English','Français','Español'],desc:'The language of every menu, screen and holiday greeting.'},
@@ -626,7 +626,8 @@ fr:{
 'New Year’s Eve':'Réveillon du Nouvel An','Happy New Year’s Eve':'Joyeux réveillon !',
 'Halloween':'Halloween','Happy Halloween':'Joyeuse Halloween',
 'Thanksgiving':'Action de grâce','Happy Thanksgiving':'Joyeuse Action de grâce',
-'Christmas':'Noël','Merry Christmas':'Joyeux Noël'
+'Christmas':'Noël','Merry Christmas':'Joyeux Noël',
+'Family Day':'Fête de la famille','Happy Family Day':'Bonne fête de la famille','Victoria Day':'Fête de Victoria','Happy Victoria Day':'Bonne fête de Victoria','National Indigenous Peoples Day':'Journée nationale des peuples autochtones','Saint-Jean-Baptiste Day':'Fête nationale du Québec','Happy Saint-Jean-Baptiste Day':'Bonne Fête nationale !','Canada Day':'Fête du Canada','Happy Canada Day':'Bonne fête du Canada !','Civic Holiday':'Congé civique','Labour Day':'Fête du Travail','Happy Labour Day':'Bonne fête du Travail','National Day for Truth and Reconciliation':'Journée nationale de la vérité et de la réconciliation','Every Child Matters':'Chaque enfant compte','Remembrance Day':'Jour du Souvenir','Lest We Forget':'Nous nous souviendrons','Boxing Day':'Lendemain de Noël','Happy Boxing Day':'Joyeux lendemain de Noël'
 },
 es:{
 'Main Menu':'Menú principal','TV Guide':'Guía de TV','Applications':'Aplicaciones','More Apps':'Más apps','On Demand':'A la carta','My Channels':'Mis canales','Settings':'Configuración','Holiday Themes':'Temas festivos','Your Local Forecast':'Su pronóstico local',
@@ -782,7 +783,8 @@ es:{
 'New Year’s Eve':'Nochevieja','Happy New Year’s Eve':'¡Feliz Nochevieja!',
 'Halloween':'Halloween','Happy Halloween':'Feliz Halloween',
 'Thanksgiving':'Día de Acción de Gracias','Happy Thanksgiving':'Feliz Día de Acción de Gracias',
-'Christmas':'Navidad','Merry Christmas':'Feliz Navidad'
+'Christmas':'Navidad','Merry Christmas':'Feliz Navidad',
+'Family Day':'Día de la Familia','Happy Family Day':'Feliz Día de la Familia','Victoria Day':'Día de Victoria','Happy Victoria Day':'Feliz Día de Victoria','National Indigenous Peoples Day':'Día Nacional de los Pueblos Indígenas','Saint-Jean-Baptiste Day':'Fiesta de San Juan Bautista','Happy Saint-Jean-Baptiste Day':'¡Feliz Fiesta de San Juan!','Canada Day':'Día de Canadá','Happy Canada Day':'¡Feliz Día de Canadá!','Civic Holiday':'Feriado Cívico','Labour Day':'Día del Trabajo','Happy Labour Day':'Feliz Día del Trabajo','National Day for Truth and Reconciliation':'Día Nacional de la Verdad y la Reconciliación','Every Child Matters':'Cada niño importa','Remembrance Day':'Día del Recuerdo','Lest We Forget':'Para que no olvidemos','Boxing Day':'Boxing Day','Happy Boxing Day':'¡Feliz Boxing Day!'
 }};
 function T(s){let r=(SET.lang&&I18N[SET.lang]&&I18N[SET.lang][s])||s;for(let i=1;i<arguments.length;i++)r=r.split('{'+(i-1)+'}').join(arguments[i]);return r}
 // translate the text between tags of a finished screen, so data labels and holiday names follow the language
@@ -912,7 +914,8 @@ function press(k){
     if(it.action&&it.k==='about'){if(k!=='ok')return;const now=Date.now();EGGC.n=(now-EGGC.t<1600)?EGGC.n+1:1;EGGC.t=now;snd.nav();if(EGGC.n>=5){EGGC.n=0;startEgg()}else render();return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;SET=Object.assign({},DEF,{themeState:{}});FAV=DEF_FAV();save();applyTheme();snd.ok();dialog('Settings Restored','All settings and favorites are back to their defaults.',1800);return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+RADARS[radarIdx];render()}return}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='jazz')updateJazz();if(it.k==='region'){applyTheme();render()}
+    if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+RADARS[radarIdx];render()}return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
     if(sc==='apps'){snd.ok();if(it.wx){go('wx')}else if(it.more){S.idx.more=0;go('more')}else launch(it);return}
@@ -1560,6 +1563,26 @@ const THEMES=[
  TH('thanksgiving','Thanksgiving',null,P('#5a2410','#7a3412','#b5531d','#7a2626','#b5531d','#f5b83a','#f6cf8f'),['#leaf:#d9661f','#turkey','#pumpkin','#oak:#e3a92b'],'Happy Thanksgiving',y=>[new Date(y,10,1),thanksgiving(y)]),
  TH('christmas','Christmas',null,P('#0b2a17','#14532d','#b3131b','#1d6b3a','#b3131b','#f4c542','#ffe7a8'),['🎄','🎅','🎁','✨'],'Merry Christmas',y=>[addDays(thanksgiving(y),2),new Date(y,11,25)])
 ];
+// US-only holidays; Canada gets its own set below (the rest are shared)
+['mlk','presidents','memorial','flagday','juneteenth','july4','labor','veterans','thanksgiving'].forEach(id=>{const t=THEMES.find(x=>x.id===id);if(t)t.reg='us'});
+const CA_THEMES=[
+ TH('familyday','Family Day',y=>nthWd(y,2,1,3),P('#123a3a','#1f6b6b','#c0572a','#2a7a7a','#c0572a','#ffd27a','#d9f2ee'),['👨‍👩‍👧‍👦','🏠','❤️'],'Happy Family Day'),
+ TH('victoria','Victoria Day',y=>{const d=new Date(y,4,24);return new Date(y,4,24-((d.getDay()+6)%7))},P('#1e1038','#3d2470','#b3131b','#4a2e8a','#b3131b','#f4c542','#e6dcff'),['👑','🎆','🌷'],'Happy Victoria Day'),
+ TH('indigenous','National Indigenous Peoples Day',fx(6,21),P('#2a1a10','#5a3a22','#b0451f','#6e4a2a','#2f6b4f','#f2c46b','#f5e1c8'),['🪶','☀️','🌿']),
+ TH('stjean','Saint-Jean-Baptiste Day',fx(6,24),P('#0a1f4d','#1546a0','#1c5fd1','#1d4f9e','#2a6fdb','#ffffff','#dbe8ff'),['⚜️','🎆','🔥'],'Happy Saint-Jean-Baptiste Day'),
+ TH('canadaday','Canada Day',fx(7,1),P('#3a0608','#8a1218','#d52b1e','#a3151c','#d52b1e','#ffffff','#ffe1e1'),['🇨🇦','🍁','🎆'],'Happy Canada Day'),
+ TH('civic','Civic Holiday',y=>nthWd(y,8,1,1),P('#0b2e3a','#14606e','#d9731a','#1a7a6e','#d9731a','#ffe066','#d8f6f2'),['☀️','🛶','🌲']),
+ TH('labourca','Labour Day',y=>nthWd(y,9,1,1),P('#3a0608','#7a1418','#c8102e','#8a1c22','#c8102e','#ffffff','#ffe1e1'),['🇨🇦','🔨','🛠️'],'Happy Labour Day'),
+ TH('truth','National Day for Truth and Reconciliation',fx(9,30),P('#2a1206','#7a3410','#e0701f','#8a3c12','#e0701f','#ffd29a','#ffe6cc'),['🧡','🪶','🍁'],'Every Child Matters'),
+ TH('thanksca','Thanksgiving',y=>nthWd(y,10,1,2),P('#5a2410','#7a3412','#b5531d','#7a2626','#b5531d','#f5b83a','#f6cf8f'),['#leaf:#d9661f','#turkey','#pumpkin','#oak:#e3a92b'],'Happy Thanksgiving'),
+ TH('remembrance','Remembrance Day',fx(11,11),P('#120606','#3a0e0e','#a3151c','#4a1414','#a3151c','#e8e0d0','#f0d6d6'),['🌺','🕊️','🍁'],'Lest We Forget'),
+ TH('boxing','Boxing Day',fx(12,26),P('#0b2a17','#14532d','#b3131b','#1d6b3a','#b3131b','#f4c542','#ffe7a8'),['🎁','🛍️','📦'],'Happy Boxing Day')
+];
+CA_THEMES.forEach(t=>t.reg='ca');
+// Indigenous Peoples Day shares June 21 with the first day of summer and takes the day in Canada
+THEMES.splice(THEMES.findIndex(t=>t.id==='summer'),0,CA_THEMES.find(t=>t.id==='indigenous'));
+CA_THEMES.filter(t=>t.id!=='indigenous').forEach(t=>THEMES.splice(THEMES.findIndex(x=>x.range),0,t));
+const regionOK=t=>!t.reg||t.reg===(SET.region||'us');
 const sameDay=(a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
 function themeOn(th,d){const y=d.getFullYear();
   if(th.range){const r=th.range(y),t=new Date(y,d.getMonth(),d.getDate());return t>=r[0]&&t<=r[1]}
@@ -1568,7 +1591,7 @@ function themeState(id){return (SET.themeState&&SET.themeState[id])||'auto'}
 function pickTheme(d){
   const forced=THEMES.find(t=>themeState(t.id)==='force');if(forced)return forced;
   if(!SET.themesOn)return null;
-  const ok=t=>themeState(t.id)!=='off'&&themeOn(t,d);
+  const ok=t=>regionOK(t)&&themeState(t.id)!=='off'&&themeOn(t,d);
   return THEMES.find(t=>!t.range&&ok(t))||THEMES.find(t=>t.range&&ok(t))||null;   // single days win over long themes
 }
 function themeDates(th){const now=new Date(),y=now.getFullYear();
