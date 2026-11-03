@@ -547,6 +547,23 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .gdlb{width:auto;margin:14px 0 6px}
 .gdlk{display:flex;justify-content:space-between;font:700 14px var(--ui);color:#9ec0ff}
 .gdlbox .bfoot{position:static;margin-top:12px;display:flex;justify-content:space-between;align-items:center}.gdlbox .bskip{position:static;margin-top:8px;text-align:center}
+.tw{position:absolute;inset:0;overflow:hidden;background:#02040a}
+.twcam{position:absolute;left:50%;top:57%;width:2200px;height:1800px;margin:-900px 0 0 -1100px;transform-style:preserve-3d;animation:twfly 45s linear infinite}
+@keyframes twfly{from{transform:perspective(1500px) rotateX(24deg) translate3d(-40px,40px,0) scale(.8)}to{transform:perspective(1500px) rotateX(24deg) translate3d(40px,-40px,0) scale(.9)}}
+.twmap{position:relative;transform-style:preserve-3d;filter:saturate(1.15)}.twt,.twr{position:absolute;width:256px;height:256px}.twr{opacity:.9;mix-blend-mode:screen}
+.twc{position:absolute;display:flex;align-items:center;gap:6px;transform:translate(-30px,-80%) rotateX(-24deg);transform-origin:30px 100%;opacity:0;animation:twpop .8s ease-out forwards}
+.twc canvas{width:58px;height:48px}.twc div{border-left:3px solid #4fa8ff;padding-left:8px;background:linear-gradient(90deg,#0a1a33cc,#0a1a3300)}.twc span{display:block;font:500 19px var(--ui);color:#dfe8ff;letter-spacing:.02em}.twc b{display:block;font:300 44px var(--ui);color:#fff;line-height:1}
+@keyframes twpop{from{opacity:0;transform:translate(-30px,-60%) rotateX(-24deg) scale(.7)}to{opacity:1;transform:translate(-30px,-80%) rotateX(-24deg) scale(1)}}
+.twshade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(170% 120% at 50% 130%,#0000 62%,#16325c88 80%,#02040a 95%),linear-gradient(#02040acc 0,#0000 22%,#0000 80%,#02040a 100%)}
+.twseg{position:absolute;left:26px;top:20px}.twseg span{display:block;font:300 22px var(--ui);color:#e8f0ff;padding-bottom:4px;border-bottom:3px solid #3d9bff;width:max-content}.twseg i{display:block;margin-top:4px;font:400 13px var(--ui);color:#8fb0de;font-style:normal;letter-spacing:.08em;text-transform:uppercase}
+.twlogo{position:absolute;right:28px;top:16px;text-align:center}.twlogo b{display:block;font:200 26px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.14em;color:#bfe3ff;text-shadow:0 0 6px #4fb2ff,0 0 14px #2a7fff}.twlogo span{display:block;font:300 12px var(--ui);letter-spacing:.6em;color:#9fd0ff;text-shadow:0 0 6px #4fb2ff}
+.twbar{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;gap:16px;padding:0 18px;background:linear-gradient(#0a1424ee,#050b16f5);border-top:1px solid #2a4a78;font:400 15px var(--ui);color:#e8f0ff;white-space:nowrap;overflow:hidden}
+.twlg{display:flex;align-items:center}.twclk{font-weight:600}.twcity{font-weight:600;min-width:96px}.twbar em{font-style:normal;color:#8fa3c4}.twbar b{font-weight:600}.twico canvas{width:26px;height:21px;vertical-align:middle}.twh{white-space:nowrap}
+.twcred{position:absolute;right:18px;bottom:44px;font:400 10px var(--ui);color:#6f86ab}
+.twintro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 60%,#0b1a33,#02040a 70%)}
+.twstars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 10% 20%,#fff9,#0000),radial-gradient(1px 1px at 30% 70%,#fff8,#0000),radial-gradient(1.5px 1.5px at 55% 30%,#fffa,#0000),radial-gradient(1px 1px at 75% 55%,#fff7,#0000),radial-gradient(1px 1px at 88% 15%,#fff9,#0000),radial-gradient(1px 1px at 20% 85%,#fff6,#0000),radial-gradient(1.5px 1.5px at 65% 85%,#fff8,#0000),radial-gradient(1px 1px at 42% 12%,#fff7,#0000);animation:twtw 4s ease-in-out infinite alternate}@keyframes twtw{to{opacity:.55}}
+.twneon{position:relative;font:100 96px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;color:#d8f0ff;text-shadow:0 0 6px #6fc4ff,0 0 18px #2f8cff,0 0 40px #1f6fff;animation:twfl 6s linear infinite}@keyframes twfl{0%,18%,22%,60%,100%{opacity:1}20%{opacity:.6}61%{opacity:.8}}
+.twlive{position:relative;display:flex;align-items:center;gap:10px}.twlive span{font:300 22px var(--ui);letter-spacing:.7em;color:#bfe3ff;text-shadow:0 0 8px #4fb2ff}
 .tnlg{position:absolute;right:34px;bottom:30px;display:flex;align-items:baseline;gap:4px;opacity:.72;pointer-events:none}.tnlg b{font:italic 900 22px var(--display);color:#fff;text-shadow:2px 2px 0 #0008}.tnlg em{font:italic 900 22px var(--display);color:#ffcf3a;font-style:italic;text-shadow:2px 2px 0 #0008}
 .tnpk{position:absolute;left:12px;bottom:14px;opacity:0;transform:translateY(20px)}.tnpk i{position:absolute;left:44px;top:-6px;padding:2px 8px;background:#fff;color:#1b1b1b;border-radius:10px;font:800 12px var(--ui);font-style:normal;white-space:nowrap}
 .tnlg.pop{opacity:1}.tnlg.pop .tnpk{animation:tnpk 6.5s ease-in-out forwards}.tnlg.pop b,.tnlg.pop em{animation:tnwig .5s ease-in-out 5}
@@ -796,10 +813,12 @@ const MOVIE_CH={n:7,call:'NCT',name:'Nyx Classic Theater',g:'movies',scene:'film
 for(let t=D0;t<D0+72*3600000;t+=2*SLOT)MOVIE_CH.sched.push({title:'Classic Movie',start:t,end:t+2*SLOT,rating:'',cat:'movies',desc:'Public-domain classic films from the Internet Archive.'});
 const TAPE_CH={n:8,call:'NTD',name:'Nyx Tape Deck',g:'music',scene:'stage',tape:true,key:'tape',cat:'music',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=2*SLOT)TAPE_CH.sched.push({title:'Nyx Tape Deck',start:t,end:t+2*SLOT,rating:'',cat:'music',desc:'Your Spotify playlists on a cassette deck. Press INFO for the tape shelf.'});
+const TWI_CH={n:3,call:'NTW',name:'Nyx Twilight',g:'news',scene:'stage',twilight:true,key:'twilight',cat:'news',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=2*SLOT)TWI_CH.sched.push({title:'Nyx Twilight',start:t,end:t+2*SLOT,rating:'TV-G',cat:'news',desc:'A relaxing night flight over North America with live local weather and music. Press OK to turn the music on or off.'});
 const TOON_CH={n:9,call:'TOON',name:'Nyx Toons',g:'kids',scene:'stage',toons:true,key:'toons',cat:'kids',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=SLOT)TOON_CH.sched.push({title:'Nyx Toons',start:t,end:t+SLOT,rating:'TV-G',cat:'kids',desc:'Classic cartoons from the Internet Archive, back to back.'});
-if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH,TAPE_CH,TOON_CH)} // TV app: weather, news + real Pluto TV channels only
-else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH;[TRAF_CH,PREVIEW_CH,MOVIE_CH,TAPE_CH,TOON_CH].forEach(X=>{const ix=CH.findIndex(c=>c.n===X.n);if(ix>=0)CH[ix]=X;else{const a=CH.findIndex(c=>c.n>X.n);CH.splice(a<0?CH.length:a,0,X)}})}
+if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,TWI_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH,TAPE_CH,TOON_CH)} // TV app: weather, news + real Pluto TV channels only
+else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH;[TRAF_CH,PREVIEW_CH,TWI_CH,MOVIE_CH,TAPE_CH,TOON_CH].forEach(X=>{const ix=CH.findIndex(c=>c.n===X.n);if(ix>=0)CH[ix]=X;else{const a=CH.findIndex(c=>c.n>X.n);CH.splice(a<0?CH.length:a,0,X)}})}
 const BASE=CH.length; // demo channels exist only in the browser preview
 const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
 let SET=Object.assign({},DEF), FAV=DEF_FAV();
@@ -1367,6 +1386,7 @@ function press(k){
     if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].traffic&&!locked(S.ch)&&!(Date.now()<S.bannerUntil)){ttNext();return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].movies&&!locked(S.ch)&&NATIVE&&movPlaying()&&!ppvOk(movPlaying())){if(!PPV.st){snd.ok();S.bannerUntil=0;ppvStart()}return}
+    if(k==='ok'&&has(S.ch)&&CH[S.ch].twilight&&!(Date.now()<S.bannerUntil)){SET.twMusic=SET.twMusic===false;save();snd.ok();updateJazz();dialog('Nyx Twilight',T(SET.twMusic===false?'Music off':'Music on'),1500);return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){if(musicOn()){SET.musicLast=SET.music;SET.music='off'}else SET.music=SET.musicLast||'auto';save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
@@ -1498,6 +1518,7 @@ function render(){
     if(CH[S.ch].movies){h+=movieHTML()}
     if(CH[S.ch].tape){h+=tapeHTML()}
     if(CH[S.ch].toons){h+=toonHTML()}
+    if(CH[S.ch].twilight){h+=twilightHTML()}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>'+T('{0} is blocked by Parental Controls. Turn them off in Settings to watch.','Ch '+CH[S.ch].n+' '+esc(CH[S.ch].call))+'</p></div></div>';
     if(S.bumpUntil>Date.now())h+=bumpHTML();
     if(Date.now()<S.bannerUntil||S.entry){
@@ -1780,7 +1801,7 @@ try{new ResizeObserver(fit).observe(screenEl)}catch(e){window.addEventListener('
 fit();
 
 const origRender=render;
-render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&CH[S.ch].radar))drawWxIcons()};
+render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&(CH[S.ch].radar||CH[S.ch].twilight)))drawWxIcons()};
 
 /* ---------------- web requests through the Android app ---------------- */
 let httpId=0;const httpWait={};
@@ -2493,10 +2514,22 @@ function barDisco(t0,B){const ch=P_DISCO[JAZZ.bar%4],r=ch.b-12;
   [1.5,3.5].forEach(x=>stab(ch.v,t0+x*B,.018));
   const pent=[76,79,81,84,88];for(let i=0;i<8;i++)if(Math.random()<.22)bellNote(pick(pent),t0+i*B/2,.035);
   JAZZ.bar++}
-const MSTY={disco:{bpm:118,bar:barDisco},jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
+// Twilight: slow, deep and warm, modeled on the user's clip (B minor, bass F#–F#–E–B–B–E–G–F#, sustained pads, no drums)
+const P_TWI=[{b:30,v:[57,61,64,69]},{b:30,v:[57,61,64,68]},{b:28,v:[55,59,62,66]},{b:35,v:[54,59,62,66]},{b:35,v:[54,59,62,69]},{b:28,v:[55,59,64,66]},{b:31,v:[55,59,62,66]},{b:30,v:[58,61,66,70]}];
+function padNote(m,t,dur,vol){const c=JAZZ.ctx,f=c.createBiquadFilter(),g=c.createGain();f.type='lowpass';f.frequency.setValueAtTime(500,t);f.frequency.linearRampToValueAtTime(1100,t+dur*.5);f.frequency.linearRampToValueAtTime(600,t+dur);f.Q.value=.6;
+  [-7,7].forEach(dt=>{const o=c.createOscillator();o.type='sawtooth';o.frequency.value=mtof(m);o.detune.value=dt;o.connect(f);o.start(t);o.stop(t+dur+1.6)});
+  f.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+1.2);g.gain.setValueAtTime(vol,t+dur-.2);g.gain.linearRampToValueAtTime(0,t+dur+1.5)}
+function subNote(m,t,dur){const c=JAZZ.ctx;[[1,.34],[2,.12]].forEach(([r,v])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=mtof(m)*r;o.connect(g);g.connect(JAZZ.out);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.6);g.gain.setValueAtTime(v,t+dur-.3);g.gain.linearRampToValueAtTime(0,t+dur+.4);o.start(t);o.stop(t+dur+.5)})}
+function barTwilight(t0,B){const i=JAZZ.bar%P_TWI.length,ch=P_TWI[i],bar=B*4;
+  ch.v.forEach(m=>padNote(m,t0,bar,.022));subNote(ch.b,t0,bar);
+  const pent=[71,74,76,78,81,83];if(JAZZ.bar%2===0||Math.random()<.5)bellNote(pick(pent),t0+B*(1+Math.floor(Math.random()*2)),.028);
+  if(Math.random()<.35)bellNote(pick(pent)+12,t0+B*(2.5+Math.random()),.016);
+  JAZZ.bar++}
+const MSTY={twilight:{bpm:64,bar:barTwilight,bars:16},disco:{bpm:118,bar:barDisco},jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
 const STYLE_OF={christmas:'winter',solstice:'winter',boxing:'winter',halloween:'spooky',thanksgiving:'harvest',thanksca:'harvest',fall:'harvest',
   newyear:'party',nye:'party',bailey:'party',taylor:'party',july4:'party',canadaday:'party',cinco:'party',mardigras:'party',stpat:'party',pride:'disco'};
-const STYLE_NAME={gaga:'Lady Gaga on YouTube',disco:'Pride Disco',jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
+const STYLE_NAME={twilight:'Twilight',gaga:'Lady Gaga on YouTube',disco:'Pride Disco',jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
 function musicOn(){return SET.music&&SET.music!=='off'}
 function musicStyle(){if(SET.music==='jazz')return 'jazz';const st=(THEME&&STYLE_OF[THEME.id])||'jazz';return (st==='disco'&&NATIVE)?'gaga':st}
 
@@ -2504,7 +2537,7 @@ let APP_PAUSED=false;
 /* On the TV, the web view can keep page audio muted, so NyxVision composes a ~90-second loop
    once with an offline renderer and plays the finished file through Android's media player. */
 async function renderJazzWav(style){
-  const st=MSTY[style||'jazz'],B=60/st.bpm,sr=22050,bars=Math.round(64/(4*B)),dur=bars*B*4+0.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
+  const st=MSTY[style||'jazz'],B=60/st.bpm,sr=22050,bars=st.bars||Math.round(64/(4*B)),dur=bars*B*4+0.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
   const saved={ctx:JAZZ.ctx,out:JAZZ.out,ep:JAZZ.ep,verb:JAZZ.verb,noise:JAZZ.noise,bar:JAZZ.bar};
   jazzGraph(off);JAZZ.out.gain.value=.85;JAZZ.bar=0;
   for(let b=0;b<bars;b++)st.bar(.02+b*B*4,B);
@@ -2532,7 +2565,7 @@ function jazzNative(st){JAZZ.nState=st;if(S.screen==='watch')render()}
 function jazzLabel(){if(!musicOn())return T('Music Off');if(musicStyle()==='gaga')return T('Lady Gaga on YouTube');const nm=T(STYLE_NAME[musicStyle()]);
   if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?T('{0} On',nm):JAZZ.nState==='preparing'?T('Music warming up\u2026'):JAZZ.nState==='error'?T('Music unavailable'):T('Music starting\u2026');
   if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return T('{0} On',nm);return T('Music starting\u2026 press OK again if silent')}
-function updateJazz(){const pv=has(S.ch)&&CH[S.ch].preview&&S.screen==='watch';let style=musicStyle();if(pv&&style==='gaga')style='party';const want=!APP_PAUSED&&musicOn()&&has(S.ch)&&(CH[S.ch].radar&&style!=='gaga'||pv);
+function updateJazz(){const pv=has(S.ch)&&CH[S.ch].preview&&S.screen==='watch',tw=has(S.ch)&&CH[S.ch].twilight&&S.screen==='watch';let style=tw?'twilight':musicStyle();if(pv&&style==='gaga')style='party';const want=!APP_PAUSED&&(tw?SET.twMusic!==false:musicOn()&&has(S.ch)&&(CH[S.ch].radar&&style!=='gaga'||pv));
   if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant&&style===JAZZ.nStyle)return;JAZZ.nWant=want;JAZZ.nStyle=style;if(want)nativeJazzOn(style);else NATIVE.jazzPlay(style,false);return}
   if(want)jazzStart(style);else jazzStop()}
 
@@ -2940,6 +2973,9 @@ function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
   if(CH[S.ch].traffic){ttTick();return}
   if(CH[S.ch].preview){const pi=Math.floor(Date.now()/8000);if(pi!==S.pvLast){S.pvLast=pi;render()}return}
   if(CH[S.ch].movies){const m=movPlaying(),want=m?m.id:null,have=PLAY.on?PLAY.mid||null:null;if(want!==have){applyStream();render()}if(NATIVE&&!MOV.busy&&(!MOV.sched.length||String(movDayStart())!==MOV.day||MOV.sched[MOV.sched.length-1].end<Date.now()+20*3600000)&&Date.now()-(MOV.tried||0)>120000){MOV.tried=Date.now();loadMovies()}}
+  if(CH[S.ch].twilight){const s=twNow(),intro=Math.floor(Date.now()/60000)%12===0&&Date.now()%60000<8000,rad=!s.reg.ca&&s.e>26000&&s.e<TW_SEG-1500,D=TW.wx[s.reg.k];
+    const key=s.n+(intro?'i':rad?'r':'f')+(D?D.at:0);if(key!==S.twKey){S.twKey=key;render();updateJazz();return}
+    const bk=Math.floor(Date.now()/7000);if(bk!==S.twBk){S.twBk=bk;const b=ui.querySelector('.twbar');if(b){b.outerHTML=twBar(s.reg);drawWxIcons(ui.querySelector('.twbar'))}}return}
   if(CH[S.ch].toons){if(S.toonLast!==S.ch){S.toonLast=S.ch;TOON.tuneT=Date.now();setTimeout(()=>{if(S.screen==='watch')render()},6500)}
     const tn=toonNow();try{syncAdYT()}catch(e){}
     if(tn&&tn.ad){const sl=adSlot(tn,Date.now()),ak=sl.part+(sl.i||0)+(sl.part==='ad'?Math.min(3,Math.floor(sl.e/(AD_LEN/4))):'')+(adytActive(tn)?'y':'');if(ak!==S.adKey){S.adKey=ak;render();
@@ -3619,6 +3655,63 @@ function movieHTML(){const m=movNow(),pm=movPlaying();if(pm&&PLAY.on&&PLAY.ready
   else if(m)h+='<p class="mvnow">'+T('Intermission')+'</p><p>'+(nx?T('Up next: {0} at {1}',esc(nx.title),fmtT(nx.start)):'')+'</p>';
   else h+='<p>'+(MOV.err?T('Movies unavailable right now.'):T('Loading tonight’s movies…'))+'</p>';
   return h+'<small>'+T('Public-domain films from the Internet Archive')+'</small></div></div>'}
+
+/* ---------------- Nyx Twilight (ch 3): night flights over North America with live weather and relaxing music ----------------
+   Night lights: NASA Black Marble (public domain) via NASA GIBS. Radar: Iowa Environmental Mesonet NEXRAD composite. Weather: Open-Meteo. */
+const TW_REG=[
+ {k:'ne',n:'Northeast',c:[42.6,-72.6],z:8,ca:0,cities:[['Burlington',44.48,-73.21],['Albany',42.65,-73.75],['Boston',42.36,-71.06],['Portland',43.66,-70.26],['Hartford',41.76,-72.68],['Providence',41.82,-71.41]]},
+ {k:'ma',n:'Mid-Atlantic',c:[40.1,-76.2],z:8,ca:0,cities:[['New York',40.71,-74.01],['Philadelphia',39.95,-75.17],['Baltimore',39.29,-76.61],['Washington',38.91,-77.04],['Scranton',41.41,-75.66],['Harrisburg',40.27,-76.88]]},
+ {k:'se',n:'Southeast',c:[33.6,-85.2],z:7,ca:0,cities:[['Atlanta',33.75,-84.39],['Nashville',36.16,-86.78],['Knoxville',35.96,-83.92],['Montgomery',32.37,-86.30],['Augusta',33.47,-81.97],['Columbus',32.46,-84.99],['Birmingham',33.52,-86.80]]},
+ {k:'fl',n:'Florida',c:[28.3,-82.3],z:7,ca:0,cities:[['Jacksonville',30.33,-81.66],['Orlando',28.54,-81.38],['Tampa',27.95,-82.46],['Miami',25.76,-80.19],['Tallahassee',30.44,-84.28]]},
+ {k:'gl',n:'Great Lakes',c:[42.6,-86.0],z:7,ca:0,cities:[['Chicago',41.88,-87.63],['Milwaukee',43.04,-87.91],['Detroit',42.33,-83.05],['Grand Rapids',42.96,-85.67],['Indianapolis',39.77,-86.16],['Cleveland',41.50,-81.69]]},
+ {k:'pl',n:'Plains',c:[39.3,-96.5],z:7,ca:0,cities:[['Omaha',41.26,-95.94],['Des Moines',41.59,-93.62],['Kansas City',39.10,-94.58],['Wichita',37.69,-97.34],['Oklahoma City',35.47,-97.52],['Lincoln',40.81,-96.70]]},
+ {k:'tx',n:'Texas',c:[31.0,-97.4],z:7,ca:0,cities:[['Dallas',32.78,-96.80],['Houston',29.76,-95.37],['San Antonio',29.42,-98.49],['Austin',30.27,-97.74],['Lubbock',33.58,-101.86],['Waco',31.55,-97.15]]},
+ {k:'rk',n:'Rockies',c:[40.5,-108.5],z:7,ca:0,cities:[['Denver',39.74,-104.99],['Salt Lake City',40.76,-111.89],['Cheyenne',41.14,-104.82],['Grand Junction',39.06,-108.55],['Colorado Springs',38.83,-104.82]]},
+ {k:'sw',n:'Desert Southwest',c:[34.0,-111.5],z:7,ca:0,cities:[['Phoenix',33.45,-112.07],['Tucson',32.22,-110.97],['Las Vegas',36.17,-115.14],['Albuquerque',35.08,-106.65],['Flagstaff',35.20,-111.65]]},
+ {k:'ca',n:'California',c:[36.2,-120.0],z:7,ca:0,cities:[['San Francisco',37.77,-122.42],['Sacramento',38.58,-121.49],['Fresno',36.74,-119.79],['Los Angeles',34.05,-118.24],['San Diego',32.72,-117.16]]},
+ {k:'nw',n:'Pacific Northwest',c:[46.4,-121.0],z:7,ca:0,cities:[['Seattle',47.61,-122.33],['Portland',45.52,-122.68],['Spokane',47.66,-117.43],['Boise',43.62,-116.20],['Eugene',44.05,-123.09]]},
+ {k:'on',n:'Ontario & Québec',c:[45.0,-75.5],z:7,ca:1,cities:[['Toronto',43.65,-79.38],['Ottawa',45.42,-75.70],['Montréal',45.50,-73.57],['Québec City',46.81,-71.21],['Kingston',44.23,-76.49]]},
+ {k:'pr',n:'Prairies',c:[51.5,-107.5],z:6,ca:1,cities:[['Calgary',51.05,-114.07],['Edmonton',53.55,-113.49],['Regina',50.45,-104.62],['Saskatoon',52.13,-106.67],['Winnipeg',49.90,-97.14]]},
+ {k:'bc',n:'British Columbia',c:[49.4,-122.3],z:8,ca:1,cities:[['Vancouver',49.28,-123.12],['Victoria',48.43,-123.37],['Kelowna',49.89,-119.50],['Kamloops',50.67,-120.33],['Nanaimo',49.17,-123.94]]},
+ {k:'at',n:'Atlantic Canada',c:[45.6,-64.0],z:7,ca:1,cities:[['Halifax',44.65,-63.58],['Moncton',46.09,-64.77],['Charlottetown',46.24,-63.13],['Fredericton',45.96,-66.64],['Saint John',45.27,-66.06]]}];
+const TW={wx:{},busy:{},seg:-1,regIdx:0,built:'',t0:0};
+const TW_SEG=45000;   // each region gets 45 seconds: forecast map, then radar (or the night lights)
+function twRegions(){const ca=SET.region==='ca';return ca?TW_REG.filter(r=>r.ca).concat(TW_REG.filter(r=>!r.ca&&/ne|gl|nw|ma/.test(r.k))):TW_REG.filter(r=>!r.ca).concat(TW_REG.filter(r=>r.ca&&/on|bc/.test(r.k)))}
+function twNow(){const L=twRegions(),n=Math.floor(Date.now()/TW_SEG);return {reg:L[n%L.length],n:n,e:Date.now()%TW_SEG,next:L[(n+1)%L.length]}}
+async function twLoad(r){if(!NATIVE||TW.busy[r.k]||(TW.wx[r.k]&&Date.now()-TW.wx[r.k].at<30*MIN))return;TW.busy[r.k]=1;
+  try{const la=r.cities.map(c=>c[1]).join(','),lo=r.cities.map(c=>c[2]).join(',');
+    const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&current=temperature_2m,weather_code,is_day&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=auto&forecast_days=4&forecast_hours=12'));
+    const A=Array.isArray(j)?j:[j];TW.wx[r.k]={at:Date.now(),c:A.map(x=>({t:Math.round(x.current.temperature_2m),code:x.current.weather_code,day:x.current.is_day,
+      hr:(x.hourly.time||[]).map((tm,i)=>({tm:tm,t:Math.round(x.hourly.temperature_2m[i]),code:x.hourly.weather_code[i],p:x.hourly.precipitation_probability?x.hourly.precipitation_probability[i]:null})),
+      dy:(x.daily.time||[]).map((tm,i)=>({tm:tm,hi:Math.round(x.daily.temperature_2m_max[i]),lo:Math.round(x.daily.temperature_2m_min[i]),code:x.daily.weather_code[i],p:x.daily.precipitation_probability_max?x.daily.precipitation_probability_max[i]:null}))}))}}
+  catch(e){}TW.busy[r.k]=0;if(twOn())render()}
+function twOn(){return S.screen==='watch'&&has(S.ch)&&!!CH[S.ch].twilight}
+function twProj(lat,lon,z){const n=256*Math.pow(2,z),s=Math.sin(lat*Math.PI/180);return [(lon+180)/360*n,(.5-Math.log((1+s)/(1-s))/(4*Math.PI))*n]}
+// the map: NASA night lights (and radar) tiles laid out around the region, tilted like an aerial camera
+function twMapHTML(r,radar){const z=r.z,W=2200,H=1800,cl=r.cities.reduce((a,x)=>[a[0]+x[1]/r.cities.length,a[1]+x[2]/r.cities.length],[0,0]),c=twProj(cl[0],cl[1],z),x0=c[0]-W/2,y0=c[1]-H/2,tx0=Math.floor(x0/256),ty0=Math.floor(y0/256),tx1=Math.floor((x0+W)/256),ty1=Math.floor((y0+H)/256),max=Math.pow(2,z);
+  const P=r.cities.map(x=>twProj(x[1],x[2],z)),dx=Math.max(...P.map(p=>p[0]))-Math.min(...P.map(p=>p[0]))||1,dy=Math.max(...P.map(p=>p[1]))-Math.min(...P.map(p=>p[1]))||1,k=Math.min(1.25,Math.max(.55,Math.min(680/dx,330/dy)));
+  let h='<div class="twmap'+(radar?' rad':'')+'" style="width:'+W+'px;height:'+H+'px;transform:scale('+k.toFixed(3)+')">';
+  for(let ty=ty0;ty<=ty1;ty++)for(let tx=tx0;tx<=tx1;tx++){if(ty<0||ty>=max)continue;const wx=((tx%max)+max)%max,l=(tx*256-x0).toFixed(0),t=(ty*256-y0).toFixed(0);
+    h+='<img class="twt" style="left:'+l+'px;top:'+t+'px" src="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/default/GoogleMapsCompatible_Level8/'+z+'/'+ty+'/'+wx+'.png" alt="" onerror="this.style.visibility=\'hidden\'">';
+    if(radar)h+='<img class="twr" style="left:'+l+'px;top:'+t+'px" src="https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/'+z+'/'+wx+'/'+ty+'.png?'+Math.floor(Date.now()/300000)+'" alt="" onerror="this.remove()">'}
+  if(!radar){const D=TW.wx[r.k];r.cities.forEach((ct,i)=>{const p=twProj(ct[1],ct[2],z),w=D&&D.c[i];if(!w)return;
+    h+='<div class="twc" style="left:'+(p[0]-x0).toFixed(0)+'px;top:'+(p[1]-y0).toFixed(0)+'px;animation-delay:'+(1.2+i*.45-((Date.now()%TW_SEG)/1000)).toFixed(2)+'s"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="64" height="52"></canvas><div><span>'+esc(ct[0])+'</span><b>'+tU(w.t)+'</b></div></div>'})}
+  return h+'</div>'}
+function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor(k/3)%r.cities.length,mode=k%3,w=D&&D.c[ci],ct=r.cities[ci];let items='';
+  if(w){const fmtH=tm=>{const h=+tm.slice(11,13);return (h%12||12)+(h<12?'a':'p')};
+    if(mode===0){const night=!w.day,d=w.dy[0];items='<em>'+T(night?'Tonight':'Today')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="40" height="32"></canvas></i><b>'+tU(w.t)+'°</b><span>'+T(WMO(w.code,w.day))+'</span>'+(d&&d.p!=null?'<span>'+T('{0}% Chance of Rain',d.p)+'</span>':'')}
+    else if(mode===1)items='<em>'+T('Hourly')+'</em>'+w.hr.filter((x,i)=>i%2===1).slice(0,4).map(x=>'<span class="twh">'+fmtH(x.tm)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,+x.tm.slice(11,13)>=7&&+x.tm.slice(11,13)<19)+'" width="40" height="32"></canvas></i> '+tU(x.t)+'°</span>').join('');
+    else items='<em>'+T('This Week')+'</em>'+w.dy.slice(1,4).map(x=>'<span class="twh">'+dayName(new Date(x.tm+'T12:00:00').getDay()).slice(0,3)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,1)+'" width="40" height="32"></canvas></i> '+tU(x.hi)+'°/'+tU(x.lo)+'°</span>').join('')}
+  else items='<span>'+T('Loading the weather…')+'</span>';
+  return '<div class="twbar"><span class="twlg">'+catSvg(20)+'</span><span class="twclk">'+fmtT(Date.now()).replace(/\s?[AP]M/i,'')+'</span><span class="twcity">'+esc(ct[0])+'</span>'+items+'</div>'}
+function twilightHTML(){const s=twNow(),r=s.reg;twLoad(r);if(s.e>TW_SEG-8000)twLoad(s.next);
+  const intro=Math.floor(Date.now()/60000)%12===0&&Date.now()%60000<8000,radar=!r.ca&&s.e>26000&&s.e<TW_SEG-1500;
+  let h='<div class="tw">';
+  if(intro)return h+'<div class="twintro"><div class="twstars"></div><div class="twneon">Twilight</div><div class="twlive">'+catSvg(34)+'<span>NYX</span></div></div>'+twBar(r)+'</div>';
+  h+='<div class="twcam" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twMapHTML(r,radar)+'</div><div class="twshade"></div>';
+  h+='<div class="twseg"><span>'+T(radar?'Radar: Past Hour':(new Date().getHours()>=18||new Date().getHours()<6)?'Tonight’s Forecast':'Today’s Forecast')+'</span><i>'+esc(T(r.n))+'</i></div>';
+  h+='<div class="twlogo"><b>Twilight</b><span>NYX</span></div>';
+  return h+twBar(r)+'<div class="twcred">'+T('Night lights: NASA')+(radar?' · '+T('Radar: Iowa Environmental Mesonet'):'')+' · '+T('Weather: Open-Meteo')+'</div></div>'}
 
 /* ---------------- Nyx Toons (ch 9): public-domain cartoons from the Internet Archive, back to back ---------------- */
 // Old cartoons include wartime propaganda and racist caricatures; none of those air here (title, subject and description checks, plus a list of known titles)
