@@ -873,7 +873,7 @@ const ALLSETS=[
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'newsVid',label:'News Channel Video',vals:['abc','nbc','cbs','off'],names:['ABC News','NBC News','CBS News','Off'],desc:'The big window on Nyx News Network (channel 5) plays the latest clips from this network’s official YouTube channel while the headlines rotate beside it. Tap the video to pause or skip.'},
- {k:'toonAds',label:'Nyx Toons Commercials',vals:['yt','orig','off'],names:['Classic Clips','NyxVision Originals','Off'],desc:'Commercial breaks on channel 9 after every two cartoons. Classic Clips plays real 2006–2009 kids-TV commercial breaks from YouTube (fan uploads) that match the season, time of day and region; if one won’t play, NyxVision’s own made-up ads fill in. NyxVision Originals uses only the made-up ads.'},
+ {k:'toonAds',label:'Nyx Toons Commercials',vals:['yt','orig','off'],names:['Classic Clips','NyxVision Originals','Off'],desc:'A two-minute commercial break on channel 9 after every cartoon. Classic Clips plays real 2006–2009 kids-TV commercial breaks from YouTube (fan uploads) that match the season, time of day and region; if one won’t play, NyxVision’s own made-up ads fill in. NyxVision Originals uses only the made-up ads.'},
  {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
  {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
  {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
@@ -3646,7 +3646,7 @@ async function loadToons(){if(!NATIVE||TOON.busy)return;const day=String(movDayS
     // a whole day of shorts needs ~150 cartoons; loop the shuffled list if the collection is smaller
     while(t<Date.now()+26*3600000&&tries<500){tries++;const id=ids[k%ids.length];k++;const m=await toonMeta(id);if(!m)continue;
       const end=t+m[1]*1000+4000;TOON.sched.push({k:k-1,id:id,file:m[0],len:m[1]*1000,title:m[2],year:m[3],start:t,end:end});t=end;
-      const L2=TOON.sched,pv=L2[L2.length-2];if(pv&&!pv.ad){L2.push({ad:true,k:k-1,start:t,end:t+AD_BREAK});t+=AD_BREAK}
+      TOON.sched.push({ad:true,k:k-1,start:t,end:t+AD_BREAK});t+=AD_BREAK;
       if(TOON.sched.length%12===0)toonToGuide();
       if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].toons&&!PLAY.on)applyStream()}
     TOON.err=null}catch(e){TOON.err='x'}
@@ -3728,9 +3728,9 @@ function adsForBreak(start){const r=SET.region==='ca'?'ca':'us',sea=adSeason(sta
   let pool=ADS.filter(a=>(a.r==='*'||a.r===r)&&a.d.indexOf(dp)>=0&&(a.s==='*'||a.s===sea)&&(!a.s2||a.s2===sea));
   if(pool.length<3)pool=ADS.filter(a=>(a.r==='*'||a.r===r)&&a.s==='*'&&!a.s2);
   const w=[];pool.forEach(a=>{const n=a.s===sea&&a.s!=='*'?3:a.r===r&&r==='ca'?2:1;for(let i=0;i<n;i++)w.push(a)});
-  const rnd=movRng(Math.floor(start/1000)),out=[];let guard=0;while(out.length<3&&guard++<60){const a=w[Math.floor(rnd()*w.length)];if(out.indexOf(a)<0)out.push(a)}
+  const rnd=movRng(Math.floor(start/1000)),out=[];let guard=0;while(out.length<AD_N&&guard++<200){const a=w[Math.floor(rnd()*w.length)];if(out.indexOf(a)<0||guard>120&&out[out.length-1]!==a)out.push(a)}
   return out}
-const AD_BUMP=4000,AD_LEN=15000,AD_BREAK=AD_BUMP*2+AD_LEN*3;
+const AD_BUMP=4000,AD_LEN=16000,AD_N=7,AD_BREAK=AD_BUMP*2+AD_LEN*AD_N;
 // what's on screen during a break: 'in' bumper, an ad, or 'out' bumper
 function adSlot(br,t){const e=t-br.start;if(e<AD_BUMP)return {part:'in',e:e};if(e>=AD_BREAK-AD_BUMP)return {part:'out',e:e-(AD_BREAK-AD_BUMP)};
   const i=Math.floor((e-AD_BUMP)/AD_LEN),ads=br.ads||(br.ads=adsForBreak(br.start));return {part:'ad',i:i,ad:ads[i],e:(e-AD_BUMP)%AD_LEN}}
@@ -3749,15 +3749,16 @@ const ADYT_LIB={
  us:{xmas:['GQA7NJFdVNs','ROSL4u-diOM','6_5YxvYPHpg','IpIBLfZZFb8','R6RlKlLuOeg'],halloween:['hvF8okzE23E','ENwWFMHMC0g','jkRLnXqAlaw','Er6tBjwrWvA','oH8_naoke-A'],
    winter:['Jp4EkdfFGXY','22plO92gqW0'],spring:['tV7hPXoaDAQ','18t6BBA1Kso','jc1N0aiRtRg'],summer:['tQCGVXQs9Fg','ZIxkPReNoRs'],school:['7FwwcPhxzgA','LmQGsx1ksiw','ewp4Nnx7XnI','ZIxkPReNoRs'],
    any:['zYKgBFrCCl4','5ikJgz4l17k','JaQpsqLyvZk','rOMHfRJB__k'],night:['x4E_Qw0_Acg','-_-GgTs-Q2A','b6hvLMXz4XI','YRjOHMKXg9Y','xR41A8K6cQY']},
- ca:{xmas:['drsZ9cznTSs','fXK_xQhbXbc','AfWGjNGm0KU'],halloween:['kn2hMPIc4tY','kZ3bTZ-TqbU','UG136NZN01E'],winter:['zNoNaD6J3fU','rBfpKoDG-d4'],spring:['zNoNaD6J3fU','rBfpKoDG-d4'],
-   summer:['zm8OC8dzdMI','QWxHFnIbkig'],school:['zm8OC8dzdMI','maC0Ee4TyKU','urNBcWcQBCE','wEIhY5ub5h0'],any:['zNoNaD6J3fU','rBfpKoDG-d4'],night:['AvWwqaK3ntE','vgv1Neqyr58','r-MPmMVmgXw']},
+ ca:{xmas:['drsZ9cznTSs','fXK_xQhbXbc','AfWGjNGm0KU','znCdgRg084Q'],nightxmas:['PcEqZIDiGYY','r-MPmMVmgXw'],halloween:['kn2hMPIc4tY','kZ3bTZ-TqbU','UG136NZN01E'],winter:['zNoNaD6J3fU','rBfpKoDG-d4'],spring:['zNoNaD6J3fU','rBfpKoDG-d4'],
+   summer:['zm8OC8dzdMI','QWxHFnIbkig'],school:['zm8OC8dzdMI','maC0Ee4TyKU','urNBcWcQBCE','wEIhY5ub5h0'],any:['zNoNaD6J3fU','rBfpKoDG-d4'],night:['AvWwqaK3ntE','vgv1Neqyr58','r-MPmMVmgXw','pxaw__T2Mmg','UYXngQWv0WI','3mNc6djTHq4']},
  // French Canada (Télétoon, VRAK): mixed in with English when the region is Canada and the language is French
  fr:{halloween:['LCPpfXhWvXA'],winter:['7d9UpgrjXN8','w3YusZpXOn4'],school:['U5IXc8rn_qs','w3YusZpXOn4'],
-   any:['w3YusZpXOn4','HIK2weg94pE','Swmtvj48iAw','XjtDA4RsB-Q','e0OuUetytwc','_GX5L--KbN0']}};
+   morning:['J1gQiZaMBNI'],night:['vSdyhzkY-4s','-ipEMtREDn4'],
+   any:['w3YusZpXOn4','HIK2weg94pE','Swmtvj48iAw','XjtDA4RsB-Q','e0OuUetytwc','_GX5L--KbN0','J1gQiZaMBNI']}};
 const ADYT={el:null,player:null,ready:false,api:false,key:'',vid:'',bad:{},fail:{},startT:0,want:false};
 function adytPick(br,n){n=n||0;const r0=movRng(Math.floor(br.start/1000)+17+n*31),fr=SET.region==='ca'&&SET.lang==='fr'&&r0()<.5;
   const L=ADYT_LIB[fr?'fr':SET.region==='ca'?'ca':'us'],sea=adSeason(br.start),dp=adPart(br.start);
-  const k=dp==='n'?'night':sea==='valentine'?'winter':sea==='easter'?'spring':sea==='*'?'any':sea;
+  const k=dp==='n'?(sea==='xmas'&&L.nightxmas?'nightxmas':'night'):dp==='m'&&L.morning&&r0()<.5?'morning':sea==='valentine'?'winter':sea==='easter'?'spring':sea==='*'?'any':sea;
   let ids=(L[k]||L.any).filter(v=>!ADYT.bad[v]);if(!ids.length)ids=L.any.filter(v=>!ADYT.bad[v]);if(!ids.length)return null;
   if(fr&&!L[k])ids=L.any.filter(v=>!ADYT.bad[v]);
   const r=movRng(Math.floor(br.start/1000)+5+n*13);return {id:ids[Math.floor(r()*ids.length)],frac:.08+r()*.8}}
@@ -3765,7 +3766,7 @@ function adytSetup(){if(ADYT.el)return;ADYT.el=document.createElement('div');ADY
   if(!window.YT||!window.YT.Player){window.onYouTubeIframeAPIReady=adytMake;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>{ADYT.api='x'};document.head.appendChild(s)}else adytMake()}
 function adytMake(){try{ADYT.player=new YT.Player('adytp',{width:'100%',height:'100%',playerVars:{playsinline:1,controls:0,rel:0,disablekb:1,modestbranding:1,iv_load_policy:3,fs:0},
   events:{onReady:()=>{ADYT.ready=true;syncAdYT()},onError:()=>{if(ADYT.vid)ADYT.bad[ADYT.vid]=1;if(ADYT.want){adytNext();return}try{ADYT.player.stopVideo()}catch(e){}ADYT.el.hidden=true},
-   onStateChange:e=>{if(e.data===1&&ADYT.seekPending){ADYT.seekPending=false;try{const d=ADYT.player.getDuration();if(d>150){ADYT.player.seekTo(Math.max(5,Math.min(d-60,d*ADYT.frac))+(Date.now()-ADYT.startT)/1000,true)}}catch(x){}}
+   onStateChange:e=>{if(e.data===1&&ADYT.seekPending){ADYT.seekPending=false;try{const d=ADYT.player.getDuration();if(d>150){ADYT.player.seekTo(Math.max(5,Math.min(d-130,d*ADYT.frac))+(Date.now()-ADYT.startT)/1000,true)}}catch(x){}}
     if(e.data===0&&ADYT.want){adytNext()}}}})}catch(e){ADYT.api='x'}}
 function adytNext(){const m=toonNow();if(!m||!m.ad||ADYT.tries>=4){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}
   ADYT.tries++;const p=adytPick(m,ADYT.tries);if(!p){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}ADYT.vid=p.id;ADYT.frac=p.frac;ADYT.seekPending=true;ADYT.startT=Date.now();try{ADYT.player.loadVideoById({videoId:p.id,startSeconds:0})}catch(e){ADYT.fail[ADYT.key]=1}}
