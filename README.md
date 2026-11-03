@@ -149,3 +149,9 @@ Your Spotify playlists on a cassette deck. The Spotify app (phone/tablet version
 Setup: at developer.spotify.com/dashboard (Premium account) create an app, check **Android**, redirect URI `http://127.0.0.1:8898/callback`, Android package `com.retrocable.box` with SHA1 `89:73:96:81:40:5B:13:77:BE:88:E2:DC:25:25:9F:96:36:5A:76:35`. Enter the Client ID in Settings → Service Keys → Spotify Client ID. Keys: OK play/pause, ◀▶ skip, INFO tape shelf. Leaving channel 8 pauses the tape; coming back resumes it. On Google TV, channel 8 offers to open Spotify's TV app instead.
 
 Spotify rules NyxVision follows: credits Spotify on the deck and shelf, links back to the album ("Open in Spotify"), shows terms & privacy before connecting (Settings → Service Keys → Spotify Terms & Privacy), offers Settings → Service Keys → Disconnect Spotify, keeps Spotify data in memory only, and plays no NyxVision sounds over the music (weather warnings pause the tape).
+
+## Channel 9: Nyx Toons
+Public-domain cartoons from the Internet Archive's Classic Cartoons collection, back to back all day. Wartime propaganda and racist caricature cartoons are filtered out by title, subject and a list of known titles. The guide shows half-hour blocks listing the cartoons; each cartoon's title pops up in the corner when it starts.
+
+## Message Center
+Main Menu → Messages. A monthly bill on the 1st (pay it with a chin scratch: nothing is charged), weekly notes from Nyx, Rex and the cable company, birthday messages for Bailey and Taylor, holiday greetings, election night notice and pay-per-view receipts.
