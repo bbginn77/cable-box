@@ -560,6 +560,12 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .twsb{left:30px;top:62px;width:560px;height:398px;box-sizing:border-box;overflow:hidden}.twsq{display:flex;gap:16px;align-items:flex-start;margin-top:8px}.twsq svg{background:#fff;padding:6px;flex:none}.twsq ol{margin:0;padding-left:20px;font:500 15px/1.4 var(--ui)}.twsq li{margin-bottom:8px}
 .twurl{display:block;margin-top:4px;font:700 18px var(--ui);color:var(--hi);word-break:break-all}.twsn{font:500 13px/1.35 var(--ui);color:var(--dim);margin-top:10px}.twok{font:800 16px var(--ui);color:#7dff8a}
 .twsl{left:606px;top:62px;width:324px;height:398px;box-sizing:border-box;overflow:hidden}.twsl ol{margin:6px 0 0;padding-left:20px;font:500 14px/1.45 var(--ui)}.twsl small{color:var(--dim)}.twsrc{position:absolute;left:18px;right:18px;bottom:12px;font:800 14px var(--ui);color:var(--hi)}
+.twfl{position:absolute;transform-origin:0 0}.twxf{position:absolute;left:0;top:0;width:100%;height:100%;opacity:.82}.twxp{position:absolute;left:0;top:0;width:100%;height:100%}
+.twxj{position:absolute;left:0;top:0;pointer-events:none}
+.twxl{position:absolute;transform-origin:0 0;display:flex;align-items:baseline;gap:5px;white-space:nowrap;margin:-6px 0 0 -4px}.twxl i{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;align-self:center}.twxl span{font:500 15px var(--ui);color:#eef4ff;text-shadow:0 1px 3px #000,0 0 6px #000}.twxl b{font:600 17px var(--ui);color:#fff;text-shadow:0 1px 3px #000}
+.twq{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2px solid var(--c);background:radial-gradient(circle,var(--c) 0 25%,#0000 60%);box-shadow:0 0 12px var(--c);animation:twqp 2.4s ease-out infinite}@keyframes twqp{0%{box-shadow:0 0 0 0 var(--c)}70%{box-shadow:0 0 0 18px #0000}100%{box-shadow:0 0 0 0 #0000}}
+.twqp{position:absolute;right:20px;top:96px;width:330px;padding:10px 14px;background:#050b16cc;border:1px solid #2a4a78;border-radius:6px}.twqp b{display:block;font:600 16px var(--ui);color:#ffd84d;margin-bottom:6px}.twqp div{display:flex;gap:8px;align-items:baseline;font:400 13px var(--ui);color:#dfe8ff;margin:4px 0}.twqp em{font-style:normal;font-weight:700;color:#ff9a3d;min-width:40px}.twqp span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.twqp i{font-style:normal;color:#8fa3c4}
+.twkey{position:absolute;left:24px;bottom:50px;display:flex;align-items:center;gap:8px;font:500 12px var(--ui);color:#cfe0ff}.twkey i{width:140px;height:8px;border-radius:4px}.twkey.wv i{background:linear-gradient(90deg,#e6721e,#8a4614,#2a3c6e,#9fb4d0,#f4f8ff)}.twkey.tp i{background:linear-gradient(90deg,#783cc8,#3c5ae6,#3cbef0,#3cc878,#aadc3c,#fad232,#fa7828,#c81e28)}
 .twseg{position:absolute;left:26px;top:20px}.twseg span{display:block;font:300 22px var(--ui);color:#e8f0ff;padding-bottom:4px;border-bottom:3px solid #3d9bff;width:max-content}.twseg i{display:block;margin-top:4px;font:400 13px var(--ui);color:#8fb0de;font-style:normal;letter-spacing:.08em;text-transform:uppercase}
 .twlogo{position:absolute;right:28px;top:16px;text-align:center}.twlogo b{display:block;font:200 26px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.14em;color:#bfe3ff;text-shadow:0 0 6px #4fb2ff,0 0 14px #2a7fff}.twlogo span{display:block;font:300 12px var(--ui);letter-spacing:.6em;color:#9fd0ff;text-shadow:0 0 6px #4fb2ff}
 .twbar{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;gap:16px;padding:0 18px;background:linear-gradient(#0a1424ee,#050b16f5);border-top:1px solid #2a4a78;font:400 15px var(--ui);color:#e8f0ff;white-space:nowrap;overflow:hidden}
@@ -1820,7 +1826,8 @@ try{new ResizeObserver(fit).observe(screenEl)}catch(e){window.addEventListener('
 fit();
 
 const origRender=render;
-render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&(CH[S.ch].radar||CH[S.ch].twilight)))drawWxIcons()};
+render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&(CH[S.ch].radar||CH[S.ch].twilight)))drawWxIcons();
+  try{if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].twilight&&!twBreak()&&!twIdent())twxStart(twPhase(twNow()))}catch(e){}};
 
 /* ---------------- web requests through the Android app ---------------- */
 let httpId=0;const httpWait={};
@@ -2998,7 +3005,7 @@ function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
   if(CH[S.ch].twilight){const s=twNow(),br=twBreak(),D=TW.wx[s.reg.k];try{syncAdYT()}catch(e){}
     if(br){const sl=adSlot(br,Date.now()),ak='b'+sl.part+(sl.i||0)+(sl.part==='ad'?Math.min(3,Math.floor(sl.e/(AD_LEN/4))):'')+(adytActive(br)?'y':'');if(ak!==S.twKey){S.twKey=ak;render();updateJazz();
       if(sl.part==='ad'&&sl.e<2500&&!adytActive(br)&&SET.toonAds!=='off'&&NATIVE&&NATIVE.clipPlay)clipNative('jgl'+sl.ad.j)}return}
-    const key=s.n+(twIdent()?'i':twPhase(s))+(D?D.at:0);if(key!==S.twKey){S.twKey=key;render();updateJazz();return}
+    const key=s.n+(twIdent()?'i':twPhase(s))+(D?D.at:0)+(TWX.gAt?'g':'')+(TWX.qAt?'q':'');if(key!==S.twKey){S.twKey=key;render();updateJazz();return}
     const bk=Math.floor(Date.now()/7000);if(bk!==S.twBk){S.twBk=bk;const b=ui.querySelector('.twbar');if(b){b.outerHTML=twBar(s.reg);drawWxIcons(ui.querySelector('.twbar'))}}return}
   if(CH[S.ch].toons){if(S.toonLast!==S.ch){S.toonLast=S.ch;TOON.tuneT=Date.now();setTimeout(()=>{if(S.screen==='watch')render()},6500)}
     const tn=toonNow();try{syncAdYT()}catch(e){}
@@ -3701,9 +3708,10 @@ const TW_REG=[
 const TW={wx:{},busy:{},seg:-1,regIdx:0,built:'',t0:0};
 const TW_SEG=45000;   // each region gets 45 seconds: forecast map, then radar (or the night lights)
 function twRegions(){const ca=SET.region==='ca';return ca?TW_REG.filter(r=>r.ca).concat(TW_REG.filter(r=>!r.ca&&/ne|gl|nw|ma/.test(r.k))):TW_REG.filter(r=>!r.ca).concat(TW_REG.filter(r=>r.ca&&/on|bc/.test(r.k)))}
-function twNow(){const L=twRegions(),n=Math.floor(Date.now()/TW_SEG);return {reg:L[n%L.length],n:n,e:Date.now()%TW_SEG,next:L[(n+1)%L.length],globe:n%4===3}}
+function twNow(){const L=twRegions(),n=Math.floor(Date.now()/TW_SEG);return {reg:L[n%L.length],n:n,e:Date.now()%TW_SEG,next:L[(n+1)%L.length],feat:n%3===2?TW_FEATS[Math.floor(n/3)%TW_FEATS.length]:null}}
+const TW_FEATS=['globe','wv','wind','temp','jet','quake'];
 // what's on: 'globe' (whole-continent satellite), 'fc' (tilted forecast map), 'rad' (flat satellite/radar map)
-function twPhase(s){if(s.globe)return 'globe';return !s.reg.ca&&s.e>25000?'rad':'fc'}
+function twPhase(s){if(s.globe)return 'globe';if(s.feat)return s.feat==='globe'||twxHas(s.feat)?s.feat:'globe';return !s.reg.ca&&s.e>25000?'rad':'fc'}
 function twIdent(t){const d=new Date(t||Date.now());return d.getMinutes()%30===0&&d.getSeconds()<13}
 const TWB={};
 function twBreak(t){t=t||Date.now();const d=new Date(t),m=d.getMinutes();if(m!==28&&m!==29&&m!==58&&m!==59)return null;
@@ -3731,10 +3739,11 @@ function twMapHTML(r,radar,flat){const z=r.z,W=2200,H=1800,cl=r.cities.reduce((a
 // live clouds (GOES-East infrared from NASA GIBS); if the layer isn't served the clouds simply don't show
 function twCloudTile(z,x,y){const zz=Math.min(z,7);return 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GOES-East_ABI_Band13_Clean_Infrared/default/default/GoogleMapsCompatible_Level7/'+zz+'/'+y+'/'+x+'.png'}
 const TWG={z:5,W:2600,H:1500,lat:33,lon:-96};
-function twGlobeHTML(){const z=TWG.z,W=TWG.W,H=TWG.H,c=twProj(TWG.lat,TWG.lon,z),x0=c[0]-W/2,y0=c[1]-H/2,max=Math.pow(2,z);let h='<div class="twglobe"><div class="twgmap" style="width:'+W+'px;height:'+H+'px;animation-delay:-'+((Date.now()%TW_SEG)/1000).toFixed(1)+'s">';
+function twGlobeHTML(jet){const z=TWG.z,W=TWG.W,H=TWG.H,c=twProj(TWG.lat,TWG.lon,z),x0=c[0]-W/2,y0=c[1]-H/2,max=Math.pow(2,z);let h='<div class="twglobe"><div class="twgmap" style="width:'+W+'px;height:'+H+'px;animation-delay:-'+((Date.now()%TW_SEG)/1000).toFixed(1)+'s">';
   for(let ty=Math.floor(y0/256);ty<=Math.floor((y0+H)/256);ty++)for(let tx=Math.floor(x0/256);tx<=Math.floor((x0+W)/256);tx++){if(ty<0||ty>=max)continue;const wx=((tx%max)+max)%max,l=(tx*256-x0).toFixed(0),t=(ty*256-y0).toFixed(0);
     h+='<img class="twt" style="left:'+l+'px;top:'+t+'px" src="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/default/GoogleMapsCompatible_Level8/'+z+'/'+ty+'/'+wx+'.png" alt="" onerror="this.style.visibility=\'hidden\'">'+
       '<img class="twcl" style="left:'+l+'px;top:'+t+'px" src="'+twCloudTile(z,wx,ty)+'" alt="" onerror="this.remove()">'}
+  if(jet)h+='<canvas class="twxj" id="twxj" width="'+(W/2)+'" height="'+(H/2)+'" style="width:'+W+'px;height:'+H+'px"></canvas>';
   return h+'</div><div class="twatmo"></div></div>'}
 function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor(k/5)%r.cities.length,mode=[4,0,1,3,2][k%5],w=D&&D.c[ci],ct=r.cities[ci];let items='';
   if(w){const fmtH=tm=>{const h=+tm.slice(11,13);return (h%12||12)+(h<12?'a':'p')};
@@ -3745,6 +3754,70 @@ function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor
     else items='<em>'+T('This Week')+'</em>'+w.dy.slice(1,4).map(x=>'<span class="twh">'+dayName(new Date(x.tm+'T12:00:00').getDay()).slice(0,3)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,1)+'" width="40" height="32"></canvas></i> '+tU(x.hi)+'°/'+tU(x.lo)+'°</span>').join('')}
   else items='<span>'+T('Loading the weather…')+'</span>';
   return '<div class="twbar"><span class="twlg">'+catSvg(20)+'</span><span class="twclk">'+fmtT(Date.now()).replace(/\s?[AP]M/i,'')+'</span><span class="twcity">'+esc(ct[0])+'</span>'+items+'</div>'}
+/* ---- Twilight weather maps: water vapor, temperatures, winds, jet stream (Open-Meteo grid) and earthquakes (USGS) ---- */
+const TWX={g:null,gAt:0,gBusy:false,gErr:0,q:null,qAt:0,qBusy:false,raf:0,anim:null};
+const TWX_LAT0=22,TWX_DLAT=3,TWX_NLAT=11,TWX_LON0=-130,TWX_DLON=4,TWX_NLON=18;
+async function twxLoadGrid(){if(!NATIVE||TWX.gBusy||(TWX.g&&Date.now()-TWX.gAt<60*MIN)||(TWX.gErr&&Date.now()-TWX.gErr<10*MIN))return;TWX.gBusy=true;
+  const la=[],lo=[];for(let i=0;i<TWX_NLAT;i++)for(let j=0;j<TWX_NLON;j++){la.push(TWX_LAT0+i*TWX_DLAT);lo.push(TWX_LON0+j*TWX_DLON)}
+  const base='https://api.open-meteo.com/v1/forecast?latitude='+la.join(',')+'&longitude='+lo.join(',')+'&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=GMT&forecast_days=1&hourly=';
+  const pick=(x,k)=>{const H=x.hourly||{},t=H.time||[],now=new Date().toISOString().slice(0,13);let i=t.findIndex(s=>s.slice(0,13)===now);if(i<0)i=0;return H[k]?H[k][i]:null};
+  try{let j;try{j=JSON.parse(await http(base+'temperature_2m,wind_speed_10m,wind_direction_10m,relative_humidity_500hPa,wind_speed_250hPa,wind_direction_250hPa'))}
+      catch(e){j=JSON.parse(await http(base+'temperature_2m,wind_speed_10m,wind_direction_10m'))}
+    const A=Array.isArray(j)?j:[j];if(A.length!==TWX_NLAT*TWX_NLON)throw 0;
+    TWX.g={t:A.map(x=>pick(x,'temperature_2m')),ws:A.map(x=>pick(x,'wind_speed_10m')),wd:A.map(x=>pick(x,'wind_direction_10m')),rh:A.map(x=>pick(x,'relative_humidity_500hPa')),js:A.map(x=>pick(x,'wind_speed_250hPa')),jd:A.map(x=>pick(x,'wind_direction_250hPa'))};TWX.gAt=Date.now();TWX.gErr=0}
+  catch(e){TWX.gErr=Date.now()}TWX.gBusy=false}
+async function twxLoadQuakes(){if(!NATIVE||TWX.qBusy||(TWX.q&&Date.now()-TWX.qAt<15*MIN))return;TWX.qBusy=true;
+  try{const j=JSON.parse(await http('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson'));
+    TWX.q=(j.features||[]).map(f=>({m:f.properties.mag,place:f.properties.place||'',t:f.properties.time,lon:f.geometry.coordinates[0],lat:f.geometry.coordinates[1],d:f.geometry.coordinates[2]})).filter(x=>x.m!=null);TWX.qAt=Date.now()}catch(e){}
+  TWX.qBusy=false}
+function twxHas(k){const g=TWX.g;if(!g)return false;const ok=a=>a&&a.filter(v=>v!=null).length>TWX_NLAT*TWX_NLON*.6;return k==='wv'?ok(g.rh):k==='jet'?ok(g.js)&&ok(g.jd):k==='quake'?!!TWX.q:ok(g.t)}
+// bilinear lookup on the grid
+function twxAt(arr,lat,lon){const fi=(lat-TWX_LAT0)/TWX_DLAT,fj=(lon-TWX_LON0)/TWX_DLON,i=Math.max(0,Math.min(TWX_NLAT-1.001,fi)),j=Math.max(0,Math.min(TWX_NLON-1.001,fj)),i0=Math.floor(i),j0=Math.floor(j),a=i-i0,b=j-j0;
+  const v=(ii,jj)=>{const x=arr[ii*TWX_NLON+jj];return x==null?null:x};const q=[v(i0,j0),v(i0,j0+1),v(i0+1,j0),v(i0+1,j0+1)];if(q.some(x=>x==null)){const f=q.filter(x=>x!=null);return f.length?f.reduce((s,x)=>s+x,0)/f.length:null}
+  return q[0]*(1-a)*(1-b)+q[1]*(1-a)*b+q[2]*a*(1-b)+q[3]*a*b}
+function twxUV(spdA,dirA,lat,lon){const s=twxAt(spdA,lat,lon),d=twxAt(dirA,lat,lon);if(s==null||d==null)return null;const r=d*Math.PI/180;return [-s*Math.sin(r),-s*Math.cos(r),s]}
+function twxInv(x,y,z){const n=256*Math.pow(2,z),lon=x/n*360-180,lat=Math.atan(Math.sinh(Math.PI*(1-2*y/n)))*180/Math.PI;return [lat,lon]}
+// a flat map of a box, scaled to fit the screen above the bottom bar
+function twxFlat(b,z){const p0=twProj(b[1],b[2],z),p1=twProj(b[0],b[3],z),x0=Math.floor(p0[0]),y0=Math.floor(p0[1]),W=Math.ceil(p1[0]-x0),H=Math.ceil(p1[1]-y0),k=Math.min(960/W,500/H),max=Math.pow(2,z);
+  let t='';for(let ty=Math.floor(y0/256);ty<=Math.floor((y0+H)/256);ty++)for(let tx=Math.floor(x0/256);tx<=Math.floor((x0+W)/256);tx++){if(ty<0||ty>=max)continue;const wx=((tx%max)+max)%max;
+    t+='<img class="twt" style="left:'+(tx*256-x0)+'px;top:'+(ty*256-y0)+'px" src="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/default/GoogleMapsCompatible_Level8/'+z+'/'+ty+'/'+wx+'.png" alt="" onerror="this.style.visibility=\'hidden\'">'}
+  return {z:z,x0:x0,y0:y0,W:W,H:H,k:k,tiles:t,P:(lat,lon)=>{const p=twProj(lat,lon,z);return [p[0]-x0,p[1]-y0]},wrap:inner=>'<div class="twfl" style="width:'+W+'px;height:'+H+'px;left:'+((960-W*k)/2).toFixed(0)+'px;top:'+((500-H*k)/2).toFixed(0)+'px;transform:scale('+k.toFixed(4)+')">'+t+inner+'</div>'}}
+const TWX_US=[21,53,-127,-64],TWX_CITIES=[['Seattle',47.6,-122.3],['San Francisco',37.8,-122.4],['Los Angeles',34.05,-118.2],['Phoenix',33.45,-112.1],['Denver',39.7,-105],['Dallas',32.8,-96.8],['Houston',29.8,-95.4],['Minneapolis',44.98,-93.3],['Chicago',41.9,-87.6],['Atlanta',33.75,-84.4],['Miami',25.8,-80.2],['Washington',38.9,-77],['New York',40.7,-74],['Boston',42.36,-71.06],['Salt Lake City',40.76,-111.9],['Kansas City',39.1,-94.6],['Nashville',36.16,-86.8],['Detroit',42.33,-83.05]];
+function twxWvColor(rh){if(rh<35){const k=Math.max(0,Math.min(1,(35-rh)/30));return [140+90*k,70+40*k,20,150+80*k]}if(rh<60){const k=(rh-35)/25;return [30+20*k,40+40*k,70+60*k,120+40*k]}const k=Math.min(1,(rh-60)/40);return [120+130*k,140+110*k,170+85*k,170+80*k]}
+function twxTColor(f){const st=[[-10,[120,60,200]],[15,[60,90,230]],[35,[60,190,240]],[50,[60,200,120]],[65,[170,220,60]],[78,[250,210,50]],[90,[250,120,40]],[105,[200,30,40]]];
+  if(f<=st[0][0])return st[0][1].concat(200);for(let i=1;i<st.length;i++)if(f<=st[i][0]){const a=st[i-1],b=st[i],k=(f-a[0])/(b[0]-a[0]);return a[1].map((c,j)=>c+(b[1][j]-c)*k).concat(200)}return st[st.length-1][1].concat(200)}
+// paint the field into a small canvas (the browser smooths it when scaled up)
+function twxPaint(cv,V,arr,col){const w=cv.width,h=cv.height,ctx=cv.getContext('2d'),img=ctx.createImageData(w,h),sx=V.W/w,sy=V.H/h;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const ll=twxInv(V.x0+x*sx,V.y0+y*sy,V.z),v=twxAt(arr,ll[0],ll[1]),o=(y*w+x)*4;if(v==null)continue;const c=col(v);img.data[o]=c[0];img.data[o+1]=c[1];img.data[o+2]=c[2];img.data[o+3]=c[3]}
+  ctx.putImageData(img,0,0)}
+// animated wind streaks; jet=true draws only fast upper-level wind in purples
+function twxAnimate(cv,proj,box,spdA,dirA,jet){cancelAnimationFrame(TWX.raf);const ctx=cv.getContext('2d'),N=jet?650:800,P=[];
+  const spawn=()=>({lat:box[0]+Math.random()*(box[1]-box[0]),lon:box[2]+Math.random()*(box[3]-box[2]),age:Math.floor(Math.random()*80)});for(let i=0;i<N;i++)P.push(spawn());
+  const step=()=>{if(!cv.isConnected){TWX.raf=0;return}ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,'+(jet?.07:.05)+')';ctx.fillRect(0,0,cv.width,cv.height);ctx.globalCompositeOperation='source-over';ctx.lineWidth=jet?2.2:1.6;
+    for(const p of P){const uv=twxUV(spdA,dirA,p.lat,p.lon);if(!uv||(jet&&uv[2]<50)||p.age++>90){Object.assign(p,spawn(),{age:0});continue}
+      const a=proj(p.lat,p.lon),k=jet?.0011:.0026;p.lon+=uv[0]*k/Math.max(.3,Math.cos(p.lat*Math.PI/180));p.lat+=uv[1]*k;const b=proj(p.lat,p.lon);
+      if(p.lat<box[0]||p.lat>box[1]||p.lon<box[2]||p.lon>box[3]){Object.assign(p,spawn(),{age:0});continue}
+      const s=uv[2];ctx.strokeStyle=jet?(s>130?'rgba(255,190,255,.9)':s>90?'rgba(220,90,255,.85)':'rgba(140,90,255,.7)'):'rgba(220,240,255,'+Math.min(.95,.45+s/25)+')';
+      ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()}
+    TWX.raf=requestAnimationFrame(step)};TWX.raf=requestAnimationFrame(step)}
+function twxLabels(V,vals){return TWX_CITIES.map(c=>{const p=V.P(c[1],c[2]);if(p[0]<0||p[1]<0||p[0]>V.W||p[1]>V.H)return '';const v=vals?vals(c):null;
+  return '<div class="twxl" style="left:'+p[0].toFixed(0)+'px;top:'+p[1].toFixed(0)+'px;transform:scale('+(1/V.k).toFixed(3)+')"><i></i><span>'+esc(c[0])+'</span>'+(v!=null?'<b>'+v+'</b>':'')+'</div>'}).join('')}
+function twxHTML(kind){const g=TWX.g;
+  if(kind==='quake'){const V=twxFlat([8,72,-178,-52],3),Q=(TWX.q||[]).filter(x=>x.lat>8&&x.lat<72&&x.lon>-178&&x.lon<-52).sort((a,b)=>b.m-a.m);
+    const dots=Q.slice(0,120).map(x=>{const p=V.P(x.lat,x.lon),r=(4+x.m*x.m*1.3)/V.k;return '<div class="twq" style="left:'+p[0].toFixed(0)+'px;top:'+p[1].toFixed(0)+'px;width:'+r.toFixed(0)+'px;height:'+r.toFixed(0)+'px;--c:'+(x.m>=5?'#ff4d3d':x.m>=4?'#ff9a3d':'#ffd84d')+'"></div>'}).join('');
+    const ago=t=>{const h=Math.round((Date.now()-t)/3600000);return h<1?T('just now'):T('{0}h ago',h)};
+    return V.wrap(dots)+'<div class="twqp"><b>'+T('{0} earthquakes',Q.length)+'</b>'+Q.slice(0,5).map(x=>'<div><em>M'+x.m.toFixed(1)+'</em><span>'+esc(x.place)+'</span><i>'+ago(x.t)+'</i></div>').join('')+(Q.length?'':'<div>'+T('No earthquakes of magnitude 2.5 or more.')+'</div>')+'</div>'}
+  const V=twxFlat(TWX_US,4),cw=Math.round(V.W/6),ch=Math.round(V.H/6);
+  if(kind==='wv')return V.wrap('<canvas class="twxf" id="twxf" width="'+cw+'" height="'+ch+'"></canvas>'+twxLabels(V))+'<div class="twkey wv"><span>'+T('Dry')+'</span><i></i><span>'+T('Moist')+'</span></div>';
+  if(kind==='temp')return V.wrap('<canvas class="twxf" id="twxf" width="'+cw+'" height="'+ch+'"></canvas>'+twxLabels(V,c=>{const v=twxAt(g.t,c[1],c[2]);return v==null?null:tU(Math.round(v))+'°'}))+'<div class="twkey tp"><span>'+tU(0)+'°</span><i></i><span>'+tU(100)+'°</span></div>';
+  if(kind==='wind')return V.wrap('<canvas class="twxp" id="twxp" width="'+Math.round(V.W/2)+'" height="'+Math.round(V.H/2)+'"></canvas>'+twxLabels(V,c=>{const u=twxUV(g.ws,g.wd,c[1],c[2]);return u?Math.round(u[2])+(isCA()?'':''):null}))+'<div class="twkey wd"><span>'+T(isCA()?'Wind speeds in mph':'Wind speeds in mph')+'</span></div>';
+  return ''}
+// after a map is on screen: paint the field or start the animation
+function twxStart(kind){const g=TWX.g;if(!g)return;const V=kind==='quake'?null:twxFlat(TWX_US,4);
+  if(kind==='wv'||kind==='temp'){const cv=document.getElementById('twxf');if(cv)twxPaint(cv,V,kind==='wv'?g.rh:g.t,kind==='wv'?twxWvColor:twxTColor)}
+  if(kind==='wind'){const cv=document.getElementById('twxp');if(cv)twxAnimate(cv,(la,lo)=>{const p=V.P(la,lo);return [p[0]/2,p[1]/2]},[TWX_US[0],TWX_US[1],TWX_US[2],TWX_US[3]],g.ws,g.wd,false)}
+  if(kind==='jet'){const cv=document.getElementById('twxj');if(cv){const c=twProj(TWG.lat,TWG.lon,TWG.z),x0=c[0]-TWG.W/2,y0=c[1]-TWG.H/2;twxAnimate(cv,(la,lo)=>{const p=twProj(la,lo,TWG.z);return [(p[0]-x0)/2,(p[1]-y0)/2]},[22,54,-130,-62],g.js,g.jd,true)}}}
+
 // Twilight: the owner's own music files (sent from a phone; stored only on this device)
 const TWF={files:[],url:'',msg:''};
 function twfLoad(){try{if(NATIVE&&NATIVE.twFiles)TWF.files=JSON.parse(NATIVE.twFiles()||'[]')}catch(e){TWF.files=[]}}
@@ -3772,13 +3845,15 @@ function twilightHTML(){const s=twNow(),r=s.reg;twLoad(r);if(s.e>TW_SEG-8000)twL
   const br=twBreak();let h='<div class="tw">';
   if(br){const sl=adSlot(br,Date.now());return sl.part==='ad'&&adytActive(br)?'<div class="tw"></div>':h+adHTML(br)+'</div>'}
   if(twIdent())return h+twIdentHTML(r)+'</div>';
-  const ph=twPhase(s);
-  if(ph==='globe')h+='<div class="twgcam" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twGlobeHTML()+'</div><div class="twspace"></div>';
+  twxLoadGrid();twxLoadQuakes();const ph=twPhase(s);
+  if(ph==='globe'||ph==='jet')h+='<div class="twgcam" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twGlobeHTML(ph==='jet')+'</div><div class="twspace"></div>';
+  else if(ph==='wv'||ph==='temp'||ph==='wind'||ph==='quake')h+=twxHTML(ph)+'<div class="twshade flat"></div>';
   else h+='<div class="twcam'+(ph==='rad'?' flat':'')+'" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twMapHTML(r,ph==='rad',ph==='rad')+'</div>'+(ph==='rad'?'<div class="twshade flat"></div>':'<div class="twshade"></div>');
   const hr=new Date().getHours(),night=hr>=18||hr<6;
-  h+='<div class="twseg"><span>'+T(ph==='globe'?'Satellite: Clouds':ph==='rad'?'Sat / Rad: Past Hour':night?'Tonight’s Forecast':'Today’s Forecast')+'</span><i>'+esc(T(ph==='globe'?'North America':r.n))+'</i></div>';
+  const TT={globe:'Satellite: Clouds',rad:'Sat / Rad: Past Hour',wv:'Water Vapor',temp:'Current Temperatures',wind:'Current Winds',jet:'Jet Stream',quake:'Earthquakes: Past 24 Hours'},SUB={globe:'North America',jet:'North America',quake:'North America',wv:'United States',temp:'United States',wind:'United States'};
+  h+='<div class="twseg"><span>'+T(TT[ph]||(night?'Tonight’s Forecast':'Today’s Forecast'))+'</span><i>'+esc(T(SUB[ph]||r.n))+'</i></div>';
   h+='<div class="twlogo"><b>Twilight</b><span>NYX</span></div>';
-  return h+twBar(r)+'<div class="twcred">'+T('Night lights & clouds: NASA')+(ph==='rad'?' · '+T('Radar: Iowa Environmental Mesonet'):'')+' · '+T('Weather: Open-Meteo')+'</div></div>'}
+  return h+twBar(r)+'<div class="twcred">'+T('Night lights & clouds: NASA')+(ph==='rad'?' · '+T('Radar: Iowa Environmental Mesonet'):'')+(ph==='quake'?' · '+T('Earthquakes: USGS'):' · '+T('Weather: Open-Meteo'))+'</div></div>'}
 
 /* ---------------- Nyx Toons (ch 9): public-domain cartoons from the Internet Archive, back to back ---------------- */
 // Old cartoons include wartime propaganda and racist caricatures; none of those air here (title, subject and description checks, plus a list of known titles)
