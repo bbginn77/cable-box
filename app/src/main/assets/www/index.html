@@ -296,6 +296,8 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .nnlogo{display:flex;align-items:center;gap:4px;background:#fff;color:#b3131b;padding:2px 8px 2px 10px;border-radius:3px}
 .nnlogo span{font:italic 900 22px var(--display);letter-spacing:-.02em}
 .wxbrand .nnlogo span{color:#b3131b;font:italic 900 22px var(--display);letter-spacing:-.02em;text-transform:none;overflow:visible}
+.nvbox_{}
+#nvbox{position:absolute;left:24px;top:100px;width:480px;height:270px;z-index:4;background:#000;border:2px solid var(--k9ec0ff);box-sizing:border-box}#nvbox .nvv,#nvbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}#nvbox .nvl{position:absolute;right:0;bottom:-26px;font:800 13px var(--ui);color:#ffe7a8;letter-spacing:.06em;white-space:nowrap}
 .nnimg{position:absolute;left:24px;top:100px;width:480px;height:270px;overflow:hidden;border:2px solid var(--k9ec0ff);background:#000}
 .nnimg2{position:absolute;left:20px;top:20px;width:384px;height:216px;overflow:hidden;border:2px solid var(--k9ec0ff);background:#000}
 .nnimg img,.nnimg2 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -743,7 +745,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,newsVid:'abc',vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -834,6 +836,7 @@ const ALLSETS=[
  {k:'pluto',label:'Pluto TV Listings',vals:[true,false],names:['On','Off'],desc:'Adds free Pluto TV channels to the guide starting at channel 200. Pressing OK on one opens it in the Pluto TV app.'},
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
+ {k:'newsVid',label:'News Channel Video',vals:['abc','nbc','cbs','off'],names:['ABC News','NBC News','CBS News','Off'],desc:'The big window on Nyx News Network (channel 5) plays the latest clips from this network’s official YouTube channel while the headlines rotate beside it. Tap the video to pause or skip.'},
  {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
  {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
  {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
@@ -860,7 +863,7 @@ const ALLSETS=[
 const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
- {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','ppv','gdl','gdlnow']},
+ {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','tkey','skey','spterms','spdisc']}];
 const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
 const SETS=[];
@@ -1548,6 +1551,7 @@ function render(){
   const rs=ui.querySelector('.radar-slot');if(rs){rs.appendChild(radarBox);if(NATIVE&&Date.now()-radarAt>10*MIN){radarIdx=0;radarSrc()}}
   syncVideo();
   try{syncGaga()}catch(e){}
+  try{syncNewsVid()}catch(e){}
   try{if(NATIVE&&NATIVE.keepAwake){const w=sc==='watch'||sc==='boot'||sc==='gdl';if(w!==render.awake){render.awake=w;NATIVE.keepAwake(w)}}}catch(e){}
   try{const tb=document.getElementById('tbar');if(tb&&sc!=='watch')tb.classList.remove('show')}catch(e){}
   clearTimeout(render.bt);if(sc==='watch'&&S.bannerUntil>Date.now())render.bt=setTimeout(render,S.bannerUntil-Date.now()+30);
@@ -2997,6 +3001,18 @@ function syncGaga(){
   else if(!want&&f)f.remove();   // leaving the channel stops the music
 }
 
+/* ---------------- NNN video window: the latest clips from a news network's official YouTube channel ---------------- */
+const NEWSVID={abc:['ABC News','UCBi2mrWuNuyYy4gbM6fU18Q'],nbc:['NBC News','UCeY0bbntWzzVIaj2z3QigXg'],cbs:['CBS News','UC8p1vwvWtl6T73JiExfWs1g']};
+const nvbox=document.createElement('div');nvbox.id='nvbox';nvbox.hidden=true;nvbox.innerHTML='<div class="nvv"></div><div class="nvl"></div>';stage.appendChild(nvbox);
+function syncNewsVid(){const k=SET.newsVid||'abc',ch=NEWSVID[k];
+  const want=!!(ch&&NATIVE&&!APP_PAUSED&&S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].news&&!locked(S.ch)&&!S.nm&&!S.mid&&S.nmenu==null&&newsStories().length&&!(S.bumpUntil>Date.now()));
+  nvbox.hidden=!want;const v=nvbox.querySelector('.nvv');let f=v.querySelector('iframe');
+  if(want&&f&&f.dataset.k!==k){f.remove();f=null}
+  if(want&&!f){f=document.createElement('iframe');f.dataset.k=k;f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');f.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+    f.src='https://www.youtube.com/embed/videoseries?list=UU'+ch[1].slice(2)+'&autoplay=1&playsinline=1&rel=0&hl='+(SET.lang||'en');v.appendChild(f)}
+  else if(!want&&f)f.remove();
+  if(want)nvbox.querySelector('.nvl').textContent='▶ '+ch[0]+' · '+T('Latest video')}
+
 /* ---------------- tiny QR code maker (byte mode, error level L) for "read the full story" links ---------------- */
 const QR=(()=>{
   // per version: [total codewords, ec codewords per block, [blocks group1, data per block g1, blocks g2, data per block g2]] for level L
@@ -3918,7 +3934,7 @@ window.cable={
   jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
   spState:function(j){spState(j)},spPlayer:function(j){spPlayer(j)},spArt:function(d){spArt(d)},spList:function(j){spList(j)},
-  pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}},
+  pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}try{syncNewsVid()}catch(e){}},
   dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
   resume:function(){APP_PAUSED=false;try{if(SPT.st==='err'||SPT.st==='conn'){SPT.st='idle';SPT.tries=0}}catch(e){}applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
