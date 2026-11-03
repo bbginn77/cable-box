@@ -14,6 +14,10 @@ import com.spotify.protocol.types.Image
 import com.spotify.protocol.types.ListItem
 import com.spotify.protocol.types.PlayerState
 import java.io.ByteArrayOutputStream
+import java.net.Inet4Address
+import java.net.NetworkInterface
+import java.net.ServerSocket
+import java.net.Socket
 import java.util.concurrent.atomic.AtomicInteger
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -180,6 +184,77 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ---- Twilight: the owner's own music files, sent from a phone on the same Wi-Fi; they stay on this device ----
+    private val twDir by lazy { File(filesDir, "twmusic").apply { mkdirs() } }
+    private var twPlayer: MediaPlayer? = null
+    private var twIdx = 0
+    @Volatile private var twServer: ServerSocket? = null
+    private fun twList(): List<File> = (twDir.listFiles() ?: arrayOf()).filter { it.isFile && it.length() > 0 && !it.name.startsWith(".") }.sortedBy { it.name.lowercase() }
+    private fun twFilesJson(): String { val a = JSONArray(); twList().forEach { a.put(JSONObject().put("name", it.name).put("size", it.length())) }; return a.toString() }
+    private fun twNotify() = runOnUiThread { web.evaluateJavascript("window.cable&&cable.twFiles&&cable.twFiles(" + JSONObject.quote(twFilesJson()) + ")", null) }
+    private fun twStop() { twPlayer?.let { try { it.stop() } catch (e: Exception) {}; it.release() }; twPlayer = null }
+    private fun twStart() {
+        val L = twList(); if (L.isEmpty()) { twStop(); return }
+        if (twIdx >= L.size) twIdx = 0
+        twStop()
+        val mp = MediaPlayer()
+        try {
+            mp.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+            mp.setDataSource(L[twIdx].absolutePath)
+            mp.isLooping = L.size == 1
+            mp.setOnPreparedListener { it.start() }
+            mp.setOnCompletionListener { twIdx = (twIdx + 1) % maxOf(1, twList().size); twStart() }
+            mp.setOnErrorListener { _, _, _ -> twIdx++; if (twIdx < twList().size) twStart(); true }
+            mp.prepareAsync()
+            twPlayer = mp
+        } catch (e: Exception) { mp.release() }
+    }
+    private fun localIp(): String {
+        try {
+            NetworkInterface.getNetworkInterfaces()?.toList()?.forEach { ni ->
+                if (!ni.isUp || ni.isLoopback) return@forEach
+                ni.inetAddresses.toList().forEach { a -> if (a is Inet4Address && !a.isLoopbackAddress && a.isSiteLocalAddress) return a.hostAddress ?: "" }
+            }
+        } catch (e: Exception) {}
+        return ""
+    }
+    private val TW_PAGE = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NyxVision Twilight Music</title>
+<style>body{margin:0;font:16px -apple-system,Roboto,Arial,sans-serif;background:#050b16;color:#e8f0ff;padding:24px}h1{font-weight:200;letter-spacing:.12em;color:#bfe3ff;text-shadow:0 0 10px #3d9bff;margin:0 0 4px}
+p{color:#9fb4d6}label{display:block;margin:20px 0;padding:22px;border:2px dashed #3d6fb0;border-radius:14px;text-align:center;font-size:18px;color:#cfe3ff}input{display:none}
+button{width:100%;padding:16px;border:0;border-radius:12px;background:#2f7dff;color:#fff;font-size:18px;font-weight:600}button:disabled{opacity:.4}
+li{margin:6px 0}.bar{height:8px;background:#13233f;border-radius:4px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;width:0;background:#4fb2ff}.ok{color:#7dff8a}.err{color:#ff7a6a}</style></head>
+<body><h1>Twilight</h1><p>Send music to Nyx Twilight on your TV. You can pick several files; they play in filename order and loop.</p>
+<label>Tap to choose music files<input id="f" type="file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav,.flac" multiple></label><ul id="l"></ul><button id="go" disabled>Send to TV</button><p id="st"></p>
+<script>const f=document.getElementById('f'),l=document.getElementById('l'),go=document.getElementById('go'),st=document.getElementById('st');
+f.onchange=()=>{l.innerHTML='';[...f.files].forEach((x,i)=>{l.innerHTML+='<li>'+x.name.replace(/</g,'&lt;')+' <small>('+(x.size/1048576).toFixed(1)+' MB)</small><div class="bar"><i id="b'+i+'"></i></div></li>'});go.disabled=!f.files.length};
+go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++){const x=f.files[i];st.textContent='Sending '+x.name+'…';
+ await new Promise(res=>{const r=new XMLHttpRequest();r.open('POST','/upload?name='+encodeURIComponent(x.name));r.upload.onprogress=e=>{if(e.lengthComputable)document.getElementById('b'+i).style.width=(e.loaded/e.total*100)+'%'};
+ r.onload=()=>{if(r.status==200)ok++;res()};r.onerror=res;r.send(x)})}
+ st.innerHTML=ok==f.files.length?'<span class="ok">Done! '+ok+' file(s) are on your TV.</span>':'<span class="err">'+ok+' of '+f.files.length+' sent. Try the rest again.</span>';go.disabled=false}</script></body></html>"""
+    private fun twHandle(sock: Socket) {
+        sock.use { so ->
+            so.soTimeout = 30000
+            val inp = java.io.BufferedInputStream(so.getInputStream()); val out = so.getOutputStream()
+            fun line(): String { val b = StringBuilder(); while (true) { val c = inp.read(); if (c < 0 || c == '\n'.code) break; if (c != '\r'.code) b.append(c.toChar()) }; return b.toString() }
+            val req = line().split(" "); if (req.size < 2) return
+            var len = -1L; while (true) { val h = line(); if (h.isEmpty()) break; val i = h.indexOf(':'); if (i > 0 && h.substring(0, i).trim().equals("Content-Length", true)) len = h.substring(i + 1).trim().toLongOrNull() ?: -1 }
+            fun send(code: String, type: String, body: ByteArray) { out.write(("HTTP/1.1 $code\r\nContent-Type: $type\r\nContent-Length: ${body.size}\r\nConnection: close\r\n\r\n").toByteArray()); out.write(body); out.flush() }
+            val path = req[1]
+            if (req[0] == "GET" && (path == "/" || path.startsWith("/?"))) { send("200 OK", "text/html; charset=utf-8", TW_PAGE.toByteArray()); return }
+            if (req[0] == "POST" && path.startsWith("/upload")) {
+                val raw = Uri.parse("http://x$path").getQueryParameter("name") ?: "music.mp3"
+                val name = raw.substringAfterLast('/').replace(Regex("[^A-Za-z0-9 ._()\\-]"), "_").take(80).ifBlank { "music.mp3" }
+                if (len <= 0 || len > 300L * 1024 * 1024 || !Regex("\\.(mp3|m4a|aac|ogg|wav|flac|opus)$", RegexOption.IGNORE_CASE).containsMatchIn(name)) { send("400 Bad Request", "text/plain", "Unsupported file".toByteArray()); return }
+                val tmp = File(twDir, ".up-" + System.nanoTime())
+                tmp.outputStream().use { fo -> val buf = ByteArray(65536); var left = len; while (left > 0) { val n = inp.read(buf, 0, minOf(buf.size.toLong(), left).toInt()); if (n < 0) break; fo.write(buf, 0, n); left -= n } }
+                if (tmp.length() != len) { tmp.delete(); send("400 Bad Request", "text/plain", "Incomplete".toByteArray()); return }
+                val dest = File(twDir, name); dest.delete(); tmp.renameTo(dest)
+                send("200 OK", "application/json", "{\"ok\":true}".toByteArray()); twNotify(); return
+            }
+            send("404 Not Found", "text/plain", "Not found".toByteArray())
+        }
+    }
+
     private fun stopJazz() {
         jazzPlayer?.let { try { it.stop() } catch (e: Exception) {}; it.release() }
         jazzPlayer = null
@@ -297,6 +372,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        try { twServer?.close() } catch (e: Exception) {}
+        twStop()
         try { spSub?.cancel(); SpotifyAppRemote.disconnect(spRemote) } catch (e: Exception) {}
         player?.release()
         player = null
@@ -599,6 +676,24 @@ class MainActivity : AppCompatActivity() {
                 try { if (i != null) startActivity(i) else startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music"))) } catch (e: Exception) {}
             }
         }
+
+        /** Twilight music upload page: starts a small web server on this device's Wi-Fi address; returns "http://ip:port/" or "" */
+        @JavascriptInterface
+        fun twServe(on: Boolean): String {
+            if (!on) { try { twServer?.close() } catch (e: Exception) {}; twServer = null; return "" }
+            val ip = localIp(); if (ip.isEmpty()) return ""
+            if (twServer == null) {
+                fun bindOn(port: Int): ServerSocket? = try { ServerSocket().apply { reuseAddress = true; bind(java.net.InetSocketAddress(port)) } } catch (e: Exception) { null }
+                val ss = bindOn(8088) ?: bindOn(8089) ?: return ""
+                twServer = ss
+                Thread { while (!ss.isClosed) { try { val c = ss.accept(); Thread { try { twHandle(c) } catch (e: Exception) {} }.start() } catch (e: Exception) { break } } }.start()
+            }
+            return "http://" + ip + ":" + (twServer?.localPort ?: 8088) + "/"
+        }
+        @JavascriptInterface fun twFiles(): String = twFilesJson()
+        @JavascriptInterface fun twClear() { twList().forEach { it.delete() }; runOnUiThread { twStop() }; twNotify() }
+        /** Play (true) or stop (false) the owner's Twilight music, in filename order, looping. */
+        @JavascriptInterface fun twPlay(on: Boolean) { runOnUiThread { if (on) { if (twPlayer == null) twStart() } else twStop() } }
 
         /** On-screen remote VOL/MUTE: 1 = up, -1 = down, 0 = mute on/off. Shows Android's own volume slider. */
         @JavascriptInterface

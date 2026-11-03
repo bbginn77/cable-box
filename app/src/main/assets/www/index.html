@@ -557,6 +557,9 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 @keyframes twpop{from{opacity:0;transform:translate(-30px,-60%) rotateX(-24deg) scale(.7)}to{opacity:1;transform:translate(-30px,-80%) rotateX(-24deg) scale(1)}}
 .twshade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(170% 120% at 50% 130%,#0000 62%,#16325c88 80%,#02040a 95%),linear-gradient(#02040acc 0,#0000 22%,#0000 80%,#02040a 100%)}
 .twshade.flat{background:linear-gradient(#02040ae6 0,#02040a00 24%,#0000 82%,#02040acc 100%)}
+.twsb{left:30px;top:62px;width:560px;height:398px;box-sizing:border-box;overflow:hidden}.twsq{display:flex;gap:16px;align-items:flex-start;margin-top:8px}.twsq svg{background:#fff;padding:6px;flex:none}.twsq ol{margin:0;padding-left:20px;font:500 15px/1.4 var(--ui)}.twsq li{margin-bottom:8px}
+.twurl{display:block;margin-top:4px;font:700 18px var(--ui);color:var(--hi);word-break:break-all}.twsn{font:500 13px/1.35 var(--ui);color:var(--dim);margin-top:10px}.twok{font:800 16px var(--ui);color:#7dff8a}
+.twsl{left:606px;top:62px;width:324px;height:398px;box-sizing:border-box;overflow:hidden}.twsl ol{margin:6px 0 0;padding-left:20px;font:500 14px/1.45 var(--ui)}.twsl small{color:var(--dim)}.twsrc{position:absolute;left:18px;right:18px;bottom:12px;font:800 14px var(--ui);color:var(--hi)}
 .twseg{position:absolute;left:26px;top:20px}.twseg span{display:block;font:300 22px var(--ui);color:#e8f0ff;padding-bottom:4px;border-bottom:3px solid #3d9bff;width:max-content}.twseg i{display:block;margin-top:4px;font:400 13px var(--ui);color:#8fb0de;font-style:normal;letter-spacing:.08em;text-transform:uppercase}
 .twlogo{position:absolute;right:28px;top:16px;text-align:center}.twlogo b{display:block;font:200 26px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.14em;color:#bfe3ff;text-shadow:0 0 6px #4fb2ff,0 0 14px #2a7fff}.twlogo span{display:block;font:300 12px var(--ui);letter-spacing:.6em;color:#9fd0ff;text-shadow:0 0 6px #4fb2ff}
 .twbar{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;gap:16px;padding:0 18px;background:linear-gradient(#0a1424ee,#050b16f5);border-top:1px solid #2a4a78;font:400 15px var(--ui);color:#e8f0ff;white-space:nowrap;overflow:hidden}
@@ -806,7 +809,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,twSrc:'built',newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -904,6 +907,8 @@ const ALLSETS=[
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'newsVid',label:'News Channel Video',vals:['abc','nbc','cbs','off'],names:['ABC News','NBC News','CBS News','Off'],desc:'The big window on Nyx News Network (channel 5) plays the latest clips from this network’s official YouTube channel while the headlines rotate beside it. Tap the video to pause or skip.'},
  {k:'toonAds',label:'Nyx Toons Commercials',vals:['yt','orig','off'],names:['Classic Clips','NyxVision Originals','Off'],desc:'A two-minute commercial break on channel 9 after every cartoon. Classic Clips plays real 2006–2009 kids-TV commercial breaks from YouTube (fan uploads) that match the season, time of day and region; if one won’t play, NyxVision’s own made-up ads fill in. NyxVision Originals uses only the made-up ads.'},
+ {k:'twSrc',label:'Twilight Music',vals:['built','mine'],names:['Built-in','My Music'],desc:'Built-in plays NyxVision’s own Twilight music. My Music plays the files you sent from your phone (Send Twilight Music, below), in filename order.'},
+ {k:'twsend',label:'Send Twilight Music',action:true,desc:'Send your own music files to channel 3 from a phone on the same Wi-Fi. The files stay on this device.'},
  {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
  {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
  {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
@@ -930,7 +935,7 @@ const ALLSETS=[
 const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
- {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','ppv','gdl','gdlnow']},
+ {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','twSrc','twsend','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','tkey','skey','spterms','spdisc']}];
 const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
 const SETS=[];
@@ -1368,6 +1373,7 @@ let entryT=0;
 function press(k){
   if(!OV.card.hidden&&(k==='ok'||k==='back')){OV.card.hidden=true;clearTimeout(OV.cardT);snd.back();renderBop();return}
   if(['sports','teams','tests','testw','teste','testsp'].indexOf(S.screen)>=0&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){if(extraListKey(S.screen,k))return}
+  if(S.screen==='twsend'&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){twsendKey(k);return}
   if(S.screen==='msgs'&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){msgsKey(k);return}
   if(['games','chess','mice'].indexOf(S.screen)>=0&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){if(S.screen==='games')gamesKey(k);else if(S.screen==='chess')chessKey(k);else miceKey(k);return}
   if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].news&&newsKey(k))return;
@@ -1433,13 +1439,14 @@ function press(k){
     if(it.action&&(it.k==='tkey'||it.k==='mkey'||it.k==='skey')){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen('key',it.k);return}
     if(it.action&&(it.k==='sports'||it.k==='tests')){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx[it.k]=0;go(it.k);return}
     if(it.action&&it.k==='loc'){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen();return}
+    if(it.action&&it.k==='twsend'){if(k!=='ok'&&k!=='right')return;snd.ok();twsendOpen();return}
     if(it.action&&it.k==='spterms'){if(k!=='ok'&&k!=='right')return;snd.ok();S.sptRet='set';go('spterms');return}
     if(it.action&&it.k==='spdisc'){if(k!=='ok')return;snd.ok();if(!SET.skey&&SPT.st!=='ok'){dialog('Disconnect Spotify',T('Spotify isn’t connected.'),2200);return}dialog('Disconnect Spotify?',T('Channel 8 stops controlling Spotify, and NyxVision forgets your Client ID and everything it got from Spotify.')+'<small>'+T('Press OK to disconnect, or BACK to keep it.')+'</small>');S.dialog.onOk=()=>{spDisconnect();setTimeout(()=>dialog('Spotify Disconnected',T('Done. To remove NyxVision from your Spotify account too, visit spotify.com/account/apps.'),5000),50)};return}
     if(it.action&&it.k==='gdlnow'){if(k!=='ok'&&k!=='right')return;snd.ok();gdlStart('set');return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
     if(it.action){if(k!=='ok')return;snd.ok();dialog('Are You Sure?',T('This puts every setting and favorite back the way NyxVision shipped. Your service keys and weather location are kept.')+'<small>'+T('Press OK to restore defaults, or BACK to cancel.')+'</small>');
       S.dialog.onOk=()=>{const keep={tkey:SET.tkey,mkey:SET.mkey,skey:SET.skey,loc:SET.loc};SET=Object.assign({},DEF,{themeState:{}},keep);FAV=DEF_FAV();save();applyTheme();vremShow();setTimeout(()=>dialog('Settings Restored','All settings and favorites are back to their defaults.',1800),50)};return}
-    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='ppv'){ppvCancel();applyStream()}if(it.k==='vremote')vremShow();if(it.k==='region'||it.k==='lang'){NEWSAT=0}
+    let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music')updateJazz();if(it.k==='ppv'){ppvCancel();applyStream()}if(it.k==='twSrc'){twfLoad();updateJazz()}if(it.k==='vremote')vremShow();if(it.k==='region'||it.k==='lang'){NEWSAT=0}
     if(it.k==='region'){applyTheme();render()}
     if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+curRadar();render()}return}
   if(k==='ok'||k==='right'){
@@ -1593,6 +1600,7 @@ function render(){
   else if(sc==='boot'){h+=bootHTML()}
   else if(sc==='gdl'){h+=gdlHTML()}
   else if(sc==='msgs'){h+=msgsHTML()}
+  else if(sc==='twsend'){h+=twsendHTML()}
   else if(sc==='spterms'){h+=sptermsHTML()}
   else if(sc==='loc'){h+=locHTML()}
   else if(sc==='sports'){h+=sportsHTML()}
@@ -2579,6 +2587,7 @@ function jazzLabel(){if(!musicOn())return T('Music Off');if(musicStyle()==='gaga
   if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?T('{0} On',nm):JAZZ.nState==='preparing'?T('Music warming up\u2026'):JAZZ.nState==='error'?T('Music unavailable'):T('Music starting\u2026');
   if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return T('{0} On',nm);return T('Music starting\u2026 press OK again if silent')}
 function updateJazz(){const pv=has(S.ch)&&CH[S.ch].preview&&S.screen==='watch',tw=has(S.ch)&&CH[S.ch].twilight&&S.screen==='watch';let style=tw?'twilightb':musicStyle();if(pv&&style==='gaga')style='party';const want=!APP_PAUSED&&(tw?SET.twMusic!==false&&!twBreak():musicOn()&&has(S.ch)&&(CH[S.ch].radar&&style!=='gaga'||pv));
+  const mine=!!(tw&&twMine());if(NATIVE&&NATIVE.twPlay){const wm=!!(mine&&want);if(wm!==TWF.playing){TWF.playing=wm;try{NATIVE.twPlay(wm)}catch(e){}}}if(mine){if(NATIVE&&NATIVE.jazzPlay&&JAZZ.nWant){JAZZ.nWant=false;NATIVE.jazzPlay(JAZZ.nStyle||style,false)}return}
   if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant&&style===JAZZ.nStyle)return;JAZZ.nWant=want;JAZZ.nStyle=style;if(want)nativeJazzOn(style);else NATIVE.jazzPlay(style,false);return}
   if(want)jazzStart(style);else jazzStop()}
 
@@ -3736,6 +3745,27 @@ function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor
     else items='<em>'+T('This Week')+'</em>'+w.dy.slice(1,4).map(x=>'<span class="twh">'+dayName(new Date(x.tm+'T12:00:00').getDay()).slice(0,3)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,1)+'" width="40" height="32"></canvas></i> '+tU(x.hi)+'°/'+tU(x.lo)+'°</span>').join('')}
   else items='<span>'+T('Loading the weather…')+'</span>';
   return '<div class="twbar"><span class="twlg">'+catSvg(20)+'</span><span class="twclk">'+fmtT(Date.now()).replace(/\s?[AP]M/i,'')+'</span><span class="twcity">'+esc(ct[0])+'</span>'+items+'</div>'}
+// Twilight: the owner's own music files (sent from a phone; stored only on this device)
+const TWF={files:[],url:'',msg:''};
+function twfLoad(){try{if(NATIVE&&NATIVE.twFiles)TWF.files=JSON.parse(NATIVE.twFiles()||'[]')}catch(e){TWF.files=[]}}
+function twMine(){return !!(SET.twSrc==='mine'&&TWF.files.length>0&&NATIVE&&NATIVE.twPlay)}
+function twFilesCb(j){const before=TWF.files.length;try{TWF.files=JSON.parse(j)}catch(e){}if(TWF.files.length>before){SET.twSrc='mine';save();TWF.msg=T('Saved! {0} file(s) on this TV.',TWF.files.length);snd.ok()}
+  try{NATIVE.twPlay(false)}catch(e){}JAZZ.nWant=null;updateJazz();if(S.screen==='twsend')render()}
+function twsendOpen(){twfLoad();TWF.msg='';try{TWF.url=NATIVE&&NATIVE.twServe?NATIVE.twServe(true):''}catch(e){TWF.url=''}go('twsend')}
+function twsendClose(){try{if(NATIVE&&NATIVE.twServe)NATIVE.twServe(false)}catch(e){}go('set')}
+function twsendHTML(){const L=TWF.files,mb=b=>(b/1048576).toFixed(1)+' MB';
+  let h='<div class="bg">'+bgDeco()+'</div>'+hdr('Twilight Music')+'<div class="box bevel twsb"><h3>'+T('Send music from your phone')+'</h3>';
+  if(!NATIVE||!NATIVE.twServe)h+='<p>'+T('Update NyxVision to use this.')+'</p>';
+  else if(!TWF.url)h+='<p>'+T('This device isn’t on Wi-Fi right now. Connect to Wi-Fi and try again.')+'</p>';
+  else h+='<div class="twsq">'+QR.svg(TWF.url,150)+'<div><ol><li>'+T('Connect your phone to the same Wi-Fi as this TV.')+'</li><li>'+T('Scan the code, or open this address in its browser:')+'<b class="twurl">'+esc(TWF.url)+'</b></li><li>'+T('Pick one or more music files and tap Send to TV.')+'</li></ol></div></div>'+
+    '<p class="twsn">'+T('Several files play in filename order and loop, so name them 1, 2, 3… to set the order. The files stay on this device.')+'</p>';
+  if(TWF.msg)h+='<p class="twok">'+esc(TWF.msg)+'</p>';
+  h+='</div><div class="box bevel twsl"><h3>'+T('On this device')+'</h3>'+(L.length?'<ol>'+L.slice(0,9).map(f=>'<li>'+esc(f.name)+' <small>'+mb(f.size)+'</small></li>').join('')+'</ol>'+(L.length>9?'<p>'+T('…and {0} more',L.length-9)+'</p>':''):'<p>'+T('No music files yet.')+'</p>')+
+    '<p class="twsrc">'+T('Twilight plays: {0}',T(twMine()?'My Music':'Built-in music'))+'</p></div>';
+  return h+ftr(L.length?['<i>OK</i>Delete All','<i>◀▶</i>'+T('Built-in / My Music'),'<i>BACK</i>Settings']:['<i>BACK</i>Settings'])}
+function twsendKey(k){if(k==='back'){snd.back();twsendClose();return}
+  if((k==='left'||k==='right')&&TWF.files.length){SET.twSrc=SET.twSrc==='mine'?'built':'mine';save();snd.nav();updateJazz();render();return}
+  if(k==='ok'&&TWF.files.length){snd.ok();dialog('Delete All Music?',T('Remove all {0} Twilight music file(s) from this device?',TWF.files.length)+'<small>'+T('Press OK to delete, or BACK to keep them.')+'</small>');S.dialog.onOk=()=>{try{NATIVE.twClear()}catch(e){}TWF.files=[];SET.twSrc='built';save();TWF.msg=T('All music files deleted.');updateJazz();render()};return}}
 function twIdentHTML(r){const L='Twilight'.split(''),el=(Date.now()%1800000)/1000,dl=[.6,1.4,.2,1.9,.9,2.3,1.1,.4].map(x=>x-el);
   return '<div class="twintro"><div class="twstars"></div><div class="twfog"></div><div class="twneon">'+L.map((c,i)=>'<span style="animation-delay:'+dl[i].toFixed(2)+'s,'+(dl[i]+1.6).toFixed(2)+'s">'+c+'</span>').join('')+'</div><div class="twlive" style="animation-delay:'+(3.2-el).toFixed(2)+'s"><span>NYX</span></div><div class="twbadge" style="animation-delay:'+(4.6-el).toFixed(2)+'s">'+catSvg(44)+'</div></div>'+twBar(r)}
 function twilightHTML(){const s=twNow(),r=s.reg;twLoad(r);if(s.e>TW_SEG-8000)twLoad(s.next);
@@ -4355,6 +4385,7 @@ applyTheme();
 /* Android TV integration: the app forwards remote buttons here */
 if(NATIVE){document.documentElement.classList.add('tv');loadInstalled();}
 try{vremSetup()}catch(e){}
+try{twfLoad()}catch(e){}
 setInterval(()=>{try{tapeTick()}catch(e){}},1000);
 BOOTSEQ.next=NATIVE?'watch':'home';BOOTSEQ.t0=performance.now();S.screen='boot';document.documentElement.lang=SET.lang||'en';
 window.cable={
@@ -4365,7 +4396,7 @@ window.cable={
   updateState:updateState,
   jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
-  spState:function(j){spState(j)},spPlayer:function(j){spPlayer(j)},spArt:function(d){spArt(d)},spList:function(j){spList(j)},
+  twFiles:function(j){twFilesCb(j)},spState:function(j){spState(j)},spPlayer:function(j){spPlayer(j)},spArt:function(d){spArt(d)},spList:function(j){spList(j)},
   pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}try{syncNewsVid()}catch(e){}},
   dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
