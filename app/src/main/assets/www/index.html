@@ -347,6 +347,16 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .md{display:grid;grid-template-columns:52px 10px 1fr auto;gap:6px;align-items:center;font:600 14px var(--ui);margin-bottom:4px}
 .md i{width:10px;height:10px;border-radius:2px}.md span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.md .mz{grid-column:2/4;color:var(--dim)}.md em{font-style:normal;color:var(--ice)}
 .mkeys{position:absolute;left:14px;right:14px;bottom:10px;font:700 13px var(--ui);color:var(--hi)}
+.ndrow{position:absolute;left:24px;right:24px;top:96px;height:340px;display:flex;gap:14px}
+.ndcard{flex:1 1 0;min-width:0;background:rgba(6,14,50,.85);padding:8px 10px 10px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center}
+.ndt{font:900 24px var(--display);letter-spacing:.04em;color:#ffe7a8;text-transform:uppercase}
+.ndsvg{width:100%;max-width:300px;height:auto;margin-top:2px}
+.ndj{animation:ndjit 2.3s ease-in-out infinite}
+@keyframes ndjit{0%{transform:rotate(calc(var(--j)*-1))}18%{transform:rotate(calc(var(--j)*.7))}35%{transform:rotate(calc(var(--j)*-.4))}52%{transform:rotate(var(--j))}70%{transform:rotate(calc(var(--j)*-.8))}86%{transform:rotate(calc(var(--j)*.3))}100%{transform:rotate(calc(var(--j)*-1))}}
+.ndends{width:100%;max-width:300px;display:flex;justify-content:space-between;font:800 13px var(--ui);margin-top:-6px}.ndends .d{color:#9db7ff}.ndends .r{color:#ff9aa2}
+.ndlean{font:800 17px var(--ui);margin-top:8px;color:#fff;text-align:center}
+.ndnum{display:flex;gap:18px;margin-top:6px;font:700 17px var(--ui)}.ndnum b{font:900 30px var(--display)}.ndnum .d b{color:#7ea0ff}.ndnum .r b{color:#ff6b76}.ndnum .o b{color:#e8c25a}
+.ndsub{font:600 13px/1.3 var(--ui);color:var(--dim);text-align:center;margin-top:4px}
 .msrc{position:absolute;left:24px;top:476px;font:600 12px var(--ui);color:var(--ice);opacity:.85}
 .nmenu{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:440px;padding:0 0 12px;background:linear-gradient(var(--k183689),var(--k0f2569));display:flex;flex-direction:column;gap:6px}
 .nmenu .t{background:#b3131b;font:900 19px var(--display);padding:8px 14px;margin-bottom:6px}.nmenu .mi{margin:0 12px;cursor:pointer}
@@ -3283,8 +3293,8 @@ const MID_IDS={senate:87528,house:87524,governor:87535};
 const MID_START=Date.parse('2026-11-03T23:00:00Z');   // first polls close, 6 PM Eastern
 const MID_DAY=Date.parse('2026-11-03T05:00:00Z');     // anything updated before Election Day is primary data
 function midLive(){return Date.now()>=MID_START}
-const MID_TABS=['senate','house','governor'];
-const MID_TABNAME={senate:'Senate',house:'House',governor:'Governors'};
+const MID_TABS=['needle','senate','house','governor'];
+const MID_TABNAME={needle:'The Needle',senate:'Senate',house:'House',governor:'Governors'};
 const MID_HOLD={senate:{R:31,D:34,O:0},governor:{R:8,D:6,O:0},house:{R:0,D:0,O:0}};
 const MID_MAJ={senate:51,house:218,governor:0};
 const PCOL={R:'#d42a35',D:'#2b5fd9',O:'#d9a520'},GREY='#8d93a0',NORACE='#27324d';
@@ -3353,7 +3363,7 @@ function midTally(tab){const d=MID.data[tab],h=(d&&d.hold)||MID_HOLD[tab],t={R:h
 function midList(tab){const d=MID.data[tab];if(!d)return [];const s=[...new Set(d.races.map(r=>r.st))];return s.sort((a,b)=>USST[a].localeCompare(USST[b]))}
 function midOpen(tab){S.mid=tab;S.midSel=0;S.nmenu=null;S.nm=false;snd.ok();loadGeo();if(!MID.data[tab]||Date.now()-(MID.at[tab]||0)>60000)loadMid(tab);render()}
 function midKey(k){const tab=S.mid,L=midList(tab);
-  if(k==='left'||k==='right'){const i=MID_TABS.indexOf(tab);S.mid=MID_TABS[(i+(k==='left'?-1:1)+3)%3];S.midSel=0;snd.nav();if(!MID.data[S.mid]||Date.now()-(MID.at[S.mid]||0)>60000)loadMid(S.mid);render();return true}
+  if(k==='left'||k==='right'){const i=MID_TABS.indexOf(tab);S.mid=MID_TABS[(i+(k==='left'?-1:1)+MID_TABS.length)%MID_TABS.length];S.midSel=0;snd.nav();if(!MID.data[S.mid]||Date.now()-(MID.at[S.mid]||0)>60000)loadMid(S.mid);render();return true}
   if(k==='up'||k==='down'){if(!L.length){snd.bump();return true}S.midSel=(S.midSel+(k==='up'?-1:1)+L.length)%L.length;snd.nav();render();return true}
   if(k==='chup'||k==='chdn'){if(!L.length)return true;S.midSel=Math.max(0,Math.min(L.length-1,S.midSel+(k==='chup'?-8:8)));snd.nav();render();return true}
   if(k==='ok'||k==='info'){snd.ok();loadMid(tab,true);return true}
@@ -3381,6 +3391,7 @@ function midDetail(tab,st){const x=midState(tab,st);
       '<em>'+(r.winner?'✔':r.rep!=null&&r.total?Math.round(r.rep)+'%':'')+'</em></div>'}).join('');
   return h}
 function midHTML(){
+  if(S.mid==='needle')return needleHTML();
   const tab=S.mid,L=midList(tab),sel=L[Math.min(S.midSel||0,L.length-1)],t=midTally(tab),maj=MID_MAJ[tab];
   let h='<div class="mglobe"></div><div class="wxtop nntop"><div class="wxbrand">'+nnnLogo()+'<b>'+T('Midterms 2026')+'</b><span>'+T('Nyx News Network')+'</span></div><div class="clk">'+clockStr()+'</div></div>';
   h+='<div class="mtabs">'+MID_TABS.map(x=>'<span class="mt'+(x===tab?' on':'')+'" data-tab="'+x+'">'+T(MID_TABNAME[x])+'</span>').join('')+
@@ -3393,7 +3404,50 @@ function midHTML(){
     '<div class="mkeys">'+(TOUCH?T('Tap a state · tap a tab · tap Refresh'):'◀▶ '+T('Race')+' · ▲▼ '+T('State')+' · OK '+T('Refresh')+' · BACK '+T('News'))+'</div></div>';
   h+='<div class="msrc">'+T('Unofficial results via civicAPI.org')+' · '+T('Map: U.S. Census Bureau (us-atlas)')+'</div>';
   return h}
-function newsMenuItems(){return ['More on this story','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
+/* ---- The Needle: an election-night dial for each chamber. It is NOT a forecast: it points by the seats already
+   called plus the seats where someone is currently ahead, among the seats on the ballot this year. It wobbles while
+   races are still open and settles as they're called. ---- */
+const NDL_SCALE={senate:.3,house:.12,governor:.3},NDL_SEATS={senate:100,house:435,governor:50};
+const _loadMid1=loadMid;
+loadMid=async function(tab,manual){
+  if(tab!=='needle')return _loadMid1(tab,manual);
+  if(MID.busy.needle)return;MID.busy.needle=true;if(manual)render();
+  await Promise.all(['senate','house','governor'].map(t=>manual||!MID.data[t]||Date.now()-(MID.at[t]||0)>55000?_loadMid1(t,false):0));
+  MID.busy.needle=false;MID.at.needle=Date.now();MID.err.needle=['senate','house','governor'].every(t=>MID.err[t]&&!MID.data[t])?MID.err.house:null;if(S.mid)render()};
+function needleState(tab){const d=MID.data[tab];const z={tab:tab,up:0,called:0,lead:0,R:0,D:0,O:0,lR:0,lD:0,lO:0,ang:0,jit:0,started:false};if(!d)return z;
+  d.races.forEach(r=>{z.up++;if(r.winner){z.called++;z[r.winner.party]++}else if(r.total&&r.cands[0]){z.lead++;z['l'+r.cands[0].party]++}});
+  z.started=z.called+z.lead>0;
+  const rp=z.R+z.lR,dp=z.D+z.lD,pos=z.up?(rp-dp)/z.up:0;
+  z.ang=z.started?Math.max(-1,Math.min(1,pos/NDL_SCALE[tab]))*82:0;   // right = Republicans, left = Democrats
+  z.jit=z.up?(z.up-z.called)/z.up*(z.started?7:2.5):0;
+  const h=MID_HOLD[tab];z.tR=h.R+z.R+z.lR;z.tD=h.D+z.D+z.lD;z.tO=h.O+z.O+z.lO;return z}
+function needleSVG(z){const cx=170,cy=165,R=140,arc=(a0,a1,col,w)=>{const p=a=>[cx+R*Math.sin(a*Math.PI/180),cy-R*Math.cos(a*Math.PI/180)];const A=p(a0),B=p(a1);
+    return '<path d="M'+A[0].toFixed(1)+' '+A[1].toFixed(1)+' A'+R+' '+R+' 0 0 1 '+B[0].toFixed(1)+' '+B[1].toFixed(1)+'" stroke="'+col+'" stroke-width="'+w+'" fill="none"/>'};
+  const bands=[[-90,-60,'#1d47b8'],[-60,-30,'#3d6be0'],[-30,-8,'#8aa7ef'],[-8,8,'#c9ccd6'],[8,30,'#ef8f97'],[30,60,'#de4652'],[60,90,'#b3121e']];
+  let g='<svg viewBox="0 0 340 190" class="ndsvg">'+bands.map(b=>arc(b[0]+.6,b[1]-.6,b[2],34)).join('');
+  for(let a=-90;a<=90;a+=10)g+='<line x1="'+(cx+(R+22)*Math.sin(a*Math.PI/180)).toFixed(1)+'" y1="'+(cy-(R+22)*Math.cos(a*Math.PI/180)).toFixed(1)+'" x2="'+(cx+(R+28)*Math.sin(a*Math.PI/180)).toFixed(1)+'" y2="'+(cy-(R+28)*Math.cos(a*Math.PI/180)).toFixed(1)+'" stroke="#9fb3e8" stroke-width="2"/>';
+  const ph=((Date.now()/1000)%2.3).toFixed(2);
+  g+='<g transform="rotate('+z.ang.toFixed(1)+' '+cx+' '+cy+')"><g class="ndj" style="--j:'+z.jit.toFixed(2)+'deg;animation-delay:-'+ph+'s;transform-origin:'+cx+'px '+cy+'px">'+
+     '<path d="M'+(cx-6)+' '+cy+' L'+cx+' '+(cy-R+6)+' L'+(cx+6)+' '+cy+' Z" fill="#111" stroke="#fff" stroke-width="1.5"/></g></g>'+
+     '<circle cx="'+cx+'" cy="'+cy+'" r="13" fill="#222" stroke="#fff" stroke-width="2.5"/></svg>';
+  return g}
+function needleCard(tab){const z=needleState(tab),maj=MID_MAJ[tab],name={senate:'Senate',house:'House',governor:'Governors'}[tab];
+  let lean;if(!MID.data[tab])lean=T('Loading results…');else if(!z.started)lean=midLive()?T('Waiting for the first votes'):T('Results start at 6 PM Eastern');
+  else{const a=Math.abs(z.ang);lean=a<8?T('Even right now'):T(a<30?'Leaning {0} right now':a<60?'{0} ahead right now':'{0} well ahead right now',T(z.ang>0?'Republicans':'Democrats'))}
+  return '<div class="ndcard bevel"><div class="ndt">'+T(name)+'</div>'+needleSVG(z)+'<div class="ndends"><span class="d">'+T('Democrats')+'</span><span class="r">'+T('Republicans')+'</span></div>'+
+    '<div class="ndlean">'+lean+'</div>'+
+    '<div class="ndnum"><span class="d"><b>'+z.tD+'</b> D</span>'+(z.tO?'<span class="o"><b>'+z.tO+'</b> '+T('Other')+'</span>':'')+'<span class="r"><b>'+z.tR+'</b> R</span></div>'+
+    '<div class="ndsub">'+(maj?T('{0} for control',maj)+' · ':'')+T('{0} of {1} races called',z.called,z.up)+(z.lead?' · '+T('{0} with a leader',z.lead):'')+'</div></div>'}
+function needleHTML(){const tab='needle';
+  let h='<div class="mglobe"></div><div class="wxtop nntop"><div class="wxbrand">'+nnnLogo()+'<b>'+T('Midterms 2026')+'</b><span>'+T('Nyx News Network')+'</span></div><div class="clk">'+clockStr()+'</div></div>';
+  h+='<div class="mtabs">'+MID_TABS.map(x=>'<span class="mt'+(x===tab?' on':'')+'" data-tab="'+x+'">'+T(MID_TABNAME[x])+'</span>').join('')+
+    '<span class="mref" data-ref="1">⟳ '+T('Refresh')+'</span><span class="mupd">'+(MID.busy.needle?'<span class="wait"></span>':MID.at.needle?T('Updated {0}',fmtT(MID.at.needle)):'')+'</span></div>';
+  if(!NATIVE)h+='<div class="mdet bevel" style="left:24px;right:24px;height:auto"><h3>'+T('The Needle')+'</h3><p>'+T('Live results appear here on your TV or tablet.')+'</p></div>';
+  else if(MID.err.needle&&!MID.data.house&&!MID.data.senate)h+='<div class="mdet bevel" style="left:24px;right:24px;height:auto"><h3>'+T('The Needle')+'</h3><p>'+T(MID.err.needle)+'</p></div>';
+  else h+='<div class="ndrow">'+['senate','house','governor'].map(needleCard).join('')+'</div>';
+  h+='<div class="msrc" style="top:442px;right:24px;line-height:1.3">'+T('Not a forecast: each needle points by races called plus races where someone is ahead now, among seats on the ballot this year. Totals include seats not up this year.')+'<br>'+T('Unofficial results via civicAPI.org')+' · '+(TOUCH?T('Tap a tab for maps'):'◀▶ '+T('Maps')+' · OK '+T('Refresh')+' · BACK '+T('News'))+'</div>';
+  return h}
+function newsMenuItems(){return ['More on this story','Midterms 2026: The Needle','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
 function newsMenuHTML(){return '<div class="nmenu bevel"><div class="t">'+T('News Desk')+'</div>'+newsMenuItems().map((x,i)=>'<div class="mi'+(i===S.nmenu?' hi':'')+'" data-nm="'+i+'">'+T(x)+'</div>').join('')+'</div>'}
 function newsMenuKey(k){const n=newsMenuItems().length;
   if(k==='up'||k==='down'){S.nmenu=(S.nmenu+(k==='up'?-1:1)+n)%n;snd.nav();render();return true}
