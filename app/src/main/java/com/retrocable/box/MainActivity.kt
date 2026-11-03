@@ -440,7 +440,8 @@ go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++)
                     conn.setRequestProperty("Accept", "application/geo+json, application/json")
                     if (headersJson.isNotBlank()) {
                         val h = JSONObject(headersJson)
-                        for (k in h.keys()) conn.setRequestProperty(k, h.getString(k))
+                        // "__timeout" (ms) lets slow services (like OpenStreetMap's Overpass) take longer; it isn't sent as a header
+                        for (k in h.keys()) { if (k == "__timeout") conn.readTimeout = h.optInt(k, 30000) else conn.setRequestProperty(k, h.getString(k)) }
                     }
                     status = conn.responseCode
                     val stream = if (status in 200..299) conn.inputStream else conn.errorStream

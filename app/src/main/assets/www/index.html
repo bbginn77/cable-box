@@ -917,6 +917,7 @@ const ALLSETS=[
  {k:'newsVid',label:'News Channel Video',vals:['abc','nbc','cbs','off'],names:['ABC News','NBC News','CBS News','Off'],desc:'The big window on Nyx News Network (channel 5) plays the latest clips from this network’s official YouTube channel while the headlines rotate beside it. Tap the video to pause or skip.'},
  {k:'toonAds',label:'Nyx Toons Commercials',vals:['yt','orig','off'],names:['Classic Clips','NyxVision Originals','Off'],desc:'A two-minute commercial break on channel 9 after every cartoon. Classic Clips plays real 2006–2009 kids-TV commercial breaks from YouTube (fan uploads) that match the season, time of day and region; if one won’t play, NyxVision’s own made-up ads fill in. NyxVision Originals uses only the made-up ads.'},
  {k:'twSrc',label:'Twilight Music',vals:['built','mine'],names:['Built-in','My Music'],desc:'Built-in plays NyxVision’s own Twilight music. My Music plays the files you sent from your phone (Send Twilight Music, below), in filename order.'},
+ {k:'twstat',label:'Twilight Status',action:true,desc:'See whether the 3D city close-ups and weather maps for channel 3 have downloaded, and the last problem if any.'},
  {k:'twsend',label:'Send Twilight Music',action:true,desc:'Send your own music files to channel 3 from a phone on the same Wi-Fi. The files stay on this device.'},
  {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
  {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
@@ -944,7 +945,7 @@ const ALLSETS=[
 const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
- {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','twSrc','twsend','ppv','gdl','gdlnow']},
+ {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','twSrc','twsend','twstat','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','tkey','skey','spterms','spdisc']}];
 const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
 const SETS=[];
@@ -1412,6 +1413,7 @@ function press(k){
     if(k==='up'||k==='chup'){chStep(1);return} if(k==='down'||k==='chdn'){chStep(-1);return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].traffic&&!locked(S.ch)&&!(Date.now()<S.bannerUntil)){ttNext();return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].movies&&!locked(S.ch)&&NATIVE&&movPlaying()&&!ppvOk(movPlaying())){if(!PPV.st){snd.ok();S.bannerUntil=0;ppvStart()}return}
+    if(k==='info'&&has(S.ch)&&CH[S.ch].twilight){snd.ok();dialog('Twilight Status',twStatusText());return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].twilight&&!(Date.now()<S.bannerUntil)){SET.twMusic=SET.twMusic===false;save();snd.ok();updateJazz();dialog('Nyx Twilight',T(SET.twMusic===false?'Music off':'Music on'),1500);return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){if(musicOn()){SET.musicLast=SET.music;SET.music='off'}else SET.music=SET.musicLast||'auto';save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
@@ -1448,6 +1450,7 @@ function press(k){
     if(it.action&&(it.k==='tkey'||it.k==='mkey'||it.k==='skey')){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen('key',it.k);return}
     if(it.action&&(it.k==='sports'||it.k==='tests')){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx[it.k]=0;go(it.k);return}
     if(it.action&&it.k==='loc'){if(k!=='ok'&&k!=='right')return;snd.ok();locOpen();return}
+    if(it.action&&it.k==='twstat'){if(k!=='ok'&&k!=='right')return;snd.ok();if(NATIVE){twcLoadThree();twcPrefetch()}dialog('Twilight Status',twStatusText());return}
     if(it.action&&it.k==='twsend'){if(k!=='ok'&&k!=='right')return;snd.ok();twsendOpen();return}
     if(it.action&&it.k==='spterms'){if(k!=='ok'&&k!=='right')return;snd.ok();S.sptRet='set';go('spterms');return}
     if(it.action&&it.k==='spdisc'){if(k!=='ok')return;snd.ok();if(!SET.skey&&SPT.st!=='ok'){dialog('Disconnect Spotify',T('Spotify isn’t connected.'),2200);return}dialog('Disconnect Spotify?',T('Channel 8 stops controlling Spotify, and NyxVision forgets your Client ID and everything it got from Spotify.')+'<small>'+T('Press OK to disconnect, or BACK to keep it.')+'</small>');S.dialog.onOk=()=>{spDisconnect();setTimeout(()=>dialog('Spotify Disconnected',T('Done. To remove NyxVision from your Spotify account too, visit spotify.com/account/apps.'),5000),50)};return}
@@ -1834,11 +1837,11 @@ render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen=
 
 /* ---------------- web requests through the Android app ---------------- */
 let httpId=0;const httpWait={};
-function http(url,headers){return new Promise((res,rej)=>{
+function http(url,headers,ms){return new Promise((res,rej)=>{
   if(!NATIVE||!NATIVE.httpGet){rej(new Error('no network bridge'));return}
   const id=++httpId;httpWait[id]={res:res,rej:rej};
-  setTimeout(()=>{if(httpWait[id]){delete httpWait[id];rej(new Error('timeout'))}},45000);
-  NATIVE.httpGet(id,url,JSON.stringify(headers||{}));
+  setTimeout(()=>{if(httpWait[id]){delete httpWait[id];rej(new Error('timeout'))}},ms||45000);
+  const h=Object.assign({},headers||{});if(ms)h.__timeout=ms-5000;NATIVE.httpGet(id,url,JSON.stringify(h));
 })}
 function httpDone(id,status){const w=httpWait[id];const body=NATIVE.takeResult(id);if(!w)return;delete httpWait[id];
   if(status>=200&&status<300)w.res(body);else w.rej(new Error('HTTP '+status))}
@@ -3846,18 +3849,26 @@ function twcKey(id){return 'nyx-city2-'+id}
 function twcCached(id){if(TWC.data[id])return TWC.data[id];try{const s=localStorage.getItem(twcKey(id));if(s){TWC.data[id]=JSON.parse(s);return TWC.data[id]}}catch(e){}return null}
 function twcReady(){return twcList().filter(c=>twcCached(c.id))}
 // download one city that isn't cached yet (a few minutes apart, to be gentle on the free Overpass service)
-async function twcPrefetch(){if(!NATIVE||TWC.busy||Date.now()-(TWC.last||0)<180000)return;const c=twcList().find(c=>!twcCached(c.id)&&!(TWC.tried[c.id]>2));if(!c)return;
-  TWC.busy=true;TWC.last=Date.now();
-  const q='[out:json][timeout:60];way["building"](around:800,'+c.c[0]+','+c.c[1]+');out tags geom;way["highway"~"^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$"](around:2200,'+c.c[0]+','+c.c[1]+');out geom;';
-  try{const j=JSON.parse(await http('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q)));const L=c.c[0]*Math.PI/180,mx=Math.cos(L)*111320,mz=110540;
+const TWC_OVP=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter','https://overpass.private.coffee/api/interpreter'];
+async function twcPrefetch(){if(!NATIVE||TWC.busy||Date.now()-(TWC.last||0)<(TWC.fails?120000:20000))return;const L=twcList(),c=L.find(c=>!twcCached(c.id)&&!(TWC.tried[c.id]>=8));if(!c)return;
+  TWC.busy=true;TWC.last=Date.now();const srv=TWC_OVP[(TWC.srv||0)%TWC_OVP.length];TWC.lastTry={city:c.n,srv:srv.split('/')[2],at:Date.now()};
+  const q='[out:json][timeout:90];way["building"](around:650,'+c.c[0]+','+c.c[1]+');out tags geom;way["highway"~"^(motorway|trunk|primary|secondary|tertiary)$"](around:2000,'+c.c[0]+','+c.c[1]+');out geom;way["highway"~"^(residential|unclassified)$"](around:900,'+c.c[0]+','+c.c[1]+');out geom;';
+  try{const j=JSON.parse(await http(srv+'?data='+encodeURIComponent(q),{Accept:'application/json'},100000));const L2=c.c[0]*Math.PI/180,mx=Math.cos(L2)*111320,mz=110540;
     const B=[],R=[];(j.elements||[]).forEach(e=>{if(!e.geometry||e.geometry.length<2)return;const pts=[];e.geometry.forEach(g=>pts.push(Math.round((g.lon-c.c[1])*mx),Math.round(-(g.lat-c.c[0])*mz)));
       const t=e.tags||{};if(t.building){if(pts.length<8)return;let h=parseFloat(String(t.height||'').replace(',','.'));if(!(h>0))h=parseFloat(t['building:levels'])*3.4;if(!(h>0))h=t.building==='house'||t.building==='garage'||t.building==='shed'?6:10;
         h=Math.min(560,Math.round(h));if(pts[0]===pts[pts.length-2]&&pts[1]===pts[pts.length-1])pts.splice(-2,2);if(pts.length>=6)B.push([h].concat(pts))}
       else if(t.highway){const cls=/motorway|trunk/.test(t.highway)?2:/primary|secondary/.test(t.highway)?1:0;R.push([cls].concat(pts))}});
-    if(B.length<20)throw 0;const d={b:B,r:R,at:Date.now()};TWC.data[c.id]=d;
+    if(B.length<20)throw new Error('only '+B.length+' buildings');const d={b:B,r:R,at:Date.now()};TWC.data[c.id]=d;TWC.fails=0;TWC.lastOk={city:c.n,n:B.length,at:Date.now()};TWC.err='';
     const save=()=>localStorage.setItem(twcKey(c.id),JSON.stringify(d));
-    try{save()}catch(e){try{TWC_CITIES.forEach(x=>{if(x.id!==c.id)localStorage.removeItem(twcKey(x.id))});save()}catch(e2){}}}
-  catch(e){TWC.tried[c.id]=(TWC.tried[c.id]||0)+1}TWC.busy=false}
+    try{save()}catch(e){try{const keep=new Set(twcReady().slice(-3).map(x=>x.id));TWC_CITIES.forEach(x=>{if(x.id!==c.id&&!keep.has(x.id))localStorage.removeItem(twcKey(x.id))});save()}catch(e2){TWC.saveErr=1}}}
+  catch(e){TWC.tried[c.id]=(TWC.tried[c.id]||0)+1;TWC.fails=(TWC.fails||0)+1;TWC.srv=(TWC.srv||0)+1;TWC.err=String(e&&e.message||e).slice(0,80)}
+  TWC.busy=false}
+function twStatusText(){const R=twcReady(),L=twcList(),t=x=>x?fmtT(x.at):'';
+  return T('3D cities saved: {0} of {1}',R.length,L.length)+(R.length?' ('+R.map(c=>c.n).join(', ')+')':'')+'<br>'+
+    T('3D engine: {0}',window.THREE?(TWC.r==='x'?T('graphics not available on this device'):T('ready')):TWC.threeLoading==='x'?T('failed to load'):T('loading…'))+'<br>'+
+    (TWC.busy?T('Downloading {0} now from {1}…',TWC.lastTry.city,TWC.lastTry.srv)+'<br>':'')+
+    (TWC.lastOk?T('Last saved: {0} ({1} buildings) at {2}',TWC.lastOk.city,TWC.lastOk.n,t(TWC.lastOk)):'')+(TWC.err?'<br>'+T('Last problem: {0} ({1}, {2})',esc(TWC.err),TWC.lastTry?TWC.lastTry.city:'',TWC.lastTry?TWC.lastTry.srv:''):'')+
+    '<br>'+T('Weather maps: {0} · Earthquakes: {1}',TWX.g?T('loaded {0}',fmtT(TWX.gAt)):TWX.gErr?T('unavailable'):T('loading…'),TWX.q?TWX.q.length:T('loading…'))}
 async function twcLoadWx(c){if(!NATIVE||(TWC.wx[c.id]&&Date.now()-TWC.wx[c.id].at<30*MIN)||TWC.wx[c.id+'b'])return;TWC.wx[c.id+'b']=1;
   const P=[[c.n,c.c[0],c.c[1]]].concat(c.h);try{const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+P.map(p=>p[1]).join(',')+'&longitude='+P.map(p=>p[2]).join(',')+'&current=temperature_2m,weather_code,is_day&temperature_unit=fahrenheit&timezone=auto'));
     const A=Array.isArray(j)?j:[j];TWC.wx[c.id]={at:Date.now(),v:A.map(x=>({t:Math.round(x.current.temperature_2m),code:x.current.weather_code,day:x.current.is_day}))}}catch(e){}TWC.wx[c.id+'b']=0}
