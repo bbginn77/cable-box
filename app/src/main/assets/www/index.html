@@ -517,7 +517,8 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .tfoot{position:absolute;left:34px;right:32px;bottom:44px;text-align:center;font:700 14px var(--ui);color:#cfb98a;letter-spacing:.04em}
 .tspot{margin-top:10px;padding-top:8px;border-top:1px dashed #6b5a3a;font:700 13px var(--ui);color:#3a2e1c;display:flex;flex-direction:column;gap:2px}.tspot b{color:#1DB954;font-weight:900}.topen{font:700 12px var(--ui);color:#1d2a6b;font-style:normal}
 .tsfrom{font:700 13px var(--ui);color:#cfb98a;font-style:normal;letter-spacing:.04em}.tsfrom b{color:#1DB954}
-.spterms{left:40px;top:62px;width:880px;height:410px;box-sizing:border-box;padding:14px 18px}.spcols{columns:2;column-gap:26px}.spcols div{break-inside:avoid;margin-bottom:9px}.spcols b{font:800 15px var(--ui);color:var(--hi)}.spcols p{margin:2px 0 0;font:500 13px/1.32 var(--ui)}
+.spterms{left:40px;top:62px;width:880px;height:410px;box-sizing:border-box;padding:14px 18px}.spbtns{position:absolute;left:0;right:0;bottom:70px;display:flex;justify-content:center;gap:24px}.spbtns button{font:900 20px var(--ui);padding:10px 34px;border-radius:8px;border:2px solid #ffe7a8;background:linear-gradient(#e6c36a,#a8822c);color:#2a1606;cursor:pointer;touch-action:manipulation}.spbtns button[data-k=back]{background:#2a1606;color:#ffe7a8}
+.spcols{columns:2;column-gap:26px}.spcols div{break-inside:avoid;margin-bottom:9px}.spcols b{font:800 15px var(--ui);color:var(--hi)}.spcols p{margin:2px 0 0;font:500 13px/1.32 var(--ui)}
 .tshelf{position:absolute;left:250px;top:56px;width:460px;height:410px;box-sizing:border-box;padding:12px 16px;background:linear-gradient(#4a3524,#2a1d12);border:3px solid #a8823c;color:#f5ecd2;z-index:3}
 .tshelf h3{margin:0 0 8px;font:italic 900 24px var(--display);color:#ffe7a8}.tshelf p{font:600 16px var(--ui)}
 .tsh{font:800 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#cfb98a;margin:6px 0 2px}
@@ -2926,6 +2927,7 @@ function tapAt(el,x){
   if(S.dialog){press(el.closest('.dlg')?'ok':'back');return}
   if(sc==='loc'){const kk=el.closest('[data-key]');if(kk){const a=kk.dataset.key.split(',').map(Number);S.lk.y=a[0];S.lk.x=a[1];S.lk.focus='kb';locKey('ok');return}
     const rr=el.closest('[data-res]');if(rr){S.lk.ri=+rr.dataset.res;locChoose(S.lk.res[S.lk.ri]);return}}
+  if(sc==='watch'&&spOnTape()&&SET.skey&&!SET.spAgree&&el.closest('.tjc,.tdeck')){snd.ok();S.sptRet='watch';go('spterms');return}
   if(sc==='watch'&&spOnTape()){const ts=el.closest('.tsp');if(ts){SPT.si=+ts.dataset.i;press('ok');return}if(SPT.shelf){if(!el.closest('.tshelf'))press('back');return}if(el.closest('.tart')||el.closest('.tspot')){snd.ok();spOpenAlbum();return}if(el.closest('.tlab')){press('info');return}if(el.closest('.tdeck')||el.closest('.tjc')){if(!(Date.now()<S.bannerUntil)){press('ok');return}}}
   const fk=el.closest('[data-k]');if(fk){press(fk.dataset.k);return}
   if(sc==='watch'&&has(S.ch)&&CH[S.ch].news&&S.mid){const tb=el.closest('[data-tab]');if(tb){S.mid=tb.dataset.tab;S.midSel=0;snd.nav();if(!MID.data[S.mid])loadMid(S.mid);render();return}
@@ -3704,6 +3706,7 @@ const SPTERMS=[['NyxVision and Spotify','NyxVision is a personal app made by its
  ['Privacy','NyxVision uses your Spotify connection only to show your tapes and what’s playing on channel 8, and to send play, pause and skip. Song details, cover art and playlist names stay in memory on this device while you listen. They are never saved, shared or sent anywhere. NyxVision has no server, ads, cookies or tracking, and lets no one else place cookies. Your Client ID is saved only on this device.'],
  ['Disconnecting','Settings → Service Keys → Disconnect Spotify stops the connection and forgets everything. To remove NyxVision from your Spotify account too, visit spotify.com/account/apps. Questions: contact the NyxVision owner through its GitHub page.']];
 function sptermsHTML(){return '<div class="bg">'+bgDeco()+'</div>'+hdr('Spotify Terms & Privacy')+'<div class="box bevel spterms"><div class="spcols">'+SPTERMS.map(x=>'<div><b>'+T(x[0])+'</b><p>'+T(x[1])+'</p></div>').join('')+'</div></div>'+
+  '<div class="spbtns">'+(SET.spAgree?'<button type="button" data-k="ok">'+T('Done')+'</button><button type="button" data-k="back">'+T('Back')+'</button>':'<button type="button" data-k="ok">'+T('I Agree')+'</button><button type="button" data-k="back">'+T('Not Now')+'</button>')+'</div>'+
   ftr(SET.spAgree?['<i>OK</i>Done','<i>BACK</i>Back']:['<i>OK</i>I Agree','<i>BACK</i>Not Now'])}
 function sptermsKey(k){if(k==='ok'){const first=!SET.spAgree;SET.spAgree=true;save();snd.ok();go(S.sptRet||'set');if(first&&S.screen==='watch'){SPT.st='idle';SPT.tries=0;spConnect()}return}
   if(k==='back'){snd.back();go(S.sptRet||'set')}}
