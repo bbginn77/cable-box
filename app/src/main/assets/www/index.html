@@ -566,6 +566,9 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .twq{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2px solid var(--c);background:radial-gradient(circle,var(--c) 0 25%,#0000 60%);box-shadow:0 0 12px var(--c);animation:twqp 2.4s ease-out infinite}@keyframes twqp{0%{box-shadow:0 0 0 0 var(--c)}70%{box-shadow:0 0 0 18px #0000}100%{box-shadow:0 0 0 0 #0000}}
 .twqp{position:absolute;right:20px;top:96px;width:330px;padding:10px 14px;background:#050b16cc;border:1px solid #2a4a78;border-radius:6px}.twqp b{display:block;font:600 16px var(--ui);color:#ffd84d;margin-bottom:6px}.twqp div{display:flex;gap:8px;align-items:baseline;font:400 13px var(--ui);color:#dfe8ff;margin:4px 0}.twqp em{font-style:normal;font-weight:700;color:#ff9a3d;min-width:40px}.twqp span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.twqp i{font-style:normal;color:#8fa3c4}
 .twkey{position:absolute;left:24px;bottom:50px;display:flex;align-items:center;gap:8px;font:500 12px var(--ui);color:#cfe0ff}.twkey i{width:140px;height:8px;border-radius:4px}.twkey.wv i{background:linear-gradient(90deg,#e6721e,#8a4614,#2a3c6e,#9fb4d0,#f4f8ff)}.twkey.tp i{background:linear-gradient(90deg,#783cc8,#3c5ae6,#3cbef0,#3cc878,#aadc3c,#fad232,#fa7828,#c81e28)}
+.tw.city{background:transparent}#twcity{position:absolute;inset:0}#twcity>canvas{position:absolute;inset:0;width:100%;height:100%}.twcl{position:absolute;inset:0;pointer-events:none}
+.twcm{position:absolute;display:flex;align-items:center;gap:6px;transform:translate(-30px,-80%);white-space:nowrap}.twcm canvas{width:52px;height:42px}.twcm div{border-left:3px solid #4fa8ff;padding-left:8px;background:linear-gradient(90deg,#0a1a33cc,#0a1a3300)}.twcm span{display:block;font:500 17px var(--ui);color:#dfe8ff}.twcm b{display:block;font:300 38px var(--ui);color:#fff;line-height:1}
+.twcm.big canvas{width:70px;height:56px}.twcm.big span{font-size:24px}.twcm.big b{font-size:54px}
 .twseg{position:absolute;left:26px;top:20px}.twseg span{display:block;font:300 22px var(--ui);color:#e8f0ff;padding-bottom:4px;border-bottom:3px solid #3d9bff;width:max-content}.twseg i{display:block;margin-top:4px;font:400 13px var(--ui);color:#8fb0de;font-style:normal;letter-spacing:.08em;text-transform:uppercase}
 .twlogo{position:absolute;right:28px;top:16px;text-align:center}.twlogo b{display:block;font:200 26px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.14em;color:#bfe3ff;text-shadow:0 0 6px #4fb2ff,0 0 14px #2a7fff}.twlogo span{display:block;font:300 12px var(--ui);letter-spacing:.6em;color:#9fd0ff;text-shadow:0 0 6px #4fb2ff}
 .twbar{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;gap:16px;padding:0 18px;background:linear-gradient(#0a1424ee,#050b16f5);border-top:1px solid #2a4a78;font:400 15px var(--ui);color:#e8f0ff;white-space:nowrap;overflow:hidden}
@@ -1827,7 +1830,7 @@ fit();
 
 const origRender=render;
 render=function(){origRender();if(S.screen==='wx'||S.screen==='home'||(S.screen==='watch'&&has(S.ch)&&(CH[S.ch].radar||CH[S.ch].twilight)))drawWxIcons();
-  try{if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].twilight&&!twBreak()&&!twIdent())twxStart(twPhase(twNow()))}catch(e){}};
+  try{if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].twilight&&!twBreak()&&!twIdent()){const s=twNow(),ph=twPhase(s);twxStart(ph);if(ph==='city'&&twcPick(s))twcShow(twcPick(s));else twcStop()}else twcStop()}catch(e){}};
 
 /* ---------------- web requests through the Android app ---------------- */
 let httpId=0;const httpWait={};
@@ -3709,7 +3712,7 @@ const TW={wx:{},busy:{},seg:-1,regIdx:0,built:'',t0:0};
 const TW_SEG=45000;   // each region gets 45 seconds: forecast map, then radar (or the night lights)
 function twRegions(){const ca=SET.region==='ca';return ca?TW_REG.filter(r=>r.ca).concat(TW_REG.filter(r=>!r.ca&&/ne|gl|nw|ma/.test(r.k))):TW_REG.filter(r=>!r.ca).concat(TW_REG.filter(r=>r.ca&&/on|bc/.test(r.k)))}
 function twNow(){const L=twRegions(),n=Math.floor(Date.now()/TW_SEG);return {reg:L[n%L.length],n:n,e:Date.now()%TW_SEG,next:L[(n+1)%L.length],feat:n%3===2?TW_FEATS[Math.floor(n/3)%TW_FEATS.length]:null}}
-const TW_FEATS=['globe','wv','wind','temp','jet','quake'];
+const TW_FEATS=['globe','wv','city','wind','temp','jet','quake','city'];
 // what's on: 'globe' (whole-continent satellite), 'fc' (tilted forecast map), 'rad' (flat satellite/radar map)
 function twPhase(s){if(s.globe)return 'globe';if(s.feat)return s.feat==='globe'||twxHas(s.feat)?s.feat:'globe';return !s.reg.ca&&s.e>25000?'rad':'fc'}
 function twIdent(t){const d=new Date(t||Date.now());return d.getMinutes()%30===0&&d.getSeconds()<13}
@@ -3770,7 +3773,7 @@ async function twxLoadQuakes(){if(!NATIVE||TWX.qBusy||(TWX.q&&Date.now()-TWX.qAt
   try{const j=JSON.parse(await http('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson'));
     TWX.q=(j.features||[]).map(f=>({m:f.properties.mag,place:f.properties.place||'',t:f.properties.time,lon:f.geometry.coordinates[0],lat:f.geometry.coordinates[1],d:f.geometry.coordinates[2]})).filter(x=>x.m!=null);TWX.qAt=Date.now()}catch(e){}
   TWX.qBusy=false}
-function twxHas(k){const g=TWX.g;if(!g)return false;const ok=a=>a&&a.filter(v=>v!=null).length>TWX_NLAT*TWX_NLON*.6;return k==='wv'?ok(g.rh):k==='jet'?ok(g.js)&&ok(g.jd):k==='quake'?!!TWX.q:ok(g.t)}
+function twxHas(k){if(k==='city')return !!(window.THREE&&TWC.r!=='x'&&twcReady().length);const g=TWX.g;if(!g)return false;const ok=a=>a&&a.filter(v=>v!=null).length>TWX_NLAT*TWX_NLON*.6;return k==='wv'?ok(g.rh):k==='jet'?ok(g.js)&&ok(g.jd):k==='quake'?!!TWX.q:ok(g.t)}
 // bilinear lookup on the grid
 function twxAt(arr,lat,lon){const fi=(lat-TWX_LAT0)/TWX_DLAT,fj=(lon-TWX_LON0)/TWX_DLON,i=Math.max(0,Math.min(TWX_NLAT-1.001,fi)),j=Math.max(0,Math.min(TWX_NLON-1.001,fj)),i0=Math.floor(i),j0=Math.floor(j),a=i-i0,b=j-j0;
   const v=(ii,jj)=>{const x=arr[ii*TWX_NLON+jj];return x==null?null:x};const q=[v(i0,j0),v(i0,j0+1),v(i0+1,j0),v(i0+1,j0+1)];if(q.some(x=>x==null)){const f=q.filter(x=>x!=null);return f.length?f.reduce((s,x)=>s+x,0)/f.length:null}
@@ -3818,6 +3821,91 @@ function twxStart(kind){const g=TWX.g;if(!g)return;const V=kind==='quake'?null:t
   if(kind==='wind'){const cv=document.getElementById('twxp');if(cv)twxAnimate(cv,(la,lo)=>{const p=V.P(la,lo);return [p[0]/2,p[1]/2]},[TWX_US[0],TWX_US[1],TWX_US[2],TWX_US[3]],g.ws,g.wd,false)}
   if(kind==='jet'){const cv=document.getElementById('twxj');if(cv){const c=twProj(TWG.lat,TWG.lon,TWG.z),x0=c[0]-TWG.W/2,y0=c[1]-TWG.H/2;twxAnimate(cv,(la,lo)=>{const p=twProj(la,lo,TWG.z);return [(p[0]-x0)/2,(p[1]-y0)/2]},[22,54,-130,-62],g.js,g.jd,true)}}}
 
+/* ---- Twilight 3D city close-ups: real downtown buildings and streets from OpenStreetMap (via Overpass), drawn at night with three.js ---- */
+const TWC_CITIES=[
+ {id:'la',n:'Los Angeles',c:[34.0505,-118.2550],h:[['Hollywood',34.098,-118.329],['Pasadena',34.148,-118.144],['Long Beach',33.770,-118.193],['Santa Monica',34.019,-118.491]]},
+ {id:'ny',n:'New York',c:[40.7540,-73.9840],h:[['Brooklyn',40.678,-73.944],['Jersey City',40.718,-74.043],['Queens',40.728,-73.795],['Hoboken',40.744,-74.032]]},
+ {id:'chi',n:'Chicago',c:[41.8810,-87.6300],h:[['Evanston',42.045,-87.688],['Oak Park',41.885,-87.784],['Hyde Park',41.794,-87.590],['Lincoln Park',41.921,-87.651]]},
+ {id:'atl',n:'Atlanta',c:[33.7710,-84.3870],h:[['Buckhead',33.838,-84.380],['Decatur',33.775,-84.296],['Marietta',33.953,-84.550],['East Point',33.679,-84.439]]},
+ {id:'sea',n:'Seattle',c:[47.6070,-122.3360],h:[['Bellevue',47.610,-122.201],['Ballard',47.668,-122.384],['West Seattle',47.567,-122.387],['Renton',47.480,-122.209]]},
+ {id:'sf',n:'San Francisco',c:[37.7900,-122.4000],h:[['Oakland',37.804,-122.271],['Berkeley',37.872,-122.273],['Daly City',37.688,-122.470],['Sausalito',37.859,-122.485]]},
+ {id:'hou',n:'Houston',c:[29.7580,-95.3670],h:[['Galleria',29.739,-95.463],['Pasadena',29.691,-95.209],['Bellaire',29.706,-95.459],['The Heights',29.799,-95.398]]},
+ {id:'dal',n:'Dallas',c:[32.7800,-96.8000],h:[['Fort Worth',32.755,-97.331],['Plano',33.020,-96.699],['Arlington',32.736,-97.108],['Irving',32.814,-96.949]]},
+ {id:'mia',n:'Miami',c:[25.7700,-80.1930],h:[['Miami Beach',25.790,-80.130],['Coral Gables',25.721,-80.268],['Fort Lauderdale',26.122,-80.137],['Hialeah',25.858,-80.278]]},
+ {id:'den',n:'Denver',c:[39.7450,-104.9920],h:[['Boulder',40.015,-105.271],['Aurora',39.729,-104.832],['Lakewood',39.705,-105.081],['Littleton',39.613,-105.017]]},
+ {id:'bos',n:'Boston',c:[42.3550,-71.0600],h:[['Cambridge',42.373,-71.110],['Quincy',42.253,-71.002],['Somerville',42.388,-71.100],['Brookline',42.332,-71.121]]},
+ {id:'phl',n:'Philadelphia',c:[39.9520,-75.1630],h:[['Camden',39.926,-75.120],['Cherry Hill',39.935,-75.031],['Germantown',40.035,-75.175],['Upper Darby',39.960,-75.271]]},
+ {id:'lv',n:'Las Vegas',c:[36.1140,-115.1730],h:[['Henderson',36.040,-114.982],['Summerlin',36.171,-115.330],['North Las Vegas',36.199,-115.118],['Paradise',36.097,-115.147]]},
+ {id:'dc',n:'Washington',c:[38.9000,-77.0300],h:[['Arlington',38.880,-77.107],['Bethesda',38.981,-77.099],['Alexandria',38.805,-77.047],['Silver Spring',38.991,-77.026]]},
+ {id:'tor',n:'Toronto',c:[43.6480,-79.3810],ca:1,h:[['Mississauga',43.589,-79.644],['Scarborough',43.773,-79.258],['North York',43.762,-79.411],['Etobicoke',43.620,-79.514]]},
+ {id:'mtl',n:'Montréal',c:[45.5020,-73.5670],ca:1,h:[['Laval',45.606,-73.712],['Longueuil',45.531,-73.518],['Verdun',45.458,-73.571],['Outremont',45.517,-73.608]]},
+ {id:'van',n:'Vancouver',c:[49.2830,-123.1200],ca:1,h:[['Burnaby',49.249,-122.980],['Richmond',49.166,-123.133],['North Vancouver',49.320,-123.072],['Surrey',49.191,-122.849]]}];
+const TWC={data:{},wx:{},busy:false,tried:{},three:null,threeLoading:false,el:null,r:null,raf:0,cur:'',lab:null};
+function twcList(){const ca=SET.region==='ca';return TWC_CITIES.filter(c=>ca?true:!c.ca)}
+function twcKey(id){return 'nyx-city2-'+id}
+function twcCached(id){if(TWC.data[id])return TWC.data[id];try{const s=localStorage.getItem(twcKey(id));if(s){TWC.data[id]=JSON.parse(s);return TWC.data[id]}}catch(e){}return null}
+function twcReady(){return twcList().filter(c=>twcCached(c.id))}
+// download one city that isn't cached yet (a few minutes apart, to be gentle on the free Overpass service)
+async function twcPrefetch(){if(!NATIVE||TWC.busy||Date.now()-(TWC.last||0)<180000)return;const c=twcList().find(c=>!twcCached(c.id)&&!(TWC.tried[c.id]>2));if(!c)return;
+  TWC.busy=true;TWC.last=Date.now();
+  const q='[out:json][timeout:60];way["building"](around:800,'+c.c[0]+','+c.c[1]+');out tags geom;way["highway"~"^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$"](around:2200,'+c.c[0]+','+c.c[1]+');out geom;';
+  try{const j=JSON.parse(await http('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(q)));const L=c.c[0]*Math.PI/180,mx=Math.cos(L)*111320,mz=110540;
+    const B=[],R=[];(j.elements||[]).forEach(e=>{if(!e.geometry||e.geometry.length<2)return;const pts=[];e.geometry.forEach(g=>pts.push(Math.round((g.lon-c.c[1])*mx),Math.round(-(g.lat-c.c[0])*mz)));
+      const t=e.tags||{};if(t.building){if(pts.length<8)return;let h=parseFloat(String(t.height||'').replace(',','.'));if(!(h>0))h=parseFloat(t['building:levels'])*3.4;if(!(h>0))h=t.building==='house'||t.building==='garage'||t.building==='shed'?6:10;
+        h=Math.min(560,Math.round(h));if(pts[0]===pts[pts.length-2]&&pts[1]===pts[pts.length-1])pts.splice(-2,2);if(pts.length>=6)B.push([h].concat(pts))}
+      else if(t.highway){const cls=/motorway|trunk/.test(t.highway)?2:/primary|secondary/.test(t.highway)?1:0;R.push([cls].concat(pts))}});
+    if(B.length<20)throw 0;const d={b:B,r:R,at:Date.now()};TWC.data[c.id]=d;
+    const save=()=>localStorage.setItem(twcKey(c.id),JSON.stringify(d));
+    try{save()}catch(e){try{TWC_CITIES.forEach(x=>{if(x.id!==c.id)localStorage.removeItem(twcKey(x.id))});save()}catch(e2){}}}
+  catch(e){TWC.tried[c.id]=(TWC.tried[c.id]||0)+1}TWC.busy=false}
+async function twcLoadWx(c){if(!NATIVE||(TWC.wx[c.id]&&Date.now()-TWC.wx[c.id].at<30*MIN)||TWC.wx[c.id+'b'])return;TWC.wx[c.id+'b']=1;
+  const P=[[c.n,c.c[0],c.c[1]]].concat(c.h);try{const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+P.map(p=>p[1]).join(',')+'&longitude='+P.map(p=>p[2]).join(',')+'&current=temperature_2m,weather_code,is_day&temperature_unit=fahrenheit&timezone=auto'));
+    const A=Array.isArray(j)?j:[j];TWC.wx[c.id]={at:Date.now(),v:A.map(x=>({t:Math.round(x.current.temperature_2m),code:x.current.weather_code,day:x.current.is_day}))}}catch(e){}TWC.wx[c.id+'b']=0}
+function twcPick(s){const R=twcReady();if(!R.length)return null;return R[Math.floor(s.n/3/TW_FEATS.length)%R.length]}
+function twcLoadThree(){if(window.THREE||TWC.threeLoading)return;TWC.threeLoading=true;const sc=document.createElement('script');sc.src='three.min.js';sc.onload=()=>{TWC.threeLoading=false};sc.onerror=()=>{TWC.threeLoading='x'};document.head.appendChild(sc)}
+// build the scene for one city
+function twcBuild(c,d){const TH=window.THREE,scene=new TH.Scene(),fogC=new TH.Color('#0b1733');scene.background=new TH.Color('#050a18');
+  const pos=[],uvw=[],seed=[];let bid=0;
+  d.b.forEach(b=>{const h=b[0],P=[];for(let i=1;i<b.length;i+=2)P.push([b[i],b[i+1]]);bid++;const sd=(bid*0.6180339)%1;
+    let u=0;for(let i=0;i<P.length;i++){const a=P[i],q=P[(i+1)%P.length],len=Math.hypot(q[0]-a[0],q[1]-a[1]);if(len<.5)continue;
+      pos.push(a[0],0,a[1], q[0],0,q[1], q[0],h,q[1],  a[0],0,a[1], q[0],h,q[1], a[0],h,a[1]);
+      uvw.push(u,0,1, u+len,0,1, u+len,h,1, u,0,1, u+len,h,1, u,h,1);for(let k=0;k<6;k++)seed.push(sd);u+=len}
+    try{const tri=TH.ShapeUtils.triangulateShape(P.map(p=>new TH.Vector2(p[0],p[1])),[]);tri.forEach(t=>t.forEach(ix=>{pos.push(P[ix][0],h,P[ix][1]);uvw.push(0,h,0);seed.push(sd)}))}catch(e){}});
+  const g=new TH.BufferGeometry();g.setAttribute('position',new TH.Float32BufferAttribute(pos,3));g.setAttribute('aUW',new TH.Float32BufferAttribute(uvw,3));g.setAttribute('aSeed',new TH.Float32BufferAttribute(seed,1));
+  const mat=new TH.ShaderMaterial({side:TH.DoubleSide,uniforms:{fogC:{value:fogC},dens:{value:.00034}},
+    vertexShader:'attribute vec3 aUW;attribute float aSeed;varying vec3 vUW;varying float vS;varying float vD;void main(){vUW=aUW;vS=aSeed;vec4 mv=modelViewMatrix*vec4(position,1.0);vD=-mv.z;gl_Position=projectionMatrix*mv;}',
+    fragmentShader:'uniform vec3 fogC;uniform float dens;varying vec3 vUW;varying float vS;varying float vD;float hs(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}'+
+      'void main(){vec3 col;if(vUW.z>.5){vec2 cell=vec2(floor(vUW.x/3.2),floor(vUW.y/3.5));vec2 f=vec2(fract(vUW.x/3.2),fract(vUW.y/3.5));float win=step(.22,f.x)*step(f.x,.78)*step(.3,f.y)*step(f.y,.78);'+
+      'float r=hs(cell+vS*91.0);float lit=step(.58,r)*step(4.0,vUW.y);vec3 warm=mix(vec3(1.0,.78,.42),vec3(.85,.92,1.0),step(.86,r));col=vec3(.035,.045,.075)+vec3(.02,.03,.06)*(vUW.y/120.0);col=mix(col,warm*(.75+.5*hs(cell.yx+vS)),win*lit);}'+
+      'else{col=vec3(.04,.05,.08);}float fg=1.0-exp(-dens*dens*vD*vD);gl_FragColor=vec4(mix(col,fogC,clamp(fg,0.,1.)),1.0);}'});
+  scene.add(new TH.Mesh(g,mat));
+  // street lights
+  const rp=[],rc=[];d.r.forEach(r=>{const cls=r[0];for(let i=1;i+3<r.length;i+=2){rp.push(r[i],.5,r[i+1],r[i+2],.5,r[i+3]);const c2=cls===2?[1,.55,.2]:cls===1?[1,.7,.35]:[.95,.75,.45];rc.push(...c2,...c2)}});
+  if(rp.length){const rg=new TH.BufferGeometry();rg.setAttribute('position',new TH.Float32BufferAttribute(rp,3));rg.setAttribute('color',new TH.Float32BufferAttribute(rc,3));
+    scene.add(new TH.LineSegments(rg,new TH.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.75,blending:TH.AdditiveBlending,depthWrite:false})))}
+  // city lights out to the horizon
+  const lp=[],lc=[];const rnd=movRng(c.id.length*977+7);for(let i=0;i<9000;i++){const rr=900+Math.pow(rnd(),.7)*9000,a=rnd()*Math.PI*2;lp.push(Math.cos(a)*rr,1,Math.sin(a)*rr);const w=rnd()<.8;lc.push(w?1:.8,w?.75:.88,w?.4:1)}
+  const lg=new TH.BufferGeometry();lg.setAttribute('position',new TH.Float32BufferAttribute(lp,3));lg.setAttribute('color',new TH.Float32BufferAttribute(lc,3));
+  scene.add(new TH.Points(lg,new TH.PointsMaterial({size:2,sizeAttenuation:false,vertexColors:true,transparent:true,opacity:.85,blending:TH.AdditiveBlending,depthWrite:false})));
+  const gnd=new TH.Mesh(new TH.PlaneGeometry(40000,40000),new TH.MeshBasicMaterial({color:'#060b16'}));gnd.rotation.x=-Math.PI/2;scene.add(gnd);
+  return scene}
+function twcEnsureEl(){if(TWC.el)return;const el=document.createElement('div');el.id='twcity';el.hidden=true;el.innerHTML='<canvas width="960" height="540"></canvas><div class="twcl"></div>';stage.insertBefore(el,ui);TWC.el=el}
+function twcStop(){cancelAnimationFrame(TWC.raf);TWC.raf=0;if(TWC.el)TWC.el.hidden=true}
+function twcShow(c){twcEnsureEl();const TH=window.THREE;if(!TH){twcLoadThree();return false}const d=twcCached(c.id);if(!d)return false;
+  if(!TWC.r){try{TWC.r=new TH.WebGLRenderer({canvas:TWC.el.querySelector('canvas'),antialias:false});TWC.r.setSize(960,540,false)}catch(e){TWC.r='x'}}if(TWC.r==='x')return false;
+  if(TWC.cur!==c.id){TWC.scene=twcBuild(c,d);TWC.cur=c.id;TWC.cam=new TH.PerspectiveCamera(42,960/540,5,20000)}
+  TWC.el.hidden=false;twcLoadWx(c);const lab=TWC.el.querySelector('.twcl');
+  const L=[{n:c.n,i:0,p:[0,0],big:1}].concat(c.h.map((h,i)=>({n:h[0],i:i+1,p:[(h[2]-c.c[1])*Math.cos(c.c[0]*Math.PI/180)*111320,-(h[1]-c.c[0])*110540]})));
+  L.forEach(x=>{const dd=Math.hypot(x.p[0],x.p[1]);if(dd>7000){x.p[0]*=7000/dd;x.p[1]*=7000/dd}});
+  const v=new TH.Vector3();let built='';
+  const loop=()=>{if(TWC.el.hidden){TWC.raf=0;return}const t=(Date.now()%TW_SEG)/1000,a=(c.id.length*.9)+t*.012,R=1550-t*5;TWC.cam.position.set(Math.cos(a)*R,480-t*2.2,Math.sin(a)*R);TWC.cam.lookAt(0,40,0);
+    TWC.r.render(TWC.scene,TWC.cam);const W=TWC.wx[c.id],key=c.id+(W?W.at:0);
+    if(key!==built){built=key;lab.innerHTML=W?L.map(x=>{const w=W.v[x.i];return w?'<div class="twcm'+(x.big?' big':'')+'"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="64" height="52"></canvas><div><span>'+esc(x.n)+'</span><b>'+tU(w.t)+'</b></div></div>':'<div hidden></div>'}).join(''):'';drawWxIcons(lab)}
+    const els=lab.children,shown=[];L.forEach((x,k)=>{const e=els[k];if(!e)return;v.set(x.p[0],x.big?230:40,x.p[1]).project(TWC.cam);const sx=(v.x+1)*480,sy=(1-v.y)*270;
+      let vis=!(v.z>1||v.x<-.92||v.x>.8||sy<105||sy>470);if(vis&&shown.some(q=>Math.abs(q[0]-sx)<(x.big||q[2]?230:170)&&Math.abs(q[1]-sy)<80))vis=false;e.style.display=vis?'':'none';if(vis){shown.push([sx,sy,x.big]);e.style.left=sx.toFixed(0)+'px';e.style.top=sy.toFixed(0)+'px'}});
+    TWC.raf=requestAnimationFrame(loop)};
+  if(!TWC.raf)TWC.raf=requestAnimationFrame(loop);return true}
+
 // Twilight: the owner's own music files (sent from a phone; stored only on this device)
 const TWF={files:[],url:'',msg:''};
 function twfLoad(){try{if(NATIVE&&NATIVE.twFiles)TWF.files=JSON.parse(NATIVE.twFiles()||'[]')}catch(e){TWF.files=[]}}
@@ -3845,15 +3933,16 @@ function twilightHTML(){const s=twNow(),r=s.reg;twLoad(r);if(s.e>TW_SEG-8000)twL
   const br=twBreak();let h='<div class="tw">';
   if(br){const sl=adSlot(br,Date.now());return sl.part==='ad'&&adytActive(br)?'<div class="tw"></div>':h+adHTML(br)+'</div>'}
   if(twIdent())return h+twIdentHTML(r)+'</div>';
-  twxLoadGrid();twxLoadQuakes();const ph=twPhase(s);
+  twxLoadGrid();twxLoadQuakes();if(NATIVE){twcLoadThree();twcPrefetch()}const ph=twPhase(s),cty=ph==='city'?twcPick(s):null;if(ph==='city')h='<div class="tw city">';
   if(ph==='globe'||ph==='jet')h+='<div class="twgcam" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twGlobeHTML(ph==='jet')+'</div><div class="twspace"></div>';
   else if(ph==='wv'||ph==='temp'||ph==='wind'||ph==='quake')h+=twxHTML(ph)+'<div class="twshade flat"></div>';
+  else if(ph==='city')h+='<div class="twshade flat"></div>';
   else h+='<div class="twcam'+(ph==='rad'?' flat':'')+'" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twMapHTML(r,ph==='rad',ph==='rad')+'</div>'+(ph==='rad'?'<div class="twshade flat"></div>':'<div class="twshade"></div>');
   const hr=new Date().getHours(),night=hr>=18||hr<6;
   const TT={globe:'Satellite: Clouds',rad:'Sat / Rad: Past Hour',wv:'Water Vapor',temp:'Current Temperatures',wind:'Current Winds',jet:'Jet Stream',quake:'Earthquakes: Past 24 Hours'},SUB={globe:'North America',jet:'North America',quake:'North America',wv:'United States',temp:'United States',wind:'United States'};
-  h+='<div class="twseg"><span>'+T(TT[ph]||(night?'Tonight’s Forecast':'Today’s Forecast'))+'</span><i>'+esc(T(SUB[ph]||r.n))+'</i></div>';
+  h+='<div class="twseg"><span>'+(cty?esc(T('{0} Current Weather',cty.n)):T(TT[ph]||(night?'Tonight’s Forecast':'Today’s Forecast')))+'</span><i>'+esc(cty?T(night?'Tonight':'Today'):T(SUB[ph]||r.n))+'</i></div>';
   h+='<div class="twlogo"><b>Twilight</b><span>NYX</span></div>';
-  return h+twBar(r)+'<div class="twcred">'+T('Night lights & clouds: NASA')+(ph==='rad'?' · '+T('Radar: Iowa Environmental Mesonet'):'')+(ph==='quake'?' · '+T('Earthquakes: USGS'):' · '+T('Weather: Open-Meteo'))+'</div></div>'}
+  return h+twBar(r)+'<div class="twcred">'+T('Night lights & clouds: NASA')+(ph==='rad'?' · '+T('Radar: Iowa Environmental Mesonet'):'')+(ph==='city'?' · '+T('Buildings & streets: © OpenStreetMap contributors'):'')+(ph==='quake'?' · '+T('Earthquakes: USGS'):' · '+T('Weather: Open-Meteo'))+'</div></div>'}
 
 /* ---------------- Nyx Toons (ch 9): public-domain cartoons from the Internet Archive, back to back ---------------- */
 // Old cartoons include wartime propaganda and racist caricatures; none of those air here (title, subject and description checks, plus a list of known titles)
