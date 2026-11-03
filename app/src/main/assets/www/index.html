@@ -513,6 +513,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .tbar{height:8px;margin-top:8px;background:#c9b98f;border:1px solid #6b5a3a}.tbar div{height:100%;background:#e4572e}
 .ttime{display:flex;justify-content:space-between;font:700 13px var(--ui);color:#6b5a3a;margin-top:3px}
 .tjc .ttqr span{color:#3a2e1c}
+.terr{display:block;margin-top:8px;font:600 11px var(--ui);color:#8a7a5a;word-break:break-word}
 .tkhint{margin-top:10px;padding:6px;text-align:center;font:800 15px var(--ui);background:#1d2a6b;color:#f5ecd2}
 .tfoot{position:absolute;left:34px;right:32px;bottom:44px;text-align:center;font:700 14px var(--ui);color:#cfb98a;letter-spacing:.04em}
 .tspot{margin-top:10px;padding-top:8px;border-top:1px dashed #6b5a3a;font:700 13px var(--ui);color:#3a2e1c;display:flex;flex-direction:column;gap:2px}.tspot b{color:#1DB954;font-weight:900}.topen{font:700 12px var(--ui);color:#1d2a6b;font-style:normal}
@@ -3674,6 +3675,8 @@ function spPos(){const p=SPT.pl;if(!p||!p.dur)return 0;return Math.min(p.dur,p.p
 function spShelfRows(){const r=[];const p=SPT.pl;if(p&&p.name&&(p.albumUri||p.uri)){r.push({head:true,title:'Now playing'});r.push({open:true,id:'open',title:T('Open “{0}” in Spotify',p.album||p.name),sub:'Spotify'})}(SPT.lib||[]).forEach(s=>{r.push({head:true,title:s.title});s.items.forEach(it=>r.push(it))});return r}
 // leave the channel: pause the tape · come back: pick up where you left off
 function tapeTick(){const on=spOnTape();
+  if(SPT.st==='conn'&&Date.now()-SPT.at>25000){SPT.st='err';SPT.err='Timeout';SPT.msg='';SPT.at=Date.now();SPT.tries=9;if(on&&S.screen==='watch')render()}
+  if(on&&SPT.st==='conn'&&S.screen==='watch'&&Date.now()-SPT.at>8000&&!document.querySelector('.tkhint'))render();
   if(on&&SET.skey&&SET.spAgree&&spNative()&&(SPT.st==='idle'||(SPT.st==='err'&&SPT.err!=='UserNotAuthorizedException'&&Date.now()-SPT.at>20000&&SPT.tries<3))){if(SPT.st==='err')SPT.tries++;spConnect()}
   if(SPT.lastCh!==S.ch){const was=SPT.lastCh>=0&&CH[SPT.lastCh]&&CH[SPT.lastCh].tape;SPT.lastCh=S.ch;
     if(was&&!on&&SPT.pl&&!SPT.pl.paused){spCmd('pause');SPT.autoPaused=true}
@@ -3690,7 +3693,8 @@ function tapeKey(k){if(!spOnTape()||locked(S.ch))return false;
   if(Date.now()<S.bannerUntil&&(k==='ok'))return false;
   if(spNative()&&!spInstalled()){if(k==='ok'){snd.ok();try{NATIVE.openSpotify()}catch(e){}return true}return false}
   if(SET.skey&&!SET.spAgree){if(k==='ok'){snd.ok();S.sptRet='watch';go('spterms');return true}return false}
-  if(SPT.st!=='ok'){if(k==='ok'&&SET.skey&&SPT.st==='err'){SPT.tries=0;snd.ok();spConnect(true);return true}return false}
+  if(SPT.st!=='ok'){if(k==='ok'&&SET.skey&&(SPT.st==='conn'&&Date.now()-SPT.at>8000||SPT.st==='err'&&SPT.err==='Timeout')){snd.ok();SPT.st='err';SPT.err='Timeout';SPT.reopen=true;try{NATIVE.openSpotify()}catch(e){}return true}
+    if(k==='ok'&&SET.skey&&SPT.st==='err'){SPT.tries=0;snd.ok();spConnect(true);return true}return false}
   if(k==='ok'){snd.ok();if(!SPT.pl||!SPT.pl.name){SPT.shelf=true;SPT.si=Math.max(1,0);render();return true}spCmd(SPT.pl.paused?'resume':'pause');if(SPT.pl){SPT.pl.pos=spPos();SPT.pl.t=Date.now();SPT.pl.paused=!SPT.pl.paused}tapeUpdate();return true}
   if(k==='right'){snd.nav();spCmd('next');return true}
   if(k==='left'){snd.nav();spCmd('prev');return true}
@@ -3710,7 +3714,7 @@ function sptermsHTML(){return '<div class="bg">'+bgDeco()+'</div>'+hdr('Spotify 
   ftr(SET.spAgree?['<i>OK</i>Done','<i>BACK</i>Back']:['<i>OK</i>I Agree','<i>BACK</i>Not Now'])}
 function sptermsKey(k){if(k==='ok'){const first=!SET.spAgree;SET.spAgree=true;save();snd.ok();go(S.sptRet||'set');if(first&&S.screen==='watch'){SPT.st='idle';SPT.tries=0;spConnect()}return}
   if(k==='back'){snd.back();go(S.sptRet||'set')}}
-const TAPE_ERR={CouldNotFindSpotifyApp:'Install the Spotify app on this device and log in, then come back to channel 8.',NotLoggedInException:'Open the Spotify app and log in first, then come back to channel 8.',
+const TAPE_ERR={Timeout:'Spotify didn’t answer. Open the Spotify app, play any song for a moment, then switch back to NyxVision. Channel 8 will try again on its own.',CouldNotFindSpotifyApp:'Install the Spotify app on this device and log in, then come back to channel 8.',NotLoggedInException:'Open the Spotify app and log in first, then come back to channel 8.',
   UserNotAuthorizedException:'Spotify didn’t let NyxVision connect. Check the Client ID in Settings → Service Keys, and that your Spotify app’s settings list the package com.retrocable.box with the SHA1 fingerprint.',
   AuthenticationFailedException:'Spotify couldn’t sign NyxVision in. Check the Client ID and the redirect URI http://127.0.0.1:8898/callback in your Spotify app’s settings.',
   OfflineModeException:'The Spotify app is in offline mode. Turn it off in Spotify’s settings.',UnsupportedFeatureVersionException:'Update the Spotify app from the Play Store, then come back.',
@@ -3720,8 +3724,8 @@ function tapeMsg(){if(!NATIVE)return null;
   if(!spNative())return {h:'Update NyxVision',p:'This build can’t talk to Spotify yet. Check for updates in Settings.'};
   if(SET.skey&&!SET.spAgree)return {h:'Before you connect',p:'Spotify asks every app that plays music through it to show its terms and privacy policy first. They’re short.',k:TOUCH?'Tap to read and agree':'Press OK to read and agree'};
   if(!SET.skey)return {h:'Connect your Spotify',p:'Make a free Spotify developer app with your Premium account, then enter its Client ID in Settings → Service Keys → Spotify Client ID.',qr:'https://developer.spotify.com/dashboard'};
-  if(SPT.st==='conn'||SPT.st==='idle')return {h:'Loading the tape…',p:'Connecting to the Spotify app. The first time, Spotify asks you to agree to let NyxVision control playback.'};
-  if(SPT.st==='err')return {h:'Spotify isn’t connected',p:T(TAPE_ERR[SPT.err]||'Couldn’t reach the Spotify app. Press OK to try again.'),k:TOUCH?'Tap to try again':'Press OK to try again'};
+  if(SPT.st==='conn'||SPT.st==='idle')return Date.now()-SPT.at>8000&&SPT.st==='conn'?{h:'Still loading the tape…',p:'Spotify hasn’t answered yet. If nothing happens, open the Spotify app, play any song for a moment, then come back to NyxVision. Channel 8 will connect on its own.',k:TOUCH?'Tap to open Spotify':'Press OK to open Spotify'}:{h:'Loading the tape…',p:'Connecting to the Spotify app. The first time, Spotify asks you to agree to let NyxVision control playback.'};
+  if(SPT.st==='err')return {h:'Spotify isn’t connected',p:T(TAPE_ERR[SPT.err]||'Couldn’t reach the Spotify app. Press OK to try again.')+'<small class="terr">'+esc(T('Details: {0}',SPT.err+(SPT.msg?' – '+SPT.msg:'')))+'</small>',k:SPT.err==='Timeout'?(TOUCH?'Tap to open Spotify':'Press OK to open Spotify'):(TOUCH?'Tap to try again':'Press OK to try again')};
   return null}
 function tapeReel(id,frac){const r=19+21*Math.max(0,Math.min(1,frac));return '<div class="treel" id="'+id+'"><i class="ttape" style="width:'+(2*r)+'px;height:'+(2*r)+'px"></i><b class="thub"><span></span><span></span><span></span></b></div>'}
 function tapeLabel(){const p=SPT.pl;return SPT.demo||!NATIVE?{t:'Nyx’s Mixtape',s:'Side A'}:{t:SPT.loadedTitle||(p&&p.album)||'Blank Tape',s:'Side A'}}
@@ -3917,7 +3921,7 @@ window.cable={
   pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}},
   dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
-  resume:function(){APP_PAUSED=false;applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
+  resume:function(){APP_PAUSED=false;try{if(SPT.st==='err'||SPT.st==='conn'){SPT.st='idle';SPT.tries=0}}catch(e){}applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
     if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}
     applyStream()}
 };

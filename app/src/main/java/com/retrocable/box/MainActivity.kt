@@ -500,6 +500,7 @@ class MainActivity : AppCompatActivity() {
                 val r0 = spRemote
                 if (r0 != null && r0.isConnected) { spSend("spState", JSONObject().put("ok", true).toString()); return@runOnUiThread }
                 try { SpotifyAppRemote.disconnect(r0) } catch (e: Exception) {}
+                try {
                 val params = ConnectionParams.Builder(clientId.trim())
                     .setRedirectUri("http://127.0.0.1:8898/callback").showAuthView(true).build()
                 SpotifyAppRemote.connect(this@MainActivity, params, object : Connector.ConnectionListener {
@@ -514,6 +515,9 @@ class MainActivity : AppCompatActivity() {
                         spSend("spState", JSONObject().put("err", e.javaClass.simpleName).put("msg", e.message ?: "").toString())
                     }
                 })
+                } catch (e: Throwable) {
+                    spSend("spState", JSONObject().put("err", e.javaClass.simpleName).put("msg", e.message ?: "").toString())
+                }
             }
         }
 
