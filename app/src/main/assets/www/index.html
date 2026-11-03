@@ -565,7 +565,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .twspace{position:absolute;inset:0;pointer-events:none;background:radial-gradient(1px 1px at 12% 18%,#fff8,#0000),radial-gradient(1px 1px at 82% 9%,#fff7,#0000),radial-gradient(1px 1px at 64% 24%,#fff6,#0000),radial-gradient(1px 1px at 30% 6%,#fff8,#0000)}
 .twgcam{position:absolute;inset:0;animation:twgdrift 45s linear infinite}@keyframes twgdrift{from{transform:translate(0,0)}to{transform:translate(-60px,10px)}}
 .twglobe{position:absolute;left:-380px;top:120px;width:1900px;height:1900px;border-radius:50%;overflow:hidden;background:#06122a;box-shadow:0 0 30px 8px #3d8cff88,0 0 90px 30px #1f5fff44,inset 0 0 60px 20px #7fb6ff55}
-.twgmap{position:absolute;left:250px;top:-60px;transform:rotate(-14deg) scale(1.15);transform-origin:50% 40%;animation:twgrot 45s linear infinite}@keyframes twgrot{from{transform:rotate(-14deg) scale(1.15) translateX(40px)}to{transform:rotate(-12deg) scale(1.2) translateX(-80px)}}
+.twgmap{position:absolute;left:-150px;top:-505px;transform-origin:50% 50%;animation:twgrot 45s linear infinite}@keyframes twgrot{from{transform:rotate(-8deg) scale(.72) translateX(-170px)}to{transform:rotate(-6deg) scale(.72) translateX(-480px)}}
 .twatmo{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 50%,#0000 66%,#5aa0ff22 70%,#8fc3ff66 71.5%,#0000 72%);pointer-events:none}
 .twfog{position:absolute;inset:0;background:radial-gradient(40% 18% at 30% 80%,#7fa6d61a,#0000),radial-gradient(35% 14% at 70% 70%,#7fa6d614,#0000);animation:twfog 20s ease-in-out infinite alternate}@keyframes twfog{to{transform:translateX(-40px)}}
 .twneon span{display:inline-block;opacity:0;animation:twon 1.4s steps(1) forwards,twgl 4s ease-in-out infinite alternate}
@@ -3721,7 +3721,8 @@ function twMapHTML(r,radar,flat){const z=r.z,W=2200,H=1800,cl=r.cities.reduce((a
   return h+'</div>'}
 // live clouds (GOES-East infrared from NASA GIBS); if the layer isn't served the clouds simply don't show
 function twCloudTile(z,x,y){const zz=Math.min(z,7);return 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GOES-East_ABI_Band13_Clean_Infrared/default/default/GoogleMapsCompatible_Level7/'+zz+'/'+y+'/'+x+'.png'}
-function twGlobeHTML(){const z=4,W=1400,H=1100,c=twProj(42,-96,z),x0=c[0]-W/2,y0=c[1]-H/2,max=16;let h='<div class="twglobe"><div class="twgmap" style="width:'+W+'px;height:'+H+'px">';
+const TWG={z:5,W:2600,H:1500,lat:33,lon:-96};
+function twGlobeHTML(){const z=TWG.z,W=TWG.W,H=TWG.H,c=twProj(TWG.lat,TWG.lon,z),x0=c[0]-W/2,y0=c[1]-H/2,max=Math.pow(2,z);let h='<div class="twglobe"><div class="twgmap" style="width:'+W+'px;height:'+H+'px;animation-delay:-'+((Date.now()%TW_SEG)/1000).toFixed(1)+'s">';
   for(let ty=Math.floor(y0/256);ty<=Math.floor((y0+H)/256);ty++)for(let tx=Math.floor(x0/256);tx<=Math.floor((x0+W)/256);tx++){if(ty<0||ty>=max)continue;const wx=((tx%max)+max)%max,l=(tx*256-x0).toFixed(0),t=(ty*256-y0).toFixed(0);
     h+='<img class="twt" style="left:'+l+'px;top:'+t+'px" src="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/default/GoogleMapsCompatible_Level8/'+z+'/'+ty+'/'+wx+'.png" alt="" onerror="this.style.visibility=\'hidden\'">'+
       '<img class="twcl" style="left:'+l+'px;top:'+t+'px" src="'+twCloudTile(z,wx,ty)+'" alt="" onerror="this.remove()">'}
@@ -3730,7 +3731,7 @@ function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor
   if(w){const fmtH=tm=>{const h=+tm.slice(11,13);return (h%12||12)+(h<12?'a':'p')};
     if(mode===0){const night=!w.day,d=w.dy[0];items='<em>'+T(night?'Tonight':'Today')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="40" height="32"></canvas></i><b>'+tU(w.t)+'°</b><span>'+T(WMO(w.code,w.day))+'</span>'+(d&&d.p!=null?'<span>'+T('{0}% Chance of Rain',d.p)+'</span>':'')}
     else if(mode===1)items='<em>'+T('Hourly')+'</em>'+w.hr.filter((x,i)=>i%2===1).slice(0,4).map(x=>'<span class="twh">'+fmtH(x.tm)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,+x.tm.slice(11,13)>=7&&+x.tm.slice(11,13)<19)+'" width="40" height="32"></canvas></i> '+tU(x.t)+'°</span>').join('');
-    else if(mode===4)items='<em>'+T('Now')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="40" height="32"></canvas></i><b>'+tU(w.t)+'°</b><span>'+T(WMO(w.code,w.day))+'</span>'+(w.fl!=null?'<span>'+T('Feels like {0}°',tU(w.fl))+'</span>':'')+(w.hum!=null?'<span>'+T('Humidity {0}%',w.hum)+'</span>':'')
+    else if(mode===4)items='<em>'+T('Now')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="40" height="32"></canvas></i><b>'+tU(w.t)+'°</b><span>'+T(WMO(w.code,w.day))+'</span>'+(Number.isFinite(w.fl)?'<span>'+T('Feels like {0}°',tU(w.fl))+'</span>':'')+(Number.isFinite(w.hum)?'<span>'+T('Humidity {0}%',w.hum)+'</span>':'')
     else if(mode===3){const d=w.dy[1];items=d?'<em>'+T('Tomorrow')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(d.code,1)+'" width="40" height="32"></canvas></i><b>'+tU(d.hi)+'°/'+tU(d.lo)+'°</b><span>'+T(WMO(d.code,1))+'</span>'+(d.p!=null?'<span>'+T('{0}% Chance of Rain',d.p)+'</span>':''):''}
     else items='<em>'+T('This Week')+'</em>'+w.dy.slice(1,4).map(x=>'<span class="twh">'+dayName(new Date(x.tm+'T12:00:00').getDay()).slice(0,3)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,1)+'" width="40" height="32"></canvas></i> '+tU(x.hi)+'°/'+tU(x.lo)+'°</span>').join('')}
   else items='<span>'+T('Loading the weather…')+'</span>';
