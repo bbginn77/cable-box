@@ -550,16 +550,27 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .tw{position:absolute;inset:0;overflow:hidden;background:#02040a}
 .twcam{position:absolute;left:50%;top:57%;width:2200px;height:1800px;margin:-900px 0 0 -1100px;transform-style:preserve-3d;animation:twfly 45s linear infinite}
 @keyframes twfly{from{transform:perspective(1500px) rotateX(24deg) translate3d(-40px,40px,0) scale(.8)}to{transform:perspective(1500px) rotateX(24deg) translate3d(40px,-40px,0) scale(.9)}}
-.twmap{position:relative;transform-style:preserve-3d;filter:saturate(1.15)}.twt,.twr{position:absolute;width:256px;height:256px}.twr{opacity:.9;mix-blend-mode:screen}
+.twmap{position:relative;transform-style:preserve-3d;filter:saturate(1.15)}.twt,.twr{position:absolute;width:256px;height:256px}.twr{opacity:.9;mix-blend-mode:screen}.twcl{opacity:.85;mix-blend-mode:screen}
+.twcam.flat{animation-name:twflat}@keyframes twflat{from{transform:translate3d(-20px,10px,0) scale(1)}to{transform:translate3d(20px,-10px,0) scale(1.08)}}
 .twc{position:absolute;display:flex;align-items:center;gap:6px;transform:translate(-30px,-80%) rotateX(-24deg);transform-origin:30px 100%;opacity:0;animation:twpop .8s ease-out forwards}
 .twc canvas{width:58px;height:48px}.twc div{border-left:3px solid #4fa8ff;padding-left:8px;background:linear-gradient(90deg,#0a1a33cc,#0a1a3300)}.twc span{display:block;font:500 19px var(--ui);color:#dfe8ff;letter-spacing:.02em}.twc b{display:block;font:300 44px var(--ui);color:#fff;line-height:1}
 @keyframes twpop{from{opacity:0;transform:translate(-30px,-60%) rotateX(-24deg) scale(.7)}to{opacity:1;transform:translate(-30px,-80%) rotateX(-24deg) scale(1)}}
 .twshade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(170% 120% at 50% 130%,#0000 62%,#16325c88 80%,#02040a 95%),linear-gradient(#02040acc 0,#0000 22%,#0000 80%,#02040a 100%)}
+.twshade.flat{background:linear-gradient(#02040ae6 0,#02040a00 24%,#0000 82%,#02040acc 100%)}
 .twseg{position:absolute;left:26px;top:20px}.twseg span{display:block;font:300 22px var(--ui);color:#e8f0ff;padding-bottom:4px;border-bottom:3px solid #3d9bff;width:max-content}.twseg i{display:block;margin-top:4px;font:400 13px var(--ui);color:#8fb0de;font-style:normal;letter-spacing:.08em;text-transform:uppercase}
 .twlogo{position:absolute;right:28px;top:16px;text-align:center}.twlogo b{display:block;font:200 26px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.14em;color:#bfe3ff;text-shadow:0 0 6px #4fb2ff,0 0 14px #2a7fff}.twlogo span{display:block;font:300 12px var(--ui);letter-spacing:.6em;color:#9fd0ff;text-shadow:0 0 6px #4fb2ff}
 .twbar{position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;gap:16px;padding:0 18px;background:linear-gradient(#0a1424ee,#050b16f5);border-top:1px solid #2a4a78;font:400 15px var(--ui);color:#e8f0ff;white-space:nowrap;overflow:hidden}
 .twlg{display:flex;align-items:center}.twclk{font-weight:600}.twcity{font-weight:600;min-width:96px}.twbar em{font-style:normal;color:#8fa3c4}.twbar b{font-weight:600}.twico canvas{width:26px;height:21px;vertical-align:middle}.twh{white-space:nowrap}
 .twcred{position:absolute;right:18px;bottom:44px;font:400 10px var(--ui);color:#6f86ab}
+.twspace{position:absolute;inset:0;pointer-events:none;background:radial-gradient(1px 1px at 12% 18%,#fff8,#0000),radial-gradient(1px 1px at 82% 9%,#fff7,#0000),radial-gradient(1px 1px at 64% 24%,#fff6,#0000),radial-gradient(1px 1px at 30% 6%,#fff8,#0000)}
+.twgcam{position:absolute;inset:0;animation:twgdrift 45s linear infinite}@keyframes twgdrift{from{transform:translate(0,0)}to{transform:translate(-60px,10px)}}
+.twglobe{position:absolute;left:-380px;top:120px;width:1900px;height:1900px;border-radius:50%;overflow:hidden;background:#06122a;box-shadow:0 0 30px 8px #3d8cff88,0 0 90px 30px #1f5fff44,inset 0 0 60px 20px #7fb6ff55}
+.twgmap{position:absolute;left:250px;top:-60px;transform:rotate(-14deg) scale(1.15);transform-origin:50% 40%;animation:twgrot 45s linear infinite}@keyframes twgrot{from{transform:rotate(-14deg) scale(1.15) translateX(40px)}to{transform:rotate(-12deg) scale(1.2) translateX(-80px)}}
+.twatmo{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 50%,#0000 66%,#5aa0ff22 70%,#8fc3ff66 71.5%,#0000 72%);pointer-events:none}
+.twfog{position:absolute;inset:0;background:radial-gradient(40% 18% at 30% 80%,#7fa6d61a,#0000),radial-gradient(35% 14% at 70% 70%,#7fa6d614,#0000);animation:twfog 20s ease-in-out infinite alternate}@keyframes twfog{to{transform:translateX(-40px)}}
+.twneon span{display:inline-block;opacity:0;animation:twon 1.4s steps(1) forwards,twgl 4s ease-in-out infinite alternate}
+@keyframes twon{0%{opacity:0}10%{opacity:.5}20%{opacity:0}35%{opacity:.8}45%{opacity:.2}60%{opacity:1}100%{opacity:1}}@keyframes twgl{to{text-shadow:0 0 8px #8fd4ff,0 0 26px #3d9bff,0 0 52px #1f6fff}}
+.twneon.on span{opacity:1}.twintro .twlive{opacity:0;animation:twfade 1.6s ease 3.2s forwards}.twbadge{position:relative;opacity:0;animation:twfade 1.6s ease 4.6s forwards}@keyframes twfade{to{opacity:1}}
 .twintro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 60%,#0b1a33,#02040a 70%)}
 .twstars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 10% 20%,#fff9,#0000),radial-gradient(1px 1px at 30% 70%,#fff8,#0000),radial-gradient(1.5px 1.5px at 55% 30%,#fffa,#0000),radial-gradient(1px 1px at 75% 55%,#fff7,#0000),radial-gradient(1px 1px at 88% 15%,#fff9,#0000),radial-gradient(1px 1px at 20% 85%,#fff6,#0000),radial-gradient(1.5px 1.5px at 65% 85%,#fff8,#0000),radial-gradient(1px 1px at 42% 12%,#fff7,#0000);animation:twtw 4s ease-in-out infinite alternate}@keyframes twtw{to{opacity:.55}}
 .twneon{position:relative;font:100 96px 'Helvetica Neue',Arial,sans-serif;letter-spacing:.12em;color:#d8f0ff;text-shadow:0 0 6px #6fc4ff,0 0 18px #2f8cff,0 0 40px #1f6fff;animation:twfl 6s linear infinite}@keyframes twfl{0%,18%,22%,60%,100%{opacity:1}20%{opacity:.6}61%{opacity:.8}}
@@ -2514,22 +2525,24 @@ function barDisco(t0,B){const ch=P_DISCO[JAZZ.bar%4],r=ch.b-12;
   [1.5,3.5].forEach(x=>stab(ch.v,t0+x*B,.018));
   const pent=[76,79,81,84,88];for(let i=0;i<8;i++)if(Math.random()<.22)bellNote(pick(pent),t0+i*B/2,.035);
   JAZZ.bar++}
-// Twilight: slow, deep and warm, modeled on the user's clip (B minor, bass F#–F#–E–B–B–E–G–F#, sustained pads, no drums)
-const P_TWI=[{b:30,v:[57,61,64,69]},{b:30,v:[57,61,64,68]},{b:28,v:[55,59,62,66]},{b:35,v:[54,59,62,66]},{b:35,v:[54,59,62,69]},{b:28,v:[55,59,64,66]},{b:31,v:[55,59,62,66]},{b:30,v:[58,61,66,70]}];
-function padNote(m,t,dur,vol){const c=JAZZ.ctx,f=c.createBiquadFilter(),g=c.createGain();f.type='lowpass';f.frequency.setValueAtTime(500,t);f.frequency.linearRampToValueAtTime(1100,t+dur*.5);f.frequency.linearRampToValueAtTime(600,t+dur);f.Q.value=.6;
-  [-7,7].forEach(dt=>{const o=c.createOscillator();o.type='sawtooth';o.frequency.value=mtof(m);o.detune.value=dt;o.connect(f);o.start(t);o.stop(t+dur+1.6)});
-  f.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+1.2);g.gain.setValueAtTime(vol,t+dur-.2);g.gain.linearRampToValueAtTime(0,t+dur+1.5)}
-function subNote(m,t,dur){const c=JAZZ.ctx;[[1,.34],[2,.12]].forEach(([r,v])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=mtof(m)*r;o.connect(g);g.connect(JAZZ.out);
-  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.6);g.gain.setValueAtTime(v,t+dur-.3);g.gain.linearRampToValueAtTime(0,t+dur+.4);o.start(t);o.stop(t+dur+.5)})}
-function barTwilight(t0,B){const i=JAZZ.bar%P_TWI.length,ch=P_TWI[i],bar=B*4;
-  ch.v.forEach(m=>padNote(m,t0,bar,.022));subNote(ch.b,t0,bar);
-  const pent=[71,74,76,78,81,83];if(JAZZ.bar%2===0||Math.random()<.5)bellNote(pick(pent),t0+B*(1+Math.floor(Math.random()*2)),.028);
-  if(Math.random()<.35)bellNote(pick(pent)+12,t0+B*(2.5+Math.random()),.016);
+// Twilight, tuned to the user's recordings: F# minor / A major, a new chord about every 2 seconds (Bm → A → F#m → A),
+// bass around A2–B2 with a sine sub underneath, sustained pads, no drums, and a sparse high note (around A5) every few seconds
+const P_TWI=[{b:47,v:[54,59,61,62]},{b:45,v:[57,61,62,66]},{b:42,v:[57,59,61,66]},{b:45,v:[54,57,61,62]}];
+function padNote(m,t,dur,vol){const c=JAZZ.ctx,f=c.createBiquadFilter(),g=c.createGain();f.type='lowpass';f.frequency.setValueAtTime(600,t);f.frequency.linearRampToValueAtTime(1300,t+dur*.5);f.frequency.linearRampToValueAtTime(700,t+dur);f.Q.value=.5;
+  [-6,6].forEach(dt=>{const o=c.createOscillator();o.type='sawtooth';o.frequency.value=mtof(m);o.detune.value=dt;o.connect(f);o.start(t);o.stop(t+dur+1.8)});
+  f.connect(g);g.connect(JAZZ.out);g.connect(JAZZ.verb);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.9);g.gain.setValueAtTime(vol,t+dur-.1);g.gain.linearRampToValueAtTime(0,t+dur+1.6)}
+function subNote(m,t,dur){const c=JAZZ.ctx;[[.5,.3],[1,.2]].forEach(([r,v])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=mtof(m)*r;o.connect(g);g.connect(JAZZ.out);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.25);g.gain.setValueAtTime(v,t+dur-.15);g.gain.linearRampToValueAtTime(0,t+dur+.35);o.start(t);o.stop(t+dur+.4)})}
+// one bar = two chords (each ~2 s)
+function barTwilight(t0,B){for(let h=0;h<2;h++){const ch=P_TWI[(JAZZ.bar*2+h)%P_TWI.length],t=t0+h*B*2;
+    ch.v.forEach(m=>padNote(m,t,B*2,.02));subNote(ch.b,t,B*2)}
+  const hi=[81,78,85,76,83];if(JAZZ.bar%3!==2)bellNote(hi[JAZZ.bar%hi.length],t0+B*(.5+Math.floor(Math.random()*3)),.03);
+  if(Math.random()<.25)bellNote(pick([69,73,74]),t0+B*(2.5+Math.random()),.018);
   JAZZ.bar++}
-const MSTY={twilight:{bpm:64,bar:barTwilight,bars:16},disco:{bpm:118,bar:barDisco},jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
+const MSTY={twilightb:{bpm:61.5,bar:barTwilight,bars:20},disco:{bpm:118,bar:barDisco},jazz:{bpm:68,bar:barJazz},winter:{bpm:84,bar:barWinter},spooky:{bpm:62,bar:barSpooky},harvest:{bpm:92,bar:barHarvest},party:{bpm:112,bar:barParty}};
 const STYLE_OF={christmas:'winter',solstice:'winter',boxing:'winter',halloween:'spooky',thanksgiving:'harvest',thanksca:'harvest',fall:'harvest',
   newyear:'party',nye:'party',bailey:'party',taylor:'party',july4:'party',canadaday:'party',cinco:'party',mardigras:'party',stpat:'party',pride:'disco'};
-const STYLE_NAME={twilight:'Twilight',gaga:'Lady Gaga on YouTube',disco:'Pride Disco',jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
+const STYLE_NAME={twilightb:'Twilight',gaga:'Lady Gaga on YouTube',disco:'Pride Disco',jazz:'Smooth Jazz',winter:'Winter Bells',spooky:'Spooky Organ',harvest:'Harvest Folk',party:'Party Mix'};
 function musicOn(){return SET.music&&SET.music!=='off'}
 function musicStyle(){if(SET.music==='jazz')return 'jazz';const st=(THEME&&STYLE_OF[THEME.id])||'jazz';return (st==='disco'&&NATIVE)?'gaga':st}
 
@@ -2565,7 +2578,7 @@ function jazzNative(st){JAZZ.nState=st;if(S.screen==='watch')render()}
 function jazzLabel(){if(!musicOn())return T('Music Off');if(musicStyle()==='gaga')return T('Lady Gaga on YouTube');const nm=T(STYLE_NAME[musicStyle()]);
   if(NATIVE&&NATIVE.jazzPlay)return JAZZ.nState==='playing'?T('{0} On',nm):JAZZ.nState==='preparing'?T('Music warming up\u2026'):JAZZ.nState==='error'?T('Music unavailable'):T('Music starting\u2026');
   if(JAZZ.on&&JAZZ.ctx&&JAZZ.ctx.state==='running')return T('{0} On',nm);return T('Music starting\u2026 press OK again if silent')}
-function updateJazz(){const pv=has(S.ch)&&CH[S.ch].preview&&S.screen==='watch',tw=has(S.ch)&&CH[S.ch].twilight&&S.screen==='watch';let style=tw?'twilight':musicStyle();if(pv&&style==='gaga')style='party';const want=!APP_PAUSED&&(tw?SET.twMusic!==false:musicOn()&&has(S.ch)&&(CH[S.ch].radar&&style!=='gaga'||pv));
+function updateJazz(){const pv=has(S.ch)&&CH[S.ch].preview&&S.screen==='watch',tw=has(S.ch)&&CH[S.ch].twilight&&S.screen==='watch';let style=tw?'twilightb':musicStyle();if(pv&&style==='gaga')style='party';const want=!APP_PAUSED&&(tw?SET.twMusic!==false&&!twBreak():musicOn()&&has(S.ch)&&(CH[S.ch].radar&&style!=='gaga'||pv));
   if(NATIVE&&NATIVE.jazzPlay){if(want===JAZZ.nWant&&style===JAZZ.nStyle)return;JAZZ.nWant=want;JAZZ.nStyle=style;if(want)nativeJazzOn(style);else NATIVE.jazzPlay(style,false);return}
   if(want)jazzStart(style);else jazzStop()}
 
@@ -2973,8 +2986,10 @@ function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
   if(CH[S.ch].traffic){ttTick();return}
   if(CH[S.ch].preview){const pi=Math.floor(Date.now()/8000);if(pi!==S.pvLast){S.pvLast=pi;render()}return}
   if(CH[S.ch].movies){const m=movPlaying(),want=m?m.id:null,have=PLAY.on?PLAY.mid||null:null;if(want!==have){applyStream();render()}if(NATIVE&&!MOV.busy&&(!MOV.sched.length||String(movDayStart())!==MOV.day||MOV.sched[MOV.sched.length-1].end<Date.now()+20*3600000)&&Date.now()-(MOV.tried||0)>120000){MOV.tried=Date.now();loadMovies()}}
-  if(CH[S.ch].twilight){const s=twNow(),intro=Math.floor(Date.now()/60000)%12===0&&Date.now()%60000<8000,rad=!s.reg.ca&&s.e>26000&&s.e<TW_SEG-1500,D=TW.wx[s.reg.k];
-    const key=s.n+(intro?'i':rad?'r':'f')+(D?D.at:0);if(key!==S.twKey){S.twKey=key;render();updateJazz();return}
+  if(CH[S.ch].twilight){const s=twNow(),br=twBreak(),D=TW.wx[s.reg.k];try{syncAdYT()}catch(e){}
+    if(br){const sl=adSlot(br,Date.now()),ak='b'+sl.part+(sl.i||0)+(sl.part==='ad'?Math.min(3,Math.floor(sl.e/(AD_LEN/4))):'')+(adytActive(br)?'y':'');if(ak!==S.twKey){S.twKey=ak;render();updateJazz();
+      if(sl.part==='ad'&&sl.e<2500&&!adytActive(br)&&SET.toonAds!=='off'&&NATIVE&&NATIVE.clipPlay)clipNative('jgl'+sl.ad.j)}return}
+    const key=s.n+(twIdent()?'i':twPhase(s))+(D?D.at:0);if(key!==S.twKey){S.twKey=key;render();updateJazz();return}
     const bk=Math.floor(Date.now()/7000);if(bk!==S.twBk){S.twBk=bk;const b=ui.querySelector('.twbar');if(b){b.outerHTML=twBar(s.reg);drawWxIcons(ui.querySelector('.twbar'))}}return}
   if(CH[S.ch].toons){if(S.toonLast!==S.ch){S.toonLast=S.ch;TOON.tuneT=Date.now();setTimeout(()=>{if(S.screen==='watch')render()},6500)}
     const tn=toonNow();try{syncAdYT()}catch(e){}
@@ -3677,41 +3692,62 @@ const TW_REG=[
 const TW={wx:{},busy:{},seg:-1,regIdx:0,built:'',t0:0};
 const TW_SEG=45000;   // each region gets 45 seconds: forecast map, then radar (or the night lights)
 function twRegions(){const ca=SET.region==='ca';return ca?TW_REG.filter(r=>r.ca).concat(TW_REG.filter(r=>!r.ca&&/ne|gl|nw|ma/.test(r.k))):TW_REG.filter(r=>!r.ca).concat(TW_REG.filter(r=>r.ca&&/on|bc/.test(r.k)))}
-function twNow(){const L=twRegions(),n=Math.floor(Date.now()/TW_SEG);return {reg:L[n%L.length],n:n,e:Date.now()%TW_SEG,next:L[(n+1)%L.length]}}
+function twNow(){const L=twRegions(),n=Math.floor(Date.now()/TW_SEG);return {reg:L[n%L.length],n:n,e:Date.now()%TW_SEG,next:L[(n+1)%L.length],globe:n%4===3}}
+// what's on: 'globe' (whole-continent satellite), 'fc' (tilted forecast map), 'rad' (flat satellite/radar map)
+function twPhase(s){if(s.globe)return 'globe';return !s.reg.ca&&s.e>25000?'rad':'fc'}
+function twIdent(t){const d=new Date(t||Date.now());return d.getMinutes()%30===0&&d.getSeconds()<13}
+const TWB={};
+function twBreak(t){t=t||Date.now();const d=new Date(t),m=d.getMinutes();if(m!==28&&m!==29&&m!==58&&m!==59)return null;
+  const st=new Date(d);st.setMinutes(m-(m%30===28?0:1),0,0);const k=st.getTime();return TWB[k]||(TWB[k]={ad:true,tw:true,adult:true,start:k,end:k+AD_BREAK})}
 async function twLoad(r){if(!NATIVE||TW.busy[r.k]||(TW.wx[r.k]&&Date.now()-TW.wx[r.k].at<30*MIN))return;TW.busy[r.k]=1;
   try{const la=r.cities.map(c=>c[1]).join(','),lo=r.cities.map(c=>c[2]).join(',');
-    const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&current=temperature_2m,weather_code,is_day&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=auto&forecast_days=4&forecast_hours=12'));
-    const A=Array.isArray(j)?j:[j];TW.wx[r.k]={at:Date.now(),c:A.map(x=>({t:Math.round(x.current.temperature_2m),code:x.current.weather_code,day:x.current.is_day,
+    const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&current=temperature_2m,weather_code,is_day,apparent_temperature,relative_humidity_2m,wind_speed_10m&wind_speed_unit=mph&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=fahrenheit&timezone=auto&forecast_days=4&forecast_hours=12'));
+    const A=Array.isArray(j)?j:[j];TW.wx[r.k]={at:Date.now(),c:A.map(x=>({t:Math.round(x.current.temperature_2m),fl:Math.round(x.current.apparent_temperature),hum:Math.round(x.current.relative_humidity_2m),wind:Math.round(x.current.wind_speed_10m),code:x.current.weather_code,day:x.current.is_day,
       hr:(x.hourly.time||[]).map((tm,i)=>({tm:tm,t:Math.round(x.hourly.temperature_2m[i]),code:x.hourly.weather_code[i],p:x.hourly.precipitation_probability?x.hourly.precipitation_probability[i]:null})),
       dy:(x.daily.time||[]).map((tm,i)=>({tm:tm,hi:Math.round(x.daily.temperature_2m_max[i]),lo:Math.round(x.daily.temperature_2m_min[i]),code:x.daily.weather_code[i],p:x.daily.precipitation_probability_max?x.daily.precipitation_probability_max[i]:null}))}))}}
   catch(e){}TW.busy[r.k]=0;if(twOn())render()}
 function twOn(){return S.screen==='watch'&&has(S.ch)&&!!CH[S.ch].twilight}
 function twProj(lat,lon,z){const n=256*Math.pow(2,z),s=Math.sin(lat*Math.PI/180);return [(lon+180)/360*n,(.5-Math.log((1+s)/(1-s))/(4*Math.PI))*n]}
 // the map: NASA night lights (and radar) tiles laid out around the region, tilted like an aerial camera
-function twMapHTML(r,radar){const z=r.z,W=2200,H=1800,cl=r.cities.reduce((a,x)=>[a[0]+x[1]/r.cities.length,a[1]+x[2]/r.cities.length],[0,0]),c=twProj(cl[0],cl[1],z),x0=c[0]-W/2,y0=c[1]-H/2,tx0=Math.floor(x0/256),ty0=Math.floor(y0/256),tx1=Math.floor((x0+W)/256),ty1=Math.floor((y0+H)/256),max=Math.pow(2,z);
+function twMapHTML(r,radar,flat){const z=r.z,W=2200,H=1800,cl=r.cities.reduce((a,x)=>[a[0]+x[1]/r.cities.length,a[1]+x[2]/r.cities.length],[0,0]),c=twProj(cl[0],cl[1],z),x0=c[0]-W/2,y0=c[1]-H/2,tx0=Math.floor(x0/256),ty0=Math.floor(y0/256),tx1=Math.floor((x0+W)/256),ty1=Math.floor((y0+H)/256),max=Math.pow(2,z);
   const P=r.cities.map(x=>twProj(x[1],x[2],z)),dx=Math.max(...P.map(p=>p[0]))-Math.min(...P.map(p=>p[0]))||1,dy=Math.max(...P.map(p=>p[1]))-Math.min(...P.map(p=>p[1]))||1,k=Math.min(1.25,Math.max(.55,Math.min(680/dx,330/dy)));
-  let h='<div class="twmap'+(radar?' rad':'')+'" style="width:'+W+'px;height:'+H+'px;transform:scale('+k.toFixed(3)+')">';
+  let h='<div class="twmap'+(radar?' rad':'')+'" style="width:'+W+'px;height:'+H+'px;transform:scale('+(flat?Math.max(.5,k*.62):k).toFixed(3)+')">';
   for(let ty=ty0;ty<=ty1;ty++)for(let tx=tx0;tx<=tx1;tx++){if(ty<0||ty>=max)continue;const wx=((tx%max)+max)%max,l=(tx*256-x0).toFixed(0),t=(ty*256-y0).toFixed(0);
     h+='<img class="twt" style="left:'+l+'px;top:'+t+'px" src="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/default/GoogleMapsCompatible_Level8/'+z+'/'+ty+'/'+wx+'.png" alt="" onerror="this.style.visibility=\'hidden\'">';
+    if(flat)h+='<img class="twcl" style="left:'+l+'px;top:'+t+'px" src="'+twCloudTile(z,wx,ty)+'" alt="" onerror="this.remove()">';
     if(radar)h+='<img class="twr" style="left:'+l+'px;top:'+t+'px" src="https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/'+z+'/'+wx+'/'+ty+'.png?'+Math.floor(Date.now()/300000)+'" alt="" onerror="this.remove()">'}
   if(!radar){const D=TW.wx[r.k];r.cities.forEach((ct,i)=>{const p=twProj(ct[1],ct[2],z),w=D&&D.c[i];if(!w)return;
     h+='<div class="twc" style="left:'+(p[0]-x0).toFixed(0)+'px;top:'+(p[1]-y0).toFixed(0)+'px;animation-delay:'+(1.2+i*.45-((Date.now()%TW_SEG)/1000)).toFixed(2)+'s"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="64" height="52"></canvas><div><span>'+esc(ct[0])+'</span><b>'+tU(w.t)+'</b></div></div>'})}
   return h+'</div>'}
-function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor(k/3)%r.cities.length,mode=k%3,w=D&&D.c[ci],ct=r.cities[ci];let items='';
+// live clouds (GOES-East infrared from NASA GIBS); if the layer isn't served the clouds simply don't show
+function twCloudTile(z,x,y){const zz=Math.min(z,7);return 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GOES-East_ABI_Band13_Clean_Infrared/default/default/GoogleMapsCompatible_Level7/'+zz+'/'+y+'/'+x+'.png'}
+function twGlobeHTML(){const z=4,W=1400,H=1100,c=twProj(42,-96,z),x0=c[0]-W/2,y0=c[1]-H/2,max=16;let h='<div class="twglobe"><div class="twgmap" style="width:'+W+'px;height:'+H+'px">';
+  for(let ty=Math.floor(y0/256);ty<=Math.floor((y0+H)/256);ty++)for(let tx=Math.floor(x0/256);tx<=Math.floor((x0+W)/256);tx++){if(ty<0||ty>=max)continue;const wx=((tx%max)+max)%max,l=(tx*256-x0).toFixed(0),t=(ty*256-y0).toFixed(0);
+    h+='<img class="twt" style="left:'+l+'px;top:'+t+'px" src="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/default/GoogleMapsCompatible_Level8/'+z+'/'+ty+'/'+wx+'.png" alt="" onerror="this.style.visibility=\'hidden\'">'+
+      '<img class="twcl" style="left:'+l+'px;top:'+t+'px" src="'+twCloudTile(z,wx,ty)+'" alt="" onerror="this.remove()">'}
+  return h+'</div><div class="twatmo"></div></div>'}
+function twBar(r){const D=TW.wx[r.k],k=Math.floor(Date.now()/7000),ci=Math.floor(k/5)%r.cities.length,mode=[4,0,1,3,2][k%5],w=D&&D.c[ci],ct=r.cities[ci];let items='';
   if(w){const fmtH=tm=>{const h=+tm.slice(11,13);return (h%12||12)+(h<12?'a':'p')};
     if(mode===0){const night=!w.day,d=w.dy[0];items='<em>'+T(night?'Tonight':'Today')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="40" height="32"></canvas></i><b>'+tU(w.t)+'°</b><span>'+T(WMO(w.code,w.day))+'</span>'+(d&&d.p!=null?'<span>'+T('{0}% Chance of Rain',d.p)+'</span>':'')}
     else if(mode===1)items='<em>'+T('Hourly')+'</em>'+w.hr.filter((x,i)=>i%2===1).slice(0,4).map(x=>'<span class="twh">'+fmtH(x.tm)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,+x.tm.slice(11,13)>=7&&+x.tm.slice(11,13)<19)+'" width="40" height="32"></canvas></i> '+tU(x.t)+'°</span>').join('');
+    else if(mode===4)items='<em>'+T('Now')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(w.code,w.day)+'" width="40" height="32"></canvas></i><b>'+tU(w.t)+'°</b><span>'+T(WMO(w.code,w.day))+'</span>'+(w.fl!=null?'<span>'+T('Feels like {0}°',tU(w.fl))+'</span>':'')+(w.hum!=null?'<span>'+T('Humidity {0}%',w.hum)+'</span>':'')
+    else if(mode===3){const d=w.dy[1];items=d?'<em>'+T('Tomorrow')+'</em><i class="twico"><canvas class="wxi" data-c="'+WMO(d.code,1)+'" width="40" height="32"></canvas></i><b>'+tU(d.hi)+'°/'+tU(d.lo)+'°</b><span>'+T(WMO(d.code,1))+'</span>'+(d.p!=null?'<span>'+T('{0}% Chance of Rain',d.p)+'</span>':''):''}
     else items='<em>'+T('This Week')+'</em>'+w.dy.slice(1,4).map(x=>'<span class="twh">'+dayName(new Date(x.tm+'T12:00:00').getDay()).slice(0,3)+' <i class="twico"><canvas class="wxi" data-c="'+WMO(x.code,1)+'" width="40" height="32"></canvas></i> '+tU(x.hi)+'°/'+tU(x.lo)+'°</span>').join('')}
   else items='<span>'+T('Loading the weather…')+'</span>';
   return '<div class="twbar"><span class="twlg">'+catSvg(20)+'</span><span class="twclk">'+fmtT(Date.now()).replace(/\s?[AP]M/i,'')+'</span><span class="twcity">'+esc(ct[0])+'</span>'+items+'</div>'}
+function twIdentHTML(r){const L='Twilight'.split(''),el=(Date.now()%1800000)/1000,dl=[.6,1.4,.2,1.9,.9,2.3,1.1,.4].map(x=>x-el);
+  return '<div class="twintro"><div class="twstars"></div><div class="twfog"></div><div class="twneon">'+L.map((c,i)=>'<span style="animation-delay:'+dl[i].toFixed(2)+'s,'+(dl[i]+1.6).toFixed(2)+'s">'+c+'</span>').join('')+'</div><div class="twlive" style="animation-delay:'+(3.2-el).toFixed(2)+'s"><span>NYX</span></div><div class="twbadge" style="animation-delay:'+(4.6-el).toFixed(2)+'s">'+catSvg(44)+'</div></div>'+twBar(r)}
 function twilightHTML(){const s=twNow(),r=s.reg;twLoad(r);if(s.e>TW_SEG-8000)twLoad(s.next);
-  const intro=Math.floor(Date.now()/60000)%12===0&&Date.now()%60000<8000,radar=!r.ca&&s.e>26000&&s.e<TW_SEG-1500;
-  let h='<div class="tw">';
-  if(intro)return h+'<div class="twintro"><div class="twstars"></div><div class="twneon">Twilight</div><div class="twlive">'+catSvg(34)+'<span>NYX</span></div></div>'+twBar(r)+'</div>';
-  h+='<div class="twcam" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twMapHTML(r,radar)+'</div><div class="twshade"></div>';
-  h+='<div class="twseg"><span>'+T(radar?'Radar: Past Hour':(new Date().getHours()>=18||new Date().getHours()<6)?'Tonight’s Forecast':'Today’s Forecast')+'</span><i>'+esc(T(r.n))+'</i></div>';
+  const br=twBreak();let h='<div class="tw">';
+  if(br){const sl=adSlot(br,Date.now());return sl.part==='ad'&&adytActive(br)?'<div class="tw"></div>':h+adHTML(br)+'</div>'}
+  if(twIdent())return h+twIdentHTML(r)+'</div>';
+  const ph=twPhase(s);
+  if(ph==='globe')h+='<div class="twgcam" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twGlobeHTML()+'</div><div class="twspace"></div>';
+  else h+='<div class="twcam'+(ph==='rad'?' flat':'')+'" style="animation-delay:-'+(s.e/1000).toFixed(1)+'s">'+twMapHTML(r,ph==='rad',ph==='rad')+'</div>'+(ph==='rad'?'<div class="twshade flat"></div>':'<div class="twshade"></div>');
+  const hr=new Date().getHours(),night=hr>=18||hr<6;
+  h+='<div class="twseg"><span>'+T(ph==='globe'?'Satellite: Clouds':ph==='rad'?'Sat / Rad: Past Hour':night?'Tonight’s Forecast':'Today’s Forecast')+'</span><i>'+esc(T(ph==='globe'?'North America':r.n))+'</i></div>';
   h+='<div class="twlogo"><b>Twilight</b><span>NYX</span></div>';
-  return h+twBar(r)+'<div class="twcred">'+T('Night lights: NASA')+(radar?' · '+T('Radar: Iowa Environmental Mesonet'):'')+' · '+T('Weather: Open-Meteo')+'</div></div>'}
+  return h+twBar(r)+'<div class="twcred">'+T('Night lights & clouds: NASA')+(ph==='rad'?' · '+T('Radar: Iowa Environmental Mesonet'):'')+' · '+T('Weather: Open-Meteo')+'</div></div>'}
 
 /* ---------------- Nyx Toons (ch 9): public-domain cartoons from the Internet Archive, back to back ---------------- */
 // Old cartoons include wartime propaganda and racist caricatures; none of those air here (title, subject and description checks, plus a list of known titles)
@@ -3817,7 +3853,7 @@ function adSeason(t){const d=new Date(t),m=d.getMonth()+1,dd=d.getDate();
   if((m===3&&dd>=15)||(m===4&&dd<=20))return 'easter';if(m===8||(m===9&&dd<=15))return 'school';if(m===6||m===7)return 'summer';if(m===12||m<=3)return 'winter';return '*'}
 function adPart(t){const h=new Date(t).getHours();return h>=6&&h<11?'m':h>=11&&h<17?'a':h>=17&&h<21?'e':'n'}
 // three ads per break, picked "live" from the season, time of day and region
-function adsForBreak(start){const r=SET.region==='ca'?'ca':'us',sea=adSeason(start),dp=adPart(start);
+function adsForBreak(start,adult){const r=SET.region==='ca'?'ca':'us',sea=adSeason(start),dp=adult?'n':adPart(start);
   let pool=ADS.filter(a=>(a.r==='*'||a.r===r)&&a.d.indexOf(dp)>=0&&(a.s==='*'||a.s===sea)&&(!a.s2||a.s2===sea));
   if(pool.length<3)pool=ADS.filter(a=>(a.r==='*'||a.r===r)&&a.s==='*'&&!a.s2);
   const w=[];pool.forEach(a=>{const n=a.s===sea&&a.s!=='*'?3:a.r===r&&r==='ca'?2:1;for(let i=0;i<n;i++)w.push(a)});
@@ -3826,8 +3862,9 @@ function adsForBreak(start){const r=SET.region==='ca'?'ca':'us',sea=adSeason(sta
 const AD_BUMP=4000,AD_LEN=16000,AD_N=7,AD_BREAK=AD_BUMP*2+AD_LEN*AD_N;
 // what's on screen during a break: 'in' bumper, an ad, or 'out' bumper
 function adSlot(br,t){const e=t-br.start;if(e<AD_BUMP)return {part:'in',e:e};if(e>=AD_BREAK-AD_BUMP)return {part:'out',e:e-(AD_BREAK-AD_BUMP)};
-  const i=Math.floor((e-AD_BUMP)/AD_LEN),ads=br.ads||(br.ads=adsForBreak(br.start));return {part:'ad',i:i,ad:ads[i],e:(e-AD_BUMP)%AD_LEN}}
+  const i=Math.floor((e-AD_BUMP)/AD_LEN),ads=br.ads||(br.ads=adsForBreak(br.start,br.adult));return {part:'ad',i:i,ad:ads[i],e:(e-AD_BUMP)%AD_LEN}}
 function adHTML(br,bumpOnly){const s=adSlot(br,Date.now());
+  if((s.part!=='ad'||bumpOnly)&&br.tw)return '<div class="twintro"><div class="twstars"></div><div class="twneon on">Twilight</div><div class="twlive"><span>'+T(s.part==='in'?'We’ll be right back':'Back after this')+'</span></div></div>';
   if(s.part!=='ad'||bumpOnly)return '<div class="tnc adbump"><div class="tncard bevel"><div class="tnlogo">'+catSvg(64)+'<b>Nyx<em>Toons</em></b></div><p class="tnnow">'+T(s.part==='in'?'We’ll be right back!':'And now, back to Nyx Toons!')+'</p></div></div>';
   const a=s.ad,sc=Math.min(3,Math.floor(s.e/(AD_LEN/4))),c=a.c;
   return '<div class="ad ad-'+a.k+'" style="--a1:'+c[0]+';--a2:'+c[1]+';--a3:'+c[2]+'"><div class="adburst"></div>'+
@@ -3850,7 +3887,7 @@ const ADYT_LIB={
    any:['w3YusZpXOn4','HIK2weg94pE','Swmtvj48iAw','XjtDA4RsB-Q','e0OuUetytwc','_GX5L--KbN0','J1gQiZaMBNI']}};
 const ADYT={el:null,player:null,ready:false,api:false,key:'',vid:'',bad:{},fail:{},startT:0,want:false};
 function adytPick(br,n){n=n||0;const r0=movRng(Math.floor(br.start/1000)+17+n*31),fr=SET.region==='ca'&&SET.lang==='fr'&&r0()<.5;
-  const L=ADYT_LIB[fr?'fr':SET.region==='ca'?'ca':'us'],sea=adSeason(br.start),dp=adPart(br.start);
+  const L=ADYT_LIB[fr?'fr':SET.region==='ca'?'ca':'us'],sea=adSeason(br.start),dp=br.adult?'n':adPart(br.start);
   const k=dp==='n'?(sea==='xmas'&&L.nightxmas?'nightxmas':'night'):dp==='m'&&L.morning&&r0()<.5?'morning':sea==='valentine'?'winter':sea==='easter'?'spring':sea==='*'?'any':sea;
   let ids=(L[k]||L.any).filter(v=>!ADYT.bad[v]);if(!ids.length)ids=L.any.filter(v=>!ADYT.bad[v]);if(!ids.length)return null;
   if(fr&&!L[k])ids=L.any.filter(v=>!ADYT.bad[v]);
@@ -3861,11 +3898,12 @@ function adytMake(){try{ADYT.player=new YT.Player('adytp',{width:'100%',height:'
   events:{onReady:()=>{ADYT.ready=true;syncAdYT()},onError:()=>{if(ADYT.vid)ADYT.bad[ADYT.vid]=1;if(ADYT.want){adytNext();return}try{ADYT.player.stopVideo()}catch(e){}ADYT.el.hidden=true},
    onStateChange:e=>{if(e.data===1&&ADYT.seekPending){ADYT.seekPending=false;try{const d=ADYT.player.getDuration();if(d>150){ADYT.player.seekTo(Math.max(5,Math.min(d-130,d*ADYT.frac))+(Date.now()-ADYT.startT)/1000,true)}}catch(x){}}
     if(e.data===0&&ADYT.want){adytNext()}}}})}catch(e){ADYT.api='x'}}
-function adytNext(){const m=toonNow();if(!m||!m.ad||ADYT.tries>=4){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}
+function adCur(){if(!has(S.ch)||S.screen!=='watch'||S.dialog||APP_PAUSED||locked(S.ch))return null;if(CH[S.ch].toons){const m=toonNow();return m&&m.ad?m:null}if(CH[S.ch].twilight)return twBreak();return null}
+function adytNext(){const m=adCur();if(!m||!m.ad||ADYT.tries>=4){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}
   ADYT.tries++;const p=adytPick(m,ADYT.tries);if(!p){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}ADYT.vid=p.id;ADYT.frac=p.frac;ADYT.seekPending=true;ADYT.startT=Date.now();try{ADYT.player.loadVideoById({videoId:p.id,startSeconds:0})}catch(e){ADYT.fail[ADYT.key]=1}}
 // is a YouTube clip covering this moment of the break? (else the HTML ads show)
 function adytActive(br){return SET.toonAds!=='orig'&&SET.toonAds!=='off'&&NATIVE&&ADYT.api!=='x'&&!ADYT.fail['b'+br.start]}
-function syncAdYT(){const m=has(S.ch)&&CH[S.ch].toons&&S.screen==='watch'&&!S.dialog&&!APP_PAUSED&&!locked(S.ch)?toonNow():null;
+function syncAdYT(){const m=adCur();
   const br=m&&m.ad?m:null,part=br?adSlot(br,Date.now()).part:'';const want=!!(br&&part==='ad'&&adytActive(br));ADYT.want=want;
   if(want)adytSetup();if(!ADYT.el)return;
   if(!want){if(!ADYT.el.hidden){ADYT.el.hidden=true;try{ADYT.player.stopVideo()}catch(e){}}ADYT.key='';return}
