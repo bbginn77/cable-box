@@ -155,3 +155,7 @@ Public-domain cartoons from the Internet Archive's Classic Cartoons collection, 
 
 ## Message Center
 Main Menu → Messages. A monthly bill on the 1st (pay it with a chin scratch: nothing is charged), weekly notes from Nyx, Rex and the cable company, birthday messages for Bailey and Taylor, holiday greetings, election night notice and pay-per-view receipts.
+
+### Nyx Toons logo and commercial breaks
+A corner logo shows during cartoons; at :00, :15, :30 and :45 Nyx pops out and says meow. After every two cartoons there's a break: "We'll be right back!", about 45 seconds of commercials, then "And now, back to Nyx Toons!".
+Commercials (Settings → TV & Guide → Nyx Toons Commercials): **Classic Clips** plays dated 2006–2009 kids-TV commercial-break compilations from YouTube (fan uploads: Nickelodeon, Cartoon Network, YTV, Teletoon, VRAK) in YouTube's own player, matched to season, time of day (late-night compilations after 9 PM) and region; Canada + French mixes in French-Canadian clips. Missing or blocked clips fall back to **NyxVision Originals**: made-up products (Frosted Nyx-O's, Zoomie Racers, the Purr-Wow Super Towel…) with their own jingles, also by season, time of day and region.

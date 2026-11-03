@@ -547,6 +547,21 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .gdlb{width:auto;margin:14px 0 6px}
 .gdlk{display:flex;justify-content:space-between;font:700 14px var(--ui);color:#9ec0ff}
 .gdlbox .bfoot{position:static;margin-top:12px;display:flex;justify-content:space-between;align-items:center}.gdlbox .bskip{position:static;margin-top:8px;text-align:center}
+.tnlg{position:absolute;right:34px;bottom:30px;display:flex;align-items:baseline;gap:4px;opacity:.72;pointer-events:none}.tnlg b{font:italic 900 22px var(--display);color:#fff;text-shadow:2px 2px 0 #0008}.tnlg em{font:italic 900 22px var(--display);color:#ffcf3a;font-style:italic;text-shadow:2px 2px 0 #0008}
+.tnpk{position:absolute;left:12px;bottom:14px;opacity:0;transform:translateY(20px)}.tnpk i{position:absolute;left:44px;top:-6px;padding:2px 8px;background:#fff;color:#1b1b1b;border-radius:10px;font:800 12px var(--ui);font-style:normal;white-space:nowrap}
+.tnlg.pop{opacity:1}.tnlg.pop .tnpk{animation:tnpk 6.5s ease-in-out forwards}.tnlg.pop b,.tnlg.pop em{animation:tnwig .5s ease-in-out 5}
+@keyframes tnpk{0%{opacity:0;transform:translateY(20px)}12%{opacity:1;transform:translateY(-6px)}18%{transform:translateY(0)}30%{transform:translateY(0) rotate(-10deg)}40%{transform:translateY(0) rotate(10deg)}50%{transform:translateY(0) rotate(0)}85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(24px)}}
+@keyframes tnwig{50%{transform:rotate(-4deg) scale(1.08)}}
+#adyt{position:absolute;inset:0;z-index:3;background:#000}#adyt iframe,#adytp{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ad{position:absolute;inset:0;overflow:hidden;background:radial-gradient(circle at 50% 45%,var(--a2),var(--a1) 70%);font-family:var(--display)}
+.adburst{position:absolute;left:50%;top:45%;width:1400px;height:1400px;margin:-700px 0 0 -700px;background:repeating-conic-gradient(#ffffff22 0 10deg,#0000 10deg 20deg);animation:adspin 20s linear infinite}@keyframes adspin{to{transform:rotate(360deg)}}
+.adbox{position:absolute;left:50%;top:38%;width:300px;padding:18px 16px;transform:translate(-50%,-50%) scale(.2) rotate(-12deg);opacity:0;background:var(--a3);border:6px solid #fff;border-radius:18px;box-shadow:10px 10px 0 #0006;text-align:center;transition:transform .6s cubic-bezier(.3,1.6,.5,1),opacity .3s}
+.adbox.on{transform:translate(-50%,-50%) scale(1) rotate(-3deg);opacity:1;animation:adbob 1.6s ease-in-out .6s infinite}@keyframes adbob{50%{transform:translate(-50%,-54%) scale(1.03) rotate(2deg)}}
+.adem{display:block;font-size:72px;line-height:1}.adbox b{display:block;margin-top:6px;font:italic 900 30px var(--display);color:#fff;text-shadow:3px 3px 0 #0007;line-height:1.05}.adbox i{position:absolute;right:-26px;top:-22px;padding:8px 10px;background:#ffd60a;color:#d00000;font:900 16px var(--display);border-radius:50%;transform:rotate(14deg);box-shadow:3px 3px 0 #0006}
+.adtxt{position:absolute;left:40px;right:40px;bottom:96px;text-align:center}.adtxt span{display:inline-block;padding:10px 22px;background:#fff;color:#1b1b1b;font:italic 900 30px var(--display);border-radius:12px;box-shadow:6px 6px 0 #0006;animation:adpop .35s cubic-bezier(.3,1.6,.5,1)}@keyframes adpop{from{transform:scale(.4)}}
+.adtxt[data-sc="0"]{bottom:auto;top:200px}.adtxt[data-sc="0"] span{font-size:40px}
+.adphone{position:absolute;left:0;right:0;top:24px;text-align:center;font:900 44px var(--display);color:#ffd60a;text-shadow:4px 4px 0 #d00000;animation:adbob2 .5s steps(2) infinite}@keyframes adbob2{50%{color:#fff}}
+.adfine{position:absolute;left:0;right:0;bottom:22px;text-align:center;font:600 13px var(--ui);color:#fff;text-shadow:1px 1px 2px #000}
 .tnc{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(from 0deg at 50% 60%,#ffcf3a 0 15deg,#ff8a2a 15deg 30deg)}
 .tncard{width:520px;padding:20px 24px;text-align:center;background:#fff8e6;border:5px solid #1b1b1b;border-radius:18px;box-shadow:8px 8px 0 #1b1b1b;color:#1b1b1b}
 .tnlogo{display:flex;align-items:center;justify-content:center;gap:10px}.tnlogo b{font:italic 900 46px var(--display);color:#e2312b;text-shadow:3px 3px 0 #1b1b1b}.tnlogo em{font-style:normal;color:#2a6fdb;margin-left:6px}
@@ -763,7 +778,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,newsVid:'abc',vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -858,6 +873,7 @@ const ALLSETS=[
  {k:'plutoPlay',label:'Pluto TV Plays In',vals:['box','app'],names:['NyxVision','Pluto TV App'],desc:'NyxVision plays Pluto channels right here: full screen, in the guide preview, and with CH ▲/▼ surfing. Pluto TV App hands each channel off to Pluto instead.'},
  {k:'plutoCount',label:'Pluto Channels',vals:[50,1000],names:['Top 50','All'],desc:'How many Pluto TV channels appear in the guide. All is several hundred.'},
  {k:'newsVid',label:'News Channel Video',vals:['abc','nbc','cbs','off'],names:['ABC News','NBC News','CBS News','Off'],desc:'The big window on Nyx News Network (channel 5) plays the latest clips from this network’s official YouTube channel while the headlines rotate beside it. Tap the video to pause or skip.'},
+ {k:'toonAds',label:'Nyx Toons Commercials',vals:['yt','orig','off'],names:['Classic Clips','NyxVision Originals','Off'],desc:'Commercial breaks on channel 9 after every two cartoons. Classic Clips plays real 2006–2009 kids-TV commercial breaks from YouTube (fan uploads) that match the season, time of day and region; if one won’t play, NyxVision’s own made-up ads fill in. NyxVision Originals uses only the made-up ads.'},
  {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
  {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
  {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
@@ -884,7 +900,7 @@ const ALLSETS=[
 const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
- {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','ppv','gdl','gdlnow']},
+ {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','tkey','skey','spterms','spdisc']}];
 const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
 const SETS=[];
@@ -2925,6 +2941,10 @@ function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
   if(CH[S.ch].preview){const pi=Math.floor(Date.now()/8000);if(pi!==S.pvLast){S.pvLast=pi;render()}return}
   if(CH[S.ch].movies){const m=movPlaying(),want=m?m.id:null,have=PLAY.on?PLAY.mid||null:null;if(want!==have){applyStream();render()}if(NATIVE&&!MOV.busy&&(!MOV.sched.length||String(movDayStart())!==MOV.day||MOV.sched[MOV.sched.length-1].end<Date.now()+20*3600000)&&Date.now()-(MOV.tried||0)>120000){MOV.tried=Date.now();loadMovies()}}
   if(CH[S.ch].toons){if(S.toonLast!==S.ch){S.toonLast=S.ch;TOON.tuneT=Date.now();setTimeout(()=>{if(S.screen==='watch')render()},6500)}
+    const tn=toonNow();try{syncAdYT()}catch(e){}
+    if(tn&&tn.ad){const sl=adSlot(tn,Date.now()),ak=sl.part+(sl.i||0)+(sl.part==='ad'?Math.min(3,Math.floor(sl.e/(AD_LEN/4))):'')+(adytActive(tn)?'y':'');if(ak!==S.adKey){S.adKey=ak;render();
+      if(sl.part==='ad'&&sl.e<2500&&!adytActive(tn)&&SET.toonAds!=='off'&&NATIVE&&NATIVE.clipPlay)clipNative('jgl'+sl.ad.j);else if(sl.part!=='ad'&&sl.e<1500)playCue('score')}}
+    else{const pp=toonPop();if(pp!==S.tnPop){S.tnPop=pp;render()}}
     const m=toonPlaying(),want=m&&TOON.bad!=='toon:'+m.id+'@'+m.start?'toon:'+m.id+'@'+m.start:null,have=PLAY.on?PLAY.mid||null:null;if(want!==have){applyStream();render();if(m)setTimeout(()=>{if(S.screen==='watch')render()},7500)}
     if(NATIVE&&!TOON.busy&&(!TOON.sched.length||String(movDayStart())!==TOON.day||TOON.sched[TOON.sched.length-1].end<Date.now()+6*3600000)&&Date.now()-(TOON.tried||0)>120000)loadToons();return}
   else S.toonLast=-1;
@@ -3320,9 +3340,13 @@ function alertChime(n){n=n||3;const seq=[];for(let r=0;r<n;r++)[[660,0],[990,.18
   if(NATIVE&&NATIVE.clipPlay){clipNative('alert');return}
   if(!SET.sound)return;seq.forEach(([f,d])=>tone(f,.15,'triangle',.09,d))}
 async function clipNative(name){try{if(tapePlaying()){if(name!=='alert')return;spCmd('pause');if(SPT.pl)SPT.pl.paused=true}if(!(NATIVE.jazzReady&&NATIVE.jazzReady('clip'+name))){const w=await renderClip(name);NATIVE.jazzBegin('clip'+name);const step=393216;for(let i=0;i<w.length;i+=step)NATIVE.jazzChunk('clip'+name,b64(w.subarray(i,i+step)))}NATIVE.clipPlay('clip'+name)}catch(e){}}
-async function renderClip(name){const sr=22050,dur=name==='modem'?6.8:name==='alert'?3.2:1.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
+async function renderClip(name){const sr=22050,dur=name.indexOf('jgl')===0?13.5:name==='modem'?6.8:name==='alert'?3.2:1.6,off=new OfflineAudioContext(1,Math.ceil(sr*dur),sr);
   const beep=(f,t,d,type,v)=>{const o=off.createOscillator(),g=off.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(off.destination);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.setValueAtTime(v,t+d-.03);g.gain.linearRampToValueAtTime(0,t+d);o.start(t);o.stop(t+d+.02)};
-  if(name==='modem'){const noise=(t,d,f,q,v)=>{const n=Math.ceil(sr*d),b=off.createBuffer(1,n,sr),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=Math.random()*2-1;
+  if(name.indexOf('jgl')===0){const st=name.slice(3),J={pop:[[60,64,67,72,67,64,65,69],.18,'square'],rock:[[52,52,55,57,52,52,59,57],.16,'sawtooth'],bells:[[76,74,72,74,76,76,76,79],.22,'triangle'],
+      spooky:[[57,60,63,62,57,60,66,65],.26,'triangle'],chip:[[72,76,79,84,79,76,74,71],.12,'square'],info:[[67,67,71,74,72,71,69,67],.2,'square']}[st]||[[60,64,67,72,67,64,65,69],.18,'square'];
+    const [mel,step,wave]=J,f=m=>440*Math.pow(2,(m-69)/12);let t=.1;for(let bar=0;t<12.6;bar++){mel.forEach((n,i)=>{if(t>12.8)return;const up=bar%4===3?5:bar%4===1?-2:0;beep(f(n+up),t,step*.9,wave,.12);if(i%2===0)beep(f(n+up-24),t,step*1.8,'triangle',.14);t+=step});}
+    beep(f(mel[0]+12),12.9,.5,'triangle',.18)}
+  else if(name==='modem'){const noise=(t,d,f,q,v)=>{const n=Math.ceil(sr*d),b=off.createBuffer(1,n,sr),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=Math.random()*2-1;
       const src=off.createBufferSource(),bp=off.createBiquadFilter(),g=off.createGain();src.buffer=b;bp.type='bandpass';bp.frequency.value=f;bp.Q.value=q;src.connect(bp);bp.connect(g);g.connect(off.destination);
       g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.setValueAtTime(v,t+d-.05);g.gain.linearRampToValueAtTime(0,t+d);src.start(t)};
     beep(350,0,.7,'sine',.22);beep(440,0,.7,'sine',.22);
@@ -3622,26 +3646,140 @@ async function loadToons(){if(!NATIVE||TOON.busy)return;const day=String(movDayS
     // a whole day of shorts needs ~150 cartoons; loop the shuffled list if the collection is smaller
     while(t<Date.now()+26*3600000&&tries<500){tries++;const id=ids[k%ids.length];k++;const m=await toonMeta(id);if(!m)continue;
       const end=t+m[1]*1000+4000;TOON.sched.push({k:k-1,id:id,file:m[0],len:m[1]*1000,title:m[2],year:m[3],start:t,end:end});t=end;
+      const L2=TOON.sched,pv=L2[L2.length-2];if(pv&&!pv.ad){L2.push({ad:true,k:k-1,start:t,end:t+AD_BREAK});t+=AD_BREAK}
       if(TOON.sched.length%12===0)toonToGuide();
       if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].toons&&!PLAY.on)applyStream()}
     TOON.err=null}catch(e){TOON.err='x'}
   TOON.busy=false;toonToGuide();if(S.screen==='watch'&&has(S.ch)&&CH[S.ch].toons){applyStream();render()}}
 // the guide shows half-hour blocks listing the cartoons in each
 function toonToGuide(){if(!TOON.sched.length)return;const out=[],first=Math.floor(TOON.sched[0].start/SLOT)*SLOT,last=TOON.sched[TOON.sched.length-1].end;
-  for(let s=first;s<last;s+=SLOT){const L=TOON.sched.filter(x=>x.start<s+SLOT&&x.end>s).map(x=>x.title);
+  for(let s=first;s<last;s+=SLOT){const L=TOON.sched.filter(x=>!x.ad&&x.start<s+SLOT&&x.end>s).map(x=>x.title);
     out.push({title:'Nyx Toons',start:s,end:s+SLOT,rating:'TV-G',cat:'kids',desc:L.length?T('Cartoons this half hour: {0}',L.slice(0,6).join(' · ')+(L.length>6?' …':'')):T('Classic cartoons from the Internet Archive.')})}
   TOON_CH.sched=out;if(S.screen==='guide')render()}
+function toonPop(){const d=new Date();return d.getMinutes()%15===0&&d.getSeconds()<7}
+function toonLogo(){return '<div class="tnlg'+(toonPop()?' pop':'')+'"><div class="tnpk">'+catSvg(40)+'<i>'+T('Meow!')+'</i></div><b>Nyx</b><em>Toons</em></div>'}
 function toonNow(){const t=Date.now();return TOON.sched.find(m=>m.start<=t&&t<m.end)||null}
-function toonPlaying(){const m=toonNow();return m&&Date.now()<m.start+m.len?m:null}
+function toonPlaying(){const m=toonNow();return m&&!m.ad&&Date.now()<m.start+m.len?m:null}
 function toonHTML(){const m=toonNow(),pm=toonPlaying();
-  if(pm&&PLAY.on&&PLAY.ready)return Date.now()-pm.start<7000||Date.now()-(TOON.tuneT||0)<6000?'<div class="tnbug"><b>'+T('Nyx Toons')+'</b><span>'+esc(pm.title)+(pm.year?' ('+esc(pm.year)+')':'')+'</span></div>':'';
-  const nx=m?TOON.sched.find(x=>x.start>=m.end):TOON.sched.find(x=>x.start>Date.now());
+  if(pm&&PLAY.on&&PLAY.ready)return toonLogo()+(Date.now()-pm.start<7000||Date.now()-(TOON.tuneT||0)<6000?'<div class="tnbug"><b>'+T('Nyx Toons')+'</b><span>'+esc(pm.title)+(pm.year?' ('+esc(pm.year)+')':'')+'</span></div>':'');
+  if(m&&m.ad){if(SET.toonAds==='off'||adSlot(m,Date.now()).part!=='ad')return adHTML(m,true);return adytActive(m)?'':adHTML(m)}
+  const nx=m?TOON.sched.find(x=>!x.ad&&x.start>=m.end):TOON.sched.find(x=>!x.ad&&x.start>Date.now());
   let h='<div class="tnc"><div class="tncard bevel"><div class="tnlogo">'+catSvg(64)+'<b>Nyx<em>Toons</em></b></div>';
   if(!NATIVE)h+='<p>'+T('Classic cartoons play here on your TV or tablet.')+'</p>';
   else if(pm)h+='<p class="tnnow">'+esc(pm.title)+'</p><p>'+T('Rolling the cartoon…')+'</p>';
   else if(m)h+='<p class="tnnow">'+T('Stay tuned!')+'</p><p>'+(nx?T('Up next: {0}',esc(nx.title)):'')+'</p>';
   else h+='<p>'+(TOON.err?T('Cartoons unavailable right now.'):T('Loading the cartoons…'))+'</p>';
   return h+'<small>'+T('Public-domain cartoons from the Internet Archive')+'</small></div></div>'}
+
+/* ---------------- Nyx Toons commercial breaks: original ads in a mid-2000s kids-TV style, for made-up products ---------------- */
+// r: us / ca / * · d: dayparts m(orning) a(fternoon) e(vening) n(ight) · s: season or * · k: look · j: jingle
+const ADS=[
+ // mornings
+ {id:'nyxos',r:'*',d:'m',s:'*',k:'cereal',j:'pop',em:'🥣',brand:'Frosted Nyx-O’s',c:['#ff5a1f','#ffd23f','#2a3dbf'],sc:['Mornings got way more FUN!','New Frosted Nyx-O’s! Now with marshmallow fish!','Crunchy! Frosty! Purr-fectly sweet!','Frosted Nyx-O’s. Eat ’em before Nyx does!'],fine:'Part of a complete breakfast.'},
+ {id:'chocopaws',r:'*',d:'m',s:'*',k:'cereal',j:'rock',em:'🐾',brand:'Choco Paws',c:['#5a2d0c','#c67c3c','#ffe08a'],sc:['Uh-oh… the milk turned CHOCOLATE!','Choco Paws cereal!','Every bowl makes chocolate milk!','Choco Paws. Paws-itively chocolatey!'],fine:'Part of a complete breakfast. Milk not included.'},
+ {id:'puptarts',r:'*',d:'m',s:'*',k:'snack',j:'pop',em:'🥐',brand:'Rexy’s Pup-Tarts',c:['#ff4d8d','#ffb3d1','#3a1f5c'],sc:['Running late for school?','Rexy’s Pup-Tarts! Toast ’em or eat ’em cold!','New Wild Berry Zoomie flavor!','Rexy’s Pup-Tarts. Breakfast, but faster!'],fine:'Toaster pastries. Ask a grown-up before using the toaster.'},
+ {id:'maple',r:'ca',d:'m',s:'*',k:'cereal',j:'pop',em:'🍁',brand:'Maple Crunch',c:['#c8102e','#ffffff','#7a3b10'],sc:['Good morning, Canada!','Maple Crunch! Real maple taste in every crunch!','Now in the family size box!','Maple Crunch. Start your day the Canadian way!'],fine:'Part of a balanced breakfast. Disponible partout au Canada.'},
+ {id:'oj',r:'*',d:'m',s:'*',k:'snack',j:'bells',em:'🍊',brand:'Sunny Paws Juice Boxes',c:['#ff9f1c','#ffe066','#2e7d32'],sc:['Lunchbox looking boring?','Sunny Paws Juice Boxes!','100% juice! 5 fruity flavors!','Sunny Paws. Squeeze the day!'],fine:'Contains 100% juice.'},
+ // afternoons: toys, games, snacks
+ {id:'zoomie',r:'*',d:'ae',s:'*',k:'toy',j:'rock',em:'🏎️',brand:'Zoomie Racers',c:['#0057ff','#00d4ff','#ffdd00'],sc:['3… 2… 1… ZOOM!','Zoomie Racers with the Mega Loop Track!','Light-up wheels! Super-speed launcher!','Zoomie Racers. Get your zoomies out!'],fine:'Each sold separately. Batteries not included.'},
+ {id:'purrboy',r:'*',d:'ae',s:'*',k:'game',j:'chip',em:'🎮',brand:'PurrBoy Pocket',c:['#2b2b2b','#7b2cbf','#00f5d4'],sc:['Your game. Anywhere.','The new PurrBoy Pocket!','Two screens! Touch controls! 50 games!','PurrBoy Pocket. Play it your way!'],fine:'Games sold separately. Screen images simulated.'},
+ {id:'bubble',r:'*',d:'a',s:'*',k:'toy',j:'pop',em:'🫧',brand:'Bubble Blasterz',c:['#00b4d8','#90e0ef','#ff006e'],sc:['Bubbles? Pfft. Try MEGA bubbles!','Bubble Blasterz!','500 bubbles a minute!','Bubble Blasterz. It’s a bubble-pocalypse!'],fine:'Bubble solution sold separately. Use outdoors.'},
+ {id:'yoyo',r:'*',d:'a',s:'*',k:'toy',j:'chip',em:'🪀',brand:'Glow-Yo Extreme',c:['#111','#39ff14','#ff00e5'],sc:['Walk the dog… IN THE DARK!','Glow-Yo Extreme!','It glows! It sleeps! It does tricks!','Glow-Yo Extreme. Light it up!'],fine:'Tricks shown performed by experienced kids.'},
+ {id:'fort',r:'*',d:'ae',s:'*',k:'toy',j:'rock',em:'🏰',brand:'Mega Fort Kit',c:['#6a994e','#a7c957','#bc4749'],sc:['No grown-ups allowed!','The Mega Fort Kit!','Build a castle! A spaceship! A secret base!','Mega Fort Kit. Your room, only cooler!'],fine:'Blankets and pillows not included. Adult assembly may be needed.'},
+ {id:'cheesymice',r:'*',d:'ae',s:'*',k:'snack',j:'pop',em:'🧀',brand:'Cheesy Mice Crackers',c:['#ffb703','#ffe8a3','#d62828'],sc:['Shhh… Nyx is hunting.','Cheesy Mice Crackers!','Shaped like mice! Baked with real cheese!','Cheesy Mice. Catch ’em all… in your mouth!'],fine:'Contains no actual mice.'},
+ {id:'meowmix',r:'*',d:'e',s:'*',k:'game',j:'pop',em:'🎲',brand:'Meow Mix-Up! The Board Game',c:['#7209b7','#f72585','#ffd60a'],sc:['Family game night just got CRAZY!','Meow Mix-Up! The Board Game!','Spin the cat! Swap the cards! Don’t get scratched!','Meow Mix-Up! Ages 6 and up!'],fine:'For 2 to 6 players.'},
+ {id:'pizza',r:'us',d:'e',s:'*',k:'food',j:'rock',em:'🍕',brand:'Rex’s Pizza Barn',c:['#d62828','#fcbf49','#003049'],sc:['Hungry? Rex is too.','Rex’s Pizza Barn!','Kids’ Night Tuesdays: a free mini pizza!','Rex’s Pizza Barn. It’s a party in a box!'],fine:'At participating locations. Limited time only.'},
+ {id:'poutine',r:'ca',d:'ae',s:'*',k:'food',j:'rock',em:'🍟',brand:'Poutine Pockets',c:['#8a5a44','#ffd166','#118ab2'],sc:['Fries? Gravy? Cheese curds?','Poutine Pockets!','The whole poutine… in a pocket!','Poutine Pockets. Eh-mazing!'],fine:'Microwave carefully. Available in the freezer aisle across Canada.'},
+ {id:'kittykart',r:'*',d:'a',s:'summer',k:'toy',j:'rock',em:'🛴',brand:'Kitty Kart Scooter',c:['#ff006e','#fb5607','#ffbe0b'],sc:['Summer’s here!','The Kitty Kart Light-Up Scooter!','Light-up wheels! Folds in a snap!','Kitty Kart. Ride into summer!'],fine:'Always wear a helmet. Each sold separately.'},
+ {id:'hydro',r:'*',d:'a',s:'summer',k:'toy',j:'rock',em:'💦',brand:'Hydro Pounce 3000',c:['#0077b6','#00b4d8','#ffd60a'],sc:['It’s HOT out there.','The Hydro Pounce 3000!','Soaks 30 feet! Big water tank!','Hydro Pounce 3000. Stay cool!'],fine:'Do not aim at cats. Nyx says so.'},
+ // back to school
+ {id:'trapper',r:'*',d:'ma',s:'school',k:'school',j:'pop',em:'📒',brand:'Trapper Kat Binders',c:['#3a86ff','#8338ec','#ffbe0b'],sc:['Back to school is coming!','Trapper Kat Binders!','Zipper pocket! Velcro flap! Cool cat designs!','Trapper Kat. Keep it together!'],fine:'Designs may vary.'},
+ {id:'backpack',r:'ca',d:'ma',s:'school',k:'school',j:'pop',em:'🎒',brand:'True North Back-to-School Sale',c:['#c8102e','#ffffff','#1d3557'],sc:['Back to school, Canada!','The True North Back-to-School Sale!','Backpacks from $19.99! Binders 2 for $5!','True North. Ready, set, school!'],fine:'Prices in Canadian dollars. While quantities last.'},
+ // seasons and holidays
+ {id:'costume',r:'*',d:'ae',s:'halloween',k:'store',j:'spooky',em:'🎃',brand:'Spooky Shack Costumes',c:['#ff7b00','#1b1b1b','#7b2cbf'],sc:['What will YOU be this Halloween?','Spooky Shack Costumes!','Witches! Robots! Even a Siamese cat!','Spooky Shack. Boo-tiful prices!'],fine:'Accessories sold separately.'},
+ {id:'candy',r:'*',d:'e',s:'halloween',k:'snack',j:'spooky',em:'🍬',brand:'Fang-tastic Fun Size Bars',c:['#3c096c','#ff9e00','#9d4edd'],sc:['Trick… or TREAT!','Fang-tastic Fun Size Bars!','Chocolate! Caramel! Glow-in-the-dark wrappers!','Fang-tastic. A scary good treat!'],fine:'Check your treats with a grown-up.'},
+ {id:'wishbook',r:'us',d:'ae',s:'xmas',k:'store',j:'bells',em:'🎁',brand:'Toy Mountain Holiday Wish Book',c:['#c1121f','#2d6a4f','#ffd60a'],sc:['Dear Santa…','The Toy Mountain Holiday Wish Book is here!','Circle your favorites! Hundreds of toys!','Toy Mountain. Where wishes come true!'],fine:'At participating stores. Prices and selection may vary.'},
+ {id:'wishca',r:'ca',d:'ae',s:'xmas',k:'store',j:'bells',em:'🎄',brand:'True North Holiday Toy Sale',c:['#c8102e','#2d6a4f','#ffffff'],sc:['The holidays are coming, Canada!','The True North Holiday Toy Sale!','Up to 40% off toys! In stores and catalogue!','True North. Holiday magic, coast to coast!'],fine:'Prices in Canadian dollars. Offre en vigueur dans les magasins participants.'},
+ {id:'snowball',r:'*',d:'a',s:'winter',k:'toy',j:'bells',em:'⛄',brand:'Snowball Launcher XL',c:['#48cae4','#ffffff','#023e8a'],sc:['Snow day!','The Snowball Launcher XL!','Makes perfect snowballs! Launches 20 feet!','Snowball Launcher XL. Winter just got EPIC!'],fine:'Snow not included. Results may vary with snow conditions.'},
+ {id:'cocoa',r:'*',d:'me',s:'winter',k:'snack',j:'bells',em:'☕',brand:'Mini Marsh Hot Cocoa',c:['#6f4518','#ffe5d9','#c1121f'],sc:['Brrr! Cold outside?','Mini Marsh Hot Cocoa!','Now with TWICE the marshmallows!','Mini Marsh. Warm hugs in a mug!'],fine:'Hot drinks can be hot! Ask a grown-up.'},
+ {id:'valentine',r:'*',d:'ae',s:'valentine',k:'store',j:'pop',em:'💌',brand:'Purr-fect Pals Valentine Cards',c:['#ff4d6d','#ffccd5','#590d22'],sc:['Valentine’s Day is coming!','Purr-fect Pals Valentine Cards!','32 cards with stickers and tattoos!','Purr-fect Pals. You’re paw-some!'],fine:'Tattoos are temporary.'},
+ {id:'egghunt',r:'*',d:'ae',s:'easter',k:'toy',j:'pop',em:'🥚',brand:'Hop-Along Egg Hunt Kit',c:['#a2d2ff','#ffc8dd','#ffafcc'],sc:['The egg hunt is ON!','The Hop-Along Egg Hunt Kit!','24 glow eggs! A golden prize egg!','Hop-Along. Happy hunting!'],fine:'Candy not included.'},
+ // evenings: family stuff
+ {id:'dvd',r:'*',d:'e',s:'*',k:'movie',j:'rock',em:'📀',brand:'“Rex Saves Christmas” on DVD',c:['#03045e','#0077b6','#ffd60a'],sc:['This holiday season…','One dog… one sleigh… one BIG mess.','“Rex Saves Christmas”, on DVD and Blu-ray!','Own it today!'],fine:'Rated G. A NyxVision Pictures film.',s2:'xmas'},
+ {id:'dvd2',r:'*',d:'e',s:'*',k:'movie',j:'rock',em:'📀',brand:'“Nyx: The Movie” on DVD',c:['#14213d','#fca311','#e5e5e5'],sc:['From the cat who brought you NyxVision…','One cat. One mission. One sunbeam.','“Nyx: The Movie”, now on DVD!','Bonus: 3 hours of Nyx napping!'],fine:'Rated G. Special features may vary.'},
+ {id:'park',r:'us',d:'e',s:'summer',k:'store',j:'rock',em:'🎢',brand:'Whisker Falls Water Park',c:['#00b4d8','#ffbe0b','#fb5607'],sc:['This summer, make a SPLASH!','Whisker Falls Water Park!','The new Tail Spin water slide!','Whisker Falls. Kids eat free all summer!'],fine:'With paid adult admission. Height limits apply.'},
+ {id:'mall',r:'*',d:'e',s:'*',k:'store',j:'pop',em:'🛍️',brand:'Kat City Mall',c:['#7b2cbf','#c77dff','#ffd60a'],sc:['Something for everyone!','Kat City Mall!','150 stores! Food court! The NEW arcade!','Kat City Mall. Shop till you flop!'],fine:'Store hours vary.'},
+ // late night: infomercials and bedtime
+ {id:'purrwow',r:'*',d:'n',s:'*',k:'info',j:'info',em:'🧽',brand:'Purr-Wow Super Towel',c:['#ffd60a','#d00000','#003566'],sc:['Spilled milk? Cat knocked over your drink AGAIN?','The Purr-Wow Super Towel holds 20 times its weight!','But wait, there’s more! Order now and get a SECOND set!','Call 1-800-NYX-MEOW now! Operators are standing by!'],fine:'Just 3 easy payments of $19.95. Plus shipping and handling.'},
+ {id:'snugglecat',r:'*',d:'n',s:'*',k:'info',j:'info',em:'🛋️',brand:'The Snuggle-Cat Blanket',c:['#0096c7','#ffd60a','#d00000'],sc:['Cold? Can’t reach the remote?','The Snuggle-Cat! The blanket with SLEEVES!','Stay warm and keep your hands free!','Call 1-800-NYX-MEOW! Just $19.95!'],fine:'Plus shipping and handling. Cat not included.'},
+ {id:'pawchop',r:'*',d:'n',s:'*',k:'info',j:'info',em:'🔪',brand:'Paw Chop',c:['#ef233c','#ffd60a','#2b2d42'],sc:['Tired of chopping? You’re gonna love my paws!','Paw Chop! Just tap, tap, tap!','Salsa! Salad! Snacks! In seconds!','Call 1-800-NYX-MEOW! But wait, there’s more!'],fine:'Grown-ups only. Plus shipping and handling.'},
+ {id:'mattress',r:'*',d:'n',s:'*',k:'store',j:'info',em:'🛏️',brand:'Nap King Mattress Outlet',c:['#023e8a','#caf0f8','#ffd60a'],sc:['Nyx naps 16 hours a day.','Shouldn’t you sleep better too?','Nap King Mattress Outlet! Huge savings!','Nap King. We’re open late… like you!'],fine:'See store for details.'},
+ {id:'bedtime',r:'*',d:'n',s:'*',k:'psa',j:'bells',em:'🌙',brand:'A message from NyxVision',c:['#03045e','#1b263b','#ffd60a'],sc:['It’s getting late…','Nyx is already asleep.','Rex is snoring. (Loudly.)','Sweet dreams from NyxVision!'],fine:'NyxVision public service message.'},
+ {id:'play',r:'*',d:'ma',s:'*',k:'psa',j:'pop',em:'⚽',brand:'Get Up & Play!',c:['#2a9d8f','#e9c46a','#e76f51'],sc:['Hey! You!','Yeah, you on the couch!','Go outside and play for an hour today!','Get Up & Play! A message from NyxVision.'],fine:'NyxVision public service message.'},
+ {id:'hockey',r:'ca',d:'ae',s:'winter',k:'store',j:'rock',em:'🏒',brand:'True North Skate & Hockey Sale',c:['#c8102e','#ffffff','#03045e'],sc:['Hit the ice, Canada!','The True North Skate & Hockey Sale!','Skates from $49.99! Sticks 30% off!','True North. Game on!'],fine:'Prices in Canadian dollars. Helmets required on the ice.'},
+ {id:'tims',r:'ca',d:'m',s:'*',k:'food',j:'bells',em:'🍩',brand:'Loonie Donut Bites',c:['#8d0801','#f4d58d','#bf0603'],sc:['Morning, Canada!','Loonie Donut Bites!','Ten bites for a loonie!','Loonie Donut Bites. A sweet deal, eh?'],fine:'$1 CAD at participating locations.'}
+];
+function adSeason(t){const d=new Date(t),m=d.getMonth()+1,dd=d.getDate();
+  if(m===10)return 'halloween';if(m===11||(m===12&&dd<=25))return 'xmas';if(m===2&&dd<=14)return 'valentine';
+  if((m===3&&dd>=15)||(m===4&&dd<=20))return 'easter';if(m===8||(m===9&&dd<=15))return 'school';if(m===6||m===7)return 'summer';if(m===12||m<=3)return 'winter';return '*'}
+function adPart(t){const h=new Date(t).getHours();return h>=6&&h<11?'m':h>=11&&h<17?'a':h>=17&&h<21?'e':'n'}
+// three ads per break, picked "live" from the season, time of day and region
+function adsForBreak(start){const r=SET.region==='ca'?'ca':'us',sea=adSeason(start),dp=adPart(start);
+  let pool=ADS.filter(a=>(a.r==='*'||a.r===r)&&a.d.indexOf(dp)>=0&&(a.s==='*'||a.s===sea)&&(!a.s2||a.s2===sea));
+  if(pool.length<3)pool=ADS.filter(a=>(a.r==='*'||a.r===r)&&a.s==='*'&&!a.s2);
+  const w=[];pool.forEach(a=>{const n=a.s===sea&&a.s!=='*'?3:a.r===r&&r==='ca'?2:1;for(let i=0;i<n;i++)w.push(a)});
+  const rnd=movRng(Math.floor(start/1000)),out=[];let guard=0;while(out.length<3&&guard++<60){const a=w[Math.floor(rnd()*w.length)];if(out.indexOf(a)<0)out.push(a)}
+  return out}
+const AD_BUMP=4000,AD_LEN=15000,AD_BREAK=AD_BUMP*2+AD_LEN*3;
+// what's on screen during a break: 'in' bumper, an ad, or 'out' bumper
+function adSlot(br,t){const e=t-br.start;if(e<AD_BUMP)return {part:'in',e:e};if(e>=AD_BREAK-AD_BUMP)return {part:'out',e:e-(AD_BREAK-AD_BUMP)};
+  const i=Math.floor((e-AD_BUMP)/AD_LEN),ads=br.ads||(br.ads=adsForBreak(br.start));return {part:'ad',i:i,ad:ads[i],e:(e-AD_BUMP)%AD_LEN}}
+function adHTML(br,bumpOnly){const s=adSlot(br,Date.now());
+  if(s.part!=='ad'||bumpOnly)return '<div class="tnc adbump"><div class="tncard bevel"><div class="tnlogo">'+catSvg(64)+'<b>Nyx<em>Toons</em></b></div><p class="tnnow">'+T(s.part==='in'?'We’ll be right back!':'And now, back to Nyx Toons!')+'</p></div></div>';
+  const a=s.ad,sc=Math.min(3,Math.floor(s.e/(AD_LEN/4))),c=a.c;
+  return '<div class="ad ad-'+a.k+'" style="--a1:'+c[0]+';--a2:'+c[1]+';--a3:'+c[2]+'"><div class="adburst"></div>'+
+    '<div class="adbox'+(sc>=1?' on':'')+'"><span class="adem">'+a.em+'</span><b>'+esc(a.brand)+'</b>'+(a.k==='info'?'<i>AS SEEN ON TV!</i>':a.k==='cereal'?'<i>NEW!</i>':'')+'</div>'+
+    '<div class="adtxt" data-sc="'+sc+'"><span>'+esc(a.sc[sc])+'</span></div>'+
+    (a.k==='info'&&sc>=2?'<div class="adphone">1-800-NYX-MEOW</div>':'')+
+    '<div class="adfine">'+esc(a.fine)+'</div></div>'}
+
+/* Classic commercial breaks from YouTube: dated 2006–2009 kids-TV compilations (fan uploads), played in YouTube's own player.
+   Each break jumps to a different spot in a compilation that fits the season, the time of day and the region. Gone or blocked → NyxVision's own ads. */
+const ADYT_LIB={
+ us:{xmas:['GQA7NJFdVNs','ROSL4u-diOM','6_5YxvYPHpg','IpIBLfZZFb8','R6RlKlLuOeg'],halloween:['hvF8okzE23E','ENwWFMHMC0g','jkRLnXqAlaw','Er6tBjwrWvA','oH8_naoke-A'],
+   winter:['Jp4EkdfFGXY','22plO92gqW0'],spring:['tV7hPXoaDAQ','18t6BBA1Kso','jc1N0aiRtRg'],summer:['tQCGVXQs9Fg','ZIxkPReNoRs'],school:['7FwwcPhxzgA','LmQGsx1ksiw','ewp4Nnx7XnI','ZIxkPReNoRs'],
+   any:['zYKgBFrCCl4','5ikJgz4l17k','JaQpsqLyvZk','rOMHfRJB__k'],night:['x4E_Qw0_Acg','-_-GgTs-Q2A','b6hvLMXz4XI','YRjOHMKXg9Y','xR41A8K6cQY']},
+ ca:{xmas:['drsZ9cznTSs','fXK_xQhbXbc','AfWGjNGm0KU'],halloween:['kn2hMPIc4tY','kZ3bTZ-TqbU','UG136NZN01E'],winter:['zNoNaD6J3fU','rBfpKoDG-d4'],spring:['zNoNaD6J3fU','rBfpKoDG-d4'],
+   summer:['zm8OC8dzdMI','QWxHFnIbkig'],school:['zm8OC8dzdMI','maC0Ee4TyKU','urNBcWcQBCE','wEIhY5ub5h0'],any:['zNoNaD6J3fU','rBfpKoDG-d4'],night:['AvWwqaK3ntE','vgv1Neqyr58','r-MPmMVmgXw']},
+ // French Canada (Télétoon, VRAK): mixed in with English when the region is Canada and the language is French
+ fr:{halloween:['LCPpfXhWvXA'],winter:['7d9UpgrjXN8','w3YusZpXOn4'],school:['U5IXc8rn_qs','w3YusZpXOn4'],
+   any:['w3YusZpXOn4','HIK2weg94pE','Swmtvj48iAw','XjtDA4RsB-Q','e0OuUetytwc','_GX5L--KbN0']}};
+const ADYT={el:null,player:null,ready:false,api:false,key:'',vid:'',bad:{},fail:{},startT:0,want:false};
+function adytPick(br,n){n=n||0;const r0=movRng(Math.floor(br.start/1000)+17+n*31),fr=SET.region==='ca'&&SET.lang==='fr'&&r0()<.5;
+  const L=ADYT_LIB[fr?'fr':SET.region==='ca'?'ca':'us'],sea=adSeason(br.start),dp=adPart(br.start);
+  const k=dp==='n'?'night':sea==='valentine'?'winter':sea==='easter'?'spring':sea==='*'?'any':sea;
+  let ids=(L[k]||L.any).filter(v=>!ADYT.bad[v]);if(!ids.length)ids=L.any.filter(v=>!ADYT.bad[v]);if(!ids.length)return null;
+  if(fr&&!L[k])ids=L.any.filter(v=>!ADYT.bad[v]);
+  const r=movRng(Math.floor(br.start/1000)+5+n*13);return {id:ids[Math.floor(r()*ids.length)],frac:.08+r()*.8}}
+function adytSetup(){if(ADYT.el)return;ADYT.el=document.createElement('div');ADYT.el.id='adyt';ADYT.el.hidden=true;ADYT.el.innerHTML='<div id="adytp"></div>';stage.appendChild(ADYT.el);
+  if(!window.YT||!window.YT.Player){window.onYouTubeIframeAPIReady=adytMake;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=()=>{ADYT.api='x'};document.head.appendChild(s)}else adytMake()}
+function adytMake(){try{ADYT.player=new YT.Player('adytp',{width:'100%',height:'100%',playerVars:{playsinline:1,controls:0,rel:0,disablekb:1,modestbranding:1,iv_load_policy:3,fs:0},
+  events:{onReady:()=>{ADYT.ready=true;syncAdYT()},onError:()=>{if(ADYT.vid)ADYT.bad[ADYT.vid]=1;if(ADYT.want){adytNext();return}try{ADYT.player.stopVideo()}catch(e){}ADYT.el.hidden=true},
+   onStateChange:e=>{if(e.data===1&&ADYT.seekPending){ADYT.seekPending=false;try{const d=ADYT.player.getDuration();if(d>150){ADYT.player.seekTo(Math.max(5,Math.min(d-60,d*ADYT.frac))+(Date.now()-ADYT.startT)/1000,true)}}catch(x){}}
+    if(e.data===0&&ADYT.want){adytNext()}}}})}catch(e){ADYT.api='x'}}
+function adytNext(){const m=toonNow();if(!m||!m.ad||ADYT.tries>=4){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}
+  ADYT.tries++;const p=adytPick(m,ADYT.tries);if(!p){ADYT.fail[ADYT.key]=1;ADYT.el.hidden=true;render();return}ADYT.vid=p.id;ADYT.frac=p.frac;ADYT.seekPending=true;ADYT.startT=Date.now();try{ADYT.player.loadVideoById({videoId:p.id,startSeconds:0})}catch(e){ADYT.fail[ADYT.key]=1}}
+// is a YouTube clip covering this moment of the break? (else the HTML ads show)
+function adytActive(br){return SET.toonAds!=='orig'&&SET.toonAds!=='off'&&NATIVE&&ADYT.api!=='x'&&!ADYT.fail['b'+br.start]}
+function syncAdYT(){const m=has(S.ch)&&CH[S.ch].toons&&S.screen==='watch'&&!S.dialog&&!APP_PAUSED&&!locked(S.ch)?toonNow():null;
+  const br=m&&m.ad?m:null,part=br?adSlot(br,Date.now()).part:'';const want=!!(br&&part==='ad'&&adytActive(br));ADYT.want=want;
+  if(want)adytSetup();if(!ADYT.el)return;
+  if(!want){if(!ADYT.el.hidden){ADYT.el.hidden=true;try{ADYT.player.stopVideo()}catch(e){}}ADYT.key='';return}
+  const key='b'+br.start;if(ADYT.key===key){ADYT.el.hidden=false;return}
+  if(!ADYT.ready){if(ADYT.wait0&&Date.now()-ADYT.wait0>8000){ADYT.api='x';render();return}ADYT.wait0=ADYT.wait0||Date.now();return}
+  const p=adytPick(br);if(!p){ADYT.fail[key]=1;render();return}
+  ADYT.key=key;ADYT.tries=0;ADYT.vid=p.id;ADYT.frac=p.frac;ADYT.startT=br.start+AD_BUMP;ADYT.seekPending=true;ADYT.el.hidden=false;
+  try{ADYT.player.loadVideoById({videoId:p.id,startSeconds:0})}catch(e){ADYT.fail[key]=1;ADYT.el.hidden=true}}
 
 /* ---------------- Message Center: mail from the cable company (and from Nyx and Rex) ---------------- */
 const MSG={read:{},paid:{},since:0};
