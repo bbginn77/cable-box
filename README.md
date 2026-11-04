@@ -176,3 +176,10 @@ Three dials (Senate, House, Governors) point by the races already called plus th
 currently ahead, among the seats on the ballot this year. It is **not a forecast**. The needles wobble while
 races are open and settle as they're called. Results: unofficial, from civicAPI.org (free, no key), refreshed
 about once a minute while the screen is open.
+
+## Georgia Legislature (NNN, ch 5)
+
+News Desk → **Georgia Legislature** (or ◀ ▶ in Midterms 2026). Needles for all 180 State House and 56 State Senate
+seats, seats won vs. the pre-election split (House R 99 · D 81, Senate R 33 · D 23), flips (incumbents beaten by the
+other party; open seats can't be checked) and the closest uncalled races. Results: civicAPI.org race search for
+Georgia, each district fetched a few at a time, refreshed every ~2.5 minutes while the page is open.

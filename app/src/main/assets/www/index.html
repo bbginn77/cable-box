@@ -357,6 +357,10 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .ndlean{font:800 17px var(--ui);margin-top:8px;color:#fff;text-align:center}
 .ndnum{display:flex;gap:18px;margin-top:6px;font:700 17px var(--ui)}.ndnum b{font:900 30px var(--display)}.ndnum .d b{color:#7ea0ff}.ndnum .r b{color:#ff6b76}.ndnum .o b{color:#e8c25a}
 .ndsub{font:600 13px/1.3 var(--ui);color:var(--dim);text-align:center;margin-top:4px}
+.garow .ndcard{flex:0 0 288px}.garow .ndsvg{max-width:250px}.garow .ndends{max-width:250px}.garow .ndlean{font-size:15px}.garow .ndnum b{font-size:26px}
+.gapan{flex:1 1 0;min-width:0;background:rgba(6,14,50,.85);padding:8px 10px;box-sizing:border-box;overflow:hidden}.gapan h3{margin:0 0 2px;font:900 19px var(--display);color:#ffe7a8}.gapan p{font:500 13px var(--ui);color:var(--dim);margin:4px 0}
+.gaflip{display:flex;gap:18px;font:800 15px var(--ui);margin:2px 0 4px}.gaflip b{font:900 22px var(--display)}
+.gabef{font:700 12px var(--ui);color:#ffe7a8;margin-top:4px;text-align:center}
 .msrc{position:absolute;left:24px;top:476px;font:600 12px var(--ui);color:var(--ice);opacity:.85}
 .nmenu{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:440px;padding:0 0 12px;background:linear-gradient(var(--k183689),var(--k0f2569));display:flex;flex-direction:column;gap:6px}
 .nmenu .t{background:#b3131b;font:900 19px var(--display);padding:8px 14px;margin-bottom:6px}.nmenu .mi{margin:0 12px;cursor:pointer}
@@ -3293,8 +3297,8 @@ const MID_IDS={senate:87528,house:87524,governor:87535};
 const MID_START=Date.parse('2026-11-03T23:00:00Z');   // first polls close, 6 PM Eastern
 const MID_DAY=Date.parse('2026-11-03T05:00:00Z');     // anything updated before Election Day is primary data
 function midLive(){return Date.now()>=MID_START}
-const MID_TABS=['needle','senate','house','governor'];
-const MID_TABNAME={needle:'The Needle',senate:'Senate',house:'House',governor:'Governors'};
+const MID_TABS=['needle','ga','senate','house','governor'];
+const MID_TABNAME={needle:'The Needle',ga:'Georgia',senate:'Senate',house:'House',governor:'Governors'};
 const MID_HOLD={senate:{R:31,D:34,O:0},governor:{R:8,D:6,O:0},house:{R:0,D:0,O:0}};
 const MID_MAJ={senate:51,house:218,governor:0};
 const PCOL={R:'#d42a35',D:'#2b5fd9',O:'#d9a520'},GREY='#8d93a0',NORACE='#27324d';
@@ -3314,7 +3318,7 @@ function midParse(j,tab){
     else{const nm=String(r.name||r.region_name||k).toLowerCase().replace(/\s*\(.*\)|\s+special.*$/,'').trim();st=STABBR[nm]||'';if(/special/.test(k+String(r.name||'')))dist='special'}
     let cands=(r.candidates||r.results||[]).map(c=>({name:c.name||c.candidate_name||[c.first_name,c.last_name].filter(Boolean).join(' ')||'—',
       party:partyOf(c.party||c.party_name||c.party_short||c.affiliation),votes:+(c.votes!=null?c.votes:c.vote_count)||0,
-      pct:(c.percent!=null?+c.percent:c.percentage!=null?+c.percentage:null),major:c.major_candidate,win:!!(c.winner===true||c.is_winner===true||c.elected===true)}));
+      pct:(c.percent!=null?+c.percent:c.percentage!=null?+c.percentage:null),major:c.major_candidate,inc:!!(c.incumbent===true||c.is_incumbent===true),win:!!(c.winner===true||c.is_winner===true||c.elected===true)}));
     if(cands.some(c=>c.major!==undefined))cands=cands.filter(c=>c.major===true||c.votes>0);
     const total=cands.reduce((a,c)=>a+c.votes,0);
     cands.forEach(c=>{if(c.pct==null||isNaN(c.pct))c.pct=total?c.votes*100/total:0;else if(c.pct<=1&&total&&c.votes/total>.01)c.pct*=100});
@@ -3392,6 +3396,7 @@ function midDetail(tab,st){const x=midState(tab,st);
   return h}
 function midHTML(){
   if(S.mid==='needle')return needleHTML();
+  if(S.mid==='ga')return gaHTML();
   const tab=S.mid,L=midList(tab),sel=L[Math.min(S.midSel||0,L.length-1)],t=midTally(tab),maj=MID_MAJ[tab];
   let h='<div class="mglobe"></div><div class="wxtop nntop"><div class="wxbrand">'+nnnLogo()+'<b>'+T('Midterms 2026')+'</b><span>'+T('Nyx News Network')+'</span></div><div class="clk">'+clockStr()+'</div></div>';
   h+='<div class="mtabs">'+MID_TABS.map(x=>'<span class="mt'+(x===tab?' on':'')+'" data-tab="'+x+'">'+T(MID_TABNAME[x])+'</span>').join('')+
@@ -3407,15 +3412,17 @@ function midHTML(){
 /* ---- The Needle: an election-night dial for each chamber. It is NOT a forecast: it points by the seats already
    called plus the seats where someone is currently ahead, among the seats on the ballot this year. It wobbles while
    races are still open and settles as they're called. ---- */
-const NDL_SCALE={senate:.3,house:.12,governor:.3},NDL_SEATS={senate:100,house:435,governor:50};
+const NDL_SCALE={senate:.3,house:.12,governor:.3,gahouse:.15,gasenate:.2},NDL_SEATS={senate:100,house:435,governor:50};
 const _loadMid1=loadMid;
 loadMid=async function(tab,manual){
+  if(tab==='ga')return loadGA(manual);
   if(tab!=='needle')return _loadMid1(tab,manual);
   if(MID.busy.needle)return;MID.busy.needle=true;if(manual)render();
   await Promise.all(['senate','house','governor'].map(t=>manual||!MID.data[t]||Date.now()-(MID.at[t]||0)>55000?_loadMid1(t,false):0));
   MID.busy.needle=false;MID.at.needle=Date.now();MID.err.needle=['senate','house','governor'].every(t=>MID.err[t]&&!MID.data[t])?MID.err.house:null;if(S.mid)render()};
 function needleState(tab){const d=MID.data[tab];const z={tab:tab,up:0,called:0,lead:0,R:0,D:0,O:0,lR:0,lD:0,lO:0,ang:0,jit:0,started:false};if(!d)return z;
   d.races.forEach(r=>{z.up++;if(r.winner){z.called++;z[r.winner.party]++}else if(r.total&&r.cands[0]){z.lead++;z['l'+r.cands[0].party]++}});
+  if(typeof GA_BEFORE!=='undefined'&&GA_BEFORE[tab])z.up=Math.max(z.up,GA_BEFORE[tab].n);
   z.started=z.called+z.lead>0;
   const rp=z.R+z.lR,dp=z.D+z.lD,pos=z.up?(rp-dp)/z.up:0;
   z.ang=z.started?Math.max(-1,Math.min(1,pos/NDL_SCALE[tab]))*82:0;   // right = Republicans, left = Democrats
@@ -3431,7 +3438,7 @@ function needleSVG(z){const cx=170,cy=165,R=140,arc=(a0,a1,col,w)=>{const p=a=>[
      '<path d="M'+(cx-6)+' '+cy+' L'+cx+' '+(cy-R+6)+' L'+(cx+6)+' '+cy+' Z" fill="#111" stroke="#fff" stroke-width="1.5"/></g></g>'+
      '<circle cx="'+cx+'" cy="'+cy+'" r="13" fill="#222" stroke="#fff" stroke-width="2.5"/></svg>';
   return g}
-function needleCard(tab){const z=needleState(tab),maj=MID_MAJ[tab],name={senate:'Senate',house:'House',governor:'Governors'}[tab];
+function needleCard(tab){const z=needleState(tab),maj=MID_MAJ[tab],name={senate:'Senate',house:'House',governor:'Governors',gahouse:'GA House',gasenate:'GA Senate'}[tab];
   let lean;if(!MID.data[tab])lean=T('Loading results…');else if(!z.started)lean=midLive()?T('Waiting for the first votes'):T('Results start at 6 PM Eastern');
   else{const a=Math.abs(z.ang);lean=a<8?T('Even right now'):T(a<30?'Leaning {0} right now':a<60?'{0} ahead right now':'{0} well ahead right now',T(z.ang>0?'Republicans':'Democrats'))}
   return '<div class="ndcard bevel"><div class="ndt">'+T(name)+'</div>'+needleSVG(z)+'<div class="ndends"><span class="d">'+T('Democrats')+'</span><span class="r">'+T('Republicans')+'</span></div>'+
@@ -3447,7 +3454,62 @@ function needleHTML(){const tab='needle';
   else h+='<div class="ndrow">'+['senate','house','governor'].map(needleCard).join('')+'</div>';
   h+='<div class="msrc" style="top:442px;right:24px;line-height:1.3">'+T('Not a forecast: each needle points by races called plus races where someone is ahead now, among seats on the ballot this year. Totals include seats not up this year.')+'<br>'+T('Unofficial results via civicAPI.org')+' · '+(TOUCH?T('Tap a tab for maps'):'◀▶ '+T('Maps')+' · OK '+T('Refresh')+' · BACK '+T('News'))+'</div>';
   return h}
-function newsMenuItems(){return ['More on this story','Midterms 2026: The Needle','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
+/* ---- Georgia Legislature: all 180 State House and 56 State Senate seats (both chambers are elected in full every 2 years).
+   Same needle as the national page, plus seats won and flips. A flip here = an incumbent beaten by the other party;
+   open seats can't be checked for a flip, because the feed doesn't say which party held them. ---- */
+MID_HOLD.gahouse={R:0,D:0,O:0};MID_HOLD.gasenate={R:0,D:0,O:0};MID_MAJ.gahouse=91;MID_MAJ.gasenate=29;
+const GA_BEFORE={gahouse:{R:99,D:81,n:180},gasenate:{R:33,D:23,n:56}};   // going into Election Day 2026
+const GA={list:null,listAt:0,busy:false,err:'',raw:{}};
+function gaKind(it){const t=String(it.election_type||it.type||'').toLowerCase(),n=String(it.election_name&&it.election_name.en_US||it.election_name||it.name||'').toLowerCase();
+  if(/congress|united states|u\.s\./.test(t+' '+n))return '';
+  if(/state[_ ]?senate/.test(t)||/(georgia|state) senate|senate district/.test(n))return 'gasenate';
+  if(/state[_ ]?house/.test(t)||/(georgia|state) house|house district|house of representatives,? district/.test(n))return 'gahouse';
+  return ''}
+function gaDist(it){const n=String(it.election_name&&it.election_name.en_US||it.election_name||it.name||''),m=n.match(/district\s*(\d+)/i)||String(it.district||'').match(/(\d+)/);return m?m[1]:''}
+async function gaGet(path){return JSON.parse(await http('https://civicapi.org/api/v2/'+path,{},60000))}
+async function loadGA(manual){
+  if(!NATIVE||GA.busy)return;if(!manual&&Date.now()-(MID.at.ga||0)<150000)return;
+  GA.busy=true;MID.busy.ga=true;if(manual)render();
+  try{
+    if(!GA.list||Date.now()-GA.listAt>3600000){
+      const j=await gaGet('race/search?country=US&province=GA&startDate=2026-11-03&endDate=2026-11-04&limit=2000');
+      const arr=Array.isArray(j)?j:(j.races||j.results||j.data||j.items||[]);
+      GA.found=arr.length;GA.list=arr.map(it=>({id:it.race_id||it.id||it.raceid,kind:gaKind(it),dist:gaDist(it),it:it})).filter(x=>x.id&&x.kind&&x.dist);GA.listAt=Date.now();
+      if(!GA.list.length)throw new Error(arr.length?'civicAPI lists '+arr.length+' Georgia races but none are State House or State Senate':'civicAPI has no Georgia races listed yet')}
+    // fetch each district's results a few at a time
+    const L=GA.list.slice();let k=0;
+    const work=async()=>{while(k<L.length){const x=L[k++];
+      if(x.it.candidates&&x.it.candidates.some(c=>c.votes>0)&&!x.it.region_results){GA.raw[x.id]=x.it;continue}
+      try{GA.raw[x.id]=await gaGet('race/'+x.id+'?light')}catch(e){}}};
+    await Promise.all([work(),work(),work(),work()]);
+    ['gahouse','gasenate'].forEach(kind=>{const rr={};GA.list.filter(x=>x.kind===kind&&GA.raw[x.id]).forEach(x=>{rr['ga-'+x.dist]=GA.raw[x.id]});
+      const d=midParse({election_date:'2026-11-03',region_results:rr},kind);
+      d.races.forEach(r=>{const raw=rr['ga-'+r.dist]||{},inc=(raw.candidates||[]).find(c=>c.incumbent===true||c.is_incumbent===true);r.inc=inc?partyOf(inc.party):null;
+        r.flip=!!(r.winner&&r.inc&&r.winner.party!==r.inc);r.runoff=!r.winner&&r.rep>=99&&r.cands[0]&&r.cands[0].pct<50});
+      MID.data[kind]=d});
+    GA.err=''}
+  catch(e){GA.err=String(e&&e.message||e).slice(0,120)}
+  GA.busy=false;MID.busy.ga=false;MID.at.ga=Date.now();if(S.mid)render()}
+function gaPanel(){const all=[];['gahouse','gasenate'].forEach(k=>{const d=MID.data[k];if(d)d.races.forEach(r=>all.push([k,r]))});
+  const lab=(k,r)=>(k==='gahouse'?'HD ':'SD ')+r.dist,flips=all.filter(x=>x[1].flip),close=all.filter(x=>!x[1].winner&&x[1].total&&x[1].cands[1]).map(x=>[x[0],x[1],(x[1].cands[0].votes-x[1].cands[1].votes)/x[1].total]).sort((a,b)=>a[2]-b[2]);
+  const fR=flips.filter(x=>x[1].winner.party==='R').length,fD=flips.filter(x=>x[1].winner.party==='D').length;
+  let h='<div class="gapan bevel"><h3>'+T('Flips')+'</h3><div class="gaflip"><span>'+T('To D')+' <b style="color:#7ea0ff">'+fD+'</b></span><span>'+T('To R')+' <b style="color:#ff6b76">'+fR+'</b></span></div>';
+  h+=flips.length?flips.slice(0,6).map(x=>'<div class="md"><b>'+lab(x[0],x[1])+'</b><i style="background:'+PCOL[x[1].winner.party]+'"></i><span>'+esc(x[1].winner.name.split(' ').slice(-1)[0])+' '+T('beat the incumbent')+'</span></div>').join(''):'<p>'+T('No incumbents beaten by the other party yet.')+'</p>';
+  h+='<h3 style="margin-top:8px">'+T('Closest uncalled')+'</h3>';
+  h+=close.length?close.slice(0,5).map(x=>{const c=x[1].cands[0];return '<div class="md"><b>'+lab(x[0],x[1])+'</b><i style="background:'+PCOL[c.party]+'"></i><span>'+esc(c.name.split(' ').slice(-1)[0])+' +'+(x[2]*100).toFixed(1)+'</span><em>'+(x[1].runoff?T('Runoff?'):x[1].rep!=null?Math.round(x[1].rep)+'%':'')+'</em></div>'}).join(''):'<p>'+T('Nothing to show yet.')+'</p>';
+  return h+'</div>'}
+function gaBefore(k){const b=GA_BEFORE[k],z=needleState(k),won={R:z.R,D:z.D};
+  return '<div class="gabef">'+T('Before: R {0} · D {1}',b.R,b.D)+(z.called?' · '+T('Won so far: R {0} · D {1}',won.R,won.D):'')+'</div>'}
+function gaHTML(){const tab='ga';
+  let h='<div class="mglobe"></div><div class="wxtop nntop"><div class="wxbrand">'+nnnLogo()+'<b>'+T('Georgia Legislature')+'</b><span>'+T('Nyx News Network')+'</span></div><div class="clk">'+clockStr()+'</div></div>';
+  h+='<div class="mtabs">'+MID_TABS.map(x=>'<span class="mt'+(x===tab?' on':'')+'" data-tab="'+x+'">'+T(MID_TABNAME[x])+'</span>').join('')+
+    '<span class="mref" data-ref="1">⟳ '+T('Refresh')+'</span><span class="mupd">'+(GA.busy?'<span class="wait"></span>':MID.at.ga?T('Updated {0}',fmtT(MID.at.ga)):'')+'</span></div>';
+  if(!NATIVE)h+='<div class="mdet bevel" style="left:24px;right:24px;height:auto"><h3>'+T('Georgia Legislature')+'</h3><p>'+T('Live results appear here on your TV or tablet.')+'</p></div>';
+  else if(!MID.data.gahouse&&!MID.data.gasenate)h+='<div class="mdet bevel" style="left:24px;right:24px;height:auto"><h3>'+T('Georgia Legislature')+'</h3><p>'+(GA.err?T('Results unavailable right now. Press OK to try again.')+'<br><small>'+esc(GA.err)+'</small>':T('Loading all 236 Georgia districts… this takes a minute the first time.'))+'</p></div>';
+  else h+='<div class="ndrow garow">'+['gahouse','gasenate'].map(k=>needleCard(k).slice(0,-6)+gaBefore(k)+'</div>').join('')+gaPanel()+'</div>';
+  h+='<div class="msrc" style="top:442px;right:24px;line-height:1.3">'+T('Not a forecast: needles point by races called plus races where someone is ahead now. Flips count incumbents beaten by the other party (open seats aren’t counted). Georgia needs 50% to win outright, or it goes to a runoff.')+'<br>'+T('Unofficial results via civicAPI.org')+' · OK '+T('Refresh')+' · BACK '+T('News')+'</div>';
+  return h}
+function newsMenuItems(){return ['More on this story','Midterms 2026: The Needle','Georgia Legislature','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
 function newsMenuHTML(){return '<div class="nmenu bevel"><div class="t">'+T('News Desk')+'</div>'+newsMenuItems().map((x,i)=>'<div class="mi'+(i===S.nmenu?' hi':'')+'" data-nm="'+i+'">'+T(x)+'</div>').join('')+'</div>'}
 function newsMenuKey(k){const n=newsMenuItems().length;
   if(k==='up'||k==='down'){S.nmenu=(S.nmenu+(k==='up'?-1:1)+n)%n;snd.nav();render();return true}
