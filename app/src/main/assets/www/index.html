@@ -3501,25 +3501,45 @@ async function gaFind(){const tries=['race/search?country=US&province=GA&startDa
     GA.diag.push(q.replace('race/search?','').slice(0,48)+' → '+note);
     const nh=list.filter(x=>x.kind==='gahouse').length,ns=list.filter(x=>x.kind==='gasenate').length;if(nh>=150&&ns>=45)break}
   return list}
+/* Georgia Secretary of State results (results.sos.ga.gov, the official unofficial count). The state doesn't "call" races,
+   so here a seat counts as won when the candidate is unopposed, or when every county has reported and they have 50%+
+   (Georgia's bar for winning outright). Candidate names carry tags: "Jane Doe (I) (Dem)". */
+const GA_SOS='https://results.sos.ga.gov/results/public/api/';
+function gaTxt(t){return typeof t==='string'?t:Array.isArray(t)?((t.find(x=>/^en/i.test(x.languageId||''))||t[0]||{}).text||''):''}
+async function gaSosElection(){if(GA.eid)return GA.eid;
+  try{const j=JSON.parse(await http(GA_SOS+'jurisdictions/Georgia',{},40000)),L=gaFlat2(j);
+    const e=L.find(x=>/2026-11-03|11032026|11\/3\/2026/.test(JSON.stringify([x.electionDate,x.date,x.publicElectionId,x.name]))&&/general/i.test(JSON.stringify(x.name||x.publicElectionId)));
+    if(e&&e.publicElectionId)return GA.eid=e.publicElectionId}catch(e){}
+  return GA.eid='11032026GeneralAndSpecialElection'}
+function gaFlat2(j,o){o=o||[];if(Array.isArray(j))j.forEach(x=>gaFlat2(x,o));else if(j&&typeof j==='object'){if(j.publicElectionId)o.push(j);Object.values(j).forEach(v=>{if(v&&typeof v==='object')gaFlat2(v,o)})}return o}
 async function loadGA(manual){
-  if(!NATIVE||GA.busy)return;if(!manual&&Date.now()-(MID.at.ga||0)<150000)return;
-  GA.busy=true;MID.busy.ga=true;if(manual)render();
-  try{
-    if(!GA.list||!GA.list.length||Date.now()-GA.listAt>3600000){GA.list=await gaFind();GA.listAt=Date.now();
-      if(!GA.list.length)throw new Error('civicAPI search found no Georgia State House or Senate races')}
-    const L=GA.list.slice();let k=0;
-    const work=async()=>{while(k<L.length){const x=L[k++];
-      if(x.it.candidates&&x.it.candidates.some(c=>c.votes>0)&&!x.it.region_results){GA.raw[x.id]=x.it;continue}
-      try{GA.raw[x.id]=await gaGet('race/'+x.id+'?light')}catch(e){if(x.it.candidates)GA.raw[x.id]=x.it}}};
-    await Promise.all([work(),work(),work(),work()]);
-    ['gahouse','gasenate'].forEach(kind=>{const rr={};GA.list.filter(x=>x.kind===kind&&GA.raw[x.id]).forEach(x=>{rr['ga-'+x.dist]=GA.raw[x.id]});
-      const d=midParse({election_date:'2026-11-03',region_results:rr},kind);
-      d.races.forEach(r=>{const raw=rr['ga-'+r.dist]||{},inc=(raw.candidates||[]).find(c=>c.incumbent===true||c.is_incumbent===true);r.inc=inc?partyOf(inc.party):null;
-        r.flip=!!(r.winner&&r.inc&&r.winner.party!==r.inc);r.runoff=!r.winner&&r.rep>=99&&r.cands[0]&&r.cands[0].pct<50});
-      MID.data[kind]=d});
+  if(!NATIVE||GA.busy)return;if(!manual&&Date.now()-(MID.at.ga||0)<120000)return;
+  GA.busy=true;MID.busy.ga=true;GA.diag=[];if(manual)render();
+  try{const eid=await gaSosElection();GA.diag.push('Election: '+eid);
+    const j=JSON.parse(await http(GA_SOS+'elections/Georgia/'+eid+'/data',{},90000));
+    const items=j.ballotItems||(j.results&&j.results.ballotItems)||[];GA.diag.push(items.length+' contests');
+    const out={gahouse:[],gasenate:[]};
+    items.forEach(it=>{const nm=gaTxt(it.name),m=nm.match(/^(?:Special\s+)?State\s+(House of Representatives|Senate)\s*-\s*District\s+(\d+)\s*$/i);if(!m)return;
+      const kind=/senate/i.test(m[1])?'gasenate':'gahouse',dist=String(+m[2]);
+      const opts=((it.summaryResults||{}).ballotOptions||[]).filter(o=>!o.isWriteIn);
+      const cands=opts.map(o=>{const raw=gaTxt(o.name),pm=raw.match(/\((Rep|Dem|Lib|Ind|Grn|NP)[^)]*\)/i);
+        return {name:raw.replace(/\s*\([^)]*\)/g,'').replace(/\s+/g,' ').trim(),party:pm?partyOf(pm[1]):'O',inc:/\(I\)/.test(raw),votes:+o.voteCount||0,pct:0,win:false}});
+      const total=cands.reduce((a,c)=>a+c.votes,0);cands.forEach(c=>c.pct=total?c.votes*100/total:0);cands.sort((a,b)=>b.votes-a.votes);
+      const rs=it.reportingStatus||{},rep=rs.totalUnits?rs.reportingUnits*100/rs.totalUnits:null;
+      const unopp=cands.length===1,done=rep!=null&&rep>=100&&total>0;
+      let winner=null;if(unopp)winner=cands[0];else if(done&&cands[0].pct>=50)winner=cands[0];if(winner)winner.win=true;
+      const inc=cands.find(c=>c.inc);
+      out[kind].push({st:'GA',dist:dist,cands:cands.slice(0,5),total:total,rep:rep,winner:winner,unopp:unopp,inc:inc?inc.party:null,
+        flip:!!(winner&&inc&&winner.party!==inc.party),runoff:done&&!winner&&cands.length>1})});
+    // a Special election and a regular one for the same seat: keep the regular one
+    ['gahouse','gasenate'].forEach(k=>{const seen={};MID.data[k]={races:out[k].filter(r=>seen[r.dist]?false:(seen[r.dist]=1)),hold:MID_HOLD[k]}});
+    GA.diag.push('House '+MID.data.gahouse.races.length+' · Senate '+MID.data.gasenate.races.length);
+    if(!out.gahouse.length&&!out.gasenate.length){MID.data.gahouse=MID.data.gasenate=null;throw new Error('No State House/Senate contests found (e.g. '+items.slice(0,3).map(x=>gaTxt(x.name)).join('; ')+')')}
     GA.err=''}
-  catch(e){GA.err=String(e&&e.message||e).slice(0,120)}
+  catch(e){GA.err=String(e&&e.message||e).slice(0,160)}
   GA.busy=false;MID.busy.ga=false;MID.at.ga=Date.now();if(S.mid)render()}
+function gaStatus(r){if(r.unopp)return T('Unopposed');if(!r.total)return T('No votes counted yet');
+  return (r.winner?'<b class="called">'+T('Won: {0} (all counties in, 50%+)',esc(r.winner.name))+'</b>':r.runoff?T('Runoff: nobody reached 50%'):T('Still counting'))+(r.rep!=null?' · '+T('{0}% of counties reporting',Math.round(r.rep)):'')}
 function gaErrHTML(){return T('Results unavailable right now. Press OK to try again.')+'<br><small>'+esc(GA.err)+'</small>'+(GA.diag&&GA.diag.length?'<div class="gadiag">'+GA.diag.map(x=>'<div>'+esc(x)+'</div>').join('')+'</div>':'')}
 function gaPanel(){const all=[];['gahouse','gasenate'].forEach(k=>{const d=MID.data[k];if(d)d.races.forEach(r=>all.push([k,r]))});
   const lab=(k,r)=>(k==='gahouse'?'HD ':'SD ')+r.dist,flips=all.filter(x=>x[1].flip),close=all.filter(x=>!x[1].winner&&x[1].total&&x[1].cands[1]).map(x=>[x[0],x[1],(x[1].cands[0].votes-x[1].cands[1].votes)/x[1].total]).sort((a,b)=>a[2]-b[2]);
@@ -3538,7 +3558,7 @@ function gaHTML(){const tab='ga';
   if(!NATIVE)h+='<div class="mdet bevel" style="left:24px;right:24px;height:auto"><h3>'+T('Georgia Legislature')+'</h3><p>'+T('Live results appear here on your TV or tablet.')+'</p></div>';
   else if(!MID.data.gahouse&&!MID.data.gasenate)h+='<div class="mdet bevel" style="left:24px;right:24px;height:auto"><h3>'+T('Georgia Legislature')+'</h3><p>'+(GA.err?gaErrHTML():T('Loading all 236 Georgia districts… this takes a minute the first time.'))+'</p></div>';
   else h+='<div class="ndrow garow">'+['gahouse','gasenate'].map(k=>needleCard(k).slice(0,-6)+gaBefore(k)+'</div>').join('')+gaPanel()+'</div>';
-  h+='<div class="msrc" style="top:442px;right:24px;line-height:1.3">'+T('Not a forecast: needles point by races called plus races where someone is ahead now. Flips count incumbents beaten by the other party (open seats aren’t counted). Georgia needs 50% to win outright, or it goes to a runoff.')+'<br>'+T('Unofficial results via civicAPI.org')+' · OK '+T('Refresh')+' · BACK '+T('News')+'</div>';
+  h+='<div class="msrc" style="top:442px;right:24px;line-height:1.3">'+T('Not a forecast: needles point by races called plus races where someone is ahead now. Flips count incumbents beaten by the other party (open seats aren’t counted). Georgia needs 50% to win outright, or it goes to a runoff.')+'<br>'+T('Unofficial results: Georgia Secretary of State')+' · OK '+T('Refresh')+' · BACK '+T('News')+'</div>';
   return h}
 /* ---- Georgia House / Senate results page, laid out like the big results boards: seat counts racing to a majority,
    seats flipped, and a seat chart (one box per district: solid = won, dark = leading, grey = no results). ---- */
@@ -3564,9 +3584,9 @@ function gaResHTML(kind){const tab=kind,b=GA_BEFORE[kind],n=b.n,maj=MID_MAJ[kind
   h+='<div class="grdet bevel"><h3>'+(kind==='gahouse'?T('House District {0}',dn):T('Senate District {0}',dn))+'</h3>';
   if(!r)h+='<p>'+T('No results for this district yet.')+'</p>';
   else{h+=(r.flip?'<div class="grflip">'+T('FLIP')+' · '+T('{0} beat the incumbent',esc(r.winner.name))+'</div>':r.inc?'<div class="lbl">'+T('Held by {0} going in',r.inc==='R'?T('Republicans'):r.inc==='D'?T('Democrats'):T('Other'))+'</div>':'<div class="lbl">'+T('Open seat')+'</div>')+
-    (r.cands.length?r.cands.slice(0,3).map(c=>candRow(c)).join(''):'')+'<p class="ms">'+(r.runoff?T('Headed for a runoff? Nobody has 50% yet.')+' · ':'')+raceStatus(r)+'</p>'}
+    (r.cands.length?r.cands.slice(0,3).map(c=>candRow(c)).join(''):'')+'<p class="ms">'+gaStatus(r)+'</p>'}
   h+='<div class="mkeys">'+(TOUCH?T('Tap a district'):'▲▼ '+T('District')+' · CH ▲▼ '+T('Jump 10')+' · ◀▶ '+T('Pages'))+'</div></div>';
-  h+='<div class="msrc" style="top:486px">'+T('Unofficial results via civicAPI.org')+' · '+T('Flipped = incumbent beaten by the other party')+'</div>';
+  h+='<div class="msrc" style="top:486px">'+T('Unofficial results: Georgia Secretary of State')+' · '+T('Won = unopposed, or all counties in with 50%+')+' · '+T('Flipped = incumbent beaten by the other party')+'</div>';
   return h}
 function newsMenuItems(){return ['More on this story','Midterms 2026: The Needle','Georgia Legislature','Georgia House Results','Georgia Senate Results','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
 function newsMenuHTML(){return '<div class="nmenu bevel"><div class="t">'+T('News Desk')+'</div>'+newsMenuItems().map((x,i)=>'<div class="mi'+(i===S.nmenu?' hi':'')+'" data-nm="'+i+'">'+T(x)+'</div>').join('')+'</div>'}

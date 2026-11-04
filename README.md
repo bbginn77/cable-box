@@ -187,3 +187,7 @@ Georgia, each district fetched a few at a time, refreshed every ~2.5 minutes whi
 **GA House / GA Senate results boards:** big seat counts racing to the majority (91 / 29), a won + leading bar,
 seats flipped each way, and a seat chart with one box per district (solid = won, dark = leading, grey = no results,
 gold outline = flipped). ▲▼ picks a district, CH ▲▼ jumps 10, or tap a box.
+
+**Georgia data source (updated):** the Georgia legislature pages now read the Georgia Secretary of State's results
+feed (results.sos.ga.gov, `…/elections/Georgia/{election}/data`). The state doesn't call races, so a seat counts as
+won when unopposed, or when every county has reported and the leader has 50%+; all counties in under 50% shows as a runoff.
