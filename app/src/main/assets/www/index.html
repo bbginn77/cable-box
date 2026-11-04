@@ -373,6 +373,14 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .gc.fl{box-shadow:inset 0 0 0 2px #ffe26a}.gc.sel{outline:3px solid #fff;outline-offset:1px;position:relative;z-index:1}
 .grleg{position:absolute;left:24px;top:452px;display:flex;gap:16px;font:700 12px var(--ui);color:#dfe6ff}.grleg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:2px;vertical-align:-2px}.grleg .flk{box-shadow:inset 0 0 0 2px #ffe26a;background:#3a4258}
 .grdet{position:absolute;left:600px;right:24px;top:196px;height:280px;background:rgba(6,14,50,.85);padding:10px 12px;box-sizing:border-box;overflow:hidden}.grdet h3{margin:0 0 4px;font:900 21px var(--display)}
+.gcr{display:flex;align-items:baseline;gap:6px;font:700 14px var(--ui);margin:2px 0}.gcr i{width:10px;height:10px;flex:none;align-self:center}.gcr span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gcr b{font:900 15px var(--ui)}.gcr em{font:600 11px var(--ui);color:var(--dim);font-style:normal;width:52px;text-align:right}.gcr.win span{color:#fff}
+.grdet .ms{font-size:13px!important;margin:4px 0!important}
+.gamap{position:absolute;left:10px;right:10px;bottom:8px;height:118px;display:flex;gap:8px}.gamap p{font:600 12px var(--ui);color:var(--dim)}
+.gam1,.gam2{position:relative;height:100%;background:rgba(0,0,0,.3);border:1px solid rgba(160,190,255,.35);box-sizing:border-box}
+.gam1{width:96px}.gam2{flex:1}.gam1 img{object-fit:contain}.gam1 img,.gam1 svg,.gam2 svg{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px)}
+.gam1 span,.gam2 span{position:absolute;left:4px;bottom:2px;font:800 9px var(--ui);letter-spacing:.08em;text-transform:uppercase;color:#cfd8ff;text-shadow:0 1px 2px #000}
+.gam2 text{fill:#fff;font-family:var(--ui);font-weight:800;text-anchor:middle;dominant-baseline:middle;paint-order:stroke;stroke:#0b1233;stroke-width:.4px}.gam2 text.me{stroke-width:.8px}
+.grleg .gkeys{margin-left:auto;color:#ffe7a8}
 .grflip{font:900 13px var(--ui);color:#1a1300;background:#ffe26a;padding:2px 6px;display:inline-block;margin-bottom:6px}.grdet .mkeys{position:absolute;left:12px;bottom:8px}
 .msrc{position:absolute;left:24px;top:476px;font:600 12px var(--ui);color:var(--ice);opacity:.85}
 .nmenu{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:440px;padding:0 0 12px;background:linear-gradient(var(--k183689),var(--k0f2569));display:flex;flex-direction:column;gap:6px}
@@ -3562,6 +3570,29 @@ function gaHTML(){const tab='ga';
   return h}
 /* ---- Georgia House / Senate results page, laid out like the big results boards: seat counts racing to a majority,
    seats flipped, and a seat chart (one box per district: solid = won, dark = leading, grey = no results). ---- */
+function gaCellColor(x){if(x&&x.winner)return PCOL[x.winner.party];if(x&&x.total&&x.cands[0])return mixc(PCOL[x.cands[0].party],'#141a33',.55);return '#3a4258'}
+/* district outlines: U.S. Census Bureau TIGER/Line 2024 (public domain), simplified, in assets/www/gadist.json */
+const GAG={d:null,bb:{},img:{},busy:false};
+function gaGeoLoad(){if(GAG.d||GAG.busy)return;GAG.busy=true;
+  fetch('gadist.json').then(r=>r.json()).then(j=>{GAG.d=j;GAG.busy=false;if(S.mid==='gahouse'||S.mid==='gasenate')render()}).catch(()=>{GAG.busy=false;GAG.fail=1})}
+function gaBB(k,n){const id=k+n;if(GAG.bb[id])return GAG.bb[id];const p=GAG.d&&GAG.d[k][n];if(!p)return null;
+  const v=p.match(/-?[\d.]+/g).map(Number);let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(let i=0;i<v.length;i+=2){x0=Math.min(x0,v[i]);x1=Math.max(x1,v[i]);y0=Math.min(y0,v[i+1]);y1=Math.max(y1,v[i+1])}
+  return GAG.bb[id]=[x0,y0,x1,y1]}
+function gaStateImg(k){if(GAG.img[k])return GAG.img[k];const D=GAG.d[k];
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 470"><g fill="#33406e" stroke="#0b1233" stroke-width="0.6">'+Object.values(D).map(d=>'<path d="'+d+'"/>').join('')+'</g></svg>';
+  try{GAG.img[k]=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}))}catch(e){GAG.img[k]='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}return GAG.img[k]}
+function gaMapHTML(kind,dn,M){if(!NATIVE&&!GAG.d)return '';gaGeoLoad();if(!GAG.d)return '<div class="gamap"><p>'+(GAG.fail?'':T('Loading map…'))+'</p></div>';
+  const k=kind==='gahouse'?'h':'s',sel=GAG.d[k][dn],bb=gaBB(k,dn);if(!sel||!bb)return '';
+  const col=gaCellColor(M[dn]),cx=(bb[0]+bb[2])/2,cy=(bb[1]+bb[3])/2,sz=Math.max(bb[2]-bb[0],bb[3]-bb[1]);
+  let h='<div class="gamap"><div class="gam1"><img src="'+gaStateImg(k)+'" alt=""><svg viewBox="0 0 410 470"><path d="'+sel+'" fill="'+col+'" stroke="#fff" stroke-width="1.5"/>'+
+    (sz<30?'<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+Math.max(16,sz*.9).toFixed(1)+'" fill="none" stroke="#ffe26a" stroke-width="4"/>':'')+'</svg><span>'+T('Georgia')+'</span></div>';
+  const half=Math.max(sz*.95,7),zx=cx-half*1.1,zy=cy-half,zw=half*2.2,zh=half*2;
+  let z='';Object.keys(GAG.d[k]).forEach(n=>{const b=gaBB(k,n);if(!b||b[2]<zx||b[0]>zx+zw||b[3]<zy||b[1]>zy+zh||+n===dn)return;
+    z+='<path d="'+GAG.d[k][n]+'" fill="'+gaCellColor(M[+n])+'" fill-opacity=".55"/>';
+    const tx=(b[0]+b[2])/2,ty=(b[1]+b[3])/2;if(tx>zx&&tx<zx+zw&&ty>zy&&ty<zy+zh)z+='<text x="'+tx.toFixed(1)+'" y="'+ty.toFixed(1)+'" font-size="'+(zh/11).toFixed(2)+'">'+n+'</text>'});
+  h+='<div class="gam2"><svg viewBox="'+[zx,zy,zw,zh].map(v=>v.toFixed(1)).join(' ')+'" preserveAspectRatio="xMidYMid meet"><g stroke="#0b1233" stroke-width="'+(zh/120).toFixed(3)+'">'+z+'</g>'+
+    '<path d="'+sel+'" fill="'+col+'" stroke="#fff" stroke-width="'+(zh/55).toFixed(3)+'"/><text x="'+cx.toFixed(1)+'" y="'+cy.toFixed(1)+'" font-size="'+(zh/7).toFixed(2)+'" class="me">'+dn+'</text></svg><span>'+T('Close-up')+'</span></div></div>';
+  return h}
 function gaRaceMap(kind){const m={},d=MID.data[kind];if(d)d.races.forEach(r=>{m[+r.dist]=r});return m}
 function gaResHTML(kind){const tab=kind,b=GA_BEFORE[kind],n=b.n,maj=MID_MAJ[kind],z=needleState(kind),M=gaRaceMap(kind);
   const sel=Math.min(n-1,S.gaSel||0),dn=sel+1,r=M[dn];
@@ -3580,12 +3611,12 @@ function gaResHTML(kind){const tab=kind,b=GA_BEFORE[kind],n=b.n,maj=MID_MAJ[kind
   for(let i=1;i<=n;i++){const x=M[i];let c='#3a4258',cl='';
     if(x&&x.winner)c=PCOL[x.winner.party];else if(x&&x.total&&x.cands[0])c=mixc(PCOL[x.cands[0].party],'#141a33',.55);
     if(x&&x.flip)cl=' fl';h+='<div class="gc'+cl+(i===dn?' sel':'')+'" data-gd="'+(i-1)+'" style="background:'+c+'">'+i+'</div>'}
-  h+='</div><div class="grleg"><span><i style="background:'+PCOL.D+'"></i><i style="background:'+PCOL.R+'"></i>'+T('Won')+'</span><span><i style="background:'+mixc(PCOL.D,'#141a33',.55)+'"></i><i style="background:'+mixc(PCOL.R,'#141a33',.55)+'"></i>'+T('Leads')+'</span><span><i style="background:#3a4258"></i>'+T('No results yet')+'</span><span><i class="flk"></i>'+T('Flipped')+'</span></div>';
+  h+='</div><div class="grleg"><span><i style="background:'+PCOL.D+'"></i><i style="background:'+PCOL.R+'"></i>'+T('Won')+'</span><span><i style="background:'+mixc(PCOL.D,'#141a33',.55)+'"></i><i style="background:'+mixc(PCOL.R,'#141a33',.55)+'"></i>'+T('Leads')+'</span><span><i style="background:#3a4258"></i>'+T('No results yet')+'</span><span><i class="flk"></i>'+T('Flipped')+'</span><span class="gkeys">'+(TOUCH?T('Tap a district'):'▲▼ '+T('District')+' · CH ▲▼ '+T('Jump 10'))+'</span></div>';
   h+='<div class="grdet bevel"><h3>'+(kind==='gahouse'?T('House District {0}',dn):T('Senate District {0}',dn))+'</h3>';
   if(!r)h+='<p>'+T('No results for this district yet.')+'</p>';
   else{h+=(r.flip?'<div class="grflip">'+T('FLIP')+' · '+T('{0} beat the incumbent',esc(r.winner.name))+'</div>':r.inc?'<div class="lbl">'+T('Held by {0} going in',r.inc==='R'?T('Republicans'):r.inc==='D'?T('Democrats'):T('Other'))+'</div>':'<div class="lbl">'+T('Open seat')+'</div>')+
-    (r.cands.length?r.cands.slice(0,3).map(c=>candRow(c)).join(''):'')+'<p class="ms">'+gaStatus(r)+'</p>'}
-  h+='<div class="mkeys">'+(TOUCH?T('Tap a district'):'▲▼ '+T('District')+' · CH ▲▼ '+T('Jump 10')+' · ◀▶ '+T('Pages'))+'</div></div>';
+    (r.cands.length?r.cands.slice(0,3).map(c=>'<div class="gcr'+(c.win?' win':'')+'"><i style="background:'+PCOL[c.party]+'"></i><span>'+esc(c.name)+(c.win?' ✔':'')+'</span><b>'+c.pct.toFixed(1)+'%</b><em>'+c.votes.toLocaleString()+'</em></div>').join(''):'')+'<p class="ms">'+gaStatus(r)+'</p>'}
+  h+=gaMapHTML(kind,dn,M)+'</div>';
   h+='<div class="msrc" style="top:486px">'+T('Unofficial results: Georgia Secretary of State')+' · '+T('Won = unopposed, or all counties in with 50%+')+' · '+T('Flipped = incumbent beaten by the other party')+'</div>';
   return h}
 function newsMenuItems(){return ['More on this story','Midterms 2026: The Needle','Georgia Legislature','Georgia House Results','Georgia Senate Results','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}

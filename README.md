@@ -191,3 +191,7 @@ gold outline = flipped). ▲▼ picks a district, CH ▲▼ jumps 10, or tap a b
 **Georgia data source (updated):** the Georgia legislature pages now read the Georgia Secretary of State's results
 feed (results.sos.ga.gov, `…/elections/Georgia/{election}/data`). The state doesn't call races, so a seat counts as
 won when unopposed, or when every county has reported and the leader has 50%+; all counties in under 50% shows as a runoff.
+
+**District locator maps:** the GA House / GA Senate detail panel shows where the selected district is in Georgia
+plus a close-up with its neighbors colored by their results. Outlines: U.S. Census Bureau TIGER/Line 2024 state
+legislative districts (public domain), simplified into `assets/www/gadist.json` (via the Tenjin25/GAPrecinctMap copy).
