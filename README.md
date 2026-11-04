@@ -183,3 +183,7 @@ News Desk → **Georgia Legislature** (or ◀ ▶ in Midterms 2026). Needles for
 seats, seats won vs. the pre-election split (House R 99 · D 81, Senate R 33 · D 23), flips (incumbents beaten by the
 other party; open seats can't be checked) and the closest uncalled races. Results: civicAPI.org race search for
 Georgia, each district fetched a few at a time, refreshed every ~2.5 minutes while the page is open.
+
+**GA House / GA Senate results boards:** big seat counts racing to the majority (91 / 29), a won + leading bar,
+seats flipped each way, and a seat chart with one box per district (solid = won, dark = leading, grey = no results,
+gold outline = flipped). ▲▼ picks a district, CH ▲▼ jumps 10, or tap a box.
