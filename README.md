@@ -202,3 +202,7 @@ All 16 lines (1–14, 3bis, 7bis) drawn from Île-de-France Mobilités open data
 arrondissements; ODbL, via benjamintd/memory.pour.paris), with live status from the free community RATP feed
 (api-ratp.pierre-grimaud.fr). Backup: an optional free IDFM PRIM key in Settings → Service Keys → Paris Métro Key
 (disruptions_bulk). Lines with trouble are dashed on the map and cycle in the panel with the RATP message.
+
+**Post-election cleanup (Nov 6):** the Needle, the Georgia legislature pages and the Balance of Power corner bar are
+retired. The Midterms 2026 Senate/House/Governors pages stay on NNN until every Alaska and Mississippi race has a
+winner in the results feed; then they disappear from the News Desk on their own (remembered as `midDone`).

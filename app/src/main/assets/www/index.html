@@ -980,7 +980,7 @@ const ALLSETS=[
 ];
 // Settings are grouped: a short top menu, with submenus for alerts, looks, TV options and service keys
 const SGROUPS=[
- {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','bop','sports','tests']},
+ {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','sports','tests']},
  {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
  {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','twSrc','twsend','twstat','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','pkey','tkey','skey','spterms','spdisc']}];
@@ -3330,7 +3330,7 @@ function newsKey(k){
   if(S.mid)return midKey(k);
   if(S.nmenu!=null)return newsMenuKey(k);
   const L=newsStories();
-  if(!S.nm&&k==='ok'&&SET.region!=='ca'){S.nmenu=0;snd.ok();render();return true}
+  if(!S.nm&&k==='ok'&&SET.region!=='ca'){if(SET.midDone){S.nm=true;S.ni=newsIdx();snd.ok();render();return true}midPrefetch();S.nmenu=0;snd.ok();render();return true}
   if(!L.length)return false;
   if(!S.nm){if(k==='ok'){S.nm=true;S.ni=newsIdx();snd.ok();render();return true}return false}
   if(k==='left'||k==='right'){S.ni=(S.ni+(k==='left'?-1:1)+L.length)%L.length;snd.nav();render();return true}
@@ -3367,7 +3367,7 @@ const MID_IDS={senate:87528,house:87524,governor:87535};
 const MID_START=Date.parse('2026-11-03T23:00:00Z');   // first polls close, 6 PM Eastern
 const MID_DAY=Date.parse('2026-11-03T05:00:00Z');     // anything updated before Election Day is primary data
 function midLive(){return Date.now()>=MID_START}
-const MID_TABS=['needle','ga','gahouse','gasenate','senate','house','governor'];
+const MID_TABS=['senate','house','governor'];
 const MID_TABNAME={needle:'Needle',ga:'GA Needle',gahouse:'GA House',gasenate:'GA Senate',senate:'Senate',house:'House',governor:'Governors'};
 const MID_HOLD={senate:{R:31,D:34,O:0},governor:{R:8,D:6,O:0},house:{R:0,D:0,O:0}};
 const MID_MAJ={senate:51,house:218,governor:0};
@@ -3488,7 +3488,7 @@ const NDL_SCALE={senate:.3,house:.12,governor:.3,gahouse:.15,gasenate:.2},NDL_SE
 const _loadMid1=loadMid;
 loadMid=async function(tab,manual){
   if(tab==='ga'||tab==='gahouse'||tab==='gasenate')return loadGA(manual);
-  if(tab!=='needle')return _loadMid1(tab,manual);
+  if(tab!=='needle'){const r=await _loadMid1(tab,manual);if(midDoneCheck()&&S.mid){S.mid=null;render()}return r}
   if(MID.busy.needle)return;MID.busy.needle=true;if(manual)render();
   await Promise.all(['senate','house','governor'].map(t=>manual||!MID.data[t]||Date.now()-(MID.at[t]||0)>55000?_loadMid1(t,false):0));
   MID.busy.needle=false;MID.at.needle=Date.now();MID.err.needle=['senate','house','governor'].every(t=>MID.err[t]&&!MID.data[t])?MID.err.house:null;if(S.mid)render()};
@@ -3668,7 +3668,12 @@ function gaResHTML(kind){const tab=kind,b=GA_BEFORE[kind],n=b.n,maj=MID_MAJ[kind
   h+=gaMapHTML(kind,dn,M)+'</div>';
   h+='<div class="msrc" style="top:486px">'+T('Unofficial results: Georgia Secretary of State')+' · '+T('Won = unopposed, or all counties in with 50%+')+' · '+T('Flipped = incumbent beaten by the other party')+'</div>';
   return h}
-function newsMenuItems(){return ['More on this story','Midterms 2026: The Needle','Georgia Legislature','Georgia House Results','Georgia Senate Results','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
+// The national results pages stay until every race in Alaska and Mississippi has been called, then retire for good.
+function midDoneCheck(){if(SET.midDone)return true;const tabs=['senate','house','governor'];if(!tabs.every(t=>MID.data[t]&&MID.data[t].races&&MID.data[t].races.length))return false;
+  const L=[];tabs.forEach(t=>MID.data[t].races.forEach(r=>{if(r.st==='AK'||r.st==='MS')L.push(r)}));
+  if(L.length&&L.every(r=>r.winner)){SET.midDone=true;save();return true}return false}
+function midPrefetch(){if(SET.midDone||!NATIVE)return;['senate','house','governor'].forEach(t=>{if(!MID.data[t]&&!MID.busy[t])_loadMid1(t,false).then(midDoneCheck).catch(()=>{})})}
+function newsMenuItems(){return SET.midDone?['More on this story']:['More on this story','Midterms 2026: Senate','Midterms 2026: House','Midterms 2026: Governors']}
 function newsMenuHTML(){return '<div class="nmenu bevel"><div class="t">'+T('News Desk')+'</div>'+newsMenuItems().map((x,i)=>'<div class="mi'+(i===S.nmenu?' hi':'')+'" data-nm="'+i+'">'+T(x)+'</div>').join('')+'</div>'}
 function newsMenuKey(k){const n=newsMenuItems().length;
   if(k==='up'||k==='down'){S.nmenu=(S.nmenu+(k==='up'?-1:1)+n)%n;snd.nav();render();return true}
@@ -3869,7 +3874,7 @@ function extraListKey(sc,k){
 /* ---------------- election night "balance of power" lower third ---------------- */
 const BOP={el:document.createElement('div'),test:null,sig:''};BOP.el.id='bop';BOP.el.hidden=true;stage.appendChild(BOP.el);
 BOP.el.addEventListener('click',()=>{if(BOP.test)return;S.screen='watch';const i=CH.findIndex(c=>c.news);if(i!==S.ch)tune(i);midOpen('senate')});
-function bopLive(){return SET.bop!==false&&SET.region!=='ca'&&rcWindow()}
+function bopLive(){return false}
 function bopTally(tab){if(BOP.test)return BOP.test.t[tab];const t=midTally(tab);return {R:t.R,D:t.D}}
 function bopCol(tab,label,need,total){const t=bopTally(tab),r=Math.min(100,t.R/total*100),d=Math.min(100-r,t.D/total*100);
   return '<div class="bpc"><div class="bpl"><b>'+T(label)+'</b><span>'+T('{0} to win',need)+'</span></div><div class="bpn"><em class="r">'+t.R+'</em><div class="bpbar"><i style="width:'+r.toFixed(1)+'%;background:'+PCOL.R+'"></i><i style="width:'+d.toFixed(1)+'%;background:'+PCOL.D+';margin-left:auto"></i><u style="left:'+(need/total*100).toFixed(1)+'%"></u></div><em class="d">'+t.D+'</em></div></div>'}
