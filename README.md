@@ -195,3 +195,10 @@ won when unopposed, or when every county has reported and the leader has 50%+; a
 **District locator maps:** the GA House / GA Senate detail panel shows where the selected district is in Georgia
 plus a close-up with its neighbors colored by their results. Outlines: U.S. Census Bureau TIGER/Line 2024 state
 legislative districts (public domain), simplified into `assets/www/gadist.json` (via the Tenjin25/GAPrecinctMap copy).
+
+## Paris Métro (NTT, ch 6) — replaces the Philadelphia view
+
+All 16 lines (1–14, 3bis, 7bis) drawn from Île-de-France Mobilités open data (line traces, stations,
+arrondissements; ODbL, via benjamintd/memory.pour.paris), with live status from the free community RATP feed
+(api-ratp.pierre-grimaud.fr). Backup: an optional free IDFM PRIM key in Settings → Service Keys → Paris Métro Key
+(disruptions_bulk). Lines with trouble are dashed on the map and cycle in the panel with the RATP message.
