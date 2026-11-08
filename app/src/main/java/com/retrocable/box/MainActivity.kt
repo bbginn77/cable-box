@@ -184,14 +184,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ---- Twilight: the owner's own music files, sent from a phone on the same Wi-Fi; they stay on this device ----
-    private val twDir by lazy { File(filesDir, "twmusic").apply { mkdirs() } }
+    // ---- My Music: the owner's own music files, sent from a phone on the same Wi-Fi; they stay on this device ----
+    // Two folders: "tw" = Nyx Twilight (channel 3), "wx" = NyxVision Weather / Local on the 8s (channel 4).
+    private fun musDir(slot: String) = File(filesDir, if (slot == "wx") "wxmusic" else "twmusic").apply { mkdirs() }
     private var twPlayer: MediaPlayer? = null
     private var twIdx = 0
+    private var twSlot = "tw"                 // folder the player is playing from
+    @Volatile private var upSlot = "tw"       // folder the phone upload page saves into
     @Volatile private var twServer: ServerSocket? = null
-    private fun twList(): List<File> = (twDir.listFiles() ?: arrayOf()).filter { it.isFile && it.length() > 0 && !it.name.startsWith(".") }.sortedBy { it.name.lowercase() }
-    private fun twFilesJson(): String { val a = JSONArray(); twList().forEach { a.put(JSONObject().put("name", it.name).put("size", it.length())) }; return a.toString() }
-    private fun twNotify() = runOnUiThread { web.evaluateJavascript("window.cable&&cable.twFiles&&cable.twFiles(" + JSONObject.quote(twFilesJson()) + ")", null) }
+    private fun twList(slot: String = twSlot): List<File> = (musDir(slot).listFiles() ?: arrayOf()).filter { it.isFile && it.length() > 0 && !it.name.startsWith(".") }.sortedBy { it.name.lowercase() }
+    private fun twFilesJson(slot: String): String { val a = JSONArray(); twList(slot).forEach { a.put(JSONObject().put("name", it.name).put("size", it.length())) }; return a.toString() }
+    private fun twNotify(slot: String) = runOnUiThread { web.evaluateJavascript("window.cable&&cable.twFiles&&cable.twFiles(" + JSONObject.quote(twFilesJson(slot)) + "," + JSONObject.quote(slot) + ")", null) }
+    private fun musPlayNow(slot: String, on: Boolean) {
+        if (on) { if (twPlayer == null || twSlot != slot) { twSlot = slot; twIdx = 0; twStart() } }
+        else if (twSlot == slot) twStop()
+    }
     private fun twStop() { twPlayer?.let { try { it.stop() } catch (e: Exception) {}; it.release() }; twPlayer = null }
     private fun twStart() {
         val L = twList(); if (L.isEmpty()) { twStop(); return }
@@ -218,12 +225,12 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {}
         return ""
     }
-    private val TW_PAGE = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NyxVision Twilight Music</title>
+    private val TW_PAGE = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NyxVision {{NAME}} Music</title>
 <style>body{margin:0;font:16px -apple-system,Roboto,Arial,sans-serif;background:#050b16;color:#e8f0ff;padding:24px}h1{font-weight:200;letter-spacing:.12em;color:#bfe3ff;text-shadow:0 0 10px #3d9bff;margin:0 0 4px}
 p{color:#9fb4d6}label{display:block;margin:20px 0;padding:22px;border:2px dashed #3d6fb0;border-radius:14px;text-align:center;font-size:18px;color:#cfe3ff}input{display:none}
 button{width:100%;padding:16px;border:0;border-radius:12px;background:#2f7dff;color:#fff;font-size:18px;font-weight:600}button:disabled{opacity:.4}
 li{margin:6px 0}.bar{height:8px;background:#13233f;border-radius:4px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;width:0;background:#4fb2ff}.ok{color:#7dff8a}.err{color:#ff7a6a}</style></head>
-<body><h1>Twilight</h1><p>Send music to Nyx Twilight on your TV. You can pick several files; they play in filename order and loop.</p>
+<body><h1>{{NAME}}</h1><p>Send music to {{CHAN}} on your TV. You can pick several files; they play in filename order and loop.</p>
 <label>Tap to choose music files<input id="f" type="file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav,.flac" multiple></label><ul id="l"></ul><button id="go" disabled>Send to TV</button><p id="st"></p>
 <script>const f=document.getElementById('f'),l=document.getElementById('l'),go=document.getElementById('go'),st=document.getElementById('st');
 f.onchange=()=>{l.innerHTML='';[...f.files].forEach((x,i)=>{l.innerHTML+='<li>'+x.name.replace(/</g,'&lt;')+' <small>('+(x.size/1048576).toFixed(1)+' MB)</small><div class="bar"><i id="b'+i+'"></i></div></li>'});go.disabled=!f.files.length};
@@ -240,16 +247,17 @@ go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++)
             var len = -1L; while (true) { val h = line(); if (h.isEmpty()) break; val i = h.indexOf(':'); if (i > 0 && h.substring(0, i).trim().equals("Content-Length", true)) len = h.substring(i + 1).trim().toLongOrNull() ?: -1 }
             fun send(code: String, type: String, body: ByteArray) { out.write(("HTTP/1.1 $code\r\nContent-Type: $type\r\nContent-Length: ${body.size}\r\nConnection: close\r\n\r\n").toByteArray()); out.write(body); out.flush() }
             val path = req[1]
-            if (req[0] == "GET" && (path == "/" || path.startsWith("/?"))) { send("200 OK", "text/html; charset=utf-8", TW_PAGE.toByteArray()); return }
+            if (req[0] == "GET" && (path == "/" || path.startsWith("/?"))) { val wx = upSlot == "wx"; send("200 OK", "text/html; charset=utf-8", TW_PAGE.replace("{{NAME}}", if (wx) "Weather" else "Twilight").replace("{{CHAN}}", if (wx) "NyxVision Weather (channel 4)" else "Nyx Twilight").toByteArray()); return }
             if (req[0] == "POST" && path.startsWith("/upload")) {
                 val raw = Uri.parse("http://x$path").getQueryParameter("name") ?: "music.mp3"
                 val name = raw.substringAfterLast('/').replace(Regex("[^A-Za-z0-9 ._()\\-]"), "_").take(80).ifBlank { "music.mp3" }
                 if (len <= 0 || len > 300L * 1024 * 1024 || !Regex("\\.(mp3|m4a|aac|ogg|wav|flac|opus)$", RegexOption.IGNORE_CASE).containsMatchIn(name)) { send("400 Bad Request", "text/plain", "Unsupported file".toByteArray()); return }
-                val tmp = File(twDir, ".up-" + System.nanoTime())
+                val slot = upSlot; val dir = musDir(slot)
+                val tmp = File(dir, ".up-" + System.nanoTime())
                 tmp.outputStream().use { fo -> val buf = ByteArray(65536); var left = len; while (left > 0) { val n = inp.read(buf, 0, minOf(buf.size.toLong(), left).toInt()); if (n < 0) break; fo.write(buf, 0, n); left -= n } }
                 if (tmp.length() != len) { tmp.delete(); send("400 Bad Request", "text/plain", "Incomplete".toByteArray()); return }
-                val dest = File(twDir, name); dest.delete(); tmp.renameTo(dest)
-                send("200 OK", "application/json", "{\"ok\":true}".toByteArray()); twNotify(); return
+                val dest = File(dir, name); dest.delete(); tmp.renameTo(dest)
+                send("200 OK", "application/json", "{\"ok\":true}".toByteArray()); twNotify(slot); return
             }
             send("404 Not Found", "text/plain", "Not found".toByteArray())
         }
@@ -692,10 +700,15 @@ go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++)
             }
             return "http://" + ip + ":" + (twServer?.localPort ?: 8088) + "/"
         }
-        @JavascriptInterface fun twFiles(): String = twFilesJson()
-        @JavascriptInterface fun twClear() { twList().forEach { it.delete() }; runOnUiThread { twStop() }; twNotify() }
+        @JavascriptInterface fun twFiles(): String = twFilesJson("tw")
+        @JavascriptInterface fun twClear() = musClear("tw")
         /** Play (true) or stop (false) the owner's Twilight music, in filename order, looping. */
-        @JavascriptInterface fun twPlay(on: Boolean) { runOnUiThread { if (on) { if (twPlayer == null) twStart() } else twStop() } }
+        @JavascriptInterface fun twPlay(on: Boolean) = musPlay("tw", on)
+        /** Same as the tw* calls, for either folder: "tw" (Twilight) or "wx" (Weather channel). */
+        @JavascriptInterface fun musServe(slot: String, on: Boolean): String { if (on) upSlot = if (slot == "wx") "wx" else "tw"; return twServe(on) }
+        @JavascriptInterface fun musFiles(slot: String): String = twFilesJson(if (slot == "wx") "wx" else "tw")
+        @JavascriptInterface fun musClear(slot: String) { val sl = if (slot == "wx") "wx" else "tw"; twList(sl).forEach { it.delete() }; runOnUiThread { if (twSlot == sl) twStop() }; twNotify(sl) }
+        @JavascriptInterface fun musPlay(slot: String, on: Boolean) { val sl = if (slot == "wx") "wx" else "tw"; runOnUiThread { musPlayNow(sl, on) } }
 
         /** On-screen remote VOL/MUTE: 1 = up, -1 = down, 0 = mute on/off. Shows Android's own volume slider. */
         @JavascriptInterface
