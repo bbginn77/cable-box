@@ -288,6 +288,7 @@ go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++)
         KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_PAGE_DOWN -> "chdn"
         KeyEvent.KEYCODE_LAST_CHANNEL -> "last"
         KeyEvent.KEYCODE_PROG_YELLOW, KeyEvent.KEYCODE_BOOKMARK -> "fav"
+        KeyEvent.KEYCODE_PROG_RED -> "red"
         in KeyEvent.KEYCODE_0..KeyEvent.KEYCODE_9 -> (code - KeyEvent.KEYCODE_0).toString()
         else -> null   // volume, mute, home, input etc. keep working normally
     }

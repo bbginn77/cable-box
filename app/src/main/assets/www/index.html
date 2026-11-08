@@ -250,6 +250,145 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .wxalert{position:absolute;left:24px;right:24px;top:100px;height:320px;background:rgba(90,8,16,.85);padding:20px 26px;box-sizing:border-box;overflow:hidden}
 .wxalert h3{font:900 28px var(--display);margin:0 0 12px;color:#ffd0d0}.wxalert p{font:600 19px/1.35 var(--ui);margin:0 0 10px}
 .wxtk{bottom:0}
+/* NyxVision Weather · Local on the 8s (2000s sky panels + modern gauge/graph), with Red Mode */
+.l8x{position:absolute;inset:0;overflow:hidden}
+.l8bg{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#1a55b8 0%,#3f82d8 34%,#8dbdf0 70%,#d6e8fb 100%)}
+.l8bg i{position:absolute;display:block}
+.l8bg .sun{right:60px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,240,.75) 0%,rgba(255,255,230,.25) 22%,rgba(255,255,255,0) 60%)}
+.l8bg .rays{right:-340px;top:-460px;width:1100px;height:1100px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.11) 0 3deg,rgba(255,255,255,0) 3deg 10deg);-webkit-mask-image:radial-gradient(circle,#000 0%,rgba(0,0,0,.5) 40%,transparent 68%);mask-image:radial-gradient(circle,#000 0%,rgba(0,0,0,.5) 40%,transparent 68%);animation:l8spin 240s linear infinite}
+.l8bg .cl1{left:-10%;right:-10%;bottom:40px;height:170px;background:radial-gradient(ellipse 28% 60% at 15% 70%,rgba(255,255,255,.75),transparent 70%),radial-gradient(ellipse 30% 55% at 45% 80%,rgba(255,255,255,.65),transparent 70%),radial-gradient(ellipse 26% 60% at 78% 75%,rgba(255,255,255,.7),transparent 70%);animation:l8drift 50s ease-in-out infinite alternate}
+@keyframes l8spin{to{transform:rotate(360deg)}}
+@keyframes l8drift{to{transform:translateX(60px)}}
+.l8top{position:absolute;left:24px;right:24px;top:14px;height:40px;display:flex;align-items:stretch;z-index:2}
+.l8bug{display:flex;align-items:center;gap:6px;padding:0 10px 0 6px;background:linear-gradient(#fff,#dfe9f7);color:#0b3d91;box-shadow:0 2px 6px rgba(0,20,70,.35)}
+.l8bug .cat{filter:none}
+.l8bug span{display:flex;flex-direction:column;font:900 12px/1.05 var(--display);letter-spacing:.06em}
+.l8bug b{font:italic 900 30px/1 var(--display);margin-left:2px;color:#1a55b8}
+.l8city{display:flex;align-items:center;gap:16px;padding:0 16px;background:rgba(8,30,80,.55);font:800 21px var(--ui);letter-spacing:.06em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.l8city .clk{font:700 21px var(--ui);letter-spacing:.02em;text-transform:none}
+.l8top .gr{margin-left:auto;display:flex;align-items:center;font:800 16px var(--display);color:var(--hi);text-shadow:1px 1px 0 #041040}
+.l8m{position:absolute;left:24px;right:24px;top:62px;height:366px}
+.l8h1{position:absolute;left:2px;top:0;height:42px;display:flex;align-items:baseline;gap:14px;font:900 32px/42px var(--display);color:#fff;text-shadow:0 2px 0 rgba(0,25,80,.55),0 0 12px rgba(0,30,90,.35);white-space:nowrap}
+.l8h1 small{font:italic 800 16px var(--display);color:#eaf3ff;text-shadow:0 1px 2px rgba(0,25,80,.6)}
+.l8pan{position:absolute;left:0;right:0;top:44px;bottom:0;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.42) 0%,rgba(255,255,255,.2) 46%,rgba(170,205,245,.16) 54%,rgba(255,255,255,.1) 100%);border:1px solid rgba(255,255,255,.6);box-shadow:0 8px 22px rgba(0,30,90,.35),inset 0 1px 0 rgba(255,255,255,.8)}
+.l8area{height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:linear-gradient(90deg,#0d3d93 0%,#2a6bcf 65%,rgba(42,107,207,.0) 100%);font:800 16px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#fff}
+.l8area .lg{display:flex;align-items:center;gap:6px;font:700 12px var(--ui);letter-spacing:.06em;text-transform:none;color:#0b2f73}
+.l8area .lg i{display:inline-block;width:42px;height:8px;border-radius:2px}
+.l8bd{position:absolute;left:0;right:0;top:28px;bottom:0;color:#fff;text-shadow:0 2px 3px rgba(0,25,80,.55)}
+/* intro */
+.l8intro{display:flex;align-items:center;gap:34px;padding:0 40px;height:100%}
+.l8clock{flex:0 0 auto;width:210px;height:210px;filter:drop-shadow(0 6px 10px rgba(0,25,80,.4))}
+.l8hello{display:flex;flex-direction:column;gap:6px}
+.l8hello b{font:900 46px/1.02 var(--display);text-transform:uppercase}
+.l8hello span{font:800 30px/1.1 var(--display);text-transform:uppercase;color:#eaf3ff}
+.l8hello em{margin-top:10px;font:700 19px var(--ui);font-style:normal;color:#fff}
+/* now */
+.l8now{display:flex;height:100%}
+.l8nl{flex:0 0 300px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.35)}
+.l8gauge{position:relative;width:200px;height:200px}
+.l8gauge svg{position:absolute;inset:0}
+.l8gauge canvas{position:absolute;left:62px;top:30px;width:76px!important;height:62px!important}
+.l8gauge .t{position:absolute;left:0;right:0;top:86px;text-align:center;font:900 64px/1 var(--display)}
+.l8nl .c{margin-top:6px;font:800 24px var(--display);text-align:center}
+.l8nr{flex:1;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 34px}
+.l8row{display:flex;align-items:baseline;gap:18px;font:800 23px var(--display)}
+.l8row span{flex:0 0 46%;text-align:right;font:700 17px var(--ui);letter-spacing:.12em;text-transform:uppercase;color:#e6f0ff}
+/* radar */
+.l8rad{position:absolute;inset:0;background:#0a0d12}
+.l8rad img,.l8rad canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.l8rad .wxnote{left:12px;top:12px}
+/* hourly */
+.l8hr{position:absolute;inset:0;padding:10px 10px 0}
+.l8hr .cols{position:absolute;left:10px;right:10px;top:8px;bottom:8px;display:flex}
+.l8hr .col{flex:1;display:flex;flex-direction:column;align-items:center;border-left:1px solid rgba(255,255,255,.2)}
+.l8hr .col:first-child{border-left:0}
+.l8hr .tm{font:900 22px var(--display)}
+.l8hr canvas{width:58px;height:47px;margin-top:2px}
+.l8hr .pp{position:absolute;bottom:4px;font:700 14px var(--ui);color:#d9ecff}
+.l8hr svg{position:absolute;left:10px;right:10px;top:150px;width:calc(100% - 20px);height:110px;overflow:visible}
+.l8hr .dot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(26,85,184,.6)}
+.l8hr .tv{position:absolute;transform:translate(-50%,-130%);font:900 28px var(--display)}
+/* local forecast text */
+.l8lf{display:flex;height:100%}
+.l8lf .p{flex:1;display:flex;flex-direction:column;padding:12px 18px;border-left:1px solid rgba(255,255,255,.3);min-width:0}
+.l8lf .p:first-child{border-left:0}
+.l8lf .ph{display:flex;align-items:center;gap:8px}
+.l8lf .ph b{font:900 22px var(--display);text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.l8lf .ph canvas{width:52px;height:42px}
+.l8lf .tp{font:900 34px/1 var(--display)}.l8lf .tp small{font:700 14px var(--ui);margin-left:6px;color:#e6f0ff;letter-spacing:.08em;text-transform:uppercase}
+.l8lf .tx{margin-top:8px;font:600 19px/1.3 var(--ui);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:9;overflow:hidden}
+/* week ahead */
+.l8wk{display:flex;height:100%;padding:8px 8px 10px;box-sizing:border-box}
+.l8wk .d{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-width:0}
+.l8wk .dn{font:900 20px var(--display);text-transform:uppercase;padding:1px 8px}
+.l8wk .dn.we{background:rgba(255,210,26,.85);color:#0b2f73;text-shadow:none}
+.l8wk canvas{width:70px;height:57px}
+.l8wk .c{height:44px;font:700 15px/1.15 var(--ui);text-align:center;color:#eef5ff}
+.l8wk .hi{font:900 40px/1 var(--display)}.l8wk .lo{font:800 26px/1 var(--display);color:#dbeaff}
+/* bulletin */
+.l8bul{padding:14px 22px;height:100%;box-sizing:border-box;overflow:hidden}
+.l8bul .nws{display:flex;align-items:center;gap:8px;height:26px;padding:0 12px;background:linear-gradient(90deg,#b5121b,#e0353d 60%,rgba(224,53,61,0));font:800 13px var(--ui);letter-spacing:.16em;margin-bottom:12px}
+.l8bul p{margin:0 0 10px;font:700 21px/1.3 var(--ui)}
+.l8bul p b{color:#ffe36b}
+/* segment tabs (bottom) */
+.l8tabs{position:absolute;left:24px;right:24px;top:434px;height:26px;display:flex;gap:10px;align-items:flex-end;padding:0 10px 4px;box-sizing:border-box;background:rgba(8,30,80,.55)}
+.l8tab{flex:1;display:flex;flex-direction:column;gap:3px;font:700 13px var(--ui);letter-spacing:.06em;color:rgba(255,255,255,.65);text-shadow:0 1px 2px rgba(0,20,60,.6);white-space:nowrap;overflow:hidden}
+.l8tab.on{color:#fff}
+.l8tab u{display:block;height:3px;background:rgba(255,255,255,.3);text-decoration:none;overflow:hidden}
+.l8tab u i{display:block;height:100%;width:0;background:#fff}
+.l8tab.done u i{width:100%}
+.l8tab.on u i{animation:l8fill linear forwards}
+@keyframes l8fill{from{width:0}to{width:100%}}
+/* bottom band (Dayton) */
+.l8band{position:absolute;left:0;right:0;bottom:38px;height:40px;display:flex;align-items:center;gap:12px;padding:0 16px 0 0;background:linear-gradient(#2160c9,#0c3184);border-top:2px solid #9cc6ff;font:800 18px var(--ui);overflow:hidden}
+.l8band .nw{align-self:stretch;display:flex;align-items:center;padding:0 10px;background:#0a2667;font:900 12px var(--display);letter-spacing:.1em;color:#9cc6ff}
+.l8band canvas{width:38px;height:31px}
+.l8band .st{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:700 16px var(--ui);color:#fff}
+.l8band .st em{font-style:normal;color:#9cc6ff;letter-spacing:.1em;margin-right:6px;font-size:13px}
+.l8chip{display:flex;align-items:center;gap:6px;padding:3px 10px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);font:700 14px var(--ui);white-space:nowrap;cursor:pointer}
+.l8chip.red{border-color:#ff8f8f}
+.l8chip.red i{width:10px;height:10px;border-radius:50%;background:#e0353d;box-shadow:0 0 6px #ff4d4d}
+.l8chip.red.off i{background:#888;box-shadow:none}
+.l8hint{font:700 13px var(--ui);color:#cfe0ff;white-space:nowrap}
+/* options panel */
+.l8opt{position:absolute;right:40px;top:150px;width:390px;z-index:6;background:linear-gradient(#173f9e,#0b2569);border:2px solid #9cc6ff;box-shadow:0 10px 0 rgba(0,0,0,.4)}
+.l8opt h3{margin:0;padding:8px 14px;background:linear-gradient(#2a6bcf,#164aa8);font:900 20px var(--display)}
+.l8opt .r{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font:700 19px var(--ui);border-top:1px solid rgba(255,255,255,.12)}
+.l8opt .r.hi{background:var(--hi);color:var(--hiText)}
+.l8opt .r b{font:900 19px var(--display)}
+.l8opt p{margin:0;padding:8px 14px;font:600 14px/1.3 var(--ui);color:#cfe0ff}
+/* side banner (Red Mode) */
+.l8side{display:none}
+/* ---------- RED MODE (storm coverage look) ---------- */
+.l8red .l8bg{background:radial-gradient(ellipse 80% 70% at 30% 55%,#3b4150 0%,#1d2029 55%,#0b0c11 100%)}
+.l8red .l8bg .sun,.l8red .l8bg .rays{display:none}
+.l8red .l8bg .cl1{bottom:60px;height:260px;opacity:.35;filter:grayscale(1) brightness(.6);animation-duration:18s}
+.l8bg .ring,.l8bg .ring2{display:none}
+.l8red .l8bg .ring{display:block;right:-200px;top:-90px;width:640px;height:640px;border-radius:50%;background:conic-gradient(#d0141f 0 62deg,transparent 62deg 96deg,#9e0f17 96deg 190deg,transparent 190deg 214deg,#e3262f 214deg 300deg,transparent 300deg);-webkit-mask-image:radial-gradient(circle,transparent 55%,#000 55.5%,#000 63%,transparent 63.5%,transparent 71%,#000 71.5%,#000 74%,transparent 74.5%);mask-image:radial-gradient(circle,transparent 55%,#000 55.5%,#000 63%,transparent 63.5%,transparent 71%,#000 71.5%,#000 74%,transparent 74.5%);opacity:.9;animation:l8spin 36s linear infinite}
+.l8red .l8bg .ring2{display:block;right:-60px;top:50px;width:360px;height:360px;border-radius:50%;background:conic-gradient(rgba(255,60,70,.85) 0 40deg,transparent 40deg 150deg,rgba(200,20,30,.8) 150deg 230deg,transparent 230deg);-webkit-mask-image:radial-gradient(circle,transparent 60%,#000 61%,#000 70%,transparent 71%);mask-image:radial-gradient(circle,transparent 60%,#000 61%,#000 70%,transparent 71%);animation:l8spin 22s linear infinite reverse}
+.l8red .l8bug{background:linear-gradient(#fff,#f1d6d8);color:#9e0f17}.l8red .l8bug b{color:#d0141f}
+.l8red .l8city{background:rgba(10,10,14,.7);box-shadow:inset 0 -3px 0 #d0141f}
+.l8red .l8m{right:244px}
+.l8red .l8h1{text-shadow:0 2px 0 #000}
+.l8red .l8pan{background:linear-gradient(180deg,rgba(40,42,52,.88),rgba(18,19,26,.9));border:0;border-top:3px solid #d0141f;box-shadow:0 8px 22px rgba(0,0,0,.6)}
+.l8red .l8area{background:linear-gradient(90deg,#8e0d15,#d0141f 65%,rgba(208,20,31,0))}
+.l8red .l8area .lg{color:#f2c9cc}
+.l8red .l8bd{text-shadow:0 2px 2px #000}
+.l8red .l8hr .dot{box-shadow:0 0 0 3px rgba(208,20,31,.75)}
+.l8red .l8wk .dn.we{background:#d0141f;color:#fff}
+.l8red .l8tab u i{background:#e3262f}.l8red .l8tabs{background:rgba(10,10,14,.6)}
+.l8red .l8band{background:linear-gradient(#2a2c35,#121319);border-top-color:#d0141f}
+.l8red .l8band .nw{background:#d0141f;color:#fff}
+.l8red .l8band .st em{color:#ff9aa0}
+.l8red .l8opt{background:linear-gradient(#2a2c35,#121319);border-color:#d0141f}.l8red .l8opt h3{background:linear-gradient(#d0141f,#8e0d15)}
+.l8red .l8side{display:flex;flex-direction:column;justify-content:center;position:absolute;right:24px;top:106px;width:204px;height:322px;padding:16px;box-sizing:border-box;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(232,232,236,.92));color:#111;border-top:4px solid #d0141f;box-shadow:0 8px 22px rgba(0,0,0,.6)}
+.l8side small{font:800 11px var(--ui);letter-spacing:.14em;color:#555;text-transform:uppercase}
+.l8side b{display:block;margin-top:6px;font:italic 900 30px/1 var(--display);color:#111;text-transform:uppercase}
+.l8side b+b{color:#d0141f}
+.l8side em{display:block;margin-top:10px;font:italic 700 13px/1.25 var(--ui);color:#333}
+.l8side .ev{margin-top:14px;padding:6px 8px;background:#d0141f;color:#fff;font:900 15px/1.2 var(--display);text-transform:uppercase}
+.l8side .ok{margin-top:14px;padding:6px 8px;background:#1d2029;color:#fff;font:800 14px/1.2 var(--ui)}
+.gaga .l8m{right:360px}.gaga .l8side{display:none!important}.gaga .l8lf .tx{-webkit-line-clamp:7}
 .gaga .rfull{right:360px!important}
 .gaga .wxbig{width:300px}.gaga .wxbig .tmp{font-size:92px}.gaga .wxbrow canvas{width:84px!important;height:68px!important}
 .gaga .wxside{left:336px;right:360px}.gaga .wxside .row{font-size:17px}
@@ -854,7 +993,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,twSrc:'built',newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
+const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,twSrc:'built',newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,wxRed:'auto',chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -960,6 +1099,7 @@ const ALLSETS=[
  {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
  {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
  {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz'],names:['Off','Seasonal','Smooth Jazz'],desc:'Music for NyxVision Weather (channel 4). Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.'},
+ {k:'wxRed',label:'Weather Red Mode',vals:['auto','on','off'],names:['Auto','On','Off'],desc:'Red Mode gives NyxVision Weather (channel 4) a dark storm-coverage look with red rings and the weather bulletin up front. Auto turns it on by itself when the National Weather Service issues a warning for your Weather Location. On channel 4 you can also press OK, or the red button if your remote has one.'},
  {k:'gcol',label:'Guide Colors',vals:[true,false],names:['On','Off'],desc:'Tints the guide by type: movies, series, news, sports, kids and music. On the guide’s top row, press ▲ to show just one type.'},
  {k:'walerts',label:'Weather Alerts',vals:[true,false],names:['On','Off'],desc:'When the National Weather Service issues a warning for your Weather Location, NyxVision interrupts what you’re watching with an alert and a red crawl. Watches show a crawl only. U.S. locations only.'},
  {k:'on8',label:'Local on the 8s',vals:[true,false],names:['On','Off'],desc:'Every ten minutes (at :08, :18, :28 and so on) a small local forecast slides into the corner of whatever you’re watching for 20 seconds.'},
@@ -1360,7 +1500,7 @@ function tune(ci){
   if(!has(ci))return;
   try{localStorage.setItem('cablebox-lastch',CH[ci].key)}catch(e){}
   if(ci===S.ch){S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
-  S.last=S.ch;S.ch=ci;S.nm=false;S.mid=null;S.nmenu=null;if(CH[ci].radar){S.wxT0=Date.now();S.wxSegLast=null}if(CH[ci].news){S.newsT0=Date.now();S.nwLast=null;if(NATIVE&&Date.now()-NEWSAT>10*MIN)loadNews()}S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
+  S.last=S.ch;S.ch=ci;S.nm=false;S.mid=null;S.nmenu=null;S.wxm=null;if(CH[ci].radar){S.wxT0=Date.now();S.wxSegLast=null}if(CH[ci].news){S.newsT0=Date.now();S.nwLast=null;if(NATIVE&&Date.now()-NEWSAT>10*MIN)loadNews()}S.staticUntil=performance.now()+(CH[ci].pluto?500:260);S.bannerUntil=Date.now()+SET.bannerSec*1000;snd.ch();render();applyStream();
   if(CH[ci].traffic){TT.hi=0;TT.hiAt=Date.now();setTimeout(()=>ttLoad(true),300)}
   if(SET.idents&&!CH[ci].radar&&!CH[ci].news&&!CH[ci].traffic&&S.screen==='watch'&&Date.now()-(S.lastBump||0)>15*MIN&&Math.random()<.5)setTimeout(showBump,900);
 }
@@ -1425,6 +1565,7 @@ function press(k){
   if(['games','chess','mice'].indexOf(S.screen)>=0&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){if(S.screen==='games')gamesKey(k);else if(S.screen==='chess')chessKey(k);else miceKey(k);return}
   if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].news&&newsKey(k))return;
   if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].tape&&tapeKey(k))return;
+  if(S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].radar&&wxKey(k))return;
   if(S.screen==='loc'&&!S.dialog){try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}locKey(k);return}
   if(S.screen==='boot'){if(k==='ok'&&performance.now()-BOOTSEQ.t0>800)endBoot();return}
   if(S.screen==='spterms'&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'){sptermsKey(k);return}
@@ -1511,7 +1652,7 @@ function press(k){
 document.addEventListener('keydown',e=>{
   if(window.CableNative)return;
   const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',Enter:'ok',' ':'ok',Escape:'back',Backspace:'back',
-    m:'menu',M:'menu',g:'guide',G:'guide',i:'info',I:'info',l:'last',L:'last',f:'fav',F:'fav',PageUp:'chup',PageDown:'chdn','+':'chup','-':'chdn',
+    m:'menu',M:'menu',g:'guide',G:'guide',i:'info',I:'info',l:'last',L:'last',f:'fav',F:'fav',r:'red',R:'red',PageUp:'chup',PageDown:'chdn','+':'chup','-':'chdn',
     MediaTrackNext:'chup',MediaTrackPrevious:'chdn',ContextMenu:'menu',GoBack:'back',BrowserBack:'back'};
   let k=map[e.key];if(!k&&/^[0-9]$/.test(e.key))k=e.key;
   if(e.keyCode===461)k='back'; // LG webOS back
@@ -1900,26 +2041,40 @@ async function loadWeather(){
     let ob=null;
     try{const st=JSON.parse(await http(pt.observationStations));const sid=st.features[0].properties.stationIdentifier;
       ob=JSON.parse(await http('https://api.weather.gov/stations/'+sid+'/observations/latest')).properties}catch(e){}
-    let alerts=[];
+    let alerts=[],alertEvents=[];
     try{const al=JSON.parse(await http('https://api.weather.gov/alerts/active?point='+LOC().lat+','+LOC().lon));
-      alerts=(al.features||[]).map(f=>f.properties.event+(f.properties.headline?': '+f.properties.headline:''))}catch(e){}
+      alerts=(al.features||[]).map(f=>f.properties.event+(f.properties.headline?': '+f.properties.headline:''));
+      alertEvents=(al.features||[]).map(f=>f.properties.event||'')}catch(e){}
     const num=v=>(v&&typeof v.value==='number')?v.value:null;
+    const pop=p=>p&&p.probabilityOfPrecipitation&&typeof p.probabilityOfPrecipitation.value==='number'?p.probabilityOfPrecipitation.value:null;
+    let hourly=null;
+    try{const hp=JSON.parse(await http(pt.forecastHourly)).properties.periods;
+      hourly=hp.filter(p=>Date.parse(p.endTime)>Date.now()).slice(0,13).map(p=>({t:Date.parse(p.startTime),temp:p.temperature,cond:wxCat(p.shortForecast),pop:pop(p)}))}catch(e){}
     const tC=ob&&num(ob.temperature);
     const p0=per[0];
+    const cF=c=>c==null?null:Math.round(c*9/5+32);
     const now={
       temp:tC!=null?Math.round(tC*9/5+32):p0.temperature,
       cond:wxCat((ob&&ob.textDescription)||p0.shortForecast),
       hum:ob&&num(ob.relativeHumidity)!=null?Math.round(num(ob.relativeHumidity))+'%':'—',
       wind:(ob&&num(ob.windSpeed)!=null)?((num(ob.windSpeed)<1?'Calm':(num(ob.windDirection)!=null?COMPASS[Math.round(num(ob.windDirection)/22.5)%16]+' ':'')+Math.round(num(ob.windSpeed)*0.621)+' mph')):(p0.windDirection+' '+p0.windSpeed),
-      baro:(ob&&num(ob.barometricPressure)!=null)?(num(ob.barometricPressure)*0.0002953).toFixed(2)+' in':'—'
+      baro:(ob&&num(ob.barometricPressure)!=null)?(num(ob.barometricPressure)*0.0002953).toFixed(2)+' in':'—',
+      dew:ob?cF(num(ob.dewpoint)):null,
+      vis:ob&&num(ob.visibility)!=null?Math.min(10,Math.round(num(ob.visibility)/1609.34))+' mi':'—',
+      gust:ob&&num(ob.windGust)!=null?Math.round(num(ob.windGust)*0.621)+' mph':'None',
+      feels:ob?(cF(num(ob.heatIndex))!=null?cF(num(ob.heatIndex)):cF(num(ob.windChill))):null,
+      day:!!p0.isDaytime
     };
-    const days=[];
-    for(let i=0;i<per.length&&days.length<5;i++){const p=per[i];
-      if(p.isDaytime){const night=per[i+1];days.push({name:days.length===0&&/today|this/i.test(p.name)?'Today':'#'+new Date(p.startTime).getDay(),hi:p.temperature,lo:night&&!night.isDaytime?night.temperature:null,cond:wxCat(p.shortForecast)})}
-      else if(i===0){days.push({name:'Tonight',hi:null,lo:p.temperature,cond:wxCat(p.shortForecast)})}
+    if(now.feels==null)now.feels=now.temp;
+    const week=[];
+    for(let i=0;i<per.length&&week.length<7;i++){const p=per[i];
+      if(p.isDaytime){const night=per[i+1];week.push({name:week.length===0&&/today|this/i.test(p.name)?'Today':'#'+new Date(p.startTime).getDay(),hi:p.temperature,lo:night&&!night.isDaytime?night.temperature:null,cond:wxCat(p.shortForecast)})}
+      else if(i===0){week.push({name:'Tonight',hi:null,lo:p.temperature,cond:wxCat(p.shortForecast)})}
     }
+    const days=week.slice(0,5);
+    const text=per.slice(0,3).map(p=>({name:p.name,temp:p.temperature,day:!!p.isDaytime,cond:wxCat(p.shortForecast),txt:p.detailedForecast||p.shortForecast||'',pop:pop(p)}));
     const tick=alerts.map(a=>'⚠ '+a.toUpperCase()).concat(per.slice(0,3).map(p=>p.name.toUpperCase()+': '+p.detailedForecast));
-    WX={now:now,days:days,ticker:tick,alerts:alerts.length,alertList:alerts,radar:pt.radarStation||null,src:'NWS',updated:Date.now()};WXERR=null;WXAT=Date.now();
+    WX={now:now,days:days,week:week,hourly:hourly,text:text,ticker:tick,alerts:alerts.length,alertList:alerts,alertEvents:alertEvents,radar:pt.radarStation||null,src:'NWS',updated:Date.now()};WXERR=null;WXAT=Date.now();
   }catch(e){try{WX=await loadOpenMeteo();WXERR=null;WXAT=Date.now()}catch(e2){WXERR='Couldn’t reach the National Weather Service. Showing the last forecast.';WXAT=Date.now()-25*MIN}}
   if(LOC()!==myLoc)return;
   const st=curRadar();if(st&&radarImg.src.indexOf('/'+st+'_')<0){radarSrc();radarFullSrc()}
@@ -1941,12 +2096,16 @@ function curRadar(){if(WX&&WX.radar)return WX.radar;const L=LOC();if(L.radar)ret
 const WMO=(c,day)=>c===0?(day?'Sunny':'Clear'):c===1?(day?'Mostly Sunny':'Clear'):c===2?'Partly Cloudy':c===3?'Cloudy':(c===45||c===48)?'Fog':(c>=51&&c<=67)||(c>=80&&c<=82)?'Showers':(c>=71&&c<=77)||c===85||c===86?'Snow':c>=95?'T-Storms':'Cloudy';
 async function loadOpenMeteo(){
   const L=LOC();
-  const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+L.lat+'&longitude='+L.lon+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,surface_pressure,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto&forecast_days=6'));
+  const j=JSON.parse(await http('https://api.open-meteo.com/v1/forecast?latitude='+L.lat+'&longitude='+L.lon+'&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,weather_code,is_day,dew_point_2m,apparent_temperature,visibility&hourly=temperature_2m,weather_code,precipitation_probability,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto&forecast_days=8'));
   const c=j.current,d=j.daily,ws=c.wind_speed_10m;
-  const days=d.time.slice(0,5).map((ts,i)=>({name:i===0?'Today':'#'+new Date(ts+'T12:00:00').getDay(),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i]),cond:WMO(d.weather_code[i],1)}));
+  const week=d.time.slice(0,7).map((ts,i)=>({name:i===0?'Today':'#'+new Date(ts+'T12:00:00').getDay(),hi:Math.round(d.temperature_2m_max[i]),lo:Math.round(d.temperature_2m_min[i]),cond:WMO(d.weather_code[i],1)}));
+  let hourly=null;try{const H=j.hourly,h0=Math.max(0,H.time.findIndex(t=>t>=c.time.slice(0,13)));
+    hourly=H.time.slice(h0,h0+13).map((t,k)=>({t:Date.parse(t),temp:Math.round(H.temperature_2m[h0+k]),cond:WMO(H.weather_code[h0+k],H.is_day[h0+k]),pop:H.precipitation_probability?H.precipitation_probability[h0+k]:null}))}catch(e){}
   return {now:{temp:Math.round(c.temperature_2m),cond:WMO(c.weather_code,c.is_day),hum:Math.round(c.relative_humidity_2m)+'%',
-      wind:ws<1?'Calm':COMPASS[Math.round(c.wind_direction_10m/22.5)%16]+' '+Math.round(ws)+' mph',baro:(c.surface_pressure*0.02953).toFixed(2)+' in'},
-    days:days,ticker:null,tickDays:true,alerts:0,alertList:[],radar:null,src:'Open-Meteo',updated:Date.now()};
+      wind:ws<1?'Calm':COMPASS[Math.round(c.wind_direction_10m/22.5)%16]+' '+Math.round(ws)+' mph',baro:(c.surface_pressure*0.02953).toFixed(2)+' in',
+      dew:c.dew_point_2m!=null?Math.round(c.dew_point_2m):null,vis:c.visibility!=null?Math.min(10,Math.round(c.visibility/(((j.current_units||{}).visibility==='ft')?5280:1609.34)))+' mi':'—',
+      gust:c.wind_gusts_10m!=null&&c.wind_gusts_10m>ws+5?Math.round(c.wind_gusts_10m)+' mph':'None',feels:c.apparent_temperature!=null?Math.round(c.apparent_temperature):Math.round(c.temperature_2m),day:!!c.is_day},
+    days:week.slice(0,5),week:week,hourly:hourly,text:null,ticker:null,tickDays:true,alerts:0,alertList:[],alertEvents:[],radar:null,src:'Open-Meteo',updated:Date.now()};
 }
 function wxTicker(W){
   if(!W.tickDays)return W.ticker;
@@ -2364,26 +2523,114 @@ function ttTick(){ttLoad(false);const v=ttView();if(v==='atl'&&SET.mkey&&Date.no
 
 /* ---------------- NyxVision Weather (channel 4) ---------------- */
 function nameWeatherChannel(){RADAR_CH.name=T('NyxVision Weather')}
-function wxSegs(){return ['radar','now','ext'].concat(WX&&WX.alerts?['alerts']:[])}
-function wxSeg(){const s=wxSegs();return s[Math.floor((Date.now()-(S.wxT0||0))/12000)%s.length]}
+/* Local on the 8s: a 2000s sky-panel look with modern gauges and graphs, plus a storm-coverage Red Mode */
+const L8SEG={intro:{n:'Local on the 8s',t:'Local',d:7},now:{n:'Current Conditions',t:'Now',d:10},radar:{n:'Doppler Radar',t:'Radar',d:12},hourly:{n:'Hourly Forecast',t:'Hourly',d:10},
+  local:{n:'Local Forecast',t:'Forecast',d:13},week:{n:'The Week Ahead',t:'Week',d:10},alerts:{n:'Weather Bulletin',t:'Bulletin',d:12}};
 const SEGNAME={radar:'Doppler Radar',now:'Current Conditions',ext:'Extended Forecast',alerts:'Weather Alerts'};
+const WXOPT=[{k:'wxRed',label:'Red Mode',vals:['auto','on','off'],names:['Auto','On','Off'],desc:'Auto turns red by itself when the National Weather Service issues a warning for your area.'},
+  {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz'],names:['Off','Seasonal','Smooth Jazz'],desc:''}];
+function wxEvents(){const ev=((WX&&WX.alertEvents)||[]).slice();try{(WAL.active||[]).forEach(a=>{if(a.event&&ev.indexOf(a.event)<0)ev.push(a.event)})}catch(e){}return ev}
+function wxAlertLines(){let L=[];try{L=(WAL.active||[]).map(a=>a.event+(a.headline?': '+a.headline:''))}catch(e){}return L.length?L:((WX&&WX.alertList)||[])}
+function wxRedAuto(){return wxEvents().some(e=>/warning/i.test(e))}
+function wxRedEvent(){const ev=wxEvents();return ev.find(e=>/warning/i.test(e))||ev[0]||''}
+function wxRed(){const m=SET.wxRed||'auto';return m==='on'||(m==='auto'&&wxRedAuto())}
+function wxSegs(){const W=WX,red=wxRed();if(!W)return ['intro','radar'];
+  const s=['intro','now','radar'];if(W.hourly&&W.hourly.length>4)s.push('hourly');if(W.text&&W.text.length)s.push('local');s.push('week');
+  if(red)s.splice(1,0,'alerts');else if(W.alerts||wxEvents().length)s.push('alerts');
+  return s}
+function wxSegInfo(){const s=wxSegs(),tot=s.reduce((a,k)=>a+L8SEG[k].d,0);let e=((Date.now()-(S.wxT0||0))/1000)%tot,i=0;while(i<s.length-1&&e>=L8SEG[s[i]].d){e-=L8SEG[s[i]].d;i++}return {list:s,i:i,seg:s[i],el:e,dur:L8SEG[s[i]].d}}
+function wxSeg(){return wxSegInfo().seg}
+function l8greet(){const h=new Date().getHours();return h<12?'Good Morning':h<17?'Good Afternoon':'Good Evening'}
+function l8clock(){const d=new Date(),s=d.getSeconds(),m=d.getMinutes()+s/60,hr=(d.getHours()%12)+m/60;let t='';
+  for(let i=0;i<12;i++){const a=i*Math.PI/6,r1=i%3?40:35;t+='<line x1="'+(50+Math.sin(a)*r1).toFixed(1)+'" y1="'+(50-Math.cos(a)*r1).toFixed(1)+'" x2="'+(50+Math.sin(a)*45).toFixed(1)+'" y2="'+(50-Math.cos(a)*45).toFixed(1)+'" stroke="#1d2b44" stroke-width="'+(i%3?1.6:3)+'"/>'}
+  return '<svg class="l8clock" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#f7f9fc"/>'+t+
+    '<line class="hh" x1="50" y1="55" x2="50" y2="27" stroke="#1d2b44" stroke-width="4.5" stroke-linecap="round" transform="rotate('+(hr*30)+' 50 50)"/>'+
+    '<line class="mh" x1="50" y1="57" x2="50" y2="13" stroke="#1d2b44" stroke-width="2.8" stroke-linecap="round" transform="rotate('+(m*6)+' 50 50)"/>'+
+    '<line class="sh" x1="50" y1="61" x2="50" y2="10" stroke="#d0141f" stroke-width="1.2" transform="rotate('+(s*6)+' 50 50)"/><circle cx="50" cy="50" r="3" fill="#d0141f"/></svg>'}
+function l8clockSet(){const c=ui.querySelector('.l8clock');if(!c)return;const d=new Date(),s=d.getSeconds(),m=d.getMinutes()+s/60,hr=(d.getHours()%12)+m/60;
+  c.querySelector('.hh').setAttribute('transform','rotate('+(hr*30)+' 50 50)');c.querySelector('.mh').setAttribute('transform','rotate('+(m*6)+' 50 50)');c.querySelector('.sh').setAttribute('transform','rotate('+(s*6)+' 50 50)')}
+function l8gauge(W,red){const f=W.now.temp,p=Math.max(0,Math.min(1,(f+10)/120)),R=86,C=2*Math.PI*R,arc=C*.75;
+  const col=red?'#e3262f':f>=90?'#ff6a1a':f>=70?'#ffa21a':f>=50?'#ffd21a':f>=32?'#7fd3ff':'#c8d4ff';
+  const ring=(c,len)=>'<circle cx="100" cy="100" r="'+R+'" fill="none" stroke="'+c+'" stroke-width="15" stroke-linecap="round" stroke-dasharray="'+len.toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(135 100 100)"/>';
+  return '<div class="l8gauge"><svg viewBox="0 0 200 200">'+ring('rgba(255,255,255,.3)',arc)+ring(col,Math.max(1,arc*p))+'</svg>'+
+    '<canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52"></canvas><div class="t">'+tU(f)+'°</div></div>'}
+function l8dn(n){return n==='Today'?T('Today'):n==='Tonight'?T('Tonight'):n[0]==='#'?dayName(+n.slice(1)):esc(n)}
+function l8hr(t){const h=new Date(t).getHours();return SET.clock24?String(h).padStart(2,'0'):(h%12||12)+(h<12?'a':'p')}
+function l8stats(W){const n=W.now;return [['Humidity',n.hum],['Dew Point',n.dew!=null?tU(n.dew)+'°':'—'],['Pressure',baroU(n.baro)],['Visibility',n.vis||'—'],['Wind',windU(n.wind)],['Feels Like',n.feels!=null?tU(n.feels)+'°':'—']]}
+function l8statHTML(){if(!WX)return esc(NATIVE?(WXERR?T('Weather unavailable right now.'):T('Loading weather…')):T('Live weather shows here on your TV.'));
+  const L=l8stats(WX),r=L[Math.floor(Date.now()/4000)%L.length];return '<em>'+esc(T(r[0]).toUpperCase())+'</em>'+esc(String(r[1]))}
+function l8redLabel(){const m=SET.wxRed||'auto',o=WXOPT[0];return T('Red Mode')+': '+T(o.names[o.vals.indexOf(m)])}
+function l8body(seg,W,red,L){const city=esc(L.short.split(',')[0]);
+  if(seg==='intro'){const ev=red?wxRedEvent():'';
+    return '<div class="l8intro">'+l8clock()+'<div class="l8hello"><b>'+T('Hello {0}',city)+'</b><span>'+(red?T('Severe weather coverage'):T('This is your local forecast'))+'</span>'+
+      '<em>'+(W?(red&&ev?esc(T(ev)):T('{0}° and {1} right now',tU(W.now.temp),T(W.now.cond).toLowerCase())):l8statHTML())+'</em></div></div>'}
+  if(seg==='radar'){const rs=curRadar();return '<div class="l8rad radar-full-slot"></div>'+((!rs||radarFullFail)?'<div class="wxnote" style="left:12px;top:40px">'+(rs?T('Sample radar · live loop unavailable'):T('Radar map not available for this location.'))+'</div>':'')}
+  if(!W)return '';
+  if(seg==='now'){return '<div class="l8now"><div class="l8nl">'+l8gauge(W,red)+'<div class="c">'+esc(T(W.now.cond))+'</div></div><div class="l8nr">'+
+    [['Humidity',W.now.hum],['Dew Point',W.now.dew!=null?tU(W.now.dew)+'°':'—'],['Pressure',baroU(W.now.baro)],['Visibility',W.now.vis||'—'],['Wind',windU(W.now.wind)],['Gusts',windU(T(W.now.gust||'None'))],['Feels Like',W.now.feels!=null?tU(W.now.feels)+'°':'—']]
+      .map(r=>'<div class="l8row"><span>'+T(r[0])+'</span>'+esc(String(r[1]))+'</div>').join('')+'</div></div>'}
+  if(seg==='hourly'){const H=W.hourly,step=H.length>=13?2:1,pts=[];for(let i=0;i<H.length&&pts.length<7;i+=step)pts.push(H[i]);
+    const n=pts.length,ts=pts.map(p=>tU(p.temp)),mn=Math.min.apply(null,ts),mx=Math.max.apply(null,ts),yy=v=>8+(1-(mx===mn?.5:(v-mn)/(mx-mn)))*84,xx=i=>(i+.5)/n*100;
+    return '<div class="l8hr"><div class="cols">'+pts.map((p,i)=>'<div class="col"><div class="tm">'+(i===0?T('Now'):l8hr(p.t))+'</div><canvas class="wxi" data-c="'+p.cond+'" width="64" height="52"></canvas>'+(p.pop>=20?'<div class="pp">'+T('{0}% rain',p.pop)+'</div>':'')+'</div>').join('')+'</div>'+
+      '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="top:128px"><polyline points="'+ts.map((v,i)=>xx(i).toFixed(2)+','+yy(v).toFixed(2)).join(' ')+'" fill="none" stroke="#fff" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>'+
+      '<div style="position:absolute;left:10px;right:10px;top:128px;height:110px">'+ts.map((v,i)=>'<i class="dot" style="left:'+xx(i).toFixed(2)+'%;top:'+yy(v).toFixed(2)+'%"></i><b class="tv" style="left:'+xx(i).toFixed(2)+'%;top:'+yy(v).toFixed(2)+'%">'+v+'°</b>').join('')+'</div></div>'}
+  if(seg==='local'){return '<div class="l8lf">'+W.text.map(p=>'<div class="p"><div class="ph"><b>'+esc(T(p.name))+'</b><canvas class="wxi" data-c="'+p.cond+'" width="64" height="52"></canvas></div>'+
+    '<div class="tp">'+tU(p.temp)+'°<small>'+T(p.day?'High':'Low')+'</small></div><div class="tx">'+esc(p.txt)+'</div></div>').join('')+'</div>'}
+  if(seg==='week'){const D=(W.week||W.days).slice(0,7);return '<div class="l8wk">'+D.map(x=>'<div class="d"><div class="dn'+(/^#(0|6)$/.test(x.name)?' we':'')+'">'+(x.name[0]==='#'?dayName(+x.name.slice(1)).slice(0,3):l8dn(x.name))+'</div>'+
+    '<canvas class="wxi" data-c="'+x.cond+'" width="64" height="52"></canvas><div class="c">'+esc(T(x.cond))+'</div><div class="hi">'+(x.hi!=null?tU(x.hi):'&nbsp;')+'</div><div class="lo">'+(x.lo!=null?tU(x.lo):'—')+'</div></div>').join('')+'</div>'}
+  if(seg==='alerts'){const A=wxAlertLines().slice(0,3);
+    return '<div class="l8bul"><div class="nws">⚠ '+T('National Weather Service').toUpperCase()+'</div>'+(A.length?A.map(a=>{const ix=String(a).indexOf(': ');const ev=a.slice(0,ix),hd=ix>0?a.slice(ix+2).replace(new RegExp('^'+ev.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i'),''):'';return '<p>'+(ix>0?'<b>'+esc(ev)+'</b> '+esc(firstSentence(hd,150)):'<b>'+esc(a)+'</b>')+'</p>'}).join(''):
+      '<p>'+T('No warnings or watches are in effect for {0} right now.',esc(L.short))+'</p><p style="font-size:17px;color:#d9d9e0">'+T('Red Mode is on. Press OK to change it.')+'</p>')+'</div>'}
+  return ''}
 function wxChannelHTML(){
-  const W=WX||null,seg=wxSeg(),L=LOC(),rs=curRadar();
-  let h='<div class="wxc"></div><div class="wxtop"><div class="wxbrand">'+catSvg(34)+'<b>'+T('NyxVision Weather')+'</b><span>'+esc(L.short)+'</span></div>'+
-    (THEME&&THEME.greet?'<div class="wxgreet">'+decoIcon(0,22)+' '+esc(THEME.greet)+' '+decoIcon(1,22)+'</div>':'')+'<div class="clk">'+clockStr()+'</div></div>'+
-    '<div class="wxseg"><b>'+T(SEGNAME[seg])+'</b><span class="dots">'+wxSegs().map(x=>'<i class="'+(x===seg?'on':'')+'"></i>').join('')+'</span></div>';
-  if(seg==='radar'){h+='<div class="rfull radar-full-slot" style="top:96px;bottom:84px;left:24px;right:24px;border:2px solid var(--k9ec0ff)"></div>';
-    if(!rs||radarFullFail)h+='<div class="wxnote">'+(rs?T('Sample radar · live loop unavailable'):T('Radar map not available for this location.'))+'</div>'}
-  else if(!W)h+='<div class="box bevel wxwait" style="left:200px;top:180px;width:520px"><h3>'+T('Your Local Forecast')+'</h3><p>'+(NATIVE?(WXERR?T('Weather unavailable right now.'):T('Loading weather…')):T('Live weather shows here on your TV.'))+'</p></div>';
-  else if(seg==='now'){const d=W.days[0];
-    h+='<div class="wxbig bevel"><div class="lbl">'+esc(L.label)+'</div><div class="wxbrow"><div class="tmp">'+tU(W.now.temp)+'°</div><canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52" style="width:150px;height:122px"></canvas></div><div class="cond">'+esc(W.now.cond)+'</div></div>'+
-      '<div class="wxside bevel">'+[['Humidity',W.now.hum],['Wind',esc(windU(W.now.wind))],['Barometer',baroU(W.now.baro)]].concat(d?[['Hi / Lo',(d.hi!=null?tU(d.hi)+'°':'—')+' / '+(d.lo!=null?tU(d.lo)+'°':'—')]]:[]).map(r=>'<div class="row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('')+'</div>'}
-  else if(seg==='ext'){h+='<div class="wxdays" style="left:24px;right:24px;top:110px;height:300px">'+W.days.map(x=>'<div class="wxd"><div class="dn">'+(x.name[0]==='#'?dayName(+x.name.slice(1)):esc(x.name))+'</div><canvas class="wxi" data-c="'+x.cond+'" width="64" height="52" style="width:88px;height:72px"></canvas><div class="c">'+x.cond+'</div><div class="hi2">'+(x.hi!=null?tU(x.hi)+'°':'—')+'</div><div class="lo">'+(x.lo!=null?tU(x.lo)+'°':'—')+'</div></div>').join('')+'</div>'}
-  else if(seg==='alerts'){h+='<div class="wxalert bevel"><h3>⚠ '+T('Weather Alerts')+'</h3>'+(W.alertList||[]).slice(0,4).map(a=>'<p>'+esc(a)+'</p>').join('')+'</div>'}
+  const W=WX||null,L=LOC(),red=wxRed(),info=wxSegInfo(),seg=info.seg,city=L.short.split(',')[0];
+  let h='<div class="l8x'+(red?' l8red':'')+'"><div class="l8bg"><i class="sun"></i><i class="rays"></i><i class="ring"></i><i class="ring2"></i><i class="cl1"></i></div>'+
+    '<div class="l8top"><div class="l8bug">'+catSvg(26)+'<span><span>NYX</span><span>'+T('WEATHER')+'</span></span><b>8</b></div><div class="l8city">'+esc(city)+'<span class="clk">'+clockStr()+'</span></div>'+
+    (THEME&&THEME.greet?'<div class="gr">'+decoIcon(0,20)+' '+esc(THEME.greet)+' '+decoIcon(1,20)+'</div>':'')+'</div>'+
+    '<div class="l8m"><div class="l8h1">'+(seg==='intro'?T(l8greet()):T(L8SEG[seg].n))+(seg==='radar'?'<small>'+T('Live Loop')+'</small>':'')+'</div>'+
+    '<div class="l8pan"><div class="l8area"><span>'+T('Greater {0} Area',esc(city))+'</span>'+(seg==='radar'?'<span class="lg">'+T('rain')+'<i style="background:linear-gradient(90deg,#2fbf3a,#f2e019,#e0353d)"></i>'+T('mix')+'<i style="background:#e05cc8"></i>'+T('snow')+'<i style="background:linear-gradient(90deg,#bfe3ff,#fff)"></i></span>':'')+'</div>'+
+    '<div class="l8bd">'+l8body(seg,W,red,L)+'</div></div></div>';
+  if(red){const ev=wxRedEvent(),w=ev?String(T(ev)).split(' '):[],sw=String(T('Severe Weather')).split(' '),b2=w.length?w.pop():sw.pop(),b1=w.length?w.join(' '):sw.join(' '),longest=Math.max.apply(null,(b1+' '+b2).split(' ').map(s=>s.length)),fs=Math.min(30,Math.floor(170/(longest*.8)));
+    h+='<div class="l8side"><small>'+T('Stay tuned for live coverage')+'</small><b style="font-size:'+fs+'px">'+esc(b1)+'</b><b style="font-size:'+fs+'px">'+esc(b2)+'</b><em>'+T('Storm coverage you can count on, from the NyxVision Weather Center.')+'</em>'+
+      (ev?'<div class="ev">'+esc(T('In effect for {0}',city))+'</div>':'<div class="ok">'+T('No warnings in effect right now')+'</div>')+'</div>'}
+  h+='<div class="l8tabs">'+info.list.map((k,i)=>'<div class="l8tab'+(i<info.i?' done':i===info.i?' on':'')+'">'+T(L8SEG[k].t)+'<u><i'+(i===info.i?' style="animation-duration:'+info.dur+'s;animation-delay:-'+info.el.toFixed(2)+'s"':'')+'></i></u></div>').join('')+'</div>';
+  h+='<div class="l8band"><span class="nw">'+T('NOW')+'</span><b>'+esc(city)+'</b>'+(W?'<canvas class="wxi" data-c="'+W.now.cond+'" width="64" height="52"></canvas><b>'+tU(W.now.temp)+'°</b>':'')+
+    '<span class="st">'+l8statHTML()+'</span><span class="l8chip" data-l8mus>♪ '+jazzLabel()+'</span><span class="l8chip red'+(red?'':' off')+'" data-l8red><i></i>'+l8redLabel()+'</span>'+(TOUCH?'':'<span class="l8hint">'+T('OK: Options')+'</span>')+'</div>';
   const tick=W?wxTicker(W):[T('Live weather shows here on your TV.')],txt=T('LOCAL WEATHER')+' • '+tick.map(esc).join(' • '),dur=Math.max(22,txt.length*.16);
-  h+='<div class="ticker wxtk'+(W&&W.alerts?' alert':'')+'"><div style="animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+((Date.now()/1000)%dur).toFixed(2)+'s">'+txt+'</div></div>'+
-    '<div class="rbot" style="bottom:52px"><span class="mus">♪ '+jazzLabel()+'</span><span>'+(TOUCH?T('Tap here for music'):T('OK to switch'))+'</span></div>';
-  return h}
+  h+='<div class="ticker wxtk'+(red||(W&&W.alerts)?' alert':'')+'"><div style="animation-duration:'+dur.toFixed(1)+'s;animation-delay:-'+((Date.now()/1000)%dur).toFixed(2)+'s">'+txt+'</div></div>';
+  if(S.wxm!=null){h+='<div class="l8opt"><h3>'+T('Weather Channel Options')+'</h3>'+WXOPT.map((o,i)=>{const vi=Math.max(0,o.vals.indexOf(SET[o.k]));return '<div class="r'+(i===S.wxm?' hi':'')+'" data-wxo="'+i+'"><span>'+T(o.label)+'</span><b>◀ '+T(o.names[vi])+' ▶</b></div>'}).join('')+
+    (WXOPT[S.wxm].desc?'<p>'+T(WXOPT[S.wxm].desc)+'</p>':'')+'<p>'+T('▲▼ choose · ◀▶ change · BACK closes')+'</p></div>'}
+  return h+'</div>'}
+function wxOptStep(o,d){let vi=o.vals.indexOf(SET[o.k]);if(vi<0)vi=0;vi=(vi+d+o.vals.length)%o.vals.length;SET[o.k]=o.vals[vi];save();snd.nav();
+  if(o.k==='music'){updateJazz();setTimeout(()=>{if(S.screen==='watch')render()},1200)}S.wxRedLast=wxRed();render()}
+function wxRedCycle(){wxOptStep(WXOPT[0],1);if(S.wxm==null)dialog(T('Red Mode'),T(WXOPT[0].names[WXOPT[0].vals.indexOf(SET.wxRed)]),1400)}
+function wxKey(k){
+  if(k==='red'){wxRedCycle();return true}
+  if(S.wxm==null){if(k==='ok'&&!(Date.now()<S.bannerUntil)){S.wxm=0;snd.ok();render();return true}return false}
+  if(k==='up'||k==='down'){S.wxm=(S.wxm+(k==='up'?-1:1)+WXOPT.length)%WXOPT.length;snd.nav();render();return true}
+  if(k==='left'||k==='right'||k==='ok'){wxOptStep(WXOPT[S.wxm],k==='left'?-1:1);return true}
+  if(k==='back'){S.wxm=null;snd.back();render();return true}
+  S.wxm=null;render();return false}
+(function(){const add=(lang,o)=>{const D=I18N[lang];if(D)Object.keys(o).forEach(k=>{if(!(k in D))D[k]=o[k]})};
+add('fr',{'Hourly Forecast':'Prévisions horaires','The Week Ahead':'La semaine à venir','Weather Bulletin':'Bulletin météo','Good Morning':'Bonjour','Good Afternoon':'Bon après-midi','Good Evening':'Bonsoir',
+'Hello {0}':'Bonjour {0}','This is your local forecast':'Voici vos prévisions locales','{0}° and {1} right now':'{0}° et {1} en ce moment','Greater {0} Area':'Région de {0}','Dew Point':'Point de rosée','Pressure':'Pression','Visibility':'Visibilité',
+'Gusts':'Rafales','Feels Like':'Ressenti','None':'Aucune','Live Loop':'Boucle en direct','rain':'pluie','mix':'mixte','snow':'neige','High':'Max','Low':'Min','{0}% rain':'{0}% pluie','Now':'Maint.','Local':'Local','Radar':'Radar','Hourly':'Horaire','Forecast':'Prévisions','Week':'Semaine','Bulletin':'Bulletin',
+'National Weather Service':'Service météo national','No warnings or watches are in effect for {0} right now.':'Aucun avertissement ni veille en vigueur pour {0} en ce moment.','Red Mode is on. Press OK to change it.':'Le mode rouge est activé. Appuyez sur OK pour le changer.',
+'Red Mode':'Mode rouge','Weather Red Mode':'Mode rouge météo','Auto':'Auto','On':'Activé','Off':'Désactivé','OK: Options':'OK : options','Weather Channel Options':'Options du canal météo','Severe weather coverage':'Couverture du temps violent',
+'Stay tuned for live coverage':'Restez à l’écoute','Severe Weather':'Temps violent','Storm coverage you can count on, from the NyxVision Weather Center.':'Une couverture des tempêtes fiable, du centre météo NyxVision.','No warnings in effect right now':'Aucun avertissement en ce moment',
+'In effect for {0}':'En vigueur pour {0}','▲▼ choose · ◀▶ change · BACK closes':'▲▼ choisir · ◀▶ changer · RETOUR ferme','Auto turns red by itself when the National Weather Service issues a warning for your area.':'Auto passe au rouge tout seul quand le Service météo national émet un avertissement pour votre région.',
+'NOW':'MAINT.','WEATHER':'MÉTÉO','Smooth Jazz':'Jazz doux','Weather Channel Music':'Musique du canal météo',
+'Red Mode gives NyxVision Weather (channel 4) a dark storm-coverage look with red rings and the weather bulletin up front. Auto turns it on by itself when the National Weather Service issues a warning for your Weather Location. On channel 4 you can also press OK, or the red button if your remote has one.':'Le mode rouge donne à NyxVision Météo (canal 4) un look sombre de couverture des tempêtes, avec des anneaux rouges et le bulletin météo en premier. Auto l’active tout seul quand le Service météo national émet un avertissement pour votre lieu météo. Sur le canal 4, appuyez aussi sur OK, ou sur le bouton rouge si votre télécommande en a un.'});
+add('es',{'Hourly Forecast':'Pronóstico por hora','The Week Ahead':'La semana que viene','Weather Bulletin':'Boletín del tiempo','Good Morning':'Buenos días','Good Afternoon':'Buenas tardes','Good Evening':'Buenas noches',
+'Hello {0}':'Hola, {0}','This is your local forecast':'Este es su pronóstico local','{0}° and {1} right now':'{0}° y {1} ahora mismo','Greater {0} Area':'Área de {0}','Dew Point':'Punto de rocío','Pressure':'Presión','Visibility':'Visibilidad',
+'Gusts':'Ráfagas','Feels Like':'Sensación','None':'Ninguna','Live Loop':'Animación en vivo','rain':'lluvia','mix':'mixta','snow':'nieve','High':'Máx','Low':'Mín','{0}% rain':'{0}% lluvia','Now':'Ahora','Local':'Local','Radar':'Radar','Hourly':'Por hora','Forecast':'Pronóstico','Week':'Semana','Bulletin':'Boletín',
+'National Weather Service':'Servicio Meteorológico Nacional','No warnings or watches are in effect for {0} right now.':'No hay avisos ni vigilancias para {0} en este momento.','Red Mode is on. Press OK to change it.':'El modo rojo está activado. Pulse OK para cambiarlo.',
+'Red Mode':'Modo rojo','Weather Red Mode':'Modo rojo del tiempo','Auto':'Auto','On':'Activado','Off':'Desactivado','OK: Options':'OK: opciones','Weather Channel Options':'Opciones del canal del tiempo','Severe weather coverage':'Cobertura de tiempo severo',
+'Stay tuned for live coverage':'Siga con nosotros','Severe Weather':'Tiempo severo','Storm coverage you can count on, from the NyxVision Weather Center.':'Cobertura de tormentas confiable, desde el Centro del Tiempo de NyxVision.','No warnings in effect right now':'No hay avisos en este momento',
+'In effect for {0}':'En vigor para {0}','▲▼ choose · ◀▶ change · BACK closes':'▲▼ elegir · ◀▶ cambiar · ATRÁS cierra','Auto turns red by itself when the National Weather Service issues a warning for your area.':'Auto se pone en rojo solo cuando el Servicio Meteorológico Nacional emite un aviso para su área.',
+'NOW':'AHORA','WEATHER':'TIEMPO','Smooth Jazz':'Jazz suave','Weather Channel Music':'Música del canal del tiempo',
+'Red Mode gives NyxVision Weather (channel 4) a dark storm-coverage look with red rings and the weather bulletin up front. Auto turns it on by itself when the National Weather Service issues a warning for your Weather Location. On channel 4 you can also press OK, or the red button if your remote has one.':'El modo rojo le da a NyxVision Tiempo (canal 4) un aspecto oscuro de cobertura de tormentas, con anillos rojos y el boletín primero. Auto lo activa solo cuando el Servicio Meteorológico Nacional emite un aviso para su ubicación. En el canal 4 también puede pulsar OK, o el botón rojo si su control lo tiene.'});
+})();
 function catSvg(sz){const m=hdr.toString().match(/<svg class=\\?"cat\\?"[\s\S]*?<\/svg>/);if(!m)return '';return m[0].replace(/\\"/g,'"').replace('width="32" height="30"','width="'+sz+'" height="'+Math.round(sz*30/32)+'"')}
 
 /* ---------------- Pluto TV listings ---------------- */
@@ -3088,7 +3335,7 @@ function eggLeafScene(x,t){
 
 const _catHead=catHead;catHead=function(x,o){_catHead(x,o);drawHat(x,o&&o.hat)};
 function wxTick(){if(S.screen!=='watch'||!has(S.ch))return;
-  if(CH[S.ch].radar){const sg=wxSeg();if(sg!==S.wxSegLast){S.wxSegLast=sg;render()}return}
+  if(CH[S.ch].radar){const sg=wxSeg(),rd=wxRed();if(sg!==S.wxSegLast||rd!==S.wxRedLast){S.wxSegLast=sg;S.wxRedLast=rd;render();return}l8clockSet();const st=ui.querySelector('.l8band .st');if(st){const x=l8statHTML();if(st.innerHTML!==x)st.innerHTML=x}return}
   if(CH[S.ch].traffic){ttTick();return}
   if(CH[S.ch].preview){const pi=Math.floor(Date.now()/8000);if(pi!==S.pvLast){S.pvLast=pi;render()}return}
   if(CH[S.ch].movies){const m=movPlaying(),want=m?m.id:null,have=PLAY.on?PLAY.mid||null:null;if(want!==have){applyStream();render()}if(NATIVE&&!MOV.busy&&(!MOV.sched.length||String(movDayStart())!==MOV.day||MOV.sched[MOV.sched.length-1].end<Date.now()+20*3600000)&&Date.now()-(MOV.tried||0)>120000){MOV.tried=Date.now();loadMovies()}}
@@ -3153,6 +3400,10 @@ function tapAt(el,x){
     if(S.nm){if(el.closest('.nnqr'))return;const b=stage.getBoundingClientRect();press(x<b.left+b.width*.33?'left':x>b.left+b.width*.67?'right':'ok');return}
     if(el.closest('.nnimg,.nntext,.nnhint')){press('ok');return}showTbar();press('info');return}
   if(sc==='watch'&&has(S.ch)&&CH[S.ch].traffic&&!el.closest('.banner')){if(el.closest('.ttmap,.ttpan,.wxseg')){S.bannerUntil=0;press('ok');return}showTbar();press('info');return}
+  if(sc==='watch'&&has(S.ch)&&CH[S.ch].radar&&!el.closest('.banner')){
+    if(el.closest('[data-l8red]')){wxRedCycle();return}
+    if(el.closest('[data-l8mus]')){wxOptStep(WXOPT[1],1);return}
+    if(S.wxm!=null){const r=el.closest('[data-wxo]');if(r){S.wxm=+r.dataset.wxo;wxOptStep(WXOPT[S.wxm],1)}else{S.wxm=null;render()}return}}
   if(sc==='watch'){if(el.closest('.rbot')||el.closest('.ppvc')){press('ok');return}if(el.closest('.banner')){press('guide');return}showTbar();press('info');return}
   if(sc==='wx'){press('back');return}
   if(sc==='home'){
