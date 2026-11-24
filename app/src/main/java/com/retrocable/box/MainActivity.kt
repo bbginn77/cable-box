@@ -24,6 +24,7 @@ import android.media.MediaPlayer
 import android.util.Base64
 import android.net.Uri
 import android.os.Bundle
+import android.os.SystemClock
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.SurfaceView
@@ -301,15 +302,27 @@ go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++)
         else -> null   // volume, mute, home, input etc. keep working normally
     }
 
+    // Holding a remote button fires about 20 repeats a second. Each one redraws the page, and the
+    // onn stick falls behind: the highlight keeps sliding after you let go. A repeat is skipped while
+    // the last press is still being drawn, and repeats go through at most about 9 a second.
+    private var keyBusy = false
+    private var lastRepeatAt = 0L
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         val name = keyName(event.keyCode) ?: return super.dispatchKeyEvent(event)
+        val repeat = event.repeatCount > 0
         if (event.action == KeyEvent.ACTION_DOWN) {
-            web.evaluateJavascript("window.cable&&cable.press('$name')", null)
+            val now = SystemClock.uptimeMillis()
+            if (repeat && (keyBusy || now - lastRepeatAt < 110)) return true
+            if (repeat) lastRepeatAt = now
+            keyBusy = true
+            web.evaluateJavascript("window.cable&&cable.press('$name')") { keyBusy = false }
         }
         // Also hand the page a real copy of the key press. Android's web view only lets a page
         // start sound (the radar channel's jazz) after a genuine button press; the page ignores
-        // these copies, so nothing happens twice. Back and Menu stay with the app.
-        if (name != "back" && name != "menu") web.dispatchKeyEvent(event)
+        // these copies, so nothing happens twice. Back and Menu stay with the app. Repeats are
+        // not copied: one real press is enough, and the extra copies only cost time.
+        if (name != "back" && name != "menu" && !repeat) web.dispatchKeyEvent(event)
         return true
     }
 
@@ -394,6 +407,22 @@ go.onclick=async()=>{go.disabled=true;let ok=0;for(let i=0;i<f.files.length;i++)
 
     /** Methods the web interface can call. */
     inner class Bridge {
+
+        /** Settings > Refresh NyxVision (and after a long sleep): clears the web cache and any
+         *  leftover update download, stops background audio and video, and reloads the page.
+         *  Settings, favorites and keys live in the page's storage and are kept. */
+        @JavascriptInterface
+        fun refreshApp() {
+            runOnUiThread {
+                try { File(cacheDir, "nyxvision-update.apk").delete() } catch (e: Exception) {}
+                try { this@MainActivity.stopStream() } catch (e: Exception) {}
+                try { stopJazz() } catch (e: Exception) {}
+                try { twStop() } catch (e: Exception) {}
+                keyBusy = false
+                web.clearCache(true)
+                web.reload()
+            }
+        }
 
         @JavascriptInterface
         fun installedApps(): String {

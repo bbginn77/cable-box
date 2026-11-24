@@ -856,13 +856,39 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 .tv .screen{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0;background:transparent}
 @media (prefers-reduced-motion:reduce){.ticker div,.wait{animation:none}}
 </style>
-<style>html,body{margin:0}body{font-size:14px}[hidden]{display:none!important}</style>
+<style>html,body{margin:0}body{font-size:14px}[hidden]{display:none!important}/* Frutiger Aero look (Settings > Themes & Colors). Gloss is plain gradients, no backdrop blur, so the onn stick stays smooth */
+.aero .bg{background:radial-gradient(130% 55% at 50% 122%,#8ad957 0 40%,#46a532 55%,rgba(70,165,50,0) 56%),radial-gradient(70% 30% at 30% 44%,rgba(255,255,255,.45),rgba(255,255,255,0) 70%),radial-gradient(55% 22% at 72% 52%,rgba(200,255,180,.35),rgba(200,255,180,0) 70%),radial-gradient(50% 40% at 82% 6%,rgba(255,255,255,.6),rgba(255,255,255,0) 70%),linear-gradient(180deg,#1f86dc 0%,#4fb6f2 45%,#a6e2ff 75%,#dff6ff 100%)}
+.aero .bg .deco{opacity:.75}
+.aero .hdr,.aero .rtop{background:linear-gradient(180deg,rgba(255,255,255,.5) 0,rgba(255,255,255,.14) 48%,rgba(255,255,255,0) 50%),linear-gradient(#3aa8ec,#0d5fb0);border-bottom:1px solid rgba(255,255,255,.9);box-shadow:0 3px 10px rgba(0,40,90,.35)}
+.aero .brand b,.aero .hdr .title,.aero .clk,.aero .rtop b{text-shadow:0 1px 3px rgba(0,30,80,.7)}
+.aero .mi{border-radius:12px;border:1px solid rgba(255,255,255,.8);background:linear-gradient(180deg,rgba(255,255,255,.5) 0,rgba(255,255,255,.14) 48%,rgba(255,255,255,0) 50%),linear-gradient(#2f8fdc,#0e4f9c);box-shadow:0 2px 6px rgba(0,30,80,.35),inset 0 -3px 6px rgba(120,220,255,.35);text-shadow:0 1px 2px rgba(0,30,80,.6)}
+.aero .mi.hi{background:linear-gradient(180deg,rgba(255,255,255,.75) 0,rgba(255,255,255,.28) 48%,rgba(255,255,255,0) 50%),linear-gradient(#c4f77a,#53b02b);border-color:#f4ffe6;color:#0b3a10;text-shadow:0 1px 0 rgba(255,255,255,.5);box-shadow:0 0 0 2px rgba(255,255,255,.65),0 0 14px rgba(170,255,120,.85)}
+.aero .mi.hi .n,.aero .mi.hi .star{color:#174d12}
+.aero .bevel{border:1px solid rgba(255,255,255,.85);border-radius:14px;overflow:hidden}
+.aero .box,.aero .gtext,.aero .dlg{border-radius:14px;border:1px solid rgba(255,255,255,.85);background:linear-gradient(180deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.08) 38%,rgba(255,255,255,0) 39%),linear-gradient(rgba(20,104,186,.93),rgba(8,58,128,.95));box-shadow:0 6px 18px rgba(0,30,80,.4)}
+.aero .dlg{overflow:hidden}
+.aero .dlg .t,.aero .cell.hi{background:linear-gradient(180deg,rgba(255,255,255,.75) 0,rgba(255,255,255,.28) 48%,rgba(255,255,255,0) 50%),linear-gradient(#c4f77a,#53b02b);color:#0b3a10;text-shadow:none}
+.aero .banner{border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.9);background:linear-gradient(180deg,rgba(255,255,255,.38) 0,rgba(255,255,255,.1) 45%,rgba(255,255,255,0) 46%),linear-gradient(#2a8fe0,#0b4f9e);box-shadow:0 8px 24px rgba(0,30,80,.5)}
+.aero .banner .num{background:linear-gradient(#1f7fd0,#0a3f86);border-right:1px solid rgba(255,255,255,.5)}
+.aero .prog{border-radius:6px;overflow:hidden;border-color:rgba(255,255,255,.85)}
+.aero .prog div{background:linear-gradient(#e0ffb0,#5cc22f)}
+.aero .ftr{background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.06) 50%,rgba(255,255,255,0) 51%),linear-gradient(#0f5aa8,#07346e);border-top:1px solid rgba(255,255,255,.85)}
+.aero .ftr i{border-radius:8px;background:linear-gradient(#6cc6ff,#1a6fc4);border-color:#fff}
+.aero .cell,.aero .gch{border-radius:8px}
+.aero .cell{border:1px solid rgba(255,255,255,.55);background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.05) 50%,rgba(255,255,255,0) 51%),var(--cell)}
+.aero .cell.now{background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.08) 50%,rgba(255,255,255,0) 51%),var(--cellNow)}
+.aero .cell.hi{border-color:#f4ffe6;box-shadow:0 0 10px rgba(170,255,120,.8)}
+.aero .trow .s{background:linear-gradient(180deg,rgba(255,255,255,.5) 0,rgba(255,255,255,.14) 48%,rgba(255,255,255,0) 50%),linear-gradient(#3aa8ec,#0d5fb0)}
+.aero .sw{border-radius:50%}
+</style>
 </head>
 <body>
 
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
+    <radialGradient id="aerobg" cx="50%" cy="55%" r="50%"><stop offset="0" stop-color="#d8f8ff" stop-opacity=".08"/><stop offset=".72" stop-color="#8fe0ff" stop-opacity=".28"/><stop offset="1" stop-color="#ffffff" stop-opacity=".95"/></radialGradient>
+    <symbol id="aerobub" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="url(#aerobg)" stroke="#fff" stroke-opacity=".85" stroke-width="2"/><ellipse cx="34" cy="28" rx="17" ry="9" transform="rotate(-32 34 28)" fill="#fff" fill-opacity=".9"/><circle cx="71" cy="73" r="5" fill="#fff" fill-opacity=".55"/></symbol>
     <symbol id="leaf" viewBox="0 0 100 100"><path d="M50 4 L57 24 L70 16 L66 37 L86 31 L77 47 L94 54 L73 62 L78 77 L58 69 L53 88 L50 90 L47 88 L42 69 L22 77 L27 62 L6 54 L23 47 L14 31 L34 37 L30 16 L43 24 Z"/><path d="M50 88 L50 99" stroke="#5a3010" stroke-width="4" stroke-linecap="round"/></symbol>
     <symbol id="oak" viewBox="0 0 60 100"><path d="M30 4 C38 10 44 14 40 22 C50 22 54 30 44 36 C54 40 54 50 42 52 C52 58 50 68 38 68 C42 78 36 84 30 88 C24 84 18 78 22 68 C10 68 8 58 18 52 C6 50 6 40 16 36 C6 30 10 22 20 22 C16 14 22 10 30 4 Z"/><path d="M30 86 L30 99" stroke="#5a3010" stroke-width="4" stroke-linecap="round"/></symbol>
     <symbol id="pumpkin" viewBox="0 0 100 90"><path d="M48 16 C46 8 50 3 58 2 L60 7 C55 8 53 11 54 17 Z" fill="#4e6b1f"/><ellipse cx="30" cy="54" rx="24" ry="32" fill="#c9561a"/><ellipse cx="70" cy="54" rx="24" ry="32" fill="#c9561a"/><ellipse cx="50" cy="54" rx="22" ry="34" fill="#e0701f"/><path d="M50 22 C44 40 44 70 50 88 M50 22 C56 40 56 70 50 88" stroke="#a8440f" stroke-width="3" fill="none"/><path d="M60 14 C70 6 80 12 74 20" stroke="#4e6b1f" stroke-width="3" fill="none"/></symbol>
@@ -994,7 +1020,7 @@ function progAt(ci,t){const s=CH[ci].sched;for(const p of s){if(t>=p.start&&t<p.
 function nextProg(ci,p){const s=CH[ci].sched;const i=s.indexOf(p);return s[i+1]||p}
 
 /* ---------------- state & settings ---------------- */
-const DEF={sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,twSrc:'built',newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,wxRed:'auto',chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
+const DEF={aero:false,sound:true,clock24:false,bannerSec:5,parental:false,guideFav:false,pluto:true,plutoCount:50,plutoPlay:'box',themesOn:true,themeState:{},jazz:false,music:'off',idents:true,gdl:true,twSrc:'built',newsVid:'abc',toonAds:'yt',vremote:true,ppv:true,walerts:true,on8:true,wxRed:'auto',chessLv:2,racecall:true,bop:true,scoreAlerts:true,teams:[],leagues:{nfl:true,cfb:true,nba:true,nhl:true,mlb:true},gcol:true,loc:null,lang:'en',region:'us'};
 CH.forEach(c=>c.key='v'+c.n);
 // Channel 4: live Doppler radar loop for metro Atlanta (National Weather Service)
 const RADAR_CH={n:4,call:'WXNV',name:'NyxVision Weather',g:'radar',scene:'radar',radar:true,key:'radar',sched:[]};
@@ -1099,6 +1125,7 @@ const ALLSETS=[
  {k:'gdl',label:'Daily Guide Download',vals:[true,false],names:['On','Off'],desc:'Once a day, the first time NyxVision starts, it shows the old “Updating Program Guide” screen while the listings, weather and movies load. Press OK to skip it.'},
  {k:'gdlnow',label:'Update Program Guide Now',action:true,desc:'Runs the guide data download screen right now.'},
  {k:'ppv',label:'Classic Theater Pay-Per-View',vals:[true,false],names:['On','Off'],desc:'Channel 7 asks you to “order” each movie, the way pay-per-view worked on a 2000s cable box: the box dials out and confirms your order. It’s free and nothing is really ordered. Off plays movies straight away.'},
+ {k:'aero',label:'Frutiger Aero Look',vals:[false,true],names:['Off','On'],desc:'A glossy sky-and-bubbles look from the late 2000s: glassy blue panels, lime-green highlights and floating bubbles. While it’s on, holiday themes wait; turn it off and they come back.'},
  {k:'themes',label:'Holiday Themes',action:true,desc:'Choose which holiday looks turn on by themselves, turn any of them off, or put one on right now.'},
  {k:'music',label:'Weather Channel Music',vals:['off','auto','jazz','mine'],names:['Off','Seasonal','Smooth Jazz','My Music'],desc:'Music for NyxVision Weather (channel 4). My Music plays the files you sent from your phone (Send Weather Music, under TV & Guide), in filename order. Seasonal follows the holiday theme: Lady Gaga’s official videos (through YouTube) during Pride Month, winter bells at Christmas, a spooky organ at Halloween, harvest folk in the fall, a party mix on birthdays and celebrations, and smooth jazz the rest of the time.'},
  {k:'wxRed',label:'Weather Red Mode',vals:['auto','on','off'],names:['Auto','On','Off'],desc:'Red Mode gives NyxVision Weather (channel 4) a dark storm-coverage look with red rings and the weather bulletin up front. Auto turns it on by itself when the National Weather Service issues a warning for your Weather Location. On channel 4 you can also press OK, or the red button if your remote has one.'},
@@ -1116,6 +1143,7 @@ const ALLSETS=[
  {k:'sports',label:'Sports Scores',action:true,desc:'Choose leagues for the scores ticker and pick your teams for score alerts.'},
  {k:'tests',label:'Test Center',action:true,desc:'Try weather alerts, race calls and sports alerts. Each test runs on a random channel and is clearly marked as a test.'},
  {k:'idents',label:'Station IDs',vals:[true,false],names:['On','Off'],desc:'Short NyxVision station breaks now and then when you change channels, and at the top and bottom of the hour.'},
+ {k:'refresh',label:'Refresh NyxVision',action:true,desc:'Feels slow or stuck? This clears old cached data and leftover update files, then restarts the box fresh. Your settings, favorites, keys and weather location stay. NyxVision also does this by itself after sleeping 6+ hours.'},
  {k:'update',label:'Check for Updates',action:true,desc:'Looks for a newer NyxVision on GitHub. If there is one, NyxVision downloads it and opens the installer. Your settings and favorites carry over.'},
  {k:'about',label:'About NyxVision',action:true,desc:'NyxVision digital cable, named after Nyx the Siamese cat.'},
  {k:'reset',label:'Restore Defaults',action:true,desc:'Put every setting and favorite back the way it shipped. Asks first, and keeps your service keys and weather location.'}
@@ -1123,10 +1151,10 @@ const ALLSETS=[
 // Settings are grouped: a short top menu, with submenus for alerts, looks, TV options and service keys
 const SGROUPS=[
  {k:'g_alerts',label:'Alerts & Tickers',action:true,group:true,desc:'Weather alerts, election night race calls and the Balance of Power bar, sports scores, and the Test Center.',rows:['walerts','on8','racecall','sports','tests']},
- {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'Holiday themes, guide colors, weather channel music and station IDs.',rows:['themes','gcol','music','idents']},
+ {k:'g_look',label:'Themes & Colors',action:true,group:true,desc:'The Frutiger Aero look, holiday themes, guide colors, weather channel music and station IDs.',rows:['aero','themes','gcol','music','idents']},
  {k:'g_tv',label:'TV & Guide',action:true,group:true,desc:'Navigation sounds, clock, channel banner, parental controls, Pluto TV options, pay-per-view and the guide download.',rows:['sound','clock24','bannerSec','parental','guideFav','pluto','plutoPlay','plutoCount','newsVid','toonAds','twSrc','twsend','twstat','ppv','gdl','gdlnow']},
  {k:'g_keys',label:'Service Keys',action:true,group:true,desc:'Free keys that unlock live data: MARTA trains and TomTom traffic on channel 6, and Spotify on channel 8.',rows:['mkey','pkey','tkey','skey','spterms','spdisc']}];
-const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','update','about','reset'];
+const STOP=['lang','region','vremote','loc','g_alerts','g_look','g_tv','g_keys','refresh','update','about','reset'];
 const SETS=[];
 function setGroup(g){SETS.length=0;const G=g&&SGROUPS.find(x=>x.k===g),touch=!!(window.__vremTest||window.CableNative&&window.CableNative.isTouch&&window.CableNative.isTouch());(G?G.rows:STOP).forEach(k=>{if(k==='vremote'&&!touch)return;const r=ALLSETS.find(x=>x.k===k)||SGROUPS.find(x=>x.k===k);if(r)SETS.push(r)})}
 setGroup(null);
@@ -1208,7 +1236,7 @@ fr:{
 'Language':'Langue','Region':'Région',
 'Navigation Sounds':'Sons de navigation','Clock Format':'Format de l’heure','Channel Banner':'Bandeau de chaîne','Parental Controls':'Contrôle parental',
 'Pluto TV Listings':'Horaire Pluto TV','Pluto TV Plays In':'Pluto TV joue dans','Pluto Channels':'Chaînes Pluto','Radar Channel Music':'Musique du canal radar',
-'Check for Updates':'Rechercher les mises à jour','About NyxVision':'À propos de NyxVision','Restore Defaults':'Rétablir les réglages',
+'Check for Updates':'Rechercher les mises à jour','About NyxVision':'À propos de NyxVision','Restore Defaults':'Rétablir les réglages','Frutiger Aero Look':'Style Frutiger Aero','Refresh NyxVision':'Actualiser NyxVision','Refresh NyxVision?':'Actualiser NyxVision?','Refreshing…':'Actualisation…','Restarting NyxVision…':'Redémarrage de NyxVision…','Press OK to refresh, or BACK to cancel.':'Appuyez sur OK pour actualiser, ou RETOUR pour annuler.','NyxVision clears old cached data and restarts. Your settings, favorites, keys and weather location stay.':'NyxVision efface les anciennes données en cache et redémarre. Vos réglages, favoris, clés et lieu météo sont conservés.',
 'On':'Activé','Off':'Désactivé','12-Hour':'12 heures','24-Hour':'24 heures','3 sec':'3 s','5 sec':'5 s','8 sec':'8 s','All Channels':'Toutes les chaînes',
 'Pluto TV App':'Appli Pluto TV','Top 50':'50 premières','All':'Toutes','Smooth Jazz':'Jazz doux',
 '🇺🇸 United States':'🇺🇸 États-Unis','🇨🇦 Canada':'🇨🇦 Canada',
@@ -1365,7 +1393,7 @@ es:{
 'Language':'Idioma','Region':'Región',
 'Navigation Sounds':'Sonidos de navegación','Clock Format':'Formato de hora','Channel Banner':'Banner de canal','Parental Controls':'Control parental',
 'Pluto TV Listings':'Programación de Pluto TV','Pluto TV Plays In':'Pluto TV se ve en','Pluto Channels':'Canales de Pluto','Radar Channel Music':'Música del canal de radar',
-'Check for Updates':'Buscar actualizaciones','About NyxVision':'Acerca de NyxVision','Restore Defaults':'Restablecer valores',
+'Check for Updates':'Buscar actualizaciones','About NyxVision':'Acerca de NyxVision','Restore Defaults':'Restablecer valores','Frutiger Aero Look':'Estilo Frutiger Aero','Refresh NyxVision':'Actualizar NyxVision','Refresh NyxVision?':'¿Actualizar NyxVision?','Refreshing…':'Actualizando…','Restarting NyxVision…':'Reiniciando NyxVision…','Press OK to refresh, or BACK to cancel.':'Pulse OK para actualizar, o ATRÁS para cancelar.','NyxVision clears old cached data and restarts. Your settings, favorites, keys and weather location stay.':'NyxVision borra los datos antiguos en caché y se reinicia. Se conservan sus ajustes, favoritos, claves y ubicación del clima.',
 'On':'Sí','Off':'No','12-Hour':'12 horas','24-Hour':'24 horas','3 sec':'3 s','5 sec':'5 s','8 sec':'8 s','All Channels':'Todos los canales',
 'Pluto TV App':'App de Pluto TV','Top 50':'Los 50 primeros','All':'Todos','Smooth Jazz':'Jazz suave',
 '🇺🇸 United States':'🇺🇸 Estados Unidos','🇨🇦 Canada':'🇨🇦 Canadá',
@@ -1637,10 +1665,11 @@ function press(k){
     if(it.action&&it.k==='spdisc'){if(k!=='ok')return;snd.ok();if(!SET.skey&&SPT.st!=='ok'){dialog('Disconnect Spotify',T('Spotify isn’t connected.'),2200);return}dialog('Disconnect Spotify?',T('Channel 8 stops controlling Spotify, and NyxVision forgets your Client ID and everything it got from Spotify.')+'<small>'+T('Press OK to disconnect, or BACK to keep it.')+'</small>');S.dialog.onOk=()=>{spDisconnect();setTimeout(()=>dialog('Spotify Disconnected',T('Done. To remove NyxVision from your Spotify account too, visit spotify.com/account/apps.'),5000),50)};return}
     if(it.action&&it.k==='gdlnow'){if(k!=='ok'&&k!=='right')return;snd.ok();gdlStart('set');return}
     if(it.action&&it.k==='themes'){if(k!=='ok'&&k!=='right')return;snd.ok();S.idx.themes=0;go('themes');return}
+    if(it.action&&it.k==='refresh'){if(k!=='ok')return;snd.ok();dialog('Refresh NyxVision?',T('NyxVision clears old cached data and restarts. Your settings, favorites, keys and weather location stay.')+'<small>'+T('Press OK to refresh, or BACK to cancel.')+'</small>');S.dialog.onOk=refreshBox;return}
     if(it.action){if(k!=='ok')return;snd.ok();dialog('Are You Sure?',T('This puts every setting and favorite back the way NyxVision shipped. Your service keys and weather location are kept.')+'<small>'+T('Press OK to restore defaults, or BACK to cancel.')+'</small>');
       S.dialog.onOk=()=>{const keep={tkey:SET.tkey,mkey:SET.mkey,skey:SET.skey,pkey:SET.pkey,loc:SET.loc};SET=Object.assign({},DEF,{themeState:{}},keep);FAV=DEF_FAV();save();applyTheme();vremShow();setTimeout(()=>dialog('Settings Restored','All settings and favorites are back to their defaults.',1800),50)};return}
     let vi=it.vals.indexOf(SET[it.k]);vi=(vi+(k==='left'?-1:1)+it.vals.length)%it.vals.length;SET[it.k]=it.vals[vi];save();snd.nav();render();if(it.k==='pluto'||it.k==='plutoCount')loadPluto();if(it.k==='plutoPlay'||it.k==='guideFav')applyStream();if(it.k==='music'){wxfLoad();updateJazz()}if(it.k==='ppv'){ppvCancel();applyStream()}if(it.k==='twSrc'){twfLoad();updateJazz()}if(it.k==='vremote')vremShow();if(it.k==='region'||it.k==='lang'){NEWSAT=0}
-    if(it.k==='region'){applyTheme();render()}
+    if(it.k==='region'||it.k==='aero'){applyTheme();render()}
     if(it.k==='lang'){document.documentElement.lang=SET.lang;radarLbl.textContent=radarFail?T(NATIVE?'RADAR OFFLINE \u00B7 SAMPLE':'SAMPLE RADAR'):T('LIVE RADAR')+' \u00B7 '+curRadar();render()}return}
   if(k==='ok'||k==='right'){
     if(sc==='home'){snd.ok();go(it.to);return}
@@ -2004,7 +2033,7 @@ requestAnimationFrame(loop);
 
 /* clock + guide refresh */
 setInterval(()=>{try{lot8Tick()}catch(e){}},1000);
-setInterval(()=>{ui.querySelectorAll('.clk').forEach(el=>{el.innerHTML=el.closest('.banner')?fmtT(Date.now()):clockStr()});wxTick()},1000);
+setInterval(()=>{ui.querySelectorAll('.clk').forEach(el=>{const v=el.closest('.banner')?fmtT(Date.now()):clockStr();if(el._v!==v){el._v=v;el.innerHTML=v}});wxTick()},1000);
 
 /* scale stage to screen */
 const screenEl=$('#screen'),stage=$('#stage');
@@ -2901,7 +2930,12 @@ const STYLE_NAME={twilightb:'Twilight',gaga:'Lady Gaga on YouTube',disco:'Pride 
 function musicOn(){return SET.music&&SET.music!=='off'}
 function musicStyle(){if(SET.music==='jazz'||SET.music==='mine')return 'jazz';const st=(THEME&&STYLE_OF[THEME.id])||'jazz';return (st==='disco'&&NATIVE)?'gaga':st}
 
-let APP_PAUSED=false;
+let APP_PAUSED=false,PAUSED_AT=0;
+// Refresh: clears caches that can go stale (movie/cartoon lists), then the app clears the web cache and reloads
+function refreshBox(){dialog('Refreshing…','<span class="wait"></span>'+T('Restarting NyxVision…'));
+  setTimeout(()=>{['nyx-mov-list','nyx-mov-meta','nyx-mov-list2','nyx-mov-meta2','nyx-toon-list','nyx-toon-meta'].forEach(x=>{try{localStorage.removeItem(x)}catch(e){}});
+    try{sessionStorage.clear()}catch(e){}
+    try{if(NATIVE&&NATIVE.refreshApp){NATIVE.refreshApp();return}}catch(e){}location.reload()},600)}
 /* On the TV, the web view can keep page audio muted, so NyxVision composes a ~90-second loop
    once with an offline renderer and plays the finished file through Android's media player. */
 async function renderJazzWav(style){
@@ -3021,7 +3055,9 @@ function themeOn(th,d){const y=d.getFullYear();
   if(th.range){const r=th.range(y),t=new Date(y,d.getMonth(),d.getDate());return t>=r[0]&&t<=r[1]}
   return sameDay(th.date(y),d)}
 function themeState(id){return (SET.themeState&&SET.themeState[id])||'auto'}
+const AERO=TH('aero','Frutiger Aero',()=>null,P('#0b5cad','#1a7fd4','#2c9cf0','#1666b8','#1f8f4a','#a8ec5a','#e4f6ff'),['#aerobub','🌿','#aerobub','🐟','#aerobub']);
 function pickTheme(d){
+  if(SET.aero)return AERO;
   const forced=THEMES.find(t=>themeState(t.id)==='force');if(forced)return forced;
   if(!SET.themesOn)return null;
   const ok=t=>regionOK(t)&&themeState(t.id)!=='off'&&themeOn(t,d);
@@ -3050,7 +3086,7 @@ function themeVars(pl){const b=pl.b,p=pl.p,h=pl.h,c=pl.c,n=pl.n,hi=pl.hi,l=pl.l,
   Object.assign(out,{'--cell':c,'--cellNow':n,'--chan':dk(p,.45),'--hi':hi,'--hiText':light?'#0b0b18':'#ffffff','--ice':l,'--dim':mix(l,'#ffffff',.35)});
   return out}
 let THEME=null,THEME_VARS=[],THEME_DAY='';
-function applyTheme(){const root=document.documentElement;THEME=pickTheme(new Date());THEME_DAY=new Date().toDateString();root.classList.toggle('pride',!!(THEME&&THEME.id==='pride'));
+function applyTheme(){const root=document.documentElement;THEME=pickTheme(new Date());THEME_DAY=new Date().toDateString();root.classList.toggle('pride',!!(THEME&&THEME.id==='pride'));root.classList.toggle('aero',!!(THEME&&THEME.id==='aero'));
   THEME_VARS.forEach(k=>root.style.removeProperty(k));THEME_VARS=[];
   root.classList.toggle('themed',!!THEME);
   if(THEME){const v=themeVars(THEME.pal);Object.keys(v).forEach(k=>{root.style.setProperty(k,v[k]);THEME_VARS.push(k)})}}
@@ -5116,10 +5152,10 @@ window.cable={
   jazzNative:function(st){jazzNative(st)},
   egg:function(){startEgg()},
   twFiles:function(j,s){twFilesCb(j,s)},spState:function(j){spState(j)},spPlayer:function(j){spPlayer(j)},spArt:function(d){spArt(d)},spList:function(j){spList(j)},
-  pause:function(){APP_PAUSED=true;updateJazz();try{syncGaga()}catch(e){}try{syncNewsVid()}catch(e){}},
+  pause:function(){APP_PAUSED=true;PAUSED_AT=Date.now();updateJazz();try{syncGaga()}catch(e){}try{syncNewsVid()}catch(e){}},
   dbg:location.protocol==='file:'?function(c){return eval(c)}:undefined,
   themeFor:function(y,m,d){const t=pickTheme(new Date(y,m-1,d));return t?t.id:null},
-  resume:function(){APP_PAUSED=false;try{if(SPT.st==='err'||SPT.st==='conn'){SPT.st='idle';SPT.tries=0}}catch(e){}applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
+  resume:function(){if(PAUSED_AT&&Date.now()-PAUSED_AT>6*3600000&&NATIVE&&NATIVE.refreshApp){PAUSED_AT=0;try{NATIVE.refreshApp();return}catch(e){}}PAUSED_AT=0;APP_PAUSED=false;try{if(SPT.st==='err'||SPT.st==='conn'){SPT.st='idle';SPT.tries=0}}catch(e){}applyTheme();PLAY.on=false;PLAY.ready=false;PLAY.ci=-1;loadInstalled();if(S.screen==='watch')S.bannerUntil=Date.now()+SET.bannerSec*1000;S.staticUntil=performance.now()+260;render();fit();
     if(NATIVE){if(Date.now()-WXAT>30*MIN)loadWeather();if(Date.now()-PLUTOAT>2*3600000)loadPluto()}
     applyStream()}
 };
