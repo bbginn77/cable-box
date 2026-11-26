@@ -42,12 +42,13 @@ function fbm(x,y,s){return vnoise(x,y,s)*.55+vnoise(x*2.1,y*2.1,s+7)*.3+vnoise(x
 const day=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);
 // Evolving storm simulation: a steering wind carries the rain field across URBO, while cells grow and fade
 // as one noise field blends into the next every 45 minutes. Nothing repeats, and there are no jumps at midnight.
-const EVO=45;
-function precip(mx,my,t){const tm=t/60000,b=Math.floor(tm/EVO),f0=(tm-b*EVO)/EVO,f=f0*f0*(3-2*f0);
-  const ang=.35*Math.sin(tm/700)+.12*Math.sin(tm/170),vx=Math.cos(ang)*5.5,vy=Math.sin(ang)*5.5;
-  const x=(mx-vx*tm)*.0055,y=(my-vy*tm)*.0055;
+const EVO=90;
+function precip(mx,my,t){const tm=(t-1767225600000)/60000,b=Math.floor(tm/EVO),f0=(tm-b*EVO)/EVO,f=f0*f0*(3-2*f0);
+  // steering wind: steady drift to the east-south-east, with a slow sway (a bounded displacement, so nothing jumps)
+  const dx=3.2*tm+300*Math.sin(tm/700),dy=.7*tm+260*Math.sin(tm/410),ang=.35*Math.sin(tm/700);
+  const x=(mx-dx)*.0055,y=(my-dy)*.0055;
   const a=fbm(x,y,b&1023),c=fbm(x+17.3,y-9.1,(b+1)&1023);
-  const front=.11*Math.sin(((mx-vx*tm)*Math.cos(ang+1.2)+(my-vy*tm)*Math.sin(ang+1.2))/170-tm/80);
+  const front=.11*Math.sin(((mx-dx)*Math.cos(ang+1.2)+(my-dy)*Math.sin(ang+1.2))/170-tm/80);
   return a+(c-a)*f+front}
 // wetness raster: which state each grid cell is in
 const RX=240,RY=135,GX=186,GY=144,CW=MW/GX,CH2=MH/GY;let WET=null,SID=null;
@@ -62,7 +63,8 @@ function buildWet(){const c=document.createElement('canvas');c.width=GX;c.height
 function wetAt(mx,my){const gx=Math.max(0,Math.min(GX-1,Math.floor(mx/CW))),gy=Math.max(0,Math.min(GY-1,Math.floor(my/CH2)));return WET[gy*GX+gx]}
 function intensity(mx,my,t){const w=wetAt(mx,my),v=precip(mx,my,t);return Math.max(0,(v-(.74-w*.24))*3.2)}
 function season(){const d=new Date(),doy=(d-new Date(d.getFullYear(),0,0))/86400000;return -Math.cos((doy-15)/365*2*Math.PI)}
-function cond(p,t){const [base,sw,wet]=CLI[p.s];const hr=new Date(t).getHours()+new Date(t).getMinutes()/60;
+function cond(p,t){t=Math.floor(t/180000)*180000; // conditions update every 3 minutes, so labels don't flicker
+  const [base,sw,wet]=CLI[p.s];const hr=new Date(t).getHours()+new Date(t).getMinutes()/60;
   let temp=base+sw*season()+7*Math.sin((hr-9)/24*2*Math.PI)+(hash(Math.round(p.x),Math.round(p.y),day())-.5)*8;
   const i=intensity(p.x,p.y,t),cl=fbm(p.x*.004+t/3600000*.3,p.y*.004,day()+31);
   if(i>0)temp-=Math.min(6,i*5);temp=Math.round(temp);
