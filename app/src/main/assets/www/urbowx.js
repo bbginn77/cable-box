@@ -75,14 +75,23 @@ function tourAt(now){const t=now%LOOP;if(t<NAT){const k=Math.min(1,t/ZOOM);retur
 function mix(a,b,k){return{cx:a.cx+(b.cx-a.cx)*k,cy:a.cy+(b.cy-a.cy)*k,w:a.w*Math.pow(b.w/a.w,k)}}
 
 /* ---- drawing ---- */
-let el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
+let TER=null,NEIGH=[],WAVE=null,el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
 function ensure(){if(el)return;el=document.createElement('div');el.id='uwx';el.hidden=true;
   el.innerHTML='<canvas width="'+W+'" height="'+H+'"></canvas><div class="uwx-top"><div class="uwx-logo"><b>URBO</b><i>WEATHER</i></div><div class="uwx-fls"></div><div class="uwx-ttl"></div><div class="uwx-clk"></div></div><div class="uwx-panel"></div><div class="uwx-crawl"><span></span></div>';
   stage.insertBefore(el,ui);cv=el.querySelector('canvas');ctx=cv.getContext('2d');
   rc=document.createElement('canvas');rc.width=GX;rc.height=GY;rctx=rc.getContext('2d');rimg=rctx.createImageData(GX,GY);
   paths={st:{},neigh:M.neigh.map(d=>new Path2D(d)),riv:new Path2D(M.rivers)};ORDER.forEach(id=>paths.st[id]=new Path2D(M.states[id]));
   buildWet();
+  TER=new Image();TER.src='urbo_terrain.jpg';
+  paths.land=new Path2D();ORDER.forEach(id=>paths.land.addPath(paths.st[id]));paths.neigh.forEach(p=>paths.land.addPath(p));
+  NEIGH=M.neigh.map((d,i)=>{const ys=(d.match(/,(-?[\d.]+)/g)||[]).map(v=>+v.slice(1));const north=Math.min(...ys)<100;return{p:paths.neigh[i],north,name:north?'SCHOONHEID':'JOYA'}});
+  WAVE=makeWaves();
   try{const ff=new FontFace('Brightportish','url(fonts/Brightportish-Regular.ttf)');ff.load().then(f=>{document.fonts.add(f);panelKey=''})}catch(e){}}
+function makeWaves(){const c=document.createElement('canvas');c.width=c.height=192;const x=c.getContext('2d');
+  for(let r=0;r<26;r++){const y0=r*7.4,amp=2+((r*37)%5),ph=(r*1.7)%6.28;x.beginPath();
+    for(let i=0;i<=192;i+=4){const y=y0+Math.sin(i/192*2*Math.PI*2+ph)*amp;i?x.lineTo(i,y):x.moveTo(i,y)}
+    x.strokeStyle='rgba(150,205,255,'+(0.05+((r*13)%7)/70)+')';x.lineWidth=1.1;x.stroke()}
+  return c}
 const RAMP=[[0,[120,220,120,150]],[.25,[40,170,60,190]],[.5,[20,120,40,210]],[.7,[240,220,40,220]],[.85,[245,140,30,230]],[1,[220,30,30,240]]];
 const SNOW=[[0,[190,225,255,150]],[.5,[120,170,255,200]],[1,[210,120,230,230]]];
 function ramp(R,v){for(let i=1;i<R.length;i++)if(v<=R[i][0]){const a=R[i-1],b=R[i],k=(v-a[0])/(b[0]-a[0]);return a[1].map((c,j)=>c+(b[1][j]-c)*k)}return R[R.length-1][1]}
@@ -92,10 +101,15 @@ function radarRaster(now){const d=rimg.data,snowSt=ORDER.map(id=>{const [b,sw]=C
   rctx.putImageData(rimg,0,0)}
 function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.cy*k;
   if(now-rAt>400){radarRaster(now);rAt=now}
-  ctx.setTransform(1,0,0,1,0,0);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0b2a55');g.addColorStop(1,'#061633');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.setTransform(1,0,0,1,0,0);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d3a6e');g.addColorStop(1,'#072450');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   ctx.setTransform(k,0,0,k,ox,oy);
-  ctx.fillStyle='#4a5a3c';paths.neigh.forEach(p=>ctx.fill(p));
-  ORDER.forEach(id=>{ctx.fillStyle=tr.i>=0&&ORDER[tr.i]===id?'#6e8a4a':'#5c7442';ctx.fill(paths.st[id])});
+  // animated ocean: two wave layers drifting in different directions
+  if(WAVE){const ts=now/1000;[[ts*6,ts*2.2,1],[-ts*4,ts*3.1,1.6]].forEach(([dx,dy,sc])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192).scale(sc))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(-700,-500,MW+1400,MH+1000)})}
+  // coast glow
+  ctx.save();ctx.shadowColor='rgba(140,210,255,.55)';ctx.shadowBlur=14*k;ctx.fillStyle='#5c7442';ctx.fill(paths.land);ctx.restore();
+  NEIGH.forEach(n=>{ctx.fillStyle=n.north?'#6a4c8c':'#b9732f';ctx.fill(n.p)});
+  ORDER.forEach(id=>{ctx.fillStyle=tr.i>=0&&ORDER[tr.i]===id?'#7a9650':'#5f7a44';ctx.fill(paths.st[id])});
+  if(TER&&TER.complete&&TER.naturalWidth){ctx.save();ctx.clip(paths.land);ctx.globalCompositeOperation='multiply';ctx.drawImage(TER,0,0,MW,1000);ctx.restore()}
   ctx.strokeStyle='rgba(120,180,255,.55)';ctx.lineWidth=1.4/k*1.2;ctx.stroke(paths.riv);
   ctx.lineJoin='round';ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=1.3/k;ORDER.forEach(id=>ctx.stroke(paths.st[id]));
   if(tr.i>=0){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3/k;ctx.stroke(paths.st[ORDER[tr.i]])}
@@ -104,6 +118,9 @@ function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.c
   ORDER.forEach(id=>{const im=FIMG[FLAG[id]];if(!im||!im.complete)return;const zoomOn=tr.i>=0&&ORDER[tr.i]===id;if(tr.i>=0&&!zoomOn)return;
     const fw=zoomOn?66:30,fh=fw*2/3,x=zoomOn?18:LBL[id][0]*k+ox-fw/2,y=zoomOn?66:LBL[id][1]*k+oy-fh/2;if(x<-60||x>W||y<50||y>H)return;
     ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(x+2,y+2,fw,fh);ctx.drawImage(im,x,y,fw,fh);ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x,y,fw,fh)});
+  ctx.textAlign='center';ctx.font='700 '+Math.max(13,Math.min(30,22*k/0.45))+'px '+F();
+  NEIGH.forEach(n=>{const x=(n.north?520:560)*k+ox,y=(n.north?36:935)*k+oy;if(y<60||y>H-40)return;ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';const t=bp(n.name).split('').join(String.fromCharCode(8202));ctx.strokeText(t,x,y);ctx.fillStyle=n.north?'#e6d4ff':'#ffe0b8';ctx.fillText(t,x,y)});
+  ctx.textAlign='left';
   // place markers
   const zoomed=tr.i>=0&&tr.el>ZOOM*.8,pl=zoomed?M.places.filter(p=>p.s===ORDER[tr.i]):M.places.filter(p=>p.c);
   ctx.textBaseline='middle';
