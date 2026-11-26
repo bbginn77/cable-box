@@ -941,11 +941,12 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 </div>
 
 <script src="urbowx.js"></script>
+<script src="urbotr.js"></script>
 <script>
 (function(){
 "use strict";
 const $=s=>document.querySelector(s);
-let UWX=null;
+let UWX=null,UTR=null,BNNI=null;
 const pad=n=>String(n).padStart(2,'0');
 const MIN=60000, SLOT=30*MIN;
 
@@ -1045,10 +1046,15 @@ for(let t=D0;t<D0+72*3600000;t+=2*SLOT)TWI_CH.sched.push({title:'Nyx Twilight',s
 // Channel 2: URBO Weather, a continental radar tour of the fictional nation of URBO (simulated weather), EN | BP
 const URBO_CH={n:2,call:'UWX',name:'URBO Weather',g:'radar',scene:'stage',urbo:true,key:'urbo',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=SLOT)URBO_CH.sched.push({title:'URBO Weather',start:t,end:t+SLOT,rating:'',desc:'Continental radar for the United Republics of Brightport and Occasue, then every state and its cities. Press OK to switch between English and Brightportish.'});
+// Channel 10: URBO Traffic & Rail · Channel 11: BNN, Brightport News Network (simulated, EN | BP)
+const UTR_CH={n:10,call:'UTR',name:'URBO Traffic & Rail',g:'news',scene:'stage',urbotr:true,key:'urbotr',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)UTR_CH.sched.push({title:'URBO Traffic & Rail',start:t,end:t+SLOT,rating:'',desc:'Lochway traffic across URBO, then each major city, the live national rail map and station arrival boards. Press OK for English or Brightportish.'});
+const BNN_CH={n:11,call:'BNN',name:'Brightport News Network',g:'news',scene:'stage',bnn:true,key:'bnn',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)BNN_CH.sched.push({title:'BNN Newsroom',start:t,end:t+SLOT,rating:'',desc:'Everyday news from across URBO: weather, the Lochways, the railway, ports, culture and sports. Press OK for English or Brightportish.'});
 const TOON_CH={n:9,call:'TOON',name:'Nyx Toons',g:'kids',scene:'stage',toons:true,key:'toons',cat:'kids',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=SLOT)TOON_CH.sched.push({title:'Nyx Toons',start:t,end:t+SLOT,rating:'TV-G',cat:'kids',desc:'Classic cartoons from the Internet Archive, back to back.'});
-if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,URBO_CH,TWI_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH,TAPE_CH,TOON_CH)} // TV app: weather, news + real Pluto TV channels only
-else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH;[TRAF_CH,PREVIEW_CH,URBO_CH,TWI_CH,MOVIE_CH,TAPE_CH,TOON_CH].forEach(X=>{const ix=CH.findIndex(c=>c.n===X.n);if(ix>=0)CH[ix]=X;else{const a=CH.findIndex(c=>c.n>X.n);CH.splice(a<0?CH.length:a,0,X)}})}
+if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,URBO_CH,TWI_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH,TAPE_CH,TOON_CH,UTR_CH,BNN_CH)} // TV app: weather, news + real Pluto TV channels only
+else{CH[CH.findIndex(c=>c.n===4)]=RADAR_CH;CH[CH.findIndex(c=>c.n===5)]=NEWS_CH;[TRAF_CH,PREVIEW_CH,URBO_CH,TWI_CH,MOVIE_CH,TAPE_CH,TOON_CH,UTR_CH,BNN_CH].forEach(X=>{const ix=CH.findIndex(c=>c.n===X.n);if(ix>=0)CH[ix]=X;else{const a=CH.findIndex(c=>c.n>X.n);CH.splice(a<0?CH.length:a,0,X)}})}
 const BASE=CH.length; // demo channels exist only in the browser preview
 const DEF_FAV=()=>new Set(window.CableNative?[]:['v2','v4','v5','v7','v22','v31']);
 let SET=Object.assign({},DEF), FAV=DEF_FAV();
@@ -1628,7 +1634,7 @@ function press(k){
     if(k==='ok'&&has(S.ch)&&CH[S.ch].movies&&!locked(S.ch)&&NATIVE&&movPlaying()&&!ppvOk(movPlaying())){if(!PPV.st){snd.ok();S.bannerUntil=0;ppvStart()}return}
     if(k==='info'&&has(S.ch)&&CH[S.ch].twilight){snd.ok();dialog('Twilight Status',twStatusText());return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].twilight&&!(Date.now()<S.bannerUntil)){SET.twMusic=SET.twMusic===false;save();snd.ok();updateJazz();dialog('Nyx Twilight',T(SET.twMusic===false?'Music off':'Music on'),1500);return}
-    if(k==='ok'&&has(S.ch)&&CH[S.ch].urbo&&!locked(S.ch)&&!(Date.now()<S.bannerUntil)&&UWX){UWX.toggle();return}
+    if(k==='ok'&&has(S.ch)&&(CH[S.ch].urbo||CH[S.ch].urbotr||CH[S.ch].bnn)&&!locked(S.ch)&&!(Date.now()<S.bannerUntil)&&UWX){UWX.toggle();return}
     if(k==='ok'&&has(S.ch)&&CH[S.ch].radar){if(musicOn()){SET.musicLast=SET.music;SET.music='off'}else SET.music=SET.musicLast||'auto';save();snd.ok();updateJazz();render();setTimeout(()=>{if(S.screen==='watch')render()},1200);return}
     if(k==='ok'&&Date.now()<S.bannerUntil&&!locked(S.ch)){snd.ok();go('guide');return}
     if(k==='ok'||k==='info'){snd.nav();S.bannerUntil=Date.now()+SET.bannerSec*1000;render();return}
@@ -1765,7 +1771,7 @@ function render(){
     if(CH[S.ch].tape){h+=tapeHTML()}
     if(CH[S.ch].toons){h+=toonHTML()}
     if(CH[S.ch].twilight){h+=twilightHTML()}
-    if(CH[S.ch].urbo&&UWX){h+=UWX.chip()}
+    if((CH[S.ch].urbo||CH[S.ch].urbotr||CH[S.ch].bnn)&&UWX){h+=UWX.chip()}
     if(locked(S.ch))h+='<div class="lock"><div class="box bevel"><h3>Channel Locked</h3><p>'+T('{0} is blocked by Parental Controls. Turn them off in Settings to watch.','Ch '+CH[S.ch].n+' '+esc(CH[S.ch].call))+'</p></div></div>';
     if(S.bumpUntil>Date.now())h+=bumpHTML();
     if(Date.now()<S.bannerUntil||S.entry){
@@ -3256,7 +3262,7 @@ function progCat(ci,p){if(p&&p.cat)return p.cat;const c=CH[ci];if(!c)return 'ent
 function chanHasCat(ci,cat){const g=S.g;if(!g)return true;const a=g.win,b=g.win+WIN;return CH[ci].sched.some(p=>p.end>a&&p.start<b&&progCat(ci,p)===cat)}
 
 /* ---------------- station IDs ("You're watching NyxVision") ---------------- */
-function showBump(){if(!SET.idents||S.screen!=='watch'||!has(S.ch)||CH[S.ch].urbo||CH[S.ch].radar||CH[S.ch].news||CH[S.ch].traffic||CH[S.ch].tape)return;
+function showBump(){if(!SET.idents||S.screen!=='watch'||!has(S.ch)||CH[S.ch].urbo||CH[S.ch].urbotr||CH[S.ch].bnn||CH[S.ch].radar||CH[S.ch].news||CH[S.ch].traffic||CH[S.ch].tape)return;
   S.bumpT0=Date.now();S.bumpUntil=S.bumpT0+3800;S.lastBump=S.bumpT0;render();setTimeout(()=>{if(S.screen==='watch')render()},3900);
   [72,76,79,84].forEach((m,i)=>setTimeout(()=>tone(mtof(m),.35,'sine',.05),180+i*140))}
 function bumpHTML(){const e=((Date.now()-S.bumpT0)/1000).toFixed(2);
@@ -5172,7 +5178,10 @@ if(NATIVE){loadWeather();loadPluto();setTimeout(loadMovies,12000);setTimeout(loa
   setTimeout(()=>{const st=musicStyle();if(MSTY[st]&&NATIVE.jazzPlay&&!NATIVE.jazzReady(st)&&!JAZZ.rendering){const w=JAZZ.nWant;JAZZ.nWant=false;nativeJazzOn(st).then(()=>{if(JAZZ.nState==='preparing')JAZZ.nState='';JAZZ.nWant=JAZZ.nWant||w})}},30000)}
 /* URBO Weather (channel 2) */
 UWX=window.URBOWX?window.URBOWX({S,CH,SET,has,locked,esc,fmtT,stage,ui,touch:TOUCH,save,snd,render:()=>render(),paused:()=>APP_PAUSED}):null;
-if(UWX){const rU=render;render=function(){rU();try{UWX.sync()}catch(e){}}}
+window.URBOWX_API=UWX;
+const UAPI={S,CH,SET,has,locked,esc,fmtT,stage,ui,touch:TOUCH,save,snd,render:()=>render(),paused:()=>APP_PAUSED};
+UTR=window.URBOTR?window.URBOTR(UAPI):null;window.URBOTR_API=UTR;BNNI=window.BNN?window.BNN(UAPI):null;
+if(UWX||UTR||BNNI){const rU=render;render=function(){rU();[UWX,UTR,BNNI].forEach(x=>{try{x&&x.sync()}catch(e){}})}}
 })();
 </script>
 

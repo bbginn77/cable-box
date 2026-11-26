@@ -6,6 +6,9 @@ channel playing inside the box; the main menu shows local radar and current cond
 Channel 2 is URBO Weather: a continental radar loop for URBO, the fictional nation of Brightport and Occasue,
 that zooms into each state and its cities with their flags and conditions (simulated weather). Press OK, or tap
 the EN | BP chip, to switch between English and Brightportish (written in the Brightportish script).
+Channel 10 is URBO Traffic & Rail: simulated Lochway traffic across URBO and in each major city, a live national rail map
+and station arrival boards. Channel 11 is BNN, the Brightport News Network: simulated everyday news from URBO.
+Both switch between English and Brightportish with OK, like channel 2.
 Channel 4 is NyxVision Weather: radar, current conditions, the extended forecast and alerts for the
 place set in Settings → Weather Location (US ZIP, Canadian postal code or city), with seasonal music
 (press OK on it). US forecasts come from the National Weather Service, others from Open-Meteo.

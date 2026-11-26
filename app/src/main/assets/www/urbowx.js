@@ -153,5 +153,5 @@ function sync(){const on=S.screen==='watch'&&has(S.ch)&&!!CH[S.ch].urbo&&!locked
 function toggle(){SET.uwxLang=uwxLang()==='bp'?'en':'bp';A.save();panelKey='';try{A.snd.ok()}catch(e){}A.render()}
 function chip(){const l=uwxLang();return '<div class="uwxchip" data-uwx="1"><b class="'+(l==='en'?'on':'')+'">EN</b><b class="'+(l==='bp'?'on':'')+'">BP</b><span>'+(A.touch?'Tap':'OK')+'</span></div>'}
 document.addEventListener('visibilitychange',()=>{try{sync()}catch(e){}});
-return{sync,toggle,chip};
+return{sync,toggle,chip,cond:(p,t)=>{if(!WET)buildWet();return cond(p,t)}};
 };
