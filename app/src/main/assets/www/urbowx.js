@@ -89,7 +89,7 @@ function ensure(){if(el)return;el=document.createElement('div');el.id='uwx';el.h
   rc=document.createElement('canvas');rc.width=GX;rc.height=GY;rctx=rc.getContext('2d');rimg=rctx.createImageData(GX,GY);
   paths={st:{},neigh:M.neigh.map(d=>new Path2D(d)),riv:new Path2D(M.rivers)};ORDER.forEach(id=>paths.st[id]=new Path2D(M.states[id]));
   buildWet();
-  TER=new Image();TER.src='urbo_terrain.jpg';
+  TER=new Image();TER.src='urbo_terrain.webp';
   paths.land=new Path2D();ORDER.forEach(id=>paths.land.addPath(paths.st[id]));paths.neigh.forEach(p=>paths.land.addPath(p));
   NEIGH=M.neigh.map((d,i)=>{const ys=(d.match(/,(-?[\d.]+)/g)||[]).map(v=>+v.slice(1));const north=Math.min(...ys)<100;return{p:paths.neigh[i],north,name:north?'SCHOONHEID':'JOYA'}});
   WAVE=makeWaves();
@@ -114,10 +114,10 @@ function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.c
   // animated ocean: two wave layers drifting in different directions
   if(WAVE){const ts=now/1000;[[ts*6,ts*2.2,1],[-ts*4,ts*3.1,1.6]].forEach(([dx,dy,sc])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192).scale(sc))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(-700,-500,MW+1400,MH+1000)})}
   // coast glow
-  ctx.save();ctx.shadowColor='rgba(140,210,255,.55)';ctx.shadowBlur=14*k;ctx.fillStyle='#5c7442';ctx.fill(paths.land);ctx.restore();
+  ctx.strokeStyle='rgba(140,210,255,.28)';ctx.lineJoin='round';ctx.lineWidth=10/k;ctx.stroke(paths.land);ctx.strokeStyle='rgba(170,225,255,.35)';ctx.lineWidth=4/k;ctx.stroke(paths.land);
   NEIGH.forEach(n=>{ctx.fillStyle=n.north?'#6a4c8c':'#b9732f';ctx.fill(n.p)});
   ORDER.forEach(id=>{ctx.fillStyle=tr.i>=0&&ORDER[tr.i]===id?'#7a9650':'#5f7a44';ctx.fill(paths.st[id])});
-  if(TER&&TER.complete&&TER.naturalWidth){ctx.save();ctx.clip(paths.land);ctx.globalCompositeOperation='multiply';ctx.drawImage(TER,0,0,MW,1000);ctx.restore()}
+  if(TER&&TER.complete&&TER.naturalWidth)ctx.drawImage(TER,0,0,MW,1000);
   ctx.strokeStyle='rgba(120,180,255,.55)';ctx.lineWidth=1.4/k*1.2;ctx.stroke(paths.riv);
   ctx.lineJoin='round';ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=1.3/k;ORDER.forEach(id=>ctx.stroke(paths.st[id]));
   if(tr.i>=0){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3/k;ctx.stroke(paths.st[ORDER[tr.i]])}
