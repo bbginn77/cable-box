@@ -127,11 +127,11 @@ function ensure(){if(el)return;el=document.createElement('div');el.id='utr';el.h
   NEIGH=M.neigh.map((d,i)=>{const ys=(d.match(/,(-?[\d.]+)/g)||[]).map(v=>+v.slice(1));return{p:paths.neigh[i],north:Math.min(...ys)<100}});
   TER=new Image();TER.src='urbo_terrain.webp';
   WAVE=document.createElement('canvas');WAVE.width=WAVE.height=192;const x=WAVE.getContext('2d');
-  for(let r=0;r<26;r++){const y0=r*7.4,amp=2+((r*37)%5),ph=(r*1.7)%6.28;x.beginPath();for(let i=0;i<=192;i+=4){const y=y0+Math.sin(i/192*4*Math.PI+ph)*amp;i?x.lineTo(i,y):x.moveTo(i,y)}x.strokeStyle='rgba(150,205,255,'+(0.05+((r*13)%7)/70)+')';x.lineWidth=1.1;x.stroke()}
+  for(let r=0;r<12;r++){const y0=r*16,amp=2+((r*37)%5),ph=(r*1.7)%6.28;x.beginPath();for(let i=0;i<=192;i+=4){const y=y0+Math.sin(i/192*4*Math.PI+ph)*amp;i?x.lineTo(i,y):x.moveTo(i,y)}x.strokeStyle='rgba(150,205,255,'+(0.03+((r*13)%7)/140)+')';x.lineWidth=2;x.stroke()}
   try{const ff=new FontFace('Brightportish','url(fonts/Brightportish-Regular.ttf)');ff.load().then(f=>{document.fonts.add(f);pk=''})}catch(e){}}
 function base(now,k,ox,oy,dim){ctx.setTransform(1,0,0,1,0,0);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d3a6e');g.addColorStop(1,'#072450');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   ctx.setTransform(k,0,0,k,ox,oy);const ts=now/1000;
-  [[ts*6,ts*2.2,1],[-ts*4,ts*3.1,1.6]].forEach(([dx,dy,sc])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192).scale(sc))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(-700,-500,MW+1400,MH+1000)});
+  ctx.setTransform(1,0,0,1,0,0);[[ts*9,ts*2.5],[-ts*6,ts*4]].forEach(([dx,dy])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(0,0,W,H)});ctx.setTransform(k,0,0,k,ox,oy);
   ctx.strokeStyle='rgba(140,210,255,.28)';ctx.lineJoin='round';ctx.lineWidth=10/k;ctx.stroke(paths.land);ctx.strokeStyle='rgba(170,225,255,.35)';ctx.lineWidth=4/k;ctx.stroke(paths.land);
   NEIGH.forEach(n=>{ctx.fillStyle=n.north?'#6a4c8c':'#b9732f';ctx.fill(n.p)});
   Object.values(paths.st).forEach(p=>{ctx.fillStyle=dim?'#4e6438':'#5f7a44';ctx.fill(p)});

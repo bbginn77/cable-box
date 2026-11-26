@@ -50,7 +50,7 @@ function precip(mx,my,t){const tm=t/60000,b=Math.floor(tm/EVO),f0=(tm-b*EVO)/EVO
   const front=.11*Math.sin(((mx-vx*tm)*Math.cos(ang+1.2)+(my-vy*tm)*Math.sin(ang+1.2))/170-tm/80);
   return a+(c-a)*f+front}
 // wetness raster: which state each grid cell is in
-const GX=186,GY=144,CW=MW/GX,CH2=MH/GY;let WET=null,SID=null;
+const RX=240,RY=135,GX=186,GY=144,CW=MW/GX,CH2=MH/GY;let WET=null,SID=null;
 function buildWet(){const c=document.createElement('canvas');c.width=GX;c.height=GY;const x=c.getContext('2d');x.scale(GX/MW,GY/MH);
   x.fillStyle='rgb(0,0,0)';x.fillRect(0,0,MW,MH);
   ORDER.forEach((id,i)=>{x.fillStyle='rgb('+(i+1)*10+',0,0)';x.fill(new Path2D(M.states[id]))});
@@ -66,7 +66,7 @@ function cond(p,t){const [base,sw,wet]=CLI[p.s];const hr=new Date(t).getHours()+
   let temp=base+sw*season()+7*Math.sin((hr-9)/24*2*Math.PI)+(hash(Math.round(p.x),Math.round(p.y),day())-.5)*8;
   const i=intensity(p.x,p.y,t),cl=fbm(p.x*.004+t/3600000*.3,p.y*.004,day()+31);
   if(i>0)temp-=Math.min(6,i*5);temp=Math.round(temp);
-  const snow=temp<=33,ic=i>0.85?(snow?'Heavy Snow':temp>58?'Thunderstorms':'Heavy Rain'):i>0.35?(snow?'Snow':'Rain'):i>0.02?(snow?'Flurries':'Showers'):cl>.62?'Cloudy':cl>.48?'Partly Cloudy':(hr<6.5||hr>19.5?'Clear':'Sunny');
+  const snow=temp<=33,ic=i>0.85?(snow?'Heavy Snow':temp>58?'Thunderstorms':'Heavy Rain'):i>0.35?(snow?'Snow':'Rain'):i>0.08?(snow?'Flurries':'Showers'):cl>.62?'Cloudy':cl>.48?'Partly Cloudy':(hr<6.5||hr>19.5?'Clear':'Sunny');
   const icon={Thunderstorms:'⛈',  'Heavy Rain':'🌧',Rain:'🌧',Showers:'🌦','Heavy Snow':'❄',Snow:'🌨',Flurries:'🌨',Cloudy:'☁','Partly Cloudy':'⛅',Clear:'🌙',Sunny:'☀'}[ic];
   const hum=Math.round(Math.min(98,30+wet*45+i*25+cl*10)),wind=Math.round(5+fbm(p.x*.01,p.y*.01+t/7200000,day()+5)*18+i*6);
   const dirs=['W','WSW','SW','WNW','NW','S','SE','E'];return{temp,ic,icon,hum,wind,dir:dirs[Math.floor(hash(Math.round(p.y),day(),3)*dirs.length)],snow}}
@@ -82,11 +82,11 @@ function tourAt(now){const t=now%LOOP;if(t<NAT){const k=Math.min(1,t/ZOOM);retur
 function mix(a,b,k){return{cx:a.cx+(b.cx-a.cx)*k,cy:a.cy+(b.cy-a.cy)*k,w:a.w*Math.pow(b.w/a.w,k)}}
 
 /* ---- drawing ---- */
-let rWall=0,TER=null,NEIGH=[],WAVE=null,el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
+let rCam='',rWall=0,TER=null,NEIGH=[],WAVE=null,el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
 function ensure(){if(el)return;el=document.createElement('div');el.id='uwx';el.hidden=true;
   el.innerHTML='<canvas width="'+W+'" height="'+H+'"></canvas><div class="uwx-top"><div class="uwx-logo"><b>URBO</b><i>WEATHER</i></div><div class="uwx-fls"></div><div class="uwx-ttl"></div><div class="uwx-clk"></div></div><div class="uwx-panel"></div><div class="uwx-crawl"><span></span></div>';
   stage.insertBefore(el,ui);cv=el.querySelector('canvas');ctx=cv.getContext('2d');
-  rc=document.createElement('canvas');rc.width=GX;rc.height=GY;rctx=rc.getContext('2d');rimg=rctx.createImageData(GX,GY);
+  rc=document.createElement('canvas');rc.width=RX;rc.height=RY;rctx=rc.getContext('2d');rimg=rctx.createImageData(RX,RY);
   paths={st:{},neigh:M.neigh.map(d=>new Path2D(d)),riv:new Path2D(M.rivers)};ORDER.forEach(id=>paths.st[id]=new Path2D(M.states[id]));
   buildWet();
   TER=new Image();TER.src='urbo_terrain.webp';
@@ -95,24 +95,29 @@ function ensure(){if(el)return;el=document.createElement('div');el.id='uwx';el.h
   WAVE=makeWaves();
   try{const ff=new FontFace('Brightportish','url(fonts/Brightportish-Regular.ttf)');ff.load().then(f=>{document.fonts.add(f);panelKey=''})}catch(e){}}
 function makeWaves(){const c=document.createElement('canvas');c.width=c.height=192;const x=c.getContext('2d');
-  for(let r=0;r<26;r++){const y0=r*7.4,amp=2+((r*37)%5),ph=(r*1.7)%6.28;x.beginPath();
+  for(let r=0;r<12;r++){const y0=r*16,amp=2+((r*37)%5),ph=(r*1.7)%6.28;x.beginPath();
     for(let i=0;i<=192;i+=4){const y=y0+Math.sin(i/192*2*Math.PI*2+ph)*amp;i?x.lineTo(i,y):x.moveTo(i,y)}
-    x.strokeStyle='rgba(150,205,255,'+(0.05+((r*13)%7)/70)+')';x.lineWidth=1.1;x.stroke()}
+    x.strokeStyle='rgba(150,205,255,'+(0.03+((r*13)%7)/140)+')';x.lineWidth=2;x.stroke()}
   return c}
 const RAMP=[[0,[120,220,120,150]],[.25,[40,170,60,190]],[.5,[20,120,40,210]],[.7,[240,220,40,220]],[.85,[245,140,30,230]],[1,[220,30,30,240]]];
 const SNOW=[[0,[190,225,255,150]],[.5,[120,170,255,200]],[1,[210,120,230,230]]];
 function ramp(R,v){for(let i=1;i<R.length;i++)if(v<=R[i][0]){const a=R[i-1],b=R[i],k=(v-a[0])/(b[0]-a[0]);return a[1].map((c,j)=>c+(b[1][j]-c)*k)}return R[R.length-1][1]}
-function radarRaster(now){const d=rimg.data,snowSt=ORDER.map(id=>{const [b,sw]=CLI[id];return b+sw*season()-4<=34});
-  for(let gy=0;gy<GY;gy++)for(let gx=0;gx<GX;gx++){const mx=(gx+.5)*CW,my=(gy+.5)*CH2,v=intensity(mx,my,now),o=(gy*GX+gx)*4;
-    if(v<=0.02){d[o+3]=0;continue}const s=SID[gy*GX+gx],c=ramp(s>=0&&snowSt[s]?SNOW:RAMP,Math.min(1,v));d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=c[3]}
+// The radar is worked out for what is on screen, so it stays smooth at every zoom level
+function radarRaster(now,k,ox,oy){const d=rimg.data,snowSt=ORDER.map(id=>{const [b,sw]=CLI[id];return b+sw*season()-4<=34});
+  for(let ry=0;ry<RY;ry++)for(let rx=0;rx<RX;rx++){const mx=((rx+.5)*W/RX-ox)/k,my=((ry+.5)*H/RY-oy)/k,o=(ry*RX+rx)*4;
+    if(mx<-40||my<-40||mx>MW+40||my>MH+40){d[o+3]=0;continue}
+    const v=intensity(mx,my,now);if(v<=0.02){d[o+3]=0;continue}
+    const gx=Math.max(0,Math.min(GX-1,Math.floor(mx/CW))),gy=Math.max(0,Math.min(GY-1,Math.floor(my/CH2)));
+    const s=SID[gy*GX+gx],c=ramp(s>=0&&snowSt[s]?SNOW:RAMP,Math.min(1,v));d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=c[3]*Math.min(1,(v-.02)/.12)}
   rctx.putImageData(rimg,0,0)}
 function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.cy*k;
   const rt=tr.i<0?now-3600000+Math.min(1,tr.el/(NAT-1500))*3600000:now;
-  if(Math.abs(rt-rAt)>(tr.i<0?90000:20000)||now-rWall>400){radarRaster(rt);rAt=rt;rWall=now}
+  const camKey=Math.round(k*400)+','+Math.round(ox)+','+Math.round(oy);
+  if(camKey!==rCam||Math.abs(rt-rAt)>(tr.i<0?90000:20000)||now-rWall>400){if(camKey===rCam||now-rWall>120){radarRaster(rt,k,ox,oy);rAt=rt;rWall=now;rCam=camKey}}
   ctx.setTransform(1,0,0,1,0,0);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d3a6e');g.addColorStop(1,'#072450');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   ctx.setTransform(k,0,0,k,ox,oy);
   // animated ocean: two wave layers drifting in different directions
-  if(WAVE){const ts=now/1000;[[ts*6,ts*2.2,1],[-ts*4,ts*3.1,1.6]].forEach(([dx,dy,sc])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192).scale(sc))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(-700,-500,MW+1400,MH+1000)})}
+  if(WAVE){ctx.setTransform(1,0,0,1,0,0);const ts=now/1000;[[ts*9,ts*2.5],[-ts*6,ts*4]].forEach(([dx,dy])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(0,0,W,H)});ctx.setTransform(k,0,0,k,ox,oy)}
   // coast glow
   ctx.strokeStyle='rgba(140,210,255,.28)';ctx.lineJoin='round';ctx.lineWidth=10/k;ctx.stroke(paths.land);ctx.strokeStyle='rgba(170,225,255,.35)';ctx.lineWidth=4/k;ctx.stroke(paths.land);
   NEIGH.forEach(n=>{ctx.fillStyle=n.north?'#6a4c8c':'#b9732f';ctx.fill(n.p)});
@@ -121,8 +126,7 @@ function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.c
   ctx.strokeStyle='rgba(120,180,255,.55)';ctx.lineWidth=1.4/k*1.2;ctx.stroke(paths.riv);
   ctx.lineJoin='round';ctx.strokeStyle='rgba(255,255,255,.75)';ctx.lineWidth=1.3/k;ORDER.forEach(id=>ctx.stroke(paths.st[id]));
   if(tr.i>=0){ctx.strokeStyle='#ffd24a';ctx.lineWidth=3/k;ctx.stroke(paths.st[ORDER[tr.i]])}
-  ctx.imageSmoothingEnabled=true;ctx.drawImage(rc,0,0,MW,MH);
-  ctx.setTransform(1,0,0,1,0,0);
+  ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=true;try{ctx.imageSmoothingQuality='high'}catch(e){}ctx.drawImage(rc,0,0,W,H);
   ORDER.forEach(id=>{const im=FIMG[FLAG[id]];if(!im||!im.complete)return;const zoomOn=tr.i>=0&&ORDER[tr.i]===id;if(tr.i>=0&&!zoomOn)return;
     const fw=zoomOn?66:30,fh=fw*2/3,x=zoomOn?18:LBL[id][0]*k+ox-fw/2,y=zoomOn?66:LBL[id][1]*k+oy-fh/2;if(x<-60||x>W||y<50||y>H)return;
     ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(x+2,y+2,fw,fh);ctx.drawImage(im,x,y,fw,fh);ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x,y,fw,fh)});
