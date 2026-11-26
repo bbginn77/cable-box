@@ -44,8 +44,9 @@ const day=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400
 // as one noise field blends into the next every 45 minutes. Nothing repeats, and there are no jumps at midnight.
 const EVO=90;
 function precip(mx,my,t){const tm=(t-1767225600000)/60000,b=Math.floor(tm/EVO),f0=(tm-b*EVO)/EVO,f=f0*f0*(3-2*f0);
-  // steering wind: steady drift to the east-south-east, with a slow sway (a bounded displacement, so nothing jumps)
-  const dx=3.2*tm+300*Math.sin(tm/700),dy=.7*tm+260*Math.sin(tm/410),ang=.35*Math.sin(tm/700);
+  // Nyreth spins the other way (the sun rises in the west), so its prevailing winds run east to west:
+  // storms drift west-north-west, with a slow sway (a bounded displacement, so nothing jumps)
+  const dx=-3.2*tm+300*Math.sin(tm/700),dy=-.7*tm+260*Math.sin(tm/410),ang=.35*Math.sin(tm/700);
   const x=(mx-dx)*.0055,y=(my-dy)*.0055;
   const a=fbm(x,y,b&1023),c=fbm(x+17.3,y-9.1,(b+1)&1023);
   const front=.11*Math.sin(((mx-dx)*Math.cos(ang+1.2)+(my-dy)*Math.sin(ang+1.2))/170-tm/80);
