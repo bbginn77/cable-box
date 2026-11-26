@@ -40,8 +40,15 @@ function vnoise(x,y,s){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u
   const a=hash(xi,yi,s),b=hash(xi+1,yi,s),c=hash(xi,yi+1,s),d=hash(xi+1,yi+1,s);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}
 function fbm(x,y,s){return vnoise(x,y,s)*.55+vnoise(x*2.1,y*2.1,s+7)*.3+vnoise(x*4.3,y*4.3,s+13)*.15}
 const day=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);
-function precip(mx,my,t){const s=day(),h=t/3600000;
-  const v=fbm(mx*.0055-h*.55,my*.0055-h*.12,s);return v}
+// Evolving storm simulation: a steering wind carries the rain field across URBO, while cells grow and fade
+// as one noise field blends into the next every 45 minutes. Nothing repeats, and there are no jumps at midnight.
+const EVO=45;
+function precip(mx,my,t){const tm=t/60000,b=Math.floor(tm/EVO),f0=(tm-b*EVO)/EVO,f=f0*f0*(3-2*f0);
+  const ang=.35*Math.sin(tm/700)+.12*Math.sin(tm/170),vx=Math.cos(ang)*5.5,vy=Math.sin(ang)*5.5;
+  const x=(mx-vx*tm)*.0055,y=(my-vy*tm)*.0055;
+  const a=fbm(x,y,b&1023),c=fbm(x+17.3,y-9.1,(b+1)&1023);
+  const front=.11*Math.sin(((mx-vx*tm)*Math.cos(ang+1.2)+(my-vy*tm)*Math.sin(ang+1.2))/170-tm/80);
+  return a+(c-a)*f+front}
 // wetness raster: which state each grid cell is in
 const GX=186,GY=144,CW=MW/GX,CH2=MH/GY;let WET=null,SID=null;
 function buildWet(){const c=document.createElement('canvas');c.width=GX;c.height=GY;const x=c.getContext('2d');x.scale(GX/MW,GY/MH);
@@ -75,7 +82,7 @@ function tourAt(now){const t=now%LOOP;if(t<NAT){const k=Math.min(1,t/ZOOM);retur
 function mix(a,b,k){return{cx:a.cx+(b.cx-a.cx)*k,cy:a.cy+(b.cy-a.cy)*k,w:a.w*Math.pow(b.w/a.w,k)}}
 
 /* ---- drawing ---- */
-let TER=null,NEIGH=[],WAVE=null,el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
+let rWall=0,TER=null,NEIGH=[],WAVE=null,el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
 function ensure(){if(el)return;el=document.createElement('div');el.id='uwx';el.hidden=true;
   el.innerHTML='<canvas width="'+W+'" height="'+H+'"></canvas><div class="uwx-top"><div class="uwx-logo"><b>URBO</b><i>WEATHER</i></div><div class="uwx-fls"></div><div class="uwx-ttl"></div><div class="uwx-clk"></div></div><div class="uwx-panel"></div><div class="uwx-crawl"><span></span></div>';
   stage.insertBefore(el,ui);cv=el.querySelector('canvas');ctx=cv.getContext('2d');
@@ -100,7 +107,8 @@ function radarRaster(now){const d=rimg.data,snowSt=ORDER.map(id=>{const [b,sw]=C
     if(v<=0.02){d[o+3]=0;continue}const s=SID[gy*GX+gx],c=ramp(s>=0&&snowSt[s]?SNOW:RAMP,Math.min(1,v));d[o]=c[0];d[o+1]=c[1];d[o+2]=c[2];d[o+3]=c[3]}
   rctx.putImageData(rimg,0,0)}
 function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.cy*k;
-  if(now-rAt>400){radarRaster(now);rAt=now}
+  const rt=tr.i<0?now-3600000+Math.min(1,tr.el/(NAT-1500))*3600000:now;
+  if(Math.abs(rt-rAt)>(tr.i<0?90000:20000)||now-rWall>400){radarRaster(rt);rAt=rt;rWall=now}
   ctx.setTransform(1,0,0,1,0,0);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d3a6e');g.addColorStop(1,'#072450');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   ctx.setTransform(k,0,0,k,ox,oy);
   // animated ocean: two wave layers drifting in different directions
@@ -132,6 +140,7 @@ function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.c
     ctx.font='800 '+(zoomed?26:16)+'px '+EN_FONT;const ts=w.temp+'°',tx=bx+tw+8;
     ctx.strokeText(ts,tx,by);ctx.fillStyle='#ffd24a';ctx.fillText(ts,tx,by);
     if(zoomed){ctx.font='22px "Noto Color Emoji","Segoe UI Emoji",sans-serif';ctx.fillText(w.icon,x+10,y+16)}});
+  {const ts=(tr.i<0?'Radar loop · ':'Radar · ')+fmtT(rAt);ctx.font='700 14px '+F();ctx.textBaseline='middle';const tw=ctx.measureText(bp(ts)).width;ctx.fillStyle='rgba(4,16,40,.75)';ctx.fillRect(12,H-66,tw+20,24);ctx.fillStyle='#ffd24a';ctx.fillText(bp(ts),22,H-54)}
   panel(now,tr);
   const ck=el.querySelector('.uwx-clk');const cs=fmtT(now);if(ck.textContent!==cs)ck.textContent=cs}
 function panel(now,tr){const lang=uwxLang(),min=Math.floor(now/20000);const key=lang+'|'+tr.i+'|'+(tr.i>=0&&tr.el>ZOOM*.8)+'|'+min;if(key===panelKey)return;panelKey=key;
