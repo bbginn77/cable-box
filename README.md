@@ -3,6 +3,9 @@
 An early-2000s digital cable box interface for the onn Google TV stick: main menu,
 program guide, channel surfing, On Demand, favorites and settings. Every channel is a real Pluto TV
 channel playing inside the box; the main menu shows local radar and current conditions.
+Channel 2 is URBO Weather: a continental radar loop for URBO, the fictional nation of Brightport and Occasue,
+that zooms into each state and its cities with their flags and conditions (simulated weather). Press OK, or tap
+the EN | BP chip, to switch between English and Brightportish (written in the Brightportish script).
 Channel 4 is NyxVision Weather: radar, current conditions, the extended forecast and alerts for the
 place set in Settings → Weather Location (US ZIP, Canadian postal code or city), with seasonal music
 (press OK on it). US forecasts come from the National Weather Service, others from Open-Meteo.
