@@ -1,6 +1,6 @@
 /* Nyreth time for the Weather and Traffic channels. Anchor: 08/15/0119 NSC 0.00 Brightport Time = 2026-11-26T05:00Z.
-   Zones (Bailey, 2026-11-26): Brightport Time BT (east), Union Time UT (+1 h), Occasue Time OT (+2 h, west); a Nyreth hour = 2 h 36 min. */
-window.NYT=window.NYT||(function(){const A0=Date.UTC(2026,10,26,5),B=118*300+7*30+14,ZS=['BT','UT','OT'];
+   Zones (Bailey, 2026-11-26): Brightport Time BT (east), Mountain Time MT (+1 h), Occasue Time OT (+2 h, west); a Nyreth hour = 2 h 36 min. */
+window.NYT=window.NYT||(function(){const A0=Date.UTC(2026,10,26,5),B=118*300+7*30+14,ZS=['BT','MT','OT'];
   const at=(t,o)=>{const d=B+(t-A0)/93600000+(o||0)/10,di=Math.floor(d),f=d-di,dm=((di%30)+30)%30;return{h:f*10,wd:dm%10}};
   return{zones:ZS,zoneX:x=>x<460?2:x<880?1:0,cycle:t=>Math.floor(t/6000)%3,
     h24:(t,o)=>at(t,o).h*2.4,                                  // Nyreth hour scaled onto a 24-hour curve
