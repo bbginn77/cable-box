@@ -61,6 +61,8 @@ function trains(now,winBack,winFwd){const out=[];const min=now/60000;
       const hh=hash(Math.floor(t0),dir,L.id.length*7+L.code.charCodeAt(0));let delay=hh<.72?0:hh<.97?Math.round(2+(hh-.72)*80):-1,why='';
       if(delay>=0){const rw=railWx(L,t0);if(rw.worst){const r=RAILWX[rw.worst],h2=hash(Math.floor(t0),dir,77);if(h2<r[2])delay=-1;else delay+=r[0]+Math.round(h2*r[1]);why=rw.worst}}
       out.push({L,dir,t0,no,delay,why})}})});return out}
+const STZN={'Brightport City':0,'Port of Brightport City':0,'Trempas':0,'Bönderbil':0,'Bikbergen':0,'Mami City':1,'Ft. Deserto':1,'Estercrystal':1,'Lochwater':1,'Berevo':2,'Costal City':2,'Belkhap':2};
+const STZ=nm=>{if(nm in STZN)return STZN[nm];for(const L of LINES)for(const s of L.st)if(s.nm===nm)return NYT.zoneX(s.pt[0]);return 0};
 function trainAt(tr,min){const L=tr.L,sts=tr.dir?[...L.st].reverse():L.st,d0=sts[0].d,t=tr.t0+Math.max(0,tr.delay);
   const times=sts.map((s,i)=>t+Math.abs(s.d-d0)*MPU+i*2);let pos=null;
   if(min>=times[0]&&min<=times[times.length-1])for(let i=1;i<sts.length;i++){const dep=times[i-1]+2;
@@ -87,7 +89,7 @@ function airports(now){return AIRPORTS.map(([n,c])=>airport(n,c,now))}
 const acol=a=>a.status==='Ground stop'?'#e2352f':a.status==='Major delays'?'#f25a2a':a.status==='Delays'?'#f28b2a':a.status==='Minor delays'?'#f2d33a':'#3fd16b';
 
 /* ---- traffic simulation ---- */
-function hourNow(now){const d=new Date(now);return d.getHours()+d.getMinutes()/60}
+function hourNow(now,o){return NYT.h24(now,o||0)}
 function rush(h,wd){if(!wd)return Math.exp(-Math.pow((h-14)/3,2))*.35;return Math.exp(-Math.pow((h-8)/1.1,2))+Math.exp(-Math.pow((h-17.3)/1.4,2))}
 const TYPES=['Crash','Stalled vehicle','Roadwork','Lane closed','Debris on road'];
 function incidents(now){const w=Math.floor(now/1200000),out=[];const n=2+Math.floor(hash(w,1,2)*3);
@@ -95,7 +97,7 @@ function incidents(now){const w=Math.floor(now/1200000),out=[];const n=2+Math.fl
   for(let i=0;i<SEGS.length&&wi<3;i+=9){const sg=SEGS[(i+w*13)%SEGS.length],sw=segWx(sg,now);if(sw&&WXI[sw.ic]&&hash(w,sg.id,8)<.5){out.push({s:sg,ty:WXI[sw.ic],dir:['northbound','southbound','eastbound','westbound'][Math.floor(hash(w,sg.id,9)*4)],sev:sw.ic==='Heavy Snow'?1:.7,wx:sw.ic});wi++}}
   for(let i=0;i<n;i++){const s=SEGS[Math.floor(hash(w,i,5)*SEGS.length)];const ty=TYPES[Math.floor(hash(w,i,6)*TYPES.length)];const dirs=['northbound','southbound','eastbound','westbound'];
     out.push({s,ty,dir:dirs[Math.floor(hash(w,i,7)*4)],sev:ty==='Crash'?1:ty==='Roadwork'||ty==='Lane closed'?.7:.5})}return out}
-function cong(s,now,inc){const h=hourNow(now),wd=[1,2,3,4,5].includes(new Date(now).getDay());const urb=Math.max(0,1-s.cd/90);
+function cong(s,now,inc){const zo=NYT.zoneX(s.m[0]),h=hourNow(now,zo),wd=NYT.work(now,zo);const urb=Math.max(0,1-s.cd/90);
   let c=.08+urb*rush(h,wd)*.75+(hash(s.id,Math.floor(now/300000),3)-.5)*.12;
   const sw=segWx(s,now),rw=sw&&ROADWX[sw.ic];if(rw)c+=rw[0];
   inc.forEach(I=>{if(I.s.n!==s.n)return;const d=dist(I.s.m,s.m);if(d<70)c+=I.sev*(1-d/70)*.8});
@@ -156,7 +158,7 @@ function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.c
   if(tr.mode==='air'){ctx.setTransform(1,0,0,1,0,0);airports(now).forEach(a=>{const x=a.c[0]*k+ox,y=a.c[1]*k+oy;const r=11+(a.status!=='On time'?Math.sin(now/300)*2:0);
       ctx.fillStyle=acol(a);ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.lineWidth=2.5;ctx.strokeStyle='#fff';ctx.stroke();
       ctx.fillStyle='#14223f';ctx.font='15px "Noto Color Emoji","Segoe UI Emoji",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('✈',x,y+1);ctx.textAlign='left';
-      label(a.code,x+14,y-10,15,'#ffd24a');if(a.delay)label('+'+a.delay+' min',x+14,y+9,12,'#fff')});panel(now,tr,inc);clock(now);return}
+      label(a.code,x+14,y-10,15,'#ffd24a');if(a.delay)label('+'+NYT.min(a.delay)+' min',x+14,y+9,12,'#fff')});panel(now,tr,inc);clock(now);return}
   // Lochways with congestion
   ctx.lineCap='round';const flow=(now/90)%24;
   SEGS.forEach(s=>{ctx.beginPath();ctx.moveTo(s.p[0],s.p[1]);ctx.lineTo(s.q[0],s.q[1]);ctx.strokeStyle='rgba(10,14,22,.9)';ctx.lineWidth=(tr.mode==='city'?9:6.5)/k;ctx.stroke()});
@@ -167,7 +169,7 @@ function draw(now){const tr=tourAt(now),c=tr.cam,k=AW/c.w,ox=SX-c.cx*k,oy=SY-c.c
   Object.entries(CITY).forEach(([nm,v])=>{const x=v[0]*k+ox,y=v[1]*k+oy;if(x<0||x>W||y<60||y>H)return;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,tr.mode==='city'?6:3.5,0,7);ctx.fill();label(bp(nm),x+8,y-12,tr.mode==='city'?20:13)});
   inc.forEach(I=>{const x=I.s.m[0]*k+ox,y=I.s.m[1]*k+oy;if(x<0||x>W||y<60||y>H)return;const r=tr.mode==='city'?13:8;ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x+r,y+r*.8);ctx.lineTo(x-r,y+r*.8);ctx.closePath();ctx.fillStyle=I.ty==='Crash'?'#e2352f':'#f28b2a';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle='#fff';ctx.stroke();ctx.fillStyle='#fff';ctx.font='900 '+(r*1.1)+'px '+X.EN_FONT;ctx.textAlign='center';ctx.fillText('!',x,y+r*.25);ctx.textAlign='left'});
   panel(now,tr,inc);clock(now)}
-function clock(now){const ck=el.querySelector('.uwx-clk'),cs=fmtT(now);if(ck.textContent!==cs)ck.textContent=cs}
+function clock(now){const ck=el.querySelector('.uwx-clk'),cs=NYT.fmt(now,NYT.cycle(now),1);if(ck.textContent!==cs)ck.textContent=cs}
 function lwStats(n,now,inc,city){const ss=SEGS.filter(s=>s.n===n&&(!city||s.city===city&&s.cd<120));if(!ss.length)return null;const cg=ss.reduce((a,s)=>a+cong(s,now,inc),0)/ss.length,worst=Math.max(...ss.map(s=>cong(s,now,inc)));const ws=ss.map(s=>segWx(s,now)).filter(w=>w&&ROADWX[w.ic]).sort((a,b)=>ROADWX[b.ic][0]-ROADWX[a.ic][0])[0];return{n,cg,worst,mph:mph(cg),why:ws?ROADWX[ws.ic][1]:''}}
 function panel(now,tr,inc){const key=lang()+'|'+tr.mode+'|'+(tr.i??tr.stn)+'|'+Math.floor(now/(tr.mode==='board'?15000:20000));if(key===pk)return;pk=key;
   el.classList.toggle('bp',lang()==='bp');el.style.setProperty('--uwxf',F());
@@ -184,15 +186,15 @@ function panel(now,tr,inc){const key=lang()+'|'+tr.mode+'|'+(tr.i??tr.stn)+'|'+M
   else if(tr.mode==='rail'){fl.innerHTML=X.fimg('urbo','uwx-tf');ttl.textContent=bp('National Railway · Live Map');const min=now/60000;const all=trains(now,0,0).filter(t=>t.delay>=0&&trainAt(t,min).pos);
     pn.innerHTML='<div class="uwx-ph">'+bp('Lines')+'</div>'+LINES.map(L=>{const n=all.filter(t=>t.L===L).length,late=all.filter(t=>t.L===L&&t.delay>0).length;return '<div class="uwx-row"><span class="uwx-n"><i class="utr-line" style="background:'+L.color+'"></i>'+esc(bp(L.name))+'</span><span></span><span class="uwx-t utr-mph">'+n+'</span><span class="uwx-c">'+bp(n===1?'train running':'trains running')+(late?' · '+late+' '+bp('delayed'):' · '+bp('on time'))+(()=>{const rw=railWx(L,min);return rw.worst?' · '+bp(rw.worst):''})()+'</span></div>'}).join('')}
   else if(tr.mode==='air'){fl.innerHTML=X.fimg('urbo','uwx-tf');ttl.textContent=bp('Airport Delays · URBO Weather');
-    pn.innerHTML='<div class="uwx-ph">'+bp('Airports')+'</div>'+airports(now).map(a=>'<div class="uwx-row"><span class="uwx-n"><b class="utr-code">'+a.code+'</b>'+esc(bp(a.nm))+'</span><span class="uwx-i emo">'+(a.w?a.w.icon:'')+'</span><span class="uwx-t utr-mph" style="color:'+acol(a)+'">'+(a.delay?'+'+a.delay:'0')+'</span><span class="uwx-c">'+esc(bp(a.status))+(a.delay?' · '+bp('average')+' '+a.delay+' min':'')+(a.canc?' · '+a.canc+' '+bp('cancelled'):'')+'</span></div>').join('')}
+    pn.innerHTML='<div class="uwx-ph">'+bp('Airports')+'</div>'+airports(now).map(a=>'<div class="uwx-row"><span class="uwx-n"><b class="utr-code">'+a.code+'</b>'+esc(bp(a.nm))+'</span><span class="uwx-i emo">'+(a.w?a.w.icon:'')+'</span><span class="uwx-t utr-mph" style="color:'+acol(a)+'">'+(a.delay?'+'+NYT.min(a.delay):'0')+'</span><span class="uwx-c">'+esc(bp(a.status))+(a.delay?' · '+bp('average')+' '+NYT.min(a.delay)+' min':'')+(a.canc?' · '+a.canc+' '+bp('cancelled'):'')+'</span></div>').join('')}
   else{const sid=CITY[tr.stn]?CITY[tr.stn][2]:null;fl.innerHTML=sid?X.fimg(FLAG[sid],'uwx-tf'):X.fimg('urbo','uwx-tf');ttl.textContent=bp(tr.stn+' · Railway Arrivals');
     const rows=board(tr.stn,now),min=now/60000;
-    bd.innerHTML='<div class="utr-bh"><span>'+esc(bp('Arrivals'))+'</span><b>'+esc(bp(tr.stn))+'</b></div><div class="utr-bt"><span>'+bp('Time')+'</span><span>'+bp('From')+'</span><span>'+bp('Train')+'</span><span>'+bp('Platform')+'</span><span>'+bp('Status')+'</span></div>'+
-      (rows.length?rows.map(r=>{const late=Math.round(r.eta-r.sched);const st=r.tr.delay<0?'Cancelled':r.eta<=min?'Arrived':r.eta-min<3?'Arriving':late>0?'Delayed '+late+' min'+(r.tr.why?' · '+r.tr.why:''):'On time';
-        return '<div class="utr-br"><span class="utr-time">'+fmtT(r.sched*60000)+'</span><span>'+esc(bp(r.from))+'</span><span><i class="utr-line" style="background:'+r.tr.L.color+'"></i>'+r.tr.no+'</span><span class="utr-pl">'+r.plat+'</span><span class="'+(late>0||r.tr.delay<0?'utr-late':'utr-ok')+'">'+esc(bp(st))+'</span></div>'}).join(''):'<div class="utr-br"><span>'+bp('No arrivals in the next hour')+'</span></div>')}
+    bd.innerHTML='<div class="utr-bh"><span>'+esc(bp('Arrivals'))+'</span><b>'+esc(bp(tr.stn))+'</b></div><div class="utr-bt"><span>'+bp('Time')+' '+NYT.zones[STZ(tr.stn)]+'</span><span>'+bp('From')+'</span><span>'+bp('Train')+'</span><span>'+bp('Platform')+'</span><span>'+bp('Status')+'</span></div>'+
+      (rows.length?rows.map(r=>{const late=Math.round(r.eta-r.sched);const st=r.tr.delay<0?'Cancelled':r.eta<=min?'Arrived':r.eta-min<3?'Arriving':late>0?'Delayed '+NYT.min(late)+' min'+(r.tr.why?' · '+r.tr.why:''):'On time';
+        return '<div class="utr-br"><span class="utr-time">'+NYT.fmt(r.sched*60000,STZ(tr.stn))+'</span><span>'+esc(bp(r.from))+'</span><span><i class="utr-line" style="background:'+r.tr.L.color+'"></i>'+r.tr.no+'</span><span class="utr-pl">'+r.plat+'</span><span class="'+(late>0||r.tr.delay<0?'utr-late':'utr-ok')+'">'+esc(bp(st))+'</span></div>'}).join(''):'<div class="utr-br"><span>'+bp('No arrivals in the next hour')+'</span></div>')}
   const cr=el.querySelector('.utr-crawl span');const st=Object.keys(G.lw).map(n=>lwStats(n,now,inc)).filter(Boolean);
   const ad=airports(now).filter(a=>a.status!=='On time');
-  cr.textContent=bp('Simulated traffic and rail for URBO')+(ad.length?'   •   '+ad.map(a=>'✈ '+a.code+' '+bp(a.status)+' +'+a.delay+' min').join('   •   '):'   •   ✈ '+bp('All airports on time'))+'   •   '+inc.map(I=>'LW '+I.s.n+' '+bp(I.dir)+': '+bp(I.ty)+' '+bp('near')+' '+bp(I.s.city)).join('   •   ')+'   •   '+st.map(s=>'LW '+s.n+' '+bp(clbl(s.worst))).join('   •   ')}
+  cr.textContent=bp('Simulated traffic and rail for URBO')+(ad.length?'   •   '+ad.map(a=>'✈ '+a.code+' '+bp(a.status)+' +'+NYT.min(a.delay)+' min').join('   •   '):'   •   ✈ '+bp('All airports on time'))+'   •   '+inc.map(I=>'LW '+I.s.n+' '+bp(I.dir)+': '+bp(I.ty)+' '+bp('near')+' '+bp(I.s.city)).join('   •   ')+'   •   '+st.map(s=>'LW '+s.n+' '+bp(clbl(s.worst))).join('   •   ')}
 function loop(t){raf=requestAnimationFrame(loop);if(t-last<45)return;last=t;try{draw(Date.now())}catch(e){console.error(e)}}
 function sync(){const on=S.screen==='watch'&&has(S.ch)&&!!CH[S.ch].urbotr&&!locked(S.ch)&&!A.paused();
   if(on){ensure();if(el.hidden){el.hidden=false;pk='';cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}}
@@ -236,8 +238,8 @@ function stories(now){const out=[];const W=window.URBOWX_API,T=window.URBOTR_API
     out.push(['WEATHER','Cold in '+cold.p.n+', warm in '+warm.p.n,'It’s '+cold.w.temp+'° and '+cold.w.ic.toLowerCase()+' in '+cold.p.n+', while '+warm.p.n+' sits at '+warm.w.temp+'°. URBO Weather on channel 2 has the full radar.',FL[cold.p.n]||'urbo','🌡']);
     const wet=ps.filter(x=>/Rain|Snow|Thunder|Showers|Flurries/.test(x.w.ic));if(wet.length)out.push(['WEATHER',wet[0].w.ic+' in '+wet.map(x=>x.p.n).slice(0,3).join(', '),'Wet weather is moving across '+wet.map(x=>x.p.n).slice(0,3).join(', ')+'. Drivers should allow extra time on the Lochways.',FL[wet[0].p.n]||'urbo',wet[0].w.icon])}}catch(e){}
   try{if(T){const s=T.summary(now);s.inc.slice(0,2).forEach(I=>out.push(['TRAFFIC',I.ty+' on LW '+I.s.n+' near '+I.s.city,I.ty+' reported '+I.dir+' on LW '+I.s.n+' near '+I.s.city+'. Expect delays. Live traffic is on channel 10.',FL[I.s.city]||'urbo','🚧']));
-    const bad=(s.air||[]).filter(a=>a.delay>=30).sort((a,b)=>b.delay-a.delay);if(bad.length)out.push(['TRAVEL',bad[0].status+' at '+bad[0].nm+' airport',(bad[0].w?bad[0].w.ic+' at '+bad[0].nm+' is holding up flights. ':'')+'Departures are running about '+bad[0].delay+' minutes late'+(bad[0].canc?', with '+bad[0].canc+' flights cancelled':'')+'. '+(bad.length>1?'Delays also at '+bad.slice(1,3).map(a=>a.nm).join(' and ')+'. ':'')+'Check with your airline before you leave.',FL[bad[0].nm]||'urbo','✈']);
-    if(s.late.length){const L=s.late.sort((a,b)=>b.delay-a.delay)[0];out.push(['RAIL',L.line+' train '+L.no+' running '+L.delay+' minutes late',(L.why?L.why+' along the '+L.line+' is slowing trains. ':'')+s.running+' trains are running on the national railway right now. '+s.late.length+(s.late.length===1?' is':' are')+' behind schedule.','urbo','🚆'])}
+    const bad=(s.air||[]).filter(a=>a.delay>=30).sort((a,b)=>b.delay-a.delay);if(bad.length)out.push(['TRAVEL',bad[0].status+' at '+bad[0].nm+' airport',(bad[0].w?bad[0].w.ic+' at '+bad[0].nm+' is holding up flights. ':'')+'Departures are running about '+NYT.min(bad[0].delay)+' minutes late'+(bad[0].canc?', with '+bad[0].canc+' flights cancelled':'')+'. '+(bad.length>1?'Delays also at '+bad.slice(1,3).map(a=>a.nm).join(' and ')+'. ':'')+'Check with your airline before you leave.',FL[bad[0].nm]||'urbo','✈']);
+    if(s.late.length){const L=s.late.sort((a,b)=>b.delay-a.delay)[0];out.push(['RAIL',L.line+' train '+L.no+' running '+NYT.min(L.delay)+' minutes late',(L.why?L.why+' along the '+L.line+' is slowing trains. ':'')+s.running+' trains are running on the national railway right now. '+s.late.length+(s.late.length===1?' is':' are')+' behind schedule.','urbo','🚆'])}
     else out.push(['RAIL','Trains running on time',s.running+' trains are on the national railway right now, all on schedule.','urbo','🚆'])}}catch(e){}
   const d=Math.floor(now/86400000);const pool=POOL.map((p,i)=>[hash(d,i,4),p]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,8);
   // interleave
