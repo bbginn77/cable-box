@@ -96,7 +96,7 @@ function mix(a,b,k){return{cx:a.cx+(b.cx-a.cx)*k,cy:a.cy+(b.cy-a.cy)*k,w:a.w*Mat
 /* ---- drawing ---- */
 let rCam='',rWall=0,TER=null,NEIGH=[],WAVE=null,el=null,cv=null,ctx=null,raf=0,last=0,rc=null,rctx=null,rimg=null,rAt=0,paths=null,panelKey='';
 function ensure(){if(el)return;el=document.createElement('div');el.id='uwx';el.hidden=true;
-  el.innerHTML='<canvas width="'+W+'" height="'+H+'"></canvas><div class="uwx-top"><div class="uwx-logo"><b>URBO</b><i>WEATHER</i></div><div class="uwx-fls"></div><div class="uwx-ttl"></div><div class="uwx-clk"></div></div><div class="uwx-panel"></div><div class="uwx-crawl"><span></span></div>';
+  el.innerHTML='<canvas width="'+W+'" height="'+H+'"></canvas><div class="uwx-top"><div class="uwx-logo"><b>UBN NEWS</b><i>WEATHER</i></div><div class="uwx-fls"></div><div class="uwx-ttl"></div><div class="uwx-clk"></div></div><div class="uwx-panel"></div><div class="uwx-crawl"><span></span></div>';
   stage.insertBefore(el,ui);cv=el.querySelector('canvas');ctx=cv.getContext('2d');
   rc=document.createElement('canvas');rc.width=RX;rc.height=RY;rctx=rc.getContext('2d');rimg=rctx.createImageData(RX,RY);
   paths={st:{},neigh:M.neigh.map(d=>new Path2D(d)),riv:new Path2D(M.rivers)};ORDER.forEach(id=>paths.st[id]=new Path2D(M.states[id]));

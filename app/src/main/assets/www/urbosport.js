@@ -1,4 +1,4 @@
-/* URBO Sport: the UBA season engine and the URBO Sport channel (NyxVision and the URBO portal).
+/* UBN Sport: the UBA season engine and the UBN Sport channel (national channel 04; NyxVision channel 12; the URBO portal).
    The season is canon (Bailey, 2026-11-27): every game is generated from a fixed seed, so every device shows
    the same schedule, live scores, results and standings. Seasons 119 onward are simulated; earlier history is fixed lore.
    Calendar: Nyrethian Standard Calendar. Anchor 08/15/0119 0.00 Brightport Time = 2026-11-26T05:00Z. 1 Nyreth day = 26 Earth hours. */
@@ -90,7 +90,7 @@ return{T,BY,ZN,absDay,timeOf,regular,playoffs,allstar,table,seasonAt,phase,live,
   label:Y=>'Season '+Y,last:{Y:118,champion:'lions',runnerup:'royals',sweep:'4–0'}};
 })();
 
-/* ---- URBO Sport channel (NyxVision channel 12, and the UBA Live page on the portal) ---- */
+/* ---- UBN Sport channel (NyxVision channel 12, and the UBN Sport page on the portal) ---- */
 window.USPORT=function(A){
 const U=window.UBA_SIM,X=window.URBO_SHARED;if(!U)return null;
 const S=A.S,CH=A.CH,has=A.has,locked=A.locked,esc=A.esc,stage=A.stage,ui=A.ui;const CB=A.crestBase||'img/uba/crests/';
@@ -101,7 +101,7 @@ const ab=id=>id==='bp-all'?'BP':id==='oc-all'?'OC':U.BY[id].abbr;
 #usport{position:absolute;inset:0;overflow:hidden;color:#fff;font-family:"Fira Sans","Segoe UI",Tahoma,sans-serif;background:radial-gradient(ellipse at 30% 0%,#26324f,#0b1020 70%)}
 #usport .us-top{position:absolute;left:0;right:0;top:0;height:54px;display:flex;align-items:center;gap:12px;padding:0 18px;background:linear-gradient(90deg,#c8262c 0 50%,#f4c21c 50%);box-shadow:0 2px 0 #ee6a1a}
 #usport .us-logo{font:900 26px/1 "Fira Sans",sans-serif;letter-spacing:.04em;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}#usport .us-logo span{color:#1b1b1b;text-shadow:none}
-#usport .us-uba{height:40px}#usport .us-seg{margin-left:auto;font:700 15px sans-serif;color:#1b1b1b;text-transform:uppercase;letter-spacing:.08em}
+#usport .us-uba{height:40px}#usport .us-ubn{height:46px;background:#fff;border-radius:8px;padding:2px 4px}#usport .us-seg{margin-left:auto;font:700 15px sans-serif;color:#1b1b1b;text-transform:uppercase;letter-spacing:.08em}
 #usport .us-clk{font:700 15px sans-serif;color:#1b1b1b;background:rgba(255,255,255,.65);padding:4px 10px;border-radius:6px}
 #usport .us-main{position:absolute;left:18px;right:18px;top:68px;bottom:52px}
 #usport h2{margin:0 0 8px;font:800 26px sans-serif;letter-spacing:.01em}#usport .us-sub{font:600 14px sans-serif;color:#b9c3dc;margin:-4px 0 10px}
@@ -124,7 +124,7 @@ const ab=id=>id==='bp-all'?'BP':id==='oc-all'?'OC':U.BY[id].abbr;
 #usport .us-in{animation:usin .5s ease}@keyframes usin{from{opacity:0;transform:translateY(8px)}}`;document.head.appendChild(s)})();
 let el=null,raf=0,last=0,pk='',seg=-1;
 function ensure(){if(el)return;el=document.createElement('div');el.id='usport';el.hidden=true;
-  el.innerHTML='<div class="us-top"><img class="us-uba" src="'+CB.replace('crests/','league/uba-logo.png')+'" alt=""><div class="us-logo">URBO <span>SPORT</span></div><div class="us-seg"></div><div class="us-clk"></div></div><div class="us-main"></div><div class="us-bot"><span></span></div>';
+  el.innerHTML='<div class="us-top"><img class="us-uba" src="'+CB.replace('crests/','league/uba-logo.png')+'" alt=""><img class="us-ubn" src="'+(A.ubnLogo||'img/media/ubn.svg')+'" alt=""><div class="us-logo">UBN <span>SPORT</span></div><div class="us-seg"></div><div class="us-clk"></div></div><div class="us-main"></div><div class="us-bot"><span></span></div>';
   stage.insertBefore(el,ui)}
 function gameCard(g,t){const L=U.live(g,t);const hw=L.st==='final'&&L.h>L.a,aw=L.st==='final'&&L.a>L.h;
   const st=L.st==='live'?'● Live · '+(typeof L.q==='number'?'Q'+L.q:L.q)+' '+L.clock:L.st==='final'?'Final'+(L.ot?' / '+(L.ot>1?L.ot:'')+'OT':''):U.tipLabel(g);
@@ -152,7 +152,7 @@ function segs(t){const ph=U.phase(t).ph,k=Math.floor(t/SEG);const list=[];const 
   if(ph==='regular'||ph==='playoffs'){list.push(['Standings',standings('Brightport',t)]);if(sl)list.push(['Scores',sl]);list.push(['Standings',standings('Occasue',t)])}
   list.push(['Spotlight',spot(t,Math.floor(t/(SEG*7))%16)]);list.push(['Nyreth Cup',cup(t)]);return list}
 function ticker(t){const Y=U.seasonAt(t);const done=U.allGames(Y).filter(g=>g.t1<=t).slice(-12);const lv=U.gamesOn(t,0).filter(g=>t>=g.t0&&t<g.t1);
-  const f=g=>{const L=U.live(g,t);return ab(g.away)+' '+L.a+' – '+L.h+' '+ab(g.home)+(L.st==='live'?' (live)':'')};return [...lv.map(f),...done.reverse().map(f)].join('   •   ')||'URBO Sport · the home of the UBA'}
+  const f=g=>{const L=U.live(g,t);return ab(g.away)+' '+L.a+' – '+L.h+' '+ab(g.home)+(L.st==='live'?' (live)':'')};return [...lv.map(f),...done.reverse().map(f)].join('   •   ')||'UBN Sport · the home of the UBA'}
 function draw(t){const k=Math.floor(t/SEG),L=segs(t),i=k%L.length,[name,html]=L[i];const ck=el.querySelector('.us-clk'),cs=U.clockOf(t,0)+' BT · '+U.dateOf(U.absDay(t)).short;if(ck.textContent!==cs)ck.textContent=cs;
   const m=el.querySelector('.us-main');const key=k+'|'+html.length;if(key!==pk){const fresh=seg!==k;seg=k;pk=key;m.innerHTML=html;el.querySelector('.us-seg').textContent=name;if(fresh){m.classList.remove('us-in');void m.offsetWidth;m.classList.add('us-in')}
     const tk=el.querySelector('.us-bot span'),tt=ticker(t);if(tk.textContent!==tt)tk.textContent=tt}}

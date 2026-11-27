@@ -1045,16 +1045,16 @@ const TAPE_CH={n:8,call:'NTD',name:'Nyx Tape Deck',g:'music',scene:'stage',tape:
 for(let t=D0;t<D0+72*3600000;t+=2*SLOT)TAPE_CH.sched.push({title:'Nyx Tape Deck',start:t,end:t+2*SLOT,rating:'',cat:'music',desc:'Your Spotify playlists on a cassette deck. Press INFO for the tape shelf.'});
 const TWI_CH={n:3,call:'NTW',name:'Nyx Twilight',g:'news',scene:'stage',twilight:true,key:'twilight',cat:'news',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=2*SLOT)TWI_CH.sched.push({title:'Nyx Twilight',start:t,end:t+2*SLOT,rating:'TV-G',cat:'news',desc:'A relaxing night flight over North America with live local weather and music. Press OK to turn the music on or off.'});
-// Channel 2: URBO Weather, a continental radar tour of the fictional nation of URBO (simulated weather), EN | BP
-const URBO_CH={n:2,call:'UWX',name:'URBO Weather',g:'radar',scene:'stage',urbo:true,key:'urbo',sched:[]};
-for(let t=D0;t<D0+72*3600000;t+=SLOT)URBO_CH.sched.push({title:'URBO Weather',start:t,end:t+SLOT,rating:'',desc:'Continental radar for the United Republics of Brightport and Occasue, then every state and its cities. Press OK to switch between English and Brightportish.'});
+// Channel 2: UBN News weather (formerly URBO Weather), a continental radar tour of the fictional nation of URBO (simulated weather), EN | BP
+const URBO_CH={n:2,call:'UWX',name:'UBN News · Weather',g:'radar',scene:'stage',urbo:true,key:'urbo',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)URBO_CH.sched.push({title:'UBN News Weather',start:t,end:t+SLOT,rating:'',desc:'Continental radar for the United Republics of Brightport and Occasue, then every state and its cities. Press OK to switch between English and Brightportish.'});
 // Channel 10: URBO Traffic & Rail · Channel 11: BNN, Brightport News Network (simulated, EN | BP)
-const UTR_CH={n:10,call:'UTR',name:'URBO Traffic & Rail',g:'news',scene:'stage',urbotr:true,key:'urbotr',sched:[]};
-for(let t=D0;t<D0+72*3600000;t+=SLOT)UTR_CH.sched.push({title:'URBO Traffic & Rail',start:t,end:t+SLOT,rating:'',desc:'Lochway traffic across URBO, then each major city, the live national rail map and station arrival boards. Press OK for English or Brightportish.'});
+const UTR_CH={n:10,call:'UTR',name:'UBN News · Traffic & Rail',g:'news',scene:'stage',urbotr:true,key:'urbotr',sched:[]};
+for(let t=D0;t<D0+72*3600000;t+=SLOT)UTR_CH.sched.push({title:'UBN News Traffic & Rail',start:t,end:t+SLOT,rating:'',desc:'Lochway traffic across URBO, then each major city, the live national rail map and station arrival boards. Press OK for English or Brightportish.'});
 const BNN_CH={n:11,call:'BNN',name:'Brightport News Network',g:'news',scene:'stage',bnn:true,key:'bnn',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=SLOT)BNN_CH.sched.push({title:'BNN Newsroom',start:t,end:t+SLOT,rating:'',desc:'Everyday news from across URBO: weather, the Lochways, the railway, ports, culture and sports. Press OK for English or Brightportish.'});
-const USPORT_CH={n:12,call:'USP',name:'URBO Sport',g:'sports',scene:'stage',usport:true,key:'usport',sched:[]};
-{const U=window.UBA_SIM;for(let t=D0;t<D0+72*3600000;t+=SLOT){let title='UBA Tonight',desc='Scores, standings and team spotlights from the URBO Basketball Association.';if(U){const g=U.allGames(U.seasonAt(t)).find(g=>g.t0<t+SLOT&&g.t1>t);if(g){const n=id=>/-all$/.test(id)?(id[0]==='b'?'Brightport All-Stars':'Occasue All-Stars'):U.BY[id].nick;title=g.type==='allstar'?'UBA All-Star Game':(g.type==='playoff'?'UBA Playoffs: ':'UBA Live: ')+n(g.away)+' at '+n(g.home);desc='Live UBA basketball with scores from around the league, standings and the Nyreth Cup race.'}}USPORT_CH.sched.push({title,start:t,end:t+SLOT,rating:'',desc})}}
+const USPORT_CH={n:12,call:'UBNS',name:'UBN Sport',g:'sports',scene:'stage',usport:true,key:'usport',sched:[]};
+{const U=window.UBA_SIM;for(let t=D0;t<D0+72*3600000;t+=SLOT){let title='UBA coverage',desc='Scores, standings and team spotlights from the URBO Basketball Association.';if(U){const g=U.allGames(U.seasonAt(t)).find(g=>g.t0<t+SLOT&&g.t1>t);if(g){const n=id=>/-all$/.test(id)?(id[0]==='b'?'Brightport All-Stars':'Occasue All-Stars'):U.BY[id].nick;title=g.type==='allstar'?'UBA All-Star Game':(g.type==='playoff'?'UBA Playoffs: ':'UBA Live: ')+n(g.away)+' at '+n(g.home);desc='Live UBA basketball with scores from around the league, standings and the Nyreth Cup race.'}}USPORT_CH.sched.push({title,start:t,end:t+SLOT,rating:'',desc})}}
 const TOON_CH={n:9,call:'TOON',name:'Nyx Toons',g:'kids',scene:'stage',toons:true,key:'toons',cat:'kids',sched:[]};
 for(let t=D0;t<D0+72*3600000;t+=SLOT)TOON_CH.sched.push({title:'Nyx Toons',start:t,end:t+SLOT,rating:'TV-G',cat:'kids',desc:'Classic cartoons from the Internet Archive, back to back.'});
 if(window.CableNative){CH.length=0;CH.push(PREVIEW_CH,URBO_CH,TWI_CH,RADAR_CH,NEWS_CH,TRAF_CH,MOVIE_CH,TAPE_CH,TOON_CH,UTR_CH,BNN_CH,USPORT_CH)} // TV app: weather, news + real Pluto TV channels only
@@ -5188,7 +5188,7 @@ if(NATIVE){loadWeather();loadPluto();setTimeout(loadMovies,12000);setTimeout(loa
 UWX=window.URBOWX?window.URBOWX({S,CH,SET,has,locked,esc,fmtT,stage,ui,touch:TOUCH,save,snd,render:()=>render(),paused:()=>APP_PAUSED}):null;
 window.URBOWX_API=UWX;
 const UAPI={S,CH,SET,has,locked,esc,fmtT,stage,ui,touch:TOUCH,save,snd,render:()=>render(),paused:()=>APP_PAUSED};
-UTR=window.URBOTR?window.URBOTR(UAPI):null;window.URBOTR_API=UTR;BNNI=window.BNN?window.BNN(UAPI):null;USP=window.USPORT?window.USPORT(Object.assign({crestBase:'uba/crests/'},UAPI)):null;
+UTR=window.URBOTR?window.URBOTR(UAPI):null;window.URBOTR_API=UTR;BNNI=window.BNN?window.BNN(UAPI):null;USP=window.USPORT?window.USPORT(Object.assign({crestBase:'uba/crests/',ubnLogo:'uba/ubn.svg'},UAPI)):null;
 if(UWX||UTR||BNNI||USP){const rU=render;render=function(){rU();[UWX,UTR,BNNI,USP].forEach(x=>{try{x&&x.sync()}catch(e){}})}}
 })();
 </script>
