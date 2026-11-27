@@ -63,7 +63,7 @@ function buildWet(){const c=document.createElement('canvas');c.width=GX;c.height
   const w2=new Float32Array(WET);for(let y=1;y<GY-1;y++)for(let x2=1;x2<GX-1;x2++){let s=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)s+=WET[(y+dy)*GX+x2+dx];w2[y*GX+x2]=s/9}WET=w2}
 function wetAt(mx,my){const gx=Math.max(0,Math.min(GX-1,Math.floor(mx/CW))),gy=Math.max(0,Math.min(GY-1,Math.floor(my/CH2)));return WET[gy*GX+gx]}
 function intensity(mx,my,t){const w=wetAt(mx,my),v=precip(mx,my,t);return Math.max(0,(v-(.74-w*.24))*3.2)}
-function season(){const d=new Date(),doy=(d-new Date(d.getFullYear(),0,0))/86400000;return -Math.cos((doy-15)/365*2*Math.PI)}
+function season(){/* Nyreth year: 300 days of 26 h, starting in spring; anchor 08/15/0119 NSC = 2026-11-26T05:00Z */const doy=(((Date.now()-Date.UTC(2026,10,26,5))/93600000+224)%300+300)%300;return -Math.cos((doy-255)/300*2*Math.PI)}
 function cond(p,t){t=Math.floor(t/180000)*180000; // conditions update every 3 minutes, so labels don't flicker
   const [base,sw,wet]=CLI[p.s];const hr=new Date(t).getHours()+new Date(t).getMinutes()/60;
   let temp=base+sw*season()+7*Math.sin((hr-9)/24*2*Math.PI)+(hash(Math.round(p.x),Math.round(p.y),day())-.5)*8;
