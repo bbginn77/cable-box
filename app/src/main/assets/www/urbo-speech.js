@@ -100,13 +100,18 @@ const BPTTS=(()=>{
   catch(e){/* fall back to WebAudio */const A=ctx(),buf=A.createBuffer(1,n,w.samplerate),ch=buf.getChannelData(0);let o=0;for(const c of chunks){for(let i=0;i<c.length;i++)ch[o+i]=c[i]/32768;o+=c.length}
    await new Promise(res=>{const s=A.createBufferSource();s.buffer=buf;s.connect(A.destination);s.onended=res;curSrc=s;s.start()})}
   finally{curSrc=null;setTimeout(()=>URL.revokeObjectURL(url),1000)}}
- function playDevice(text,tag,vo,my){return new Promise(res=>{const vs=voicesFor(tag);if(!vs.length)return res(false);const u=new SpeechSynthesisUtterance(text);if(tag)u.lang=tag;try{u.voice=vs[0]}catch(e){}u.rate=vo.rate;u.pitch=vo.pitch;let done=false;const fin=ok=>{if(!done){done=true;res(ok)}};u.onend=()=>fin(true);u.onerror=()=>fin(true);SS.speak(u);
-   const t=setInterval(()=>{if(my!==token){clearInterval(t);fin(true)}else if(!SS.speaking&&!SS.pending){clearInterval(t);fin(true)}},400)})}
+ let DEVFAIL=false;
+ /* resolves true when the device voice actually started; false if it is missing, errors or never starts (e.g. blocked inside an app's web view) */
+ function playDevice(text,tag,vo,my){return new Promise(res=>{if(DEVFAIL)return res(false);const vs=voicesFor(tag);if(!vs.length)return res(false);const u=new SpeechSynthesisUtterance(text);if(tag)u.lang=tag;try{u.voice=vs[0]}catch(e){}u.rate=vo.rate;u.pitch=vo.pitch;let done=false,started=false;const fin=ok=>{if(!done){done=true;clearInterval(t);clearTimeout(t0);res(ok)}};
+   u.onstart=()=>{started=true};u.onend=()=>fin(true);u.onerror=e=>{if(!started){DEVFAIL=true;fin(false)}else fin(true)};
+   const t0=setTimeout(()=>{if(!started&&!SS.speaking){DEVFAIL=true;try{SS.cancel()}catch(e){}fin(false)}},1800);
+   try{SS.speak(u)}catch(e){DEVFAIL=true;return fin(false)}
+   const t=setInterval(()=>{if(my!==token)fin(true);else if(started&&!SS.speaking&&!SS.pending)fin(true)},400)})}
  /* ---------- settings ---------- */
  const LS='bptts-mode';
  function mode(){try{return localStorage.getItem(LS)||'auto'}catch(e){return 'auto'}}
  function setMode(m){try{localStorage.setItem(LS,m)}catch(e){}}
- function useExact(context){const m=mode();if(m==='exact')return true;if(m==='natural')return !voicesFor('fr-FR').length;return context==='learn'||!voicesFor('fr-FR').length}
+ function useExact(context){if(DEVFAIL)return true;const m=mode();if(m==='exact')return true;if(m==='natural')return !voicesFor('fr-FR').length;return context==='learn'||!voicesFor('fr-FR').length}
  /* ---------- public API ---------- */
  let onstate=()=>{},busy=false,onerr=()=>{};
  function stop(){token++;busy=false;if(SS)SS.cancel();try{curSrc&&curSrc.stop()}catch(e){}curSrc=null;onstate(false)}
@@ -120,7 +125,7 @@ const BPTTS=(()=>{
   if(my===token){busy=false;onstate(false)}}
  function sayBp(text,opts){return say([{lang:'bp',text}],Object.assign({context:'learn'},opts))}
  return{say,sayBp,stop,segments,espeakInput,frenchInput,wordEspeak,wordFrench,VOICES,mode,setMode,
-  setDir:d=>{TTSDIR=d},busy:()=>busy,hasDevice:t=>voicesFor(t||'fr-FR').length>0,onState:f=>{onstate=f},onError:f=>{onerr=f},unlock,cleanEn,
+  setDir:d=>{TTSDIR=d},deviceBlocked:()=>DEVFAIL,busy:()=>busy,hasDevice:t=>voicesFor(t||'fr-FR').length>0,onState:f=>{onstate=f},onError:f=>{onerr=f},unlock,cleanEn,
   ready:()=>espeak().then(()=>true,()=>false)}})();
 
 
@@ -150,11 +155,12 @@ const TTSUI=(()=>{
  function setAuto(on){auto=on;document.querySelectorAll('[data-uwauto]').forEach(c=>c.checked=on);if(on){curBtn=document.querySelector('[data-uwsay]');readStage()}watch()}
  function radioRead(){if(typeof MD!=='function')return;const x=MD().radio[window.__rd.i];return [x.name,x.fmt,x.market].filter(Boolean).join('. ')}
  function alertRead(){if(typeof ALTXT==='undefined')return null;const A=window.__al,t=(ALTXT[A.kind]||{})[A.lang];if(!t||!A.on)return null;return{lang:LANGCODE[A.lang]||'en',text:t[0]+'. '+A.area+'. '+t[1]}}
- BPTTS.onError(msg=>{let t=document.getElementById('ttserr');if(!t){t=document.createElement('div');t.id='ttserr';t.setAttribute('role','status');t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10001;background:#111;color:#fff;font:500 15px/1.3 sans-serif;padding:10px 16px;border-radius:10px;max-width:90vw';document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,4000)});
+ function showErr(msg){let t=document.getElementById('ttserr');if(!t){t=document.createElement('div');t.id='ttserr';t.setAttribute('role','status');t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10001;background:#111;color:#fff;font:500 15px/1.3 sans-serif;padding:10px 16px;border-radius:10px;max-width:90vw';document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,6000)}
+ BPTTS.onError(showErr);
  /* warm the engine so the first tap does not wait for it */
  const warm=()=>setTimeout(()=>{if(document.querySelector('[data-say],[data-uwsay],[data-rdsay],[data-alsay],#bnn,#uwx,#utr,#usport'))try{BPTTS.ready()}catch(e){}},2500);warm();addEventListener('hashchange',warm);
  document.addEventListener('click',e=>{const tg=e.target;if(!tg.closest)return;
-  const s=tg.closest('[data-say]');if(s){e.preventDefault();e.stopPropagation();if(curBtn===s){BPTTS.stop();return}curBtn=s;BPTTS.sayBp(s.dataset.say,{voice:'dictionary'});return}
+  const s=tg.closest('[data-say]');if(s){e.preventDefault();e.stopPropagation();if(curBtn===s){BPTTS.stop();return}curBtn=s;const nat=BPTTS.mode()==='natural';BPTTS.sayBp(s.dataset.say,{voice:'dictionary'}).then(()=>{if(nat&&BPTTS.deviceBlocked()&&!window.__devwarn){window.__devwarn=1;showErr('Your device’s voices aren’t available here (the Claude app blocks them), so Exact was used. Open the site in Safari for Natural.')}});return}
   const m=tg.closest('[data-ttsmode]');if(m){BPTTS.setMode(m.dataset.ttsmode);document.querySelectorAll('[data-ttsmode]').forEach(b=>b.setAttribute('aria-pressed',b===m));return}
   const u=tg.closest('[data-uwsay]');if(u){e.preventDefault();if(curBtn===u){BPTTS.stop();if(auto)setAuto(false);return}curBtn=u;readStage();return}
   const r=tg.closest('[data-rdsay]');if(r){e.preventDefault();if(curBtn===r){BPTTS.stop();return}curBtn=r;BPTTS.say(items(radioRead()),{voice:'radio',context:'media'});return}
