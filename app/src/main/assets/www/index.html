@@ -924,6 +924,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
       <button class="rb" data-k="back" type="button">BACK</button>
       <button class="rb" data-k="last" type="button">LAST</button>
       <button class="rb" data-k="fav" type="button">★ FAV</button>
+      <button class="rb" data-k="red" type="button" aria-label="Read aloud">🔊</button>
     </div>
     <div class="chv">
       <div class="stack">
@@ -944,6 +945,7 @@ body{background:var(--room);color:var(--text);font-family:var(--ui);
 <script src="urbowx.js"></script>
 <script src="urbotr.js"></script>
 <script src="urbosport.js"></script>
+<script src="urbo-speech.js"></script>
 <script>
 (function(){
 "use strict";
@@ -1606,6 +1608,7 @@ function launch(app){
 /* ---------------- input ---------------- */
 let entryT=0;
 function press(k){
+  if(k==='red'&&S.screen==='watch'&&!S.dialog&&has(S.ch)&&CH[S.ch].scene==='stage'&&window.TTSUI){const on=TTSUI.toggleAuto();ttsToast(on);return}
   if(!OV.card.hidden&&(k==='ok'||k==='back')){OV.card.hidden=true;clearTimeout(OV.cardT);snd.back();renderBop();return}
   if(['sports','teams','tests','testw','teste','testsp'].indexOf(S.screen)>=0&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){if(extraListKey(S.screen,k))return}
   if(S.screen==='twsend'&&!S.dialog&&!/^[0-9]$/.test(k)&&k!=='menu'&&k!=='guide'&&k!=='last'){twsendKey(k);return}
@@ -5189,7 +5192,10 @@ UWX=window.URBOWX?window.URBOWX({S,CH,SET,has,locked,esc,fmtT,stage,ui,touch:TOU
 window.URBOWX_API=UWX;
 const UAPI={S,CH,SET,has,locked,esc,fmtT,stage,ui,touch:TOUCH,save,snd,render:()=>render(),paused:()=>APP_PAUSED};
 UTR=window.URBOTR?window.URBOTR(UAPI):null;window.URBOTR_API=UTR;BNNI=window.BNN?window.BNN(UAPI):null;USP=window.USPORT?window.USPORT(Object.assign({crestBase:'uba/crests/',ubnLogo:'uba/ubn.svg'},UAPI)):null;
-if(UWX||UTR||BNNI||USP){const rU=render;render=function(){rU();[UWX,UTR,BNNI,USP].forEach(x=>{try{x&&x.sync()}catch(e){}})}}
+window.TTSUI&&TTSUI.config({isBp:()=>SET.uwxLang==='bp'});
+function ttsToast(on){let t=document.getElementById('ttstoast');if(!t){t=document.createElement('div');t.id='ttstoast';t.style.cssText='position:absolute;right:4%;top:6%;z-index:60;background:rgba(0,0,0,.78);color:#fff;font:600 22px/1.2 sans-serif;padding:10px 18px;border-radius:8px;pointer-events:none';(document.getElementById('tvframe')||document.body).appendChild(t)}t.textContent=on?'🔊 Read aloud: on':'🔇 Read aloud: off';t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,2500)}
+window.ttsToast=ttsToast;
+if(UWX||UTR||BNNI||USP){const rU=render;render=function(){rU();if(window.TTSUI&&TTSUI.auto()&&!(S.screen==='watch'&&has(S.ch)&&CH[S.ch].scene==='stage')){TTSUI.setAuto(false)}else if(window.TTSUI&&TTSUI.auto())TTSUI.watch();[UWX,UTR,BNNI,USP].forEach(x=>{try{x&&x.sync()}catch(e){}})}}
 })();
 </script>
 
