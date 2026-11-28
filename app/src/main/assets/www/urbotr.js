@@ -15,7 +15,7 @@ window.URBO_SHARED=(function(){
   const fimg=(k,cls)=>FURL[k]?'<img class="'+(cls||'uwx-fl')+'" src="'+FURL[k]+'" alt="">':'';
   const hash=(a,b,c)=>{let h=(a*374761393+b*668265263+c*982451653)|0;h=(h^(h>>>13))*1274126177|0;return((h^(h>>>16))>>>0)/4294967295};
   const EN_FONT='"Frutiger","Segoe UI",Tahoma,Verdana,sans-serif';
-  return{bp,fimg,FURL,hash,EN_FONT,BP_FONT:'Brightportish,'+EN_FONT};
+  return{bp,fimg,FURL,hash,EN_FONT,BP_FONT:'"Brightport Sans",Brightportish,'+EN_FONT};
 })();
 
 window.URBOTR=function(A){
@@ -131,7 +131,7 @@ function ensure(){if(el)return;el=document.createElement('div');el.id='utr';el.h
   TER=new Image();TER.src='urbo_terrain.webp';
   WAVE=document.createElement('canvas');WAVE.width=WAVE.height=192;const x=WAVE.getContext('2d');
   for(let r=0;r<12;r++){const y0=r*16,amp=2+((r*37)%5),ph=(r*1.7)%6.28;x.beginPath();for(let i=0;i<=192;i+=4){const y=y0+Math.sin(i/192*4*Math.PI+ph)*amp;i?x.lineTo(i,y):x.moveTo(i,y)}x.strokeStyle='rgba(150,205,255,'+(0.03+((r*13)%7)/140)+')';x.lineWidth=2;x.stroke()}
-  try{const ff=new FontFace('Brightportish','url(fonts/Brightportish-Regular.ttf)');ff.load().then(f=>{document.fonts.add(f);pk=''})}catch(e){}}
+  try{const ff=new FontFace('Brightport Sans','url(fonts/BrightportSans-Regular.woff2)');ff.load().then(f=>{document.fonts.add(f);pk=''})}catch(e){}}
 function base(now,k,ox,oy,dim){ctx.setTransform(1,0,0,1,0,0);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d3a6e');g.addColorStop(1,'#072450');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   ctx.setTransform(k,0,0,k,ox,oy);const ts=now/1000;
   ctx.setTransform(1,0,0,1,0,0);[[ts*9,ts*2.5],[-ts*6,ts*4]].forEach(([dx,dy])=>{const pat=ctx.createPattern(WAVE,'repeat');try{pat.setTransform(new DOMMatrix().translate(dx%192,dy%192))}catch(e){}ctx.fillStyle=pat;ctx.fillRect(0,0,W,H)});ctx.setTransform(k,0,0,k,ox,oy);
@@ -249,7 +249,7 @@ const SEG=12000;
 let el=null,raf=0,last=0,pk='';
 function ensure(){if(el)return;el=document.createElement('div');el.id='bnn';el.hidden=true;
   el.innerHTML='<div class="bnn-bg"></div><div class="bnn-top"><div class="bnn-logo"><b>BNN</b><span>BRIGHTPORT NEWS NETWORK</span></div><div class="bnn-sim">SIMULATED</div><div class="bnn-clk"></div></div><div class="bnn-main"><div class="bnn-vis"></div><div class="bnn-story"></div></div><div class="bnn-side"></div><div class="bnn-lower"><div class="bnn-kick"></div><div class="bnn-head"></div></div><div class="bnn-crawl"><b>BNN</b><span></span></div>';
-  stage.insertBefore(el,ui);try{const ff=new FontFace('Brightportish','url(fonts/Brightportish-Regular.ttf)');ff.load().then(f=>{document.fonts.add(f);pk=''})}catch(e){}}
+  stage.insertBefore(el,ui);try{const ff=new FontFace('Brightport Sans','url(fonts/BrightportSans-Regular.woff2)');ff.load().then(f=>{document.fonts.add(f);pk=''})}catch(e){}}
 let CACHE={seg:-1,all:null};
 function draw(now){const sg=Math.floor(now/SEG);if(CACHE.seg!==sg||!CACHE.all){CACHE={seg:sg,all:stories(now)}}const all=CACHE.all,i=sg%all.length,s=all[i];const key=lang()+'|'+sg;
   const ck=el.querySelector('.bnn-clk'),cs=nscBC(now);if(ck.textContent!==cs)ck.textContent=cs;
