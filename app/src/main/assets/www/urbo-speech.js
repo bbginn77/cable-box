@@ -82,7 +82,7 @@ const BPTTS=(()=>{
  function voicesFor(tag){if(!SS)return[];const v=SS.getVoices();const l=tag.toLowerCase(),b=l.split('-')[0];return v.filter(x=>x.lang.toLowerCase().replace('_','-')===l).concat(v.filter(x=>x.lang.toLowerCase().replace('_','-').split('-')[0]===b&&x.lang.toLowerCase().replace('_','-')!==l))}
  if(SS&&SS.addEventListener)SS.addEventListener('voiceschanged',()=>{});
  let ES=null,ESW=null,AC=null;
- async function espeak(){if(ESW)return ESW;if(!ES)ES=(async()=>{const dir=new URL(TTSDIR,location.href).href;const mod=await import(dir+'espeak-ng.js');const m=await mod.default({urboDataURL:dir+'espeak-ng-urbo.bin'});ESW=new m.eSpeakNGWorker();return ESW})();return ES}
+ async function espeak(){if(ESW)return ESW;if(!ES)ES=(async()=>{const dir=new URL(TTSDIR,location.href).href;const mod=await import(dir+'espeak-ng.js');const dat=(await import(dir+'espeak-ng-data.js')).default;const bin=Uint8Array.from(atob(dat),c=>c.charCodeAt(0)).buffer;const m=await mod.default({getPreloadedPackage:()=>bin});ESW=new m.eSpeakNGWorker();return ESW})();return ES}
  function ctx(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;AC=new C()}if(AC.state==='suspended')AC.resume();return AC}
  let token=0,curSrc=null;
  async function playEspeak(input,esv,lang,my){const w=await espeak();if(my!==token)return;w.set_voice(lang==='bp'?esv.v:(ESLANG[lang]||'en-us')+(esv.v.includes('+')?esv.v.slice(esv.v.indexOf('+')):''),'',0,0,'');w.set_rate(esv.rate);w.set_pitch(esv.pitch);
