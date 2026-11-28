@@ -79,17 +79,27 @@ const BPTTS=(()=>{
  const ESLANG={en:'en-us',fr:'fr',es:'es',nl:'nl',gd:'gd'};
  /* ---------- engines ---------- */
  const SS=typeof speechSynthesis!=='undefined'?speechSynthesis:null;
- function voicesFor(tag){if(!SS)return[];const v=SS.getVoices();const l=tag.toLowerCase(),b=l.split('-')[0];return v.filter(x=>x.lang.toLowerCase().replace('_','-')===l).concat(v.filter(x=>x.lang.toLowerCase().replace('_','-').split('-')[0]===b&&x.lang.toLowerCase().replace('_','-')!==l))}
+ function voicesFor(tag){if(!SS)return[];const v=SS.getVoices();if(!tag)return v.slice(0,1);const l=tag.toLowerCase(),b=l.split('-')[0];return v.filter(x=>x.lang.toLowerCase().replace('_','-')===l).concat(v.filter(x=>x.lang.toLowerCase().replace('_','-').split('-')[0]===b&&x.lang.toLowerCase().replace('_','-')!==l))}
  if(SS&&SS.addEventListener)SS.addEventListener('voiceschanged',()=>{});
  let ES=null,ESW=null,AC=null;
  async function espeak(){if(ESW)return ESW;if(!ES)ES=(async()=>{const dir=new URL(TTSDIR,location.href).href;const mod=await import(dir+'espeak-ng.js');const dat=(await import(dir+'espeak-ng-data.js')).default;const bin=Uint8Array.from(atob(dat),c=>c.charCodeAt(0)).buffer;const m=await mod.default({getPreloadedPackage:()=>bin});ESW=new m.eSpeakNGWorker();return ESW})();return ES}
  function ctx(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;AC=new C()}if(AC.state==='suspended')AC.resume();return AC}
+ let EL=null,ESFAIL=false;const SILENT='data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQIAAAAAAA==';
+ function audioEl(){if(!EL){EL=new Audio();EL.setAttribute('playsinline','');EL.preload='auto'}return EL}
+ /* must run synchronously inside the tap: unlocks the shared player and WebAudio */
+ function unlock(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}try{const a=audioEl();if(!a.src||a.src===SILENT||a.paused){a.src=SILENT;const p=a.play();if(p&&p.catch)p.catch(()=>{})}}catch(e){}try{ctx()}catch(e){}}
+ function wav(chunks,rate){const n=chunks.reduce((a,c)=>a+c.length,0),b=new ArrayBuffer(44+n*2),v=new DataView(b);const W=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+  W(0,'RIFF');v.setUint32(4,36+n*2,true);W(8,'WAVE');W(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);W(36,'data');v.setUint32(40,n*2,true);
+  let o=44;for(const c of chunks)for(let i=0;i<c.length;i++){v.setInt16(o,c[i],true);o+=2}return new Blob([b],{type:'audio/wav'})}
  let token=0,curSrc=null;
  async function playEspeak(input,esv,lang,my){const w=await espeak();if(my!==token)return;w.set_voice(lang==='bp'?esv.v:(ESLANG[lang]||'en-us')+(esv.v.includes('+')?esv.v.slice(esv.v.indexOf('+')):''),'',0,0,'');w.set_rate(esv.rate);w.set_pitch(esv.pitch);
   const chunks=[];w.synthesize(input,(d)=>{if(d&&d.length)chunks.push(d);return 0});const n=chunks.reduce((a,c)=>a+c.length,0);if(!n||my!==token)return;
-  const A=ctx(),buf=A.createBuffer(1,n,w.samplerate),ch=buf.getChannelData(0);let o=0;for(const c of chunks){for(let i=0;i<c.length;i++)ch[o+i]=c[i]/32768;o+=c.length}
-  await new Promise(res=>{const s=A.createBufferSource();s.buffer=buf;s.connect(A.destination);s.onended=()=>{if(curSrc===s)curSrc=null;res()};curSrc=s;s.start()})}
- function playDevice(text,tag,vo,my){return new Promise(res=>{const vs=voicesFor(tag);if(!vs.length)return res(false);const u=new SpeechSynthesisUtterance(text);u.lang=tag;try{u.voice=vs[0]}catch(e){}u.rate=vo.rate;u.pitch=vo.pitch;let done=false;const fin=ok=>{if(!done){done=true;res(ok)}};u.onend=()=>fin(true);u.onerror=()=>fin(true);SS.speak(u);
+  const a=audioEl(),url=URL.createObjectURL(wav(chunks,w.samplerate));
+  try{await new Promise((res,rej)=>{const t=setTimeout(res,n/w.samplerate*1000+4000);a.onended=()=>{clearTimeout(t);res()};a.onerror=()=>{clearTimeout(t);rej(new Error('audio'))};curSrc={stop:()=>{a.pause();clearTimeout(t);res()}};a.src=url;const p=a.play();if(p&&p.catch)p.catch(e=>{clearTimeout(t);rej(e)})})}
+  catch(e){/* fall back to WebAudio */const A=ctx(),buf=A.createBuffer(1,n,w.samplerate),ch=buf.getChannelData(0);let o=0;for(const c of chunks){for(let i=0;i<c.length;i++)ch[o+i]=c[i]/32768;o+=c.length}
+   await new Promise(res=>{const s=A.createBufferSource();s.buffer=buf;s.connect(A.destination);s.onended=res;curSrc=s;s.start()})}
+  finally{curSrc=null;setTimeout(()=>URL.revokeObjectURL(url),1000)}}
+ function playDevice(text,tag,vo,my){return new Promise(res=>{const vs=voicesFor(tag);if(!vs.length)return res(false);const u=new SpeechSynthesisUtterance(text);if(tag)u.lang=tag;try{u.voice=vs[0]}catch(e){}u.rate=vo.rate;u.pitch=vo.pitch;let done=false;const fin=ok=>{if(!done){done=true;res(ok)}};u.onend=()=>fin(true);u.onerror=()=>fin(true);SS.speak(u);
    const t=setInterval(()=>{if(my!==token){clearInterval(t);fin(true)}else if(!SS.speaking&&!SS.pending){clearInterval(t);fin(true)}},400)})}
  /* ---------- settings ---------- */
  const LS='bptts-mode';
@@ -97,19 +107,19 @@ const BPTTS=(()=>{
  function setMode(m){try{localStorage.setItem(LS,m)}catch(e){}}
  function useExact(context){const m=mode();if(m==='exact')return true;if(m==='natural')return !voicesFor('fr-FR').length;return context==='learn'||!voicesFor('fr-FR').length}
  /* ---------- public API ---------- */
- let onstate=()=>{},busy=false;
+ let onstate=()=>{},busy=false,onerr=()=>{};
  function stop(){token++;busy=false;if(SS)SS.cancel();try{curSrc&&curSrc.stop()}catch(e){}curSrc=null;onstate(false)}
  /* items: [{lang,text}] ; opts: {voice, context:'learn'|'media'} */
- async function say(items,opts={}){stop();const my=++token;busy=true;onstate(true);const vo=VOICES[opts.voice||'dictionary']||VOICES.dictionary;const exact=useExact(opts.context||'media');
+ async function say(items,opts={}){unlock();stop();const my=++token;busy=true;onstate(true);const vo=VOICES[opts.voice||'dictionary']||VOICES.dictionary;const exact=useExact(opts.context||'media');
   if(SS)SS.getVoices();
   try{for(const it of items){if(my!==token)break;const text=(it.text||'').trim();if(!text)continue;
-    if(it.lang==='bp'){if(exact){await playEspeak(espeakInput(text),vo.es,'bp',my)}else{const ok=await playDevice(frenchInput(text),'fr-FR',vo,my);if(!ok)await playEspeak(espeakInput(text),vo.es,'bp',my)}}
+    if(it.lang==='bp'){if(exact&&!ESFAIL){try{await playEspeak(espeakInput(text),vo.es,'bp',my)}catch(e){console.warn('eSpeak',e);ESFAIL=true;ES=null;const ok=await playDevice(frenchInput(text),'fr-FR',vo,my)||await playDevice(frenchInput(text),'',vo,my);if(!ok)onerr('Speech could not start on this device.')}}else if(exact){const ok=await playDevice(frenchInput(text),'fr-FR',vo,my)||await playDevice(frenchInput(text),'',vo,my);if(!ok)onerr('Speech could not start on this device.')}else{const ok=await playDevice(frenchInput(text),'fr-FR',vo,my);if(!ok)await playEspeak(espeakInput(text),vo.es,'bp',my)}}
     else{const t=it.lang==='en'?cleanEn(text):text.replace(/[\u{1F000}-\u{1FFFF}☀-➿️]/gu,' ');if(!/[\p{L}\d]/u.test(t))continue;const ok=await playDevice(t,LANGTAG[it.lang]||'en-US',vo,my);if(!ok)await playEspeak(t,vo.es,it.lang,my)}}}
   catch(e){console.warn('BPTTS',e)}
   if(my===token){busy=false;onstate(false)}}
  function sayBp(text,opts){return say([{lang:'bp',text}],Object.assign({context:'learn'},opts))}
  return{say,sayBp,stop,segments,espeakInput,frenchInput,wordEspeak,wordFrench,VOICES,mode,setMode,
-  setDir:d=>{TTSDIR=d},busy:()=>busy,hasDevice:t=>voicesFor(t||'fr-FR').length>0,onState:f=>{onstate=f},cleanEn,
+  setDir:d=>{TTSDIR=d},busy:()=>busy,hasDevice:t=>voicesFor(t||'fr-FR').length>0,onState:f=>{onstate=f},onError:f=>{onerr=f},unlock,cleanEn,
   ready:()=>espeak().then(()=>true,()=>false)}})();
 
 
@@ -139,6 +149,9 @@ const TTSUI=(()=>{
  function setAuto(on){auto=on;document.querySelectorAll('[data-uwauto]').forEach(c=>c.checked=on);if(on){curBtn=document.querySelector('[data-uwsay]');readStage()}watch()}
  function radioRead(){if(typeof MD!=='function')return;const x=MD().radio[window.__rd.i];return [x.name,x.fmt,x.market].filter(Boolean).join('. ')}
  function alertRead(){if(typeof ALTXT==='undefined')return null;const A=window.__al,t=(ALTXT[A.kind]||{})[A.lang];if(!t||!A.on)return null;return{lang:LANGCODE[A.lang]||'en',text:t[0]+'. '+A.area+'. '+t[1]}}
+ BPTTS.onError(msg=>{let t=document.getElementById('ttserr');if(!t){t=document.createElement('div');t.id='ttserr';t.setAttribute('role','status');t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10001;background:#111;color:#fff;font:500 15px/1.3 sans-serif;padding:10px 16px;border-radius:10px;max-width:90vw';document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,4000)});
+ /* warm the engine so the first tap does not wait for it */
+ const warm=()=>setTimeout(()=>{if(document.querySelector('[data-say],[data-uwsay],[data-rdsay],[data-alsay],#bnn,#uwx,#utr,#usport'))try{BPTTS.ready()}catch(e){}},2500);warm();addEventListener('hashchange',warm);
  document.addEventListener('click',e=>{const tg=e.target;if(!tg.closest)return;
   const s=tg.closest('[data-say]');if(s){e.preventDefault();e.stopPropagation();if(curBtn===s){BPTTS.stop();return}curBtn=s;BPTTS.sayBp(s.dataset.say,{voice:'dictionary'});return}
   const m=tg.closest('[data-ttsmode]');if(m){BPTTS.setMode(m.dataset.ttsmode);document.querySelectorAll('[data-ttsmode]').forEach(b=>b.setAttribute('aria-pressed',b===m));return}
