@@ -79,7 +79,8 @@ const BPTTS=(()=>{
  const ESLANG={en:'en-us',fr:'fr',es:'es',nl:'nl',gd:'gd'};
  /* ---------- engines ---------- */
  const SS=typeof speechSynthesis!=='undefined'?speechSynthesis:null;
- function voicesFor(tag){if(!SS)return[];const v=SS.getVoices();if(!tag)return v.slice(0,1);const l=tag.toLowerCase(),b=l.split('-')[0];return v.filter(x=>x.lang.toLowerCase().replace('_','-')===l).concat(v.filter(x=>x.lang.toLowerCase().replace('_','-').split('-')[0]===b&&x.lang.toLowerCase().replace('_','-')!==l))}
+ const QV=x=>/premium/i.test(x.name)?3:/enhanced|améliorée|natural|neural/i.test(x.name)?2:/google/i.test(x.name)?1:0;
+ function voicesFor(tag){if(!SS)return[];const v=SS.getVoices();if(!tag)return v.slice(0,1);const l=tag.toLowerCase(),b=l.split('-')[0],lg=x=>x.lang.toLowerCase().replace('_','-'),rk=a=>a.sort((p,q)=>QV(q)-QV(p));return rk(v.filter(x=>lg(x)===l)).concat(rk(v.filter(x=>lg(x).split('-')[0]===b&&lg(x)!==l)))}
  if(SS&&SS.addEventListener)SS.addEventListener('voiceschanged',()=>{});
  let ES=null,ESW=null,AC=null;
  async function espeak(){if(ESW)return ESW;if(!ES)ES=(async()=>{const dir=new URL(TTSDIR,location.href).href;const mod=await import(dir+'espeak-ng.js');const dat=(await import(dir+'espeak-ng-data.js')).default;const bin=Uint8Array.from(atob(dat),c=>c.charCodeAt(0)).buffer;const m=await mod.default({getPreloadedPackage:()=>bin});ESW=new m.eSpeakNGWorker();return ESW})();return ES}
