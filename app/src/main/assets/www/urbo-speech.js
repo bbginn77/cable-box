@@ -69,7 +69,7 @@ const BPTTS=(()=>{
  /* ---------- text clean-up for broadcast English ---------- */
  function cleanEn(t){return t.replace(/[\u{1F000}-\u{1FFFF}☀-➿️]/gu,' ').replace(/(\d)\s*°/g,'$1 degrees').replace(/\bmph\b/g,'miles per hour').replace(/(\d)\s*%/g,'$1 percent').replace(/\s*[•·|]\s*/g,'. ').replace(/\s+/g,' ').trim()}
  /* ---------- station voices (unnamed presets) ---------- */
- const VOICES={dictionary:{label:'Dictionary voice',rate:0.85,pitch:1,es:{v:'fr',rate:140,pitch:50}},
+ const VOICES={dictionary:{label:'Dictionary voice',nnLen:1.15,rate:0.85,pitch:1,es:{v:'fr',rate:140,pitch:50}},
   news:{label:'UBN News voice',rate:1,pitch:1,es:{v:'fr+f2',rate:165,pitch:55}},
   bnn:{label:'BNN voice',rate:1.02,pitch:0.95,es:{v:'fr+m3',rate:170,pitch:45}},
   sport:{label:'UBN Sport voice',rate:1.1,pitch:1.05,es:{v:'fr+m7',rate:185,pitch:50}},
@@ -94,12 +94,31 @@ const BPTTS=(()=>{
   let o=44;for(const c of chunks)for(let i=0;i<c.length;i++){v.setInt16(o,c[i],true);o+=2}return new Blob([b],{type:'audio/wav'})}
  let token=0,curSrc=null;
  async function playEspeak(input,esv,lang,my){const w=await espeak();if(my!==token)return;w.set_voice(lang==='bp'?esv.v:(ESLANG[lang]||'en-us')+(esv.v.includes('+')?esv.v.slice(esv.v.indexOf('+')):''),'',0,0,'');w.set_rate(esv.rate);w.set_pitch(esv.pitch);
-  const chunks=[];w.synthesize(input,(d)=>{if(d&&d.length)chunks.push(d);return 0});const n=chunks.reduce((a,c)=>a+c.length,0);if(!n||my!==token)return;
-  const a=audioEl(),url=URL.createObjectURL(wav(chunks,w.samplerate));
-  try{await new Promise((res,rej)=>{const t=setTimeout(res,n/w.samplerate*1000+4000);a.onended=()=>{clearTimeout(t);res()};a.onerror=()=>{clearTimeout(t);rej(new Error('audio'))};curSrc={stop:()=>{a.pause();clearTimeout(t);res()}};a.src=url;const p=a.play();if(p&&p.catch)p.catch(e=>{clearTimeout(t);rej(e)})})}
-  catch(e){/* fall back to WebAudio */const A=ctx(),buf=A.createBuffer(1,n,w.samplerate),ch=buf.getChannelData(0);let o=0;for(const c of chunks){for(let i=0;i<c.length;i++)ch[o+i]=c[i]/32768;o+=c.length}
-   await new Promise(res=>{const s=A.createBufferSource();s.buffer=buf;s.connect(A.destination);s.onended=res;curSrc=s;s.start()})}
-  finally{curSrc=null;setTimeout(()=>URL.revokeObjectURL(url),1000)}}
+  const chunks=[];w.synthesize(input,(d)=>{if(d&&d.length)chunks.push(d);return 0});if(my!==token)return;await playPcm(chunks.map(c=>Float32Array.from(c,v=>v/32768)),w.samplerate,my)}
+ const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ /* play float PCM: iPhone/iPad use the media player (ignores the silent switch); elsewhere WebAudio, which stays unlocked after the first tap */
+ async function playPcm(chunks,rate,my){const n=chunks.reduce((a,c)=>a+c.length,0);if(!n||my!==token)return;
+  const viaWA=async()=>{const A=ctx();if(A.state==='suspended'){try{await A.resume()}catch(e){}}const buf=A.createBuffer(1,n,rate),ch=buf.getChannelData(0);let o=0;for(const c of chunks){ch.set(c,o);o+=c.length}
+   await new Promise(res=>{const s=A.createBufferSource();s.buffer=buf;s.connect(A.destination);const t=setTimeout(res,n/rate*1000+3000);s.onended=()=>{clearTimeout(t);res()};curSrc={stop:()=>{try{s.stop()}catch(e){}clearTimeout(t);res()}};s.start()});curSrc=null};
+  const viaEl=async()=>{const a=audioEl(),url=URL.createObjectURL(wav(chunks.map(c=>Int16Array.from(c,v=>Math.max(-32768,Math.min(32767,v*32767)))),rate));
+   try{await new Promise((res,rej)=>{let started=false;const t=setTimeout(res,n/rate*1000+4000),w=setTimeout(()=>{if(!started){clearTimeout(t);rej(new Error('no start'))}},2000);
+     a.onplaying=()=>{started=true};a.onended=()=>{clearTimeout(t);clearTimeout(w);res()};a.onerror=()=>{clearTimeout(t);clearTimeout(w);rej(new Error('audio'))};curSrc={stop:()=>{a.pause();clearTimeout(t);clearTimeout(w);res()}};
+     a.src=url;const p=a.play();if(p&&p.catch)p.catch(e=>{clearTimeout(t);clearTimeout(w);rej(e)})})}
+   finally{curSrc=null;setTimeout(()=>URL.revokeObjectURL(url),1500)}};
+  if(IOS){try{await viaEl()}catch(e){if(my===token)await viaWA()}}else{try{await viaWA()}catch(e){if(my===token)await viaEl()}}}
+ /* ---------- neural voice (Piper VITS, SIWIS French voice, CC BY 4.0) fed the same IPA ---------- */
+ let NN=null,NNREADY=false;const FULLV='aeiouyøœɛɔ';
+ function neural(){if(!NN)NN=(async()=>{const dir=new URL(TTSDIR+'neural/',location.href).href;const ort=await import(dir+'ort.wasm.min.mjs');ort.env.wasm.numThreads=1;ort.env.wasm.wasmPaths=dir;
+   const cfg=await (await fetch(dir+'fr-voice.json')).json();const parts=[];for(let k=1;k<=cfg.parts;k++){parts.push((await import(dir+'fr-voice-'+k+'.js')).default)}
+   const b64=parts.join('');const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k);
+   const sess=await ort.InferenceSession.create(bytes,{executionProviders:['wasm']});NNREADY=true;return{ort,sess,cfg}})().catch(e=>{NN=null;throw e});return NN}
+ function nnIds(words,M){const ids=[M['^'],0];words.forEach((w,wi)=>{w=w.normalize('NFD').replace(/\u032f/g,'');if(!w.includes('ˈ')){let k=-1;for(let q=w.length-1;q>=0;q--)if(FULLV.includes(w[q])){k=q;break}if(k>0||k===0)w=w.slice(0,k)+'ˈ'+w.slice(k)}
+   for(const c of w)if(c in M)ids.push(M[c],0);if(wi<words.length-1)ids.push(M[' '],0)});ids.push(M['$']);return ids}
+ async function playNeural(text,vo,my){const N=await neural();if(my!==token)return;const{ort,sess,cfg}=N;const out=[];
+  for(const [c,p] of splitClauses(text)){const words=ipaWords(c);if(!words.length)continue;const ids=nnIds(words,cfg.map);
+   const r=await sess.run({input:new ort.Tensor('int64',BigInt64Array.from(ids.map(BigInt)),[1,ids.length]),input_lengths:new ort.Tensor('int64',BigInt64Array.from([BigInt(ids.length)]),[1]),scales:new ort.Tensor('float32',Float32Array.from([0.667,(vo.nnLen||1.05),0.8]),[3])});
+   if(my!==token)return;const a=r.output.data;let m=0;for(const v of a)m=Math.max(m,Math.abs(v));const g=m>0?0.9/m:1;out.push(Float32Array.from(a,v=>v*g));out.push(new Float32Array(Math.round(cfg.rate*(/[.!?…]/.test(p||'.')?0.4:0.22))))}
+  await playPcm(out,cfg.rate,my)}
  let DEVFAIL=false;
  /* resolves true when the device voice actually started; false if it is missing, errors or never starts (e.g. blocked inside an app's web view) */
  function playDevice(text,tag,vo,my){return new Promise(res=>{if(DEVFAIL)return res(false);const vs=voicesFor(tag);if(!vs.length)return res(false);const u=new SpeechSynthesisUtterance(text);if(tag)u.lang=tag;try{u.voice=vs[0]}catch(e){}u.rate=vo.rate;u.pitch=vo.pitch;let done=false,started=false;const fin=ok=>{if(!done){done=true;clearInterval(t);clearTimeout(t0);res(ok)}};
@@ -111,21 +130,22 @@ const BPTTS=(()=>{
  const LS='bptts-mode';
  function mode(){try{return localStorage.getItem(LS)||'auto'}catch(e){return 'auto'}}
  function setMode(m){try{localStorage.setItem(LS,m)}catch(e){}}
- function useExact(context){if(DEVFAIL)return true;const m=mode();if(m==='exact')return true;if(m==='natural')return !voicesFor('fr-FR').length;return context==='learn'||!voicesFor('fr-FR').length}
+ function useExact(context){const m=mode();if(m==='exact')return true;if(m==='natural')return false;return !NNREADY}
  /* ---------- public API ---------- */
- let onstate=()=>{},busy=false,onerr=()=>{};
- function stop(){token++;busy=false;if(SS)SS.cancel();try{curSrc&&curSrc.stop()}catch(e){}curSrc=null;onstate(false)}
+ let onstate=()=>{},busy=false,onerr=()=>{},onload=()=>{};
+ function stop(){token++;busy=false;try{if(SS&&(SS.speaking||SS.pending))SS.cancel()}catch(e){}try{curSrc&&curSrc.stop()}catch(e){}curSrc=null;onstate(false)}
  /* items: [{lang,text}] ; opts: {voice, context:'learn'|'media'} */
  async function say(items,opts={}){unlock();stop();const my=++token;busy=true;onstate(true);const vo=VOICES[opts.voice||'dictionary']||VOICES.dictionary;const exact=useExact(opts.context||'media');
   if(SS)SS.getVoices();
   try{for(const it of items){if(my!==token)break;const text=(it.text||'').trim();if(!text)continue;
-    if(it.lang==='bp'){if(exact&&!ESFAIL){try{await playEspeak(espeakInput(text),vo.es,'bp',my)}catch(e){console.warn('eSpeak',e);ESFAIL=true;ES=null;const ok=await playDevice(frenchInput(text),'fr-FR',vo,my)||await playDevice(frenchInput(text),'',vo,my);if(!ok)onerr('Speech could not start on this device.')}}else if(exact){const ok=await playDevice(frenchInput(text),'fr-FR',vo,my)||await playDevice(frenchInput(text),'',vo,my);if(!ok)onerr('Speech could not start on this device.')}else{const ok=await playDevice(frenchInput(text),'fr-FR',vo,my);if(!ok)await playEspeak(espeakInput(text),vo.es,'bp',my)}}
+    if(it.lang==='bp'){if(!exact){try{if(!NNREADY)onload(true);await playNeural(text,vo,my);onload(false);continue}catch(e){onload(false);console.warn('neural',e);onerr('The natural voice could not load here, so Exact was used.')}}
+     if(my!==token)break;try{await playEspeak(espeakInput(text),vo.es,'bp',my)}catch(e){console.warn('eSpeak',e);onerr('Speech could not start on this device.')}}
     else{const t=it.lang==='en'?cleanEn(text):text.replace(/[\u{1F000}-\u{1FFFF}☀-➿️]/gu,' ');if(!/[\p{L}\d]/u.test(t))continue;const ok=await playDevice(t,LANGTAG[it.lang]||'en-US',vo,my);if(!ok)await playEspeak(t,vo.es,it.lang,my)}}}
   catch(e){console.warn('BPTTS',e)}
   if(my===token){busy=false;onstate(false)}}
  function sayBp(text,opts){return say([{lang:'bp',text}],Object.assign({context:'learn'},opts))}
  return{say,sayBp,stop,segments,espeakInput,frenchInput,wordEspeak,wordFrench,VOICES,mode,setMode,
-  setDir:d=>{TTSDIR=d},deviceBlocked:()=>DEVFAIL,busy:()=>busy,hasDevice:t=>voicesFor(t||'fr-FR').length>0,onState:f=>{onstate=f},onError:f=>{onerr=f},unlock,cleanEn,
+  setDir:d=>{TTSDIR=d},deviceBlocked:()=>DEVFAIL,busy:()=>busy,hasDevice:t=>voicesFor(t||'fr-FR').length>0,onState:f=>{onstate=f},onError:f=>{onerr=f},onLoading:f=>{onload=f},neuralReady:()=>NNREADY,unlock,cleanEn,
   ready:()=>espeak().then(()=>true,()=>false)}})();
 
 
@@ -157,10 +177,11 @@ const TTSUI=(()=>{
  function alertRead(){if(typeof ALTXT==='undefined')return null;const A=window.__al,t=(ALTXT[A.kind]||{})[A.lang];if(!t||!A.on)return null;return{lang:LANGCODE[A.lang]||'en',text:t[0]+'. '+A.area+'. '+t[1]}}
  function showErr(msg){let t=document.getElementById('ttserr');if(!t){t=document.createElement('div');t.id='ttserr';t.setAttribute('role','status');t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10001;background:#111;color:#fff;font:500 15px/1.3 sans-serif;padding:10px 16px;border-radius:10px;max-width:90vw';document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,6000)}
  BPTTS.onError(showErr);
+ BPTTS.onLoading(on=>{if(on)showErr('Downloading the natural voice (about 48 MB, first time only)…');else{const t=document.getElementById('ttserr');if(t&&/Downloading/.test(t.textContent))t.hidden=true}});
  /* warm the engine so the first tap does not wait for it */
  const warm=()=>setTimeout(()=>{if(document.querySelector('[data-say],[data-uwsay],[data-rdsay],[data-alsay],#bnn,#uwx,#utr,#usport'))try{BPTTS.ready()}catch(e){}},2500);warm();addEventListener('hashchange',warm);
  document.addEventListener('click',e=>{const tg=e.target;if(!tg.closest)return;
-  const s=tg.closest('[data-say]');if(s){e.preventDefault();e.stopPropagation();if(curBtn===s){BPTTS.stop();return}curBtn=s;const nat=BPTTS.mode()==='natural';BPTTS.sayBp(s.dataset.say,{voice:'dictionary'}).then(()=>{if(nat&&BPTTS.deviceBlocked()&&!window.__devwarn){window.__devwarn=1;showErr('Your device’s voices aren’t available here (the Claude app blocks them), so Exact was used. Open the site in Safari for Natural.')}});return}
+  const s=tg.closest('[data-say]');if(s){e.preventDefault();e.stopPropagation();if(curBtn===s){BPTTS.stop();return}curBtn=s;BPTTS.sayBp(s.dataset.say,{voice:'dictionary'});return}
   const m=tg.closest('[data-ttsmode]');if(m){BPTTS.setMode(m.dataset.ttsmode);document.querySelectorAll('[data-ttsmode]').forEach(b=>b.setAttribute('aria-pressed',b===m));return}
   const u=tg.closest('[data-uwsay]');if(u){e.preventDefault();if(curBtn===u){BPTTS.stop();if(auto)setAuto(false);return}curBtn=u;readStage();return}
   const r=tg.closest('[data-rdsay]');if(r){e.preventDefault();if(curBtn===r){BPTTS.stop();return}curBtn=r;BPTTS.say(items(radioRead()),{voice:'radio',context:'media'});return}
